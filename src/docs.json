@@ -29,7 +29,7 @@
     "body": {
       "family": "TWK Lausanne",
       "weight": 400,
-      "source": "/fonts/TWKLausanne-250.woff2",
+      "source": "/fonts/TWKLausanne-400.woff2",
       "format": "woff2"
     }
   },
@@ -46,7 +46,10 @@
   "styling": {
     "eyebrows": "breadcrumbs",
     "codeblocks": {
-      "theme": "catppuccin-mocha"
+      "theme": {
+        "light": "catppuccin-macchiato",
+        "dark": "catppuccin-mocha"
+      }
     }
   },
   "contextual": {
