@@ -41,5 +41,8 @@
   },
   "[jsonc]": {
     "editor.tabSize": 2
+  },
+  "editor.quickSuggestions": {
+    "strings": "on"
   }
 }
