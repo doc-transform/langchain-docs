@@ -3,18 +3,18 @@ title: MODEL_RATE_LIMIT
 ---
 
 <Note>
-    Currently only used in `langchainjs` (JavaScript/TypeScript).
+    目前仅在 `langchainjs`（JavaScript/TypeScript）中使用。
 </Note>
 
-You have hit the maximum number of requests that a model provider allows over a given time period and are being temporarily blocked.
+你在给定时间段内达到了模型提供商允许的最大请求数，被临时封禁。
 
-This error occurs when you exceed the maximum number of requests permitted by your model provider within a specific timeframe, resulting in temporary blocking. The restriction is generally temporary and lifts after the limit resets.
+当你在特定时间范围内超过模型提供商允许的最大请求数时会触发此错误，导致临时封禁。该限制通常是临时的，限额重置后即可解除。
 
-## Troubleshooting
+## 排查方法
 
-To resolve this error, you can:
+要解决此错误，你可以：
 
-1. **Implement Rate Limiting**: Deploy a rate limiter to regulate the frequency of requests sent to the model. See [rate limiting](/oss/langchain/models#rate-limiting) docs.
-2. **Implement Response Caching**: Use model response caching to reduce redundant requests when incoming queries are repetitive.
-3. **Use Multiple Providers**: Distribute requests across multiple providers if your application architecture supports this approach
-4. **Contact Your Provider**: Reach out to your model provider requesting an increase to your rate limits
+1. **实施速率限制**：部署速率限制器来调控发送到模型的请求频率。参见[速率限制](/oss/langchain/models#rate-limiting)文档。
+2. **实施响应缓存**：当输入查询存在重复时，使用模型响应缓存来减少冗余请求。
+3. **使用多个提供商**：如果应用架构允许，将请求分散到多个提供商。
+4. **联系提供商**：联系你的模型提供商请求提高速率限制。

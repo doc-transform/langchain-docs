@@ -1,35 +1,34 @@
 ---
-title: "WebLLM integration"
-description: "Integrate with the WebLLM chat model using LangChain JavaScript."
+title: "WebLLM 集成"
+description: "使用 LangChain JavaScript 集成 WebLLM 对话模型。"
 ---
 
 <Tip>
-**Compatibility**
+**兼容性**
 
-Only available in web environments.
+仅在 Web 环境中可用。
 </Tip>
 
-You can run LLMs directly in your web browser using LangChain's [WebLLM](https://webllm.mlc.ai) integration.
+你可以使用 LangChain 的 [WebLLM](https://webllm.mlc.ai) 集成直接在浏览器中运行 LLM。
 
-## Setup
+## 安装
 
-You'll need to install the [WebLLM SDK](https://www.npmjs.com/package/@mlc-ai/web-llm) module to communicate with your local model.
+你需要安装 [WebLLM SDK](https://www.npmjs.com/package/@mlc-ai/web-llm) 模块来与本地模型通信。
 
 <Tip>
-See [this section for general instructions on installing LangChain packages](/oss/langchain/install).
+安装 LangChain 包的通用说明请参见[此章节](/oss/langchain/install)。
 </Tip>
 
 ```bash npm
 npm install -S @mlc-ai/web-llm @langchain/community @langchain/core
 ```
 
-## Usage
+## 用法
 
-Note that the first time a model is called, WebLLM will download the full weights for that model. This can be multiple gigabytes, and may not be possible for all end-users of your application depending on their internet connection and computer specs.
-While the browser will cache future invocations of that model, we recommend using the smallest possible model you can.
+请注意，首次调用模型时，WebLLM 会下载该模型的完整权重。这可能达数 GB，取决于终端用户的网络连接和计算机配置，可能无法适用于所有用户。
+虽然浏览器会缓存后续对该模型的调用，但我们建议使用尽可能小的模型。
 
-We also recommend using a [separate web worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers) when invoking and loading your models to
-not block execution.
+我们还建议在调用和加载模型时使用单独的 [Web Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers)，以避免阻塞主线程执行。
 
 ```typescript
 // Must be run in a web environment, e.g. a web worker
@@ -71,13 +70,13 @@ AIMessage {
 */
 ```
 
-Streaming is also supported.
+也支持流式响应。
 
-## Example
+## 示例
 
-For a full end-to-end example, check out [this project](https://github.com/jacoblee93/fully-local-pdf-chatbot).
+完整的端到端示例请查看[此项目](https://github.com/jacoblee93/fully-local-pdf-chatbot)。
 
-## Related
+## 相关资源
 
-- Chat model [conceptual guide](/oss/langchain/models)
-- Chat model [how-to guides](/oss/langchain/models)
+- 对话模型[概念指南](/oss/langchain/models)
+- 对话模型[操作指南](/oss/langchain/models)

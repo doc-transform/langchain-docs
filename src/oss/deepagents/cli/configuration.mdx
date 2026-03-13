@@ -1,34 +1,34 @@
 ---
-title: Configuration
-sidebarTitle: Configuration
-description: Configure the Deep Agents CLI with config.toml, hooks, and MCP servers
+title: 配置
+sidebarTitle: 配置
+description: 使用 config.toml、钩子和 MCP 服务器配置 Deep Agents CLI
 ---
 
-The CLI stores its configuration in the `~/.deepagents/` directory. The main config files are:
+CLI 将其配置存储在 `~/.deepagents/` 目录中。主要配置文件包括：
 
-| File | Format | Purpose |
+| 文件 | 格式 | 用途 |
 |------|--------|---------|
-| `config.toml` | [TOML](https://toml.io/) | Model defaults, provider settings, constructor params, profile overrides, MCP trust store |
-| `hooks.json` | JSON | External tool subscriptions to CLI lifecycle events |
-| `.mcp.json` | JSON | MCP server definitions (also auto-discovered from project directories) |
+| `config.toml` | [TOML](https://toml.io/) | 模型默认值、提供商设置、构造函数参数、配置文件覆盖、MCP 信任存储 |
+| `hooks.json` | JSON | 订阅 CLI 生命周期事件的外部工具 |
+| `.mcp.json` | JSON | MCP 服务器定义（也可从项目目录自动发现） |
 
-## Config file
+## 配置文件
 
-`~/.deepagents/config.toml` lets you customize model providers, set defaults, and pass extra parameters to model constructors.
+`~/.deepagents/config.toml` 允许你自定义模型提供商、设置默认值，以及向模型构造函数传递额外参数。
 
-### Default and recent model
+### 默认模型和最近使用模型
 
 ```toml
 [models]
-default = "ollama:qwen3:4b"             # your intentional long-term preference
-recent = "anthropic:claude-sonnet-4-5"   # last /model switch (written automatically)
+default = "ollama:qwen3:4b"             # 你有意设置的长期偏好
+recent = "anthropic:claude-sonnet-4-5"   # 上次 /model 切换时自动写入
 ```
 
-`[models].default` always takes priority over `[models].recent`. The `/model` command only writes to `[models].recent`, so your configured default is never overwritten by mid-session switches. To remove the default, use `/model --default --clear` or delete the `default` key from the config file.
+`[models].default` 始终优先于 `[models].recent`。`/model` 命令只会写入 `[models].recent`，因此你配置的默认值永远不会被会话中途的切换所覆盖。要移除默认值，请使用 `/model --default --clear` 或直接从配置文件中删除 `default` 键。
 
-### Provider configuration
+### 提供商配置
 
-Each provider is a TOML table under `[models.providers]`:
+每个提供商是 `[models.providers]` 下的一个 TOML 表：
 
 ```toml
 [models.providers.<name>]
@@ -45,39 +45,39 @@ max_tokens = 4096
 temperature = 0.7
 ```
 
-**Keys:**
+**配置键说明：**
 
 <ResponseField name="models" type="string[]">
-    A list of model names to show in the interactive `/model` switcher for this provider. For providers that already ship with model profiles, any names you add here appear alongside the bundled ones — useful for newly released models that haven't been added to the package yet. For [arbitrary providers](#arbitrary-providers), this list is the only source of models in the switcher.
+    在该提供商的交互式 `/model` 切换器中显示的模型名称列表。对于已自带模型配置文件的提供商，你在此处添加的名称会与内置名称并列显示——适用于尚未被添加到包中的新发布模型。对于[自定义提供商](#arbitrary-providers)，此列表是切换器中模型的唯一来源。
 
-    Models listed here **bypass** the profile-based [filtering criteria](/oss/deepagents/cli/providers#which-models-appear-in-the-switcher) and always appear in the switcher. This makes it the recommended way to surface models that are excluded because their profile lacks `tool_calling` support or doesn't exist yet.
+    此处列出的模型会**绕过**基于配置文件的[过滤条件](/oss/deepagents/cli/providers#which-models-appear-in-the-switcher)，始终显示在切换器中。这使其成为展示那些因配置文件缺少 `tool_calling` 支持或尚不存在而被排除的模型的推荐方式。
 
-    This key is optional. You can always pass any model name directly to `/model` or `--model` regardless of whether it appears in the switcher; the provider validates the name at request time.
+    此键为可选项。无论模型是否出现在切换器中，你始终可以通过 `/model` 或 `--model` 直接传入任何模型名称；提供商会在请求时验证名称。
 </ResponseField>
 
 <ResponseField name="api_key_env" type="string">
-    Optionally override the environment variable name checked for credentials. Most chat model packages read from a default env var automatically — see the [Provider reference](/oss/deepagents/cli/providers#provider-reference) table for which variable each provider checks.
+    可选，覆盖用于检查凭证的环境变量名称。
 </ResponseField>
 
 <ResponseField name="base_url" type="string">
-    Optionally override the base URL used by the provider, if supported. Refer to your provider packages' [reference docs](https://reference.langchain.com/python/integrations/) for more info.
+    可选，覆盖提供商使用的基础 URL（如果支持）。请参阅你的提供商包的[参考文档](https://reference.langchain.com/python/integrations/)获取更多信息。
 </ResponseField>
 
 <ResponseField name="params" type="object">
-    Extra keyword arguments forwarded to the model constructor. Flat keys (e.g., `temperature = 0`) apply to every model from this provider. Model-keyed sub-tables (e.g., `[params."gpt-4o"]`) override individual values for that model only; the merge is shallow (model wins on conflict).
+    转发给模型构造函数的额外关键字参数。扁平键（如 `temperature = 0`）适用于该提供商的每个模型。模型键子表（如 `[params."gpt-4o"]`）仅覆盖该模型的个别值；合并为浅合并（冲突时模型级优先）。
 </ResponseField>
 
 <ResponseField name="profile" type="object">
-    (Advanced) Override fields in the model's runtime [profile](/oss/langchain/models#model-profiles) (e.g., `max_input_tokens`). Flat keys apply to every model from this provider. Model-keyed sub-tables (e.g., `[profile."claude-sonnet-4-5"]`) override individual values for that model only; the merge is shallow (model wins on conflict). These overrides are applied after the model is created, so they take effect for context-limit display, auto-summarization, and any other feature that reads the profile.
+    （高级）覆盖模型运行时[配置文件](/oss/langchain/models#model-profiles)中的字段（如 `max_input_tokens`）。扁平键适用于该提供商的每个模型。模型键子表（如 `[profile."claude-sonnet-4-5"]`）仅覆盖该模型的个别值；合并为浅合并（冲突时模型级优先）。这些覆盖在模型创建后应用，因此对上下文限制显示、自动摘要以及任何读取配置文件的功能都会生效。
 </ResponseField>
 
 <ResponseField name="class_path" type="string">
-    Used for [arbitrary model](#arbitrary-providers) providers. Optional fully-qualified Python class in `module.path:ClassName` format. When set, the CLI imports and instantiates this class directly for provider `<name>`. The class must be a `BaseChatModel` subclass.
+    用于[自定义模型](#arbitrary-providers)提供商。可选的完全限定 Python 类，格式为 `module.path:ClassName`。设置后，CLI 将直接为提供商 `<name>` 导入并实例化此类。该类必须是 `BaseChatModel` 的子类。
 </ResponseField>
 
-### Model constructor params
+### 模型构造函数参数
 
-Any provider can use the `params` table to pass extra arguments to the model constructor:
+任何提供商都可以使用 `params` 表向模型构造函数传递额外参数：
 
 ```toml
 [models.providers.ollama.params]
@@ -85,9 +85,9 @@ temperature = 0
 num_ctx = 8192
 ```
 
-#### Per-model overrides
+#### 按模型覆盖
 
-If a specific model needs different params, add a model-keyed sub-table under `params` to override individual values without duplicating the entire provider config:
+如果特定模型需要不同的参数，可以在 `params` 下添加按模型键命名的子表来覆盖个别值，无需重复整个提供商配置：
 
 ```toml
 [models.providers.ollama]
@@ -102,90 +102,90 @@ temperature = 0.5
 num_ctx = 4000
 ```
 
-With this configuration:
+使用此配置：
 
-* `ollama:qwen3:4b` gets `{temperature: 0.5, num_ctx: 4000}` — model overrides win.
-* `ollama:llama3` gets `{temperature: 0, num_ctx: 8192}` — no override, provider-level params only.
+* `ollama:qwen3:4b` 获得 `{temperature: 0.5, num_ctx: 4000}` —— 模型级覆盖优先。
+* `ollama:llama3` 获得 `{temperature: 0, num_ctx: 8192}` —— 无覆盖，仅使用提供商级参数。
 
-The merge is shallow: any key present in the model sub-table replaces the same key from the provider-level params, while keys only at the provider level are preserved.
+合并为浅合并：模型子表中存在的任何键会替换提供商级参数中的同名键，而仅存在于提供商级别的键则被保留。
 
-#### CLI overrides with `--model-params`
+#### 通过 `--model-params` 进行 CLI 覆盖
 
-For one-off adjustments without editing the config file, pass a JSON object via `--model-params` at launch or mid-session with the `/model` command:
+对于无需编辑配置文件的一次性调整，可以在启动时或使用 `/model` 命令在会话中通过 `--model-params` 传递 JSON 对象：
 
 ```bash
 deepagents --model ollama:llama3 --model-params '{"temperature": 0.9, "num_ctx": 16384}'
 
-# In non-interactive mode
+# 非交互模式
 deepagents -n "Summarize this repo" --model ollama:llama3 --model-params '{"temperature": 0}'
 ```
 
-```txt title="Inside the TUI"
+```txt title="在 TUI 中"
 /model --model-params '{"temperature": 0.9}' ollama:llama3
-/model --model-params '{"num_ctx": 16384}'  # opens selector, applies params to chosen model
+/model --model-params '{"num_ctx": 16384}'  # 打开选择器，将参数应用于所选模型
 ```
 
-These take the highest priority, overriding values from config file params. Mid-session params are applied for the current session only and are not persisted. `--model-params` cannot be combined with `--default`.
+这些参数具有最高优先级，会覆盖配置文件中的参数值。会话中设置的参数仅适用于当前会话，不会被持久化。`--model-params` 不能与 `--default` 组合使用。
 
-### Profile overrides
+### 配置文件覆盖
 
-**(Advanced)**
+**（高级）**
 
-Override fields in the model's runtime profile to change how the CLI interprets model capabilities. The most common use case is lowering `max_input_tokens` to trigger auto-summarization earlier — useful for testing or for constraining context usage:
+覆盖模型运行时配置文件中的字段，以改变 CLI 对模型能力的解读方式。最常见的用例是降低 `max_input_tokens` 以更早触发自动摘要——这对测试或限制上下文使用量非常有用：
 
 ```toml
-# Apply to all models from this provider
+# 应用于该提供商的所有模型
 [models.providers.anthropic.profile]
 max_input_tokens = 4096
 ```
 
-Per-model sub-tables work the same way as `params` — the model-level value wins on conflict:
+按模型子表的工作方式与 `params` 相同——冲突时模型级值优先：
 
 ```toml
 [models.providers.anthropic.profile]
 max_input_tokens = 4096
 
-# This model gets a higher limit
+# 此模型获得更高的限制
 [models.providers.anthropic.profile."claude-sonnet-4-5"]
 max_input_tokens = 8192
 ```
 
-Profile overrides are merged into the model's profile after creation. Any feature that reads the profile — context-limit display in the status bar, auto-summarization thresholds, capability checks — will see the overridden values.
+配置文件覆盖在模型创建后合并到模型的配置文件中。任何读取配置文件的功能——状态栏中的上下文限制显示、自动摘要阈值、能力检查——都会看到被覆盖后的值。
 
-#### CLI profile overrides with `--profile-override`
+#### 通过 `--profile-override` 进行 CLI 配置文件覆盖
 
-**(Advanced)**
+**（高级）**
 
-To override model profile fields at runtime without editing the config file, pass a JSON object via `--profile-override`:
+要在运行时覆盖模型配置文件字段而不编辑配置文件，可通过 `--profile-override` 传递 JSON 对象：
 
 ```bash
 deepagents --profile-override '{"max_input_tokens": 4096}'
 
-# Combine with --model
+# 与 --model 组合使用
 deepagents --model anthropic:claude-sonnet-4-5 --profile-override '{"max_input_tokens": 4096}'
 
-# In non-interactive mode
+# 非交互模式
 deepagents -n "Summarize this repo" --profile-override '{"max_input_tokens": 4096}'
 ```
 
-These are merged on top of config file profile overrides (CLI wins). The priority chain is: model default &lt; config.toml profile &lt; CLI `--profile-override`.
+这些覆盖会合并到配置文件的 profile 覆盖之上（CLI 优先）。优先级链为：模型默认值 < config.toml profile < CLI `--profile-override`。
 
-`--profile-override` values persist across mid-session `/model` hot-swaps — switching models re-applies the override to the new model.
+`--profile-override` 值在会话中切换模型时（`/model` 热切换）会持续生效——切换模型时会将覆盖重新应用于新模型。
 
-### Custom base URL
+### 自定义基础 URL
 
-Some provider packages accept a `base_url` to override the default endpoint. For example, `langchain-ollama` defaults to `http://localhost:11434` via the underlying `ollama` client. To point it elsewhere, set `base_url` in your configuration:
+某些提供商包接受 `base_url` 来覆盖默认端点。例如，`langchain-ollama` 通过底层 `ollama` 客户端默认使用 `http://localhost:11434`。要将其指向其他地址，请在配置中设置 `base_url`：
 
 ```toml
 [models.providers.ollama]
 base_url = "http://your-host-here:port"
 ```
 
-Refer to your provider's reference documentation for compatibility information and additional considerations.
+请参阅你的提供商参考文档了解兼容性信息和其他注意事项。
 
-### Compatible APIs
+### 兼容 API
 
-For providers that expose APIs that are wire-compatible with OpenAI or Anthropic, you can use the existing `langchain-openai` or `langchain-anthropic` packages by pointing `base_url` at the provider's endpoint:
+对于暴露与 OpenAI 或 Anthropic 线路兼容 API 的提供商，你可以通过将 `base_url` 指向提供商的端点来使用现有的 `langchain-openai` 或 `langchain-anthropic` 包：
 
 ```toml
 [models.providers.openai]
@@ -202,29 +202,29 @@ models = ["my-model"]
 ```
 
 <Note>
-    Any features added on top of the official spec by the provider will not be captured. If the provider offers a dedicated LangChain integration package, prefer that instead.
+    提供商在官方规范之上添加的任何功能都不会被捕获。如果提供商提供了专用的 LangChain 集成包，建议优先使用该包。
 </Note>
 
-### Adding models to the interactive switcher
+### 向交互式切换器添加模型
 
-Some providers (e.g. `langchain-ollama`) don't bundle model profile data (see [Provider reference](/oss/deepagents/cli/providers#provider-reference) for full listing). When this is the case, the interactive `/model` switcher won't list models for that provider. You can fill in the gap by defining a `models` list in your config file for the provider:
+某些提供商（如 `langchain-ollama`）不包含模型配置文件数据（完整列表请参阅[提供商参考](/oss/deepagents/cli/providers#provider-reference)）。在这种情况下，交互式 `/model` 切换器不会列出该提供商的模型。你可以通过在配置文件中为该提供商定义 `models` 列表来填补这一空白：
 
 ```toml
 [models.providers.ollama]
 models = ["llama3", "mistral", "codellama"]
 ```
 
-The `/model` switcher will now include an Ollama section with these models listed.
+`/model` 切换器现在将包含一个 Ollama 区域，列出这些模型。
 
-This is entirely optional. You can always switch to any model by specifying its full name directly:
+这完全是可选的。你始终可以通过直接指定完整名称来切换到任何模型：
 
 ```txt
 /model ollama:llama3
 ```
 
-### Arbitrary providers
+### 自定义提供商
 
-You can use any [LangChain `BaseChatModel`](https://reference.langchain.com/python/langchain_core/language_models/#langchain_core.language_models.BaseChatModel) subclass using `class_path`. The CLI will import and instantiate it directly:
+你可以使用任何 [LangChain `BaseChatModel`](https://reference.langchain.com/python/langchain_core/language_models/#langchain_core.language_models.BaseChatModel) 子类，通过 `class_path` 来实现。CLI 将直接导入并实例化它：
 
 ```toml
 [models.providers.my_custom]
@@ -237,36 +237,36 @@ temperature = 0
 max_tokens = 4096
 ```
 
-The package must be installed in the same Python environment as `deepagents-cli`:
+包必须安装在与 `deepagents-cli` 相同的 Python 环境中：
 
 ```bash
-# If deepagents-cli was installed with uv tool:
+# 如果 deepagents-cli 是通过 uv tool 安装的：
 uv tool upgrade deepagents-cli --with my_package
 ```
 
-When you switch to `my_custom:my-model-v1` (via `/model` or `--model`), the model name (`my-model-v1`) is passed as the `model` kwarg:
+当你切换到 `my_custom:my-model-v1`（通过 `/model` 或 `--model`）时，模型名称（`my-model-v1`）将作为 `model` 关键字参数传递：
 
 ```python
 MyChatModel(model="my-model-v1", base_url="...", api_key="...", temperature=0, max_tokens=4096)
 ```
 
 <Warning>
-    `class_path` executes arbitrary Python code from your config file. This has the same trust model as `pyproject.toml` build scripts — you control your own machine.
+    `class_path` 会从你的配置文件中执行任意 Python 代码。这与 `pyproject.toml` 构建脚本的信任模型相同——你控制自己的机器。
 </Warning>
 
-Your provider package may optionally provide model profiles at a `_PROFILES` dict in `<package>.data._profiles` in lieu of defining them under the `models` key. See LangChain [model profiles](https://github.com/langchain-ai/langchain/tree/master/libs/model-profiles) for more info.
+你的提供商包可以选择在 `<package>.data._profiles` 中的 `_PROFILES` 字典中提供模型配置文件，以替代在 `models` 键下定义它们。更多信息请参阅 LangChain [模型配置文件](https://github.com/langchain-ai/langchain/tree/master/libs/model-profiles)。
 
 ---
 
-## Hooks
+## 钩子
 
-Hooks let external programs react to CLI lifecycle events. Configure commands in `~/.deepagents/hooks.json` and the CLI pipes a JSON payload to each matching command's stdin whenever an event fires.
+钩子让外部程序能够响应 CLI 生命周期事件。在 `~/.deepagents/hooks.json` 中配置命令，CLI 将在事件触发时通过管道将 JSON 负载发送到每个匹配命令的 stdin。
 
-Hooks run fire-and-forget in a background thread — they never block the CLI and failures are logged without interrupting your session.
+钩子在后台线程中以"即发即忘"的方式运行——它们永远不会阻塞 CLI，失败也会被记录日志而不会中断你的会话。
 
-### Setup
+### 设置
 
-Create `~/.deepagents/hooks.json`:
+创建 `~/.deepagents/hooks.json`：
 
 ```json
 {
@@ -279,16 +279,16 @@ Create `~/.deepagents/hooks.json`:
 }
 ```
 
-Now every time a session starts or ends, the CLI appends the event payload to `~/deepagents-events.log`.
+现在每次会话开始或结束时，CLI 都会将事件负载追加到 `~/deepagents-events.log`。
 
-### Hook configuration
+### 钩子配置
 
-The config file contains a single `hooks` array. Each entry has:
+配置文件包含单个 `hooks` 数组。每个条目包含：
 
-| Field | Type | Required | Description |
+| 字段 | 类型 | 必填 | 说明 |
 |-------|------|----------|-------------|
-| `command` | `list[str]` | Yes | Command and arguments to run (no shell expansion — use `["bash", "-c", "..."]` if needed) |
-| `events` | `list[str]` | No | Event names to subscribe to. Omit or leave empty to receive **all** events |
+| `command` | `list[str]` | 是 | 要运行的命令及参数（不进行 shell 展开——如需要请使用 `["bash", "-c", "..."]`） |
+| `events` | `list[str]` | 否 | 要订阅的事件名称。省略或留空则接收**所有**事件 |
 
 ```json
 {
@@ -304,11 +304,11 @@ The config file contains a single `hooks` array. Each entry has:
 }
 ```
 
-The second hook above has no `events` filter, so it receives every event the CLI emits.
+上面的第二个钩子没有 `events` 过滤器，因此它会接收 CLI 发出的每个事件。
 
-### Payload format
+### 负载格式
 
-Each hook command receives a JSON object on stdin with an `"event"` key plus event-specific fields:
+每个钩子命令通过 stdin 接收一个带有 `"event"` 键以及事件特定字段的 JSON 对象：
 
 ```json
 {
@@ -317,78 +317,78 @@ Each hook command receives a JSON object on stdin with an `"event"` key plus eve
 }
 ```
 
-### Events reference
+### 事件参考
 
 #### `session.start`
 
-Fired when an agent session begins (both interactive and non-interactive modes).
+当 Agent 会话开始时触发（交互式和非交互式模式均适用）。
 
-| Field | Type | Description |
+| 字段 | 类型 | 说明 |
 |-------|------|-------------|
-| `thread_id` | `string` | The session thread identifier |
+| `thread_id` | `string` | 会话线程标识符 |
 
 #### `session.end`
 
-Fired when a session exits.
+当会话退出时触发。
 
-| Field | Type | Description |
+| 字段 | 类型 | 说明 |
 |-------|------|-------------|
-| `thread_id` | `string` | The session thread identifier |
+| `thread_id` | `string` | 会话线程标识符 |
 
 #### `user.prompt`
 
-Fired in interactive mode when the user submits a chat message.
+在交互模式下用户提交聊天消息时触发。
 
-No additional fields.
+无额外字段。
 
 #### `input.required`
 
-Fired when the agent requires human input (human-in-the-loop interrupt).
+当 Agent 需要人工输入（人机交互中断）时触发。
 
-No additional fields.
+无额外字段。
 
 #### `permission.request`
 
-Fired before the approval dialog when one or more tool calls need user permission.
+在一个或多个工具调用需要用户权限时，审批对话框出现前触发。
 
-| Field | Type | Description |
+| 字段 | 类型 | 说明 |
 |-------|------|-------------|
-| `tool_names` | `list[str]` | Names of the tools requesting approval |
+| `tool_names` | `list[str]` | 请求审批的工具名称 |
 
 #### `tool.error`
 
-Fired when a tool call returns an error.
+当工具调用返回错误时触发。
 
-| Field | Type | Description |
+| 字段 | 类型 | 说明 |
 |-------|------|-------------|
-| `tool_names` | `list[str]` | Names of the tool(s) that errored |
+| `tool_names` | `list[str]` | 出错的工具名称 |
 
 #### `task.complete`
 
-Fired when the agent finishes its current task (the streaming loop ends without further interrupts).
+当 Agent 完成当前任务（流式循环结束且没有更多中断）时触发。
 
-| Field | Type | Description |
+| 字段 | 类型 | 说明 |
 |-------|------|-------------|
-| `thread_id` | `string` | The session thread identifier |
+| `thread_id` | `string` | 会话线程标识符 |
 
 #### `context.compact`
 
-Fired before the CLI compacts (summarizes) the conversation context.
+在 CLI 压缩（摘要）对话上下文之前触发。
 
-No additional fields.
+无额外字段。
 
-### Execution model
+### 执行模型
 
-- **Background thread**: Hook subprocesses run in a thread via `asyncio.to_thread` so the main event loop is never blocked.
-- **Concurrent dispatch**: When multiple hooks match an event, they run concurrently in a thread pool.
-- **5-second timeout**: Each command has a 5-second timeout. Commands that exceed this are killed.
-- **Fire-and-forget**: Errors are caught per-hook and logged at debug/warning level. A failing hook never crashes or stalls the CLI.
-- **Lazy loading**: The config file is read once on the first event dispatch and cached for the rest of the session.
-- **No shell expansion**: Commands are executed directly (not through a shell). Wrap in `["bash", "-c", "..."]` if you need shell features like pipes or variable expansion.
+- **后台线程**：钩子子进程通过 `asyncio.to_thread` 在线程中运行，因此主事件循环永远不会被阻塞。
+- **并发调度**：当多个钩子匹配一个事件时，它们在线程池中并发运行。
+- **5 秒超时**：每个命令有 5 秒超时限制。超时的命令会被终止。
+- **即发即忘**：错误按钩子单独捕获，并以 debug/warning 级别记录日志。失败的钩子永远不会导致 CLI 崩溃或卡住。
+- **延迟加载**：配置文件在首次事件调度时读取一次，并在会话剩余时间内缓存。
+- **无 shell 展开**：命令直接执行（不通过 shell）。如需 shell 功能（如管道或变量展开），请用 `["bash", "-c", "..."]` 包装。
 
-### Hook examples
+### 钩子示例
 
-#### Log all events to a file
+#### 将所有事件记录到文件
 
 ```json
 {
@@ -401,7 +401,7 @@ No additional fields.
 }
 ```
 
-#### Desktop notification on task completion (macOS)
+#### 任务完成时发送桌面通知（macOS）
 
 ```json
 {
@@ -417,9 +417,9 @@ No additional fields.
 }
 ```
 
-#### Python handler
+#### Python 处理器
 
-Write a handler script that reads the JSON payload from stdin:
+编写一个从 stdin 读取 JSON 负载的处理器脚本：
 
 ```python title="my_handler.py"
 import json
@@ -445,14 +445,14 @@ elif event == "permission.request":
 }
 ```
 
-### Security considerations
+### 安全注意事项
 
-Hooks follow the same trust model as Git hooks or shell aliases — any user who can write to `~/.deepagents/hooks.json` can execute arbitrary commands. This is by design:
+钩子遵循与 Git 钩子或 shell 别名相同的信任模型——任何可以写入 `~/.deepagents/hooks.json` 的用户都可以执行任意命令。这是设计使然：
 
-- **No command injection**: Payload data flows only to stdin as JSON, never to command-line arguments. `json.dumps` handles escaping.
-- **No shell by default**: Commands run with `shell=False`, preventing shell injection.
-- **Malformed config**: Invalid JSON or unexpected types produce logged warnings, not security issues.
+- **无命令注入**：负载数据仅以 JSON 格式流向 stdin，永远不会流向命令行参数。`json.dumps` 处理转义。
+- **默认无 shell**：命令以 `shell=False` 运行，防止 shell 注入。
+- **格式错误的配置**：无效的 JSON 或意外类型会产生日志警告，而非安全问题。
 
 <Warning>
-    Only add hooks from sources you trust. A hook has the same permissions as your user account.
+    仅添加来自你信任的来源的钩子。钩子拥有与你的用户账户相同的权限。
 </Warning>

@@ -1,26 +1,26 @@
 ---
-title: Quickstart
+title: 快速开始
 ---
 
 
 
-This quickstart demonstrates how to build a calculator agent using the LangGraph Graph API or the Functional API.
+本快速入门演示如何使用 LangGraph Graph API 或 Functional API 构建一个计算器 Agent。
 
-- [Use the Graph API](#use-the-graph-api) if you prefer to define your agent as a graph of nodes and edges.
-- [Use the Functional API](#use-the-functional-api) if you prefer to define your agent as a single function.
+- 如果你倾向于将 Agent 定义为节点和边的图，请[使用 Graph API](#use-the-graph-api)。
+- 如果你倾向于将 Agent 定义为单个函数，请[使用 Functional API](#use-the-functional-api)。
 
-For conceptual information, see [Graph API overview](/oss/langgraph/graph-api) and [Functional API overview](/oss/langgraph/functional-api).
+概念信息请参见 [Graph API 概览](/oss/langgraph/graph-api)和 [Functional API 概览](/oss/langgraph/functional-api)。
 
 <Info>
-For this example, you will need to set up a [Claude (Anthropic)](https://www.anthropic.com/) account and get an API key. Then, set the `ANTHROPIC_API_KEY` environment variable in your terminal.
+在本示例中，你需要设置一个 [Claude (Anthropic)](https://www.anthropic.com/) 账户并获取 API 密钥。然后在终端中设置 `ANTHROPIC_API_KEY` 环境变量。
 </Info>
 
 <Tabs>
-<Tab title="Use the Graph API">
+<Tab title="使用 Graph API">
 
-## 1. Define tools and model
+## 1. 定义工具和模型
 
-In this example, we'll use the Claude Sonnet 4.5 model and define tools for addition, multiplication, and division.
+在本示例中，我们将使用 Claude Sonnet 4.5 模型，并定义加法、乘法和除法工具。
 
 :::python
 ```python
@@ -125,16 +125,16 @@ const modelWithTools = model.bindTools(tools);
 ```
 :::
 
-## 2. Define state
+## 2. 定义状态
 
-The graph's state is used to store the messages and the number of LLM calls.
+图的状态用于存储消息和 LLM 调用次数。
 
 :::python
 
 <Tip>
-    State in LangGraph persists throughout the agent's execution.
+    LangGraph 中的状态在整个 Agent 执行过程中持久化。
 
-    The `Annotated` type with `operator.add` ensures that new messages are appended to the existing list rather than replacing it.
+    带有 `operator.add` 的 `Annotated` 类型确保新消息被追加到现有列表中，而不是替换它。
 </Tip>
 
 :::
@@ -142,9 +142,9 @@ The graph's state is used to store the messages and the number of LLM calls.
 :::js
 
 <Tip>
-    State in LangGraph persists throughout the agent's execution.
+    LangGraph 中的状态在整个 Agent 执行过程中持久化。
 
-    The `MessagesValue` provides a built-in reducer for appending messages. The `llmCalls` field uses a `ReducedValue` with `(x, y) => x + y` to accumulate the count.
+    `MessagesValue` 提供了一个内置的 reducer 用于追加消息。`llmCalls` 字段使用 `ReducedValue` 和 `(x, y) => x + y` 来累计计数。
 </Tip>
 
 :::
@@ -187,9 +187,9 @@ const MessagesState = new StateSchema({
 ```
 :::
 
-## 3. Define model node
+## 3. 定义模型节点
 
-The model node is used to call the LLM and decide whether to call a tool or not.
+模型节点用于调用 LLM 并决定是否调用工具。
 
 :::python
 
@@ -236,9 +236,9 @@ const llmCall: GraphNode<typeof MessagesState> = async (state) => {
 ```
 :::
 
-## 4. Define tool node
+## 4. 定义工具节点
 
-The tool node is used to call the tools and return the results.
+工具节点用于调用工具并返回结果。
 
 :::python
 
@@ -282,9 +282,9 @@ const toolNode: GraphNode<typeof MessagesState> = async (state) => {
 ```
 :::
 
-## 5. Define end logic
+## 5. 定义结束逻辑
 
-The conditional edge function is used to route to the tool node or end based upon whether the LLM made a tool call.
+条件边函数用于根据 LLM 是否进行了工具调用来路由到工具节点或结束。
 
 :::python
 
@@ -330,9 +330,9 @@ const shouldContinue: ConditionalEdgeRouter<typeof MessagesState, "toolNode"> = 
 ```
 :::
 
-## 6. Build and compile the agent
+## 6. 构建和编译 Agent
 
-The agent is built using the @[`StateGraph`] class and compiled using the @[`compile`][StateGraph.compile] method.
+Agent 使用 @[`StateGraph`] 类构建，并使用 @[`compile`][StateGraph.compile] 方法编译。
 
 :::python
 
@@ -393,12 +393,12 @@ for (const message of result.messages) {
 :::
 
 <Tip>
-    To learn how to trace your agent with LangSmith, see the [LangSmith documentation](/langsmith/trace-with-langgraph).
+    要了解如何使用 LangSmith 追踪你的 Agent，请参见 [LangSmith 文档](/langsmith/trace-with-langgraph)。
 </Tip>
 
-Congratulations! You've built your first agent using the LangGraph Graph API.
+恭喜！你已经使用 LangGraph Graph API 构建了你的第一个 Agent。
 
-<Accordion title="Full code example">
+<Accordion title="完整代码示例">
 :::python
 
 ```python
@@ -713,11 +713,11 @@ for (const message of result.messages) {
 </Accordion>
 </Tab>
 
-<Tab title="Use the Functional API">
+<Tab title="使用 Functional API">
 
-## 1. Define tools and model
+## 1. 定义工具和模型
 
-In this example, we'll use the Claude Sonnet 4.5 model and define tools for addition, multiplication, and division.
+在本示例中，我们将使用 Claude Sonnet 4.5 模型，并定义加法、乘法和除法工具。
 
 :::python
 
@@ -834,14 +834,14 @@ const modelWithTools = model.bindTools(tools);
 ```
 :::
 
-## 2. Define model node
+## 2. 定义模型节点
 
-The model node is used to call the LLM and decide whether to call a tool or not.
+模型节点用于调用 LLM 并决定是否调用工具。
 
 :::python
 
 <Tip>
-    The @[`@task`] decorator marks a function as a task that can be executed as part of the agent. Tasks can be called synchronously or asynchronously within your entrypoint function.
+    @[`@task`] 装饰器将函数标记为可以作为 Agent 一部分执行的任务。任务可以在你的入口函数中同步或异步调用。
 </Tip>
 
 ```python
@@ -875,9 +875,9 @@ const callLlm = task({ name: "callLlm" }, async (messages: BaseMessage[]) => {
 ```
 :::
 
-## 3. Define tool node
+## 3. 定义工具节点
 
-The tool node is used to call the tools and return the results.
+工具节点用于调用工具并返回结果。
 
 :::python
 ```python
@@ -901,14 +901,14 @@ const callTool = task({ name: "callTool" }, async (toolCall: ToolCall) => {
 ```
 :::
 
-## 4. Define agent
+## 4. 定义 Agent
 
 :::python
 
-The agent is built using the @[`@entrypoint`] function.
+Agent 使用 @[`@entrypoint`] 函数构建。
 
 <Note>
-    In the Functional API, instead of defining nodes and edges explicitly, you write standard control flow logic (loops, conditionals) within a single function.
+    在 Functional API 中，你不需要显式定义节点和边，而是在单个函数中编写标准控制流逻辑（循环、条件判断）。
 </Note>
 
 ```python
@@ -975,12 +975,12 @@ for (const message of result) {
 :::
 
 <Tip>
-    To learn how to trace your agent with LangSmith, see the [LangSmith documentation](/langsmith/trace-with-langgraph).
+    要了解如何使用 LangSmith 追踪你的 Agent，请参见 [LangSmith 文档](/langsmith/trace-with-langgraph)。
 </Tip>
 
-Congratulations! You've built your first agent using the LangGraph Functional API.
+恭喜！你已经使用 LangGraph Functional API 构建了你的第一个 Agent。
 
-<Accordion title="Full code example" icon="code">
+<Accordion title="完整代码示例" icon="code">
 :::python
 
 ```python

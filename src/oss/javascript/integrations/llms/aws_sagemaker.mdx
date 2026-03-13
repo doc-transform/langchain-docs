@@ -1,26 +1,26 @@
 ---
-title: "AWS SageMakerEndpoint integration"
-description: "Integrate with the AWS SageMakerEndpoint LLM using LangChain JavaScript."
+title: "AWS SageMakerEndpoint 集成"
+description: "使用 LangChain JavaScript 集成 AWS SageMakerEndpoint LLM 模型。"
 ---
 
-LangChain.js supports integration with AWS SageMaker-hosted endpoints. Check [Amazon SageMaker JumpStart](https://aws.amazon.com/sagemaker/jumpstart/) for a list of available models, and how to deploy your own.
+LangChain.js 支持与 AWS SageMaker 托管端点集成。可用模型列表以及如何部署自己的模型请参见 [Amazon SageMaker JumpStart](https://aws.amazon.com/sagemaker/jumpstart/)。
 
-## Setup
+## 设置
 
-You'll need to install the official SageMaker SDK as a peer dependency:
+你需要安装官方 SageMaker SDK 作为对等依赖：
 
 ```bash npm
 npm install @aws-sdk/client-sagemaker-runtime
 ```
 <Tip>
-See [this section for general instructions on installing LangChain packages](/oss/langchain/install).
+安装 LangChain 包的通用说明请参见[此章节](/oss/langchain/install)。
 </Tip>
 
 ```bash npm
 npm install @langchain/community @langchain/core
 ```
 
-## Usage
+## 用法
 
 ```typescript
 import {
@@ -102,7 +102,7 @@ console.log(res);
  */
 ```
 
-## Related
+## 相关链接
 
 
-- [Models guide](/oss/langchain/models)
+- [模型指南](/oss/langchain/models)

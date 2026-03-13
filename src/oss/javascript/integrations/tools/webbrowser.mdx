@@ -1,27 +1,27 @@
 ---
-title: "Web browser integration"
-description: "Integrate with the Web browser tool using LangChain JavaScript."
+title: "网页浏览器集成"
+description: "使用 LangChain JavaScript 集成网页浏览器工具。"
 ---
 
-The Webbrowser Tool gives your agent the ability to visit a website and extract information. It is described to the agent as
+网页浏览器工具赋予你的代理访问网站并提取信息的能力。对代理的描述为
 
 ```
 useful for when you need to find something on or summarize a webpage. input should be a comma separated list of "valid URL including protocol","what you want to find on the page or empty string for a summary".
 ```
 
-It exposes two modes of operation:
+它提供两种操作模式：
 
-- when called by the Agent with only a URL it produces a summary of the website contents
-- when called by the Agent with a URL and a description of what to find it will instead use an in-memory Vector Store to find the most relevant snippets and summarise those
+- 当代理仅使用 URL 调用时，它会生成网站内容的摘要
+- 当代理使用 URL 和查找内容的描述调用时，它会使用内存向量存储查找最相关的片段并对其进行摘要
 
-## Setup
+## 设置
 
-To use the Webbrowser Tool you need to install the dependencies:
+要使用网页浏览器工具，你需要安装依赖：
 
 ```bash npm
 npm install cheerio axios
 ```
-## Usage, standalone
+## 用法，独立使用
 
 ```typescript
 import { WebBrowser } from "@langchain/classic/tools/webbrowser";
@@ -51,7 +51,7 @@ export async function run() {
 }
 ```
 
-## Usage, in an Agent
+## 用法，在代理中使用
 
 ```typescript
 import { OpenAI, OpenAIEmbeddings } from "@langchain/openai";
@@ -133,7 +133,7 @@ export const run = async () => {
 };
 ```
 
-## Related
+## 相关
 
-- Tool [conceptual guide](/oss/langchain/tools)
-- Tool [how-to guides](/oss/langchain/tools)
+- 工具[概念指南](/oss/langchain/tools)
+- 工具[操作指南](/oss/langchain/tools)

@@ -1,46 +1,46 @@
 ---
-title: "Cohere integration"
-description: "Integrate with the Cohere LLM using LangChain JavaScript."
+title: "Cohere 集成"
+description: "使用 LangChain JavaScript 集成 Cohere LLM 模型。"
 ---
 
 <Warning>
-**Legacy**
+**已弃用**
 
-Cohere has marked their `generate` endpoint for LLMs as deprecated. Follow their [migration guide](https://docs.cohere.com/docs/migrating-from-cogenerate-to-cochat) to start using their Chat API via the [`ChatCohere`](/oss/integrations/chat/cohere) integration.
+Cohere 已将其 LLM 的 `generate` 端点标记为弃用。请按照其[迁移指南](https://docs.cohere.com/docs/migrating-from-cogenerate-to-cochat)开始通过 [`ChatCohere`](/oss/integrations/chat/cohere) 集成使用其 Chat API。
 </Warning>
 
-This will help you get started with Cohere completion models (LLMs) using LangChain. For detailed documentation on `Cohere` features and configuration options, please refer to the [API reference](https://api.js.langchain.com/classes/langchain_cohere.Cohere.html).
+本文将帮助你开始使用 Cohere 文本补全模型（LLM）。`Cohere` 所有功能和配置选项的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain_cohere.Cohere.html)。
 
-## Overview
+## 概览
 
-### Integration details
+### 集成详情
 
 | Class | Package | Local | Serializable | [PY support](https://python.langchain.com/docs/integrations/llms/cohere) | Downloads | Version |
 | :--- | :--- | :---: | :---: |  :---: | :---: | :---: |
 | [Cohere](https://api.js.langchain.com/classes/langchain_cohere.Cohere.html) | [@langchain/cohere](https://api.js.langchain.com/modules/langchain_cohere.html) | ❌ | ✅ | ✅ | ![NPM - Downloads](https://img.shields.io/npm/dm/@langchain/cohere?style=flat-square&label=%20&) | ![NPM - Version](https://img.shields.io/npm/v/@langchain/cohere?style=flat-square&label=%20&) |
 
-## Setup
+## 设置
 
-To access Cohere models you'll need to create a Cohere account, get an API key, and install the `@langchain/cohere` integration package.
+要访问 Cohere 模型，你需要创建 Cohere 账户、获取 API 密钥，并安装 `@langchain/cohere` 集成包。
 
-### Credentials
+### 凭据
 
-Head to [cohere.com](https://cohere.com) to sign up to Cohere and generate an API key. Once you've done this set the `COHERE_API_KEY` environment variable:
+前往 [cohere.com](https://cohere.com) 注册 Cohere 并生成 API 密钥。完成后设置 `COHERE_API_KEY` 环境变量：
 
 ```bash
 export COHERE_API_KEY="your-api-key"
 ```
 
-If you want to get automated tracing of your model calls you can also set your [LangSmith](/langsmith/home) API key by uncommenting below:
+如果你想获取模型调用的自动追踪，你还可以通过取消下方注释来设置你的 [LangSmith](/langsmith/home) API 密钥：
 
 ```bash
 # export LANGSMITH_TRACING="true"
 # export LANGSMITH_API_KEY="your-api-key"
 ```
 
-### Installation
+### 安装
 
-The LangChain Cohere integration lives in the `@langchain/cohere` package:
+LangChain Cohere 集成位于 `@langchain/cohere` 包中：
 
 <CodeGroup>
 ```bash npm
@@ -54,9 +54,9 @@ pnpm add @langchain/cohere @langchain/core
 ```
 </CodeGroup>
 
-## Instantiation
+## 实例化
 
-Now we can instantiate our model object and generate chat completions:
+现在我们可以实例化模型对象并生成对话补全：
 
 ```typescript
 import { Cohere } from "@langchain/cohere"
@@ -70,11 +70,11 @@ const llm = new Cohere({
 })
 ```
 
-### Custom client for Cohere on Azure, Cohere on AWS Bedrock, and standalone Cohere instance
+### 用于 Azure、AWS Bedrock 和独立 Cohere 实例的自定义客户端
 
-We can instantiate a custom `CohereClient` and pass it to the ChatCohere constructor.
+我们可以实例化一个自定义的 `CohereClient` 并将其传递给 ChatCohere 构造函数。
 
-**Note:** If a custom client is provided both `COHERE_API_KEY` environment variable and `apiKey` parameter in the constructor will be ignored.
+**注意：** 如果提供了自定义客户端，`COHERE_API_KEY` 环境变量和构造函数中的 `apiKey` 参数都将被忽略。
 
 ```typescript
 import { Cohere } from "@langchain/cohere";
@@ -92,7 +92,7 @@ const llmWithCustomClient = new Cohere({
 });
 ```
 
-## Invocation
+## 调用
 
 ```typescript
 const inputText = "Cohere is an AI company that "
@@ -107,6 +107,6 @@ Cohere is a company that provides natural language processing models that help c
 
 ---
 
-## API reference
+## API 参考
 
-For detailed documentation of all Cohere features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_cohere.Cohere.html).
+所有 Cohere 功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain_cohere.Cohere.html)。

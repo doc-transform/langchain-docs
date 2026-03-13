@@ -1,26 +1,26 @@
 ---
-title: "Webpages, with playwright integration"
-description: "Integrate with the Webpages, with playwright document loader using LangChain JavaScript."
+title: "网页，使用 Playwright 集成"
+description: "使用 LangChain JavaScript 集成 Playwright 网页文档加载器。"
 ---
 
 <Tip>
-**Compatibility**
+**兼容性**
 
-Only available on Node.js.
+仅在 Node.js 上可用。
 </Tip>
 
-This example goes over how to load data from webpages using Playwright. One document will be created for each webpage.
+本示例介绍如何使用 Playwright 从网页加载数据。每个网页创建一个文档。
 
-Playwright is a Node.js library that provides a high-level API for controlling multiple browser engines, including Chromium, Firefox, and WebKit. You can use Playwright to automate web page interactions, including extracting data from dynamic web pages that require JavaScript to render.
+Playwright 是一个 Node.js 库，提供了用于控制多个浏览器引擎（包括 Chromium、Firefox 和 WebKit）的高级 API。你可以使用 Playwright 自动化网页交互，包括从需要 JavaScript 渲染的动态网页提取数据。
 
-If you want a lighterweight solution, and the webpages you want to load do not require JavaScript to render, you can use the [`CheerioWebBaseLoader`](/oss/integrations/document_loaders/web_loaders/web_cheerio) instead.
+如果你想要更轻量的解决方案，且你要加载的网页不需要 JavaScript 渲染，你可以改用 [`CheerioWebBaseLoader`](/oss/integrations/document_loaders/web_loaders/web_cheerio)。
 
-## Setup
+## 设置
 
 ```bash npm
 npm install @langchain/community @langchain/core playwright
 ```
-## Usage
+## 用法
 
 ```typescript
 import { PlaywrightWebBaseLoader } from "@langchain/community/document_loaders/web/playwright";
@@ -33,9 +33,9 @@ const loader = new PlaywrightWebBaseLoader("https://www.tabnews.com.br/");
 
 const docs = await loader.load();
 ```
-## Options
+## 选项
 
-Here's an explanation of the parameters you can pass to the PlaywrightWebBaseLoader constructor using the PlaywrightWebBaseLoaderOptions interface:
+以下是你可以通过 PlaywrightWebBaseLoaderOptions 接口传递给 PlaywrightWebBaseLoader 构造函数的参数说明：
 
 ```typescript
 type PlaywrightWebBaseLoaderOptions = {
@@ -44,15 +44,15 @@ type PlaywrightWebBaseLoaderOptions = {
   evaluate?: PlaywrightEvaluate;
 };
 ```
-1. `launchOptions`: an optional object that specifies additional options to pass to the playwright.chromium.launch() method. This can include options such as the headless flag to launch the browser in headless mode.
+1. `launchOptions`：一个可选对象，指定传递给 playwright.chromium.launch() 方法的额外选项。可以包含 headless 标志等选项以在无头模式下启动浏览器。
 
-2. `gotoOptions`: an optional object that specifies additional options to pass to the page.goto() method. This can include options such as the timeout option to specify the maximum navigation time in milliseconds, or the waitUntil option to specify when to consider the navigation as successful.
+2. `gotoOptions`：一个可选对象，指定传递给 page.goto() 方法的额外选项。可以包含 timeout 选项来指定最大导航时间（毫秒），或 waitUntil 选项来指定何时视为导航成功。
 
-3. `evaluate`: an optional function that can be used to evaluate JavaScript code on the page using a custom evaluation function. This can be useful for extracting data from the page, interacting with page elements, or handling specific HTTP responses. The function should return a Promise that resolves to a string containing the result of the evaluation.
+3. `evaluate`：一个可选函数，可用于使用自定义评估函数在页面上执行 JavaScript 代码。这对于从页面提取数据、与页面元素交互或处理特定 HTTP 响应非常有用。该函数应返回一个解析为包含评估结果字符串的 Promise。
 
-By passing these options to the `PlaywrightWebBaseLoader` constructor, you can customize the behavior of the loader and use Playwright's powerful features to scrape and interact with web pages.
+通过将这些选项传递给 `PlaywrightWebBaseLoader` 构造函数，你可以自定义加载器的行为，并使用 Playwright 的强大功能来爬取和交互网页。
 
-Here is a basic example to do it:
+以下是一个基本示例：
 
 ```typescript
 import {
@@ -68,7 +68,7 @@ const docs = await loader.load();
 // raw HTML page content
 const extractedContents = docs[0].pageContent;
 ```
-And a more advanced example:
+以下是一个更高级的示例：
 
 ```typescript
 import {

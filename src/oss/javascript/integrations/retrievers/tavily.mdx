@@ -1,34 +1,34 @@
 ---
-title: "TavilySearchAPIRetriever integration"
-description: "Integrate with the TavilySearchAPIRetriever retriever using LangChain JavaScript."
+title: "TavilySearchAPIRetriever 集成"
+description: "使用 LangChain JavaScript 集成 TavilySearchAPIRetriever 检索器。"
 ---
 
-[Tavily's Search API](https://tavily.com) is a search engine built specifically for AI agents (LLMs), delivering real-time, accurate, and factual results at speed.
+[Tavily 的 Search API](https://tavily.com) 是一个专为 AI 代理（LLM）构建的搜索引擎，提供实时、准确且事实性的搜索结果。
 
-## Overview
+## 概览
 
-This will help you getting started with the Tavily Search API [retriever](/oss/langchain/retrieval). For detailed documentation of all `TavilySearchAPIRetriever` features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_community_retrievers_tavily_search_api.TavilySearchAPIRetriever.html).
+本文将帮助你开始使用 Tavily Search API [检索器](/oss/langchain/retrieval)。所有 `TavilySearchAPIRetriever` 功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain_community_retrievers_tavily_search_api.TavilySearchAPIRetriever.html)。
 
-### Integration details
+### 集成详情
 
 | Retriever | Source | Package |
 | :--- | :--- | :---: |
 [`TavilySearchAPIRetriever`](https://api.js.langchain.com/classes/langchain_community_retrievers_tavily_search_api.TavilySearchAPIRetriever.html) | Information on the web. | [`@langchain/community`](https://npmjs.com/@langchain/community/) |
 
-## Setup
+## 设置
 
-You will need to populate a `TAVILY_API_KEY` environment variable with your Tavily API key or pass it into the constructor as `apiKey`. Obtain a key by signing up [on their website](https://tavily.com/).
+你需要将 `TAVILY_API_KEY` 环境变量设置为你的 Tavily API 密钥，或通过构造函数的 `apiKey` 传入。在[官网](https://tavily.com/)注册即可获取密钥。
 
-If you want to get automated tracing from individual queries, you can also set your [LangSmith](/langsmith/home) API key by uncommenting below:
+如果你想获取单个查询的自动追踪，你还可以通过取消下方注释来设置你的 [LangSmith](/langsmith/home) API 密钥：
 
 ```typescript
 // process.env.LANGSMITH_API_KEY = "<YOUR API KEY HERE>";
 // process.env.LANGSMITH_TRACING = "true";
 ```
 
-### Installation
+### 安装
 
-This retriever lives in the `@langchain/community` package:
+该检索器位于 `@langchain/community` 包中：
 
 <CodeGroup>
 ```bash npm
@@ -42,9 +42,9 @@ pnpm add @langchain/community @langchain/core
 ```
 </CodeGroup>
 
-## Instantiation
+## 实例化
 
-Now we can instantiate our retriever:
+现在我们可以实例化检索器：
 
 ```typescript
 import { TavilySearchAPIRetriever } from "@langchain/community/retrievers/tavily_search_api";
@@ -54,9 +54,9 @@ const retriever = new TavilySearchAPIRetriever({
 });
 ```
 
-For a full list of allowed arguments, see [the official documentation](https://docs.tavily.com/docs/tavily-api/rest_api#parameters). You can pass any param to the SDK via a `kwargs` object.
+有关允许参数的完整列表，请参见[官方文档](https://docs.tavily.com/docs/tavily-api/rest_api#parameters)。你可以通过 `kwargs` 对象将任何参数传递给 SDK。
 
-## Usage
+## 用法
 
 ```typescript
 const query = "what is the current weather in SF?";
@@ -101,6 +101,6 @@ await retriever.invoke(query);
 
 ---
 
-## API reference
+## API 参考
 
-For detailed documentation of all `TavilySearchAPIRetriever` features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_community_retrievers_tavily_search_api.TavilySearchAPIRetriever.html).
+所有 `TavilySearchAPIRetriever` 功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain_community_retrievers_tavily_search_api.TavilySearchAPIRetriever.html)。

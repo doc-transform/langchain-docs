@@ -1,11 +1,11 @@
 ---
-title: "Upstash rate limit integration"
-description: "Integrate with the Upstash rate limit callback using LangChain JavaScript."
+title: "Upstash 速率限制集成"
+description: "使用 LangChain JavaScript 集成 Upstash 速率限制回调。"
 ---
 
-In this guide, we will go over how to add rate limiting based on number of requests or the number of tokens using `UpstashRatelimitHandler`. This handler uses [Upstash's ratelimit library](https://github.com/upstash/ratelimit-js/), which utilizes [Upstash Redis](https://upstash.com/docs/redis/overall/getstarted).
+在本指南中，我们将介绍如何使用 `UpstashRatelimitHandler` 根据请求数或 token 数添加速率限制。该处理器使用 [Upstash 的速率限制库](https://github.com/upstash/ratelimit-js/)，它依赖 [Upstash Redis](https://upstash.com/docs/redis/overall/getstarted)。
 
-Upstash Ratelimit works by sending an HTTP request to Upstash Redis every time the `limit` method is called. Remaining tokens/requests of the user are checked and updated. Based on the remaining tokens, we can stop the execution of costly operations, like invoking an LLM or querying a vector store:
+Upstash Ratelimit 的工作原理是每次调用 `limit` 方法时向 Upstash Redis 发送 HTTP 请求。系统会检查并更新用户的剩余 token/请求数。根据剩余 token 数，我们可以阻止执行高成本操作，如调用 LLM 或查询向量存储：
 
 ```tsx
 const response = await ratelimit.limit();
@@ -14,31 +14,31 @@ if (response.success) {
 }
 ```
 
-`UpstashRatelimitHandler` allows you to incorporate this ratelimit logic into your chain in a few minutes.
+`UpstashRatelimitHandler` 可以让你在几分钟内将这种速率限制逻辑集成到你的链式调用中。
 
-## Setup
+## 安装
 
-First, you will need to go to [the Upstash Console](https://console.upstash.com/login) and create a redis database ([see our docs](https://upstash.com/docs/redis/overall/getstarted)). After creating a database, you will need to set the environment variables:
+首先，你需要前往 [Upstash 控制台](https://console.upstash.com/login)并创建一个 Redis 数据库（[参见文档](https://upstash.com/docs/redis/overall/getstarted)）。创建数据库后，你需要设置环境变量：
 
 ```
 UPSTASH_REDIS_REST_URL="****"
 UPSTASH_REDIS_REST_TOKEN="****"
 ```
 
-Next, you will need to install Upstash Ratelimit and `@langchain/community`:
+接下来，你需要安装 Upstash Ratelimit 和 `@langchain/community`：
 
 <Tip>
-See [this section for general instructions on installing LangChain packages](/oss/langchain/install).
+安装 LangChain 包的通用说明请参见[此章节](/oss/langchain/install)。
 </Tip>
 
 ```bash npm
 npm install @upstash/ratelimit @langchain/community @langchain/core
 ```
-You are now ready to add rate limiting to your chain!
+现在你可以为你的链式调用添加速率限制了！
 
-## Ratelimiting per request
+## 按请求限速
 
-Let's imagine that we want to allow our users to invoke our chain 10 times per minute. Achieving this is as simple as:
+假设我们希望允许用户每分钟调用链式调用 10 次。实现方法非常简单：
 
 ```tsx
 const UPSTASH_REDIS_REST_URL = "****";
@@ -52,23 +52,23 @@ import { RunnableLambda } from "@langchain/core/runnables";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 
-// create ratelimit
+// 创建速率限制
 const ratelimit = new Ratelimit({
   redis: new Redis({
     url: UPSTASH_REDIS_REST_URL,
     token: UPSTASH_REDIS_REST_TOKEN,
   }),
-  // 10 requests per window, where window size is 60 seconds:
+  // 每个窗口期 10 个请求，窗口大小为 60 秒：
   limiter: Ratelimit.fixedWindow(10, "60 s"),
 });
 
-// create handler
-const user_id = "user_id"; // should be a method which gets the user id
+// 创建处理器
+const user_id = "user_id"; // 应为获取用户 ID 的方法
 const handler = new UpstashRatelimitHandler(user_id, {
   requestRatelimit: ratelimit,
 });
 
-// create mock chain
+// 创建模拟链式调用
 const chain = new RunnableLambda({ func: (str: string): string => str });
 
 try {
@@ -82,48 +82,48 @@ try {
   }
 }
 ```
-Note that we pass the handler to the `invoke` method instead of passing the handler when defining the chain.
+请注意，我们是在 `invoke` 方法中传递处理器，而不是在定义链式调用时传递。
 
-For rate limiting algorithms other than `FixedWindow`, see [upstash-ratelimit docs](https://upstash.com/docs/oss/sdks/ts/ratelimit/algorithms).
+对于 `FixedWindow` 之外的速率限制算法，请参见 [upstash-ratelimit 文档](https://upstash.com/docs/oss/sdks/ts/ratelimit/algorithms)。
 
-Before executing any steps in our pipeline, ratelimit will check whether the user has passed the request limit. If so, `UpstashRatelimitError` is raised.
+在执行流水线中的任何步骤之前，速率限制会检查用户是否已超过请求限制。如果超过，将抛出 `UpstashRatelimitError`。
 
-## Ratelimiting per token
+## 按 token 限速
 
-Another option is to rate limit chain invocations based on:
+另一种选择是根据以下指标对链式调用进行速率限制：
 
-1. number of tokens in prompt
-2. number of tokens in prompt and LLM completion
+1. 提示词中的 token 数
+2. 提示词和 LLM 完成中的 token 总数
 
-This only works if you have an LLM in your chain. Another requirement is that the LLM you are using should return the token usage in it's `LLMOutput`. The format of the token usage dictionary returned depends on the LLM. To learn about how you should configure the handler depending on your LLM, see the end of the Configuration section below.
+此功能仅在链式调用中包含 LLM 时有效。另一个要求是你使用的 LLM 应在其 `LLMOutput` 中返回 token 用量。返回的 token 用量字典格式取决于具体的 LLM。要了解如何根据 LLM 配置处理器，请参见下面配置部分的末尾。
 
-### How it works
+### 工作原理
 
-The handler will get the remaining tokens before calling the LLM. If the remaining tokens is more than 0, LLM will be called. Otherwise `UpstashRatelimitError` will be raised.
+处理器会在调用 LLM 之前获取剩余 token 数。如果剩余 token 大于 0，则调用 LLM；否则抛出 `UpstashRatelimitError`。
 
-After LLM is called, token usage information will be used to subtracted from the remaining tokens of the user. No error is raised at this stage of the chain.
+LLM 调用完成后，token 用量信息将从用户的剩余 token 中扣除。在链式调用的这个阶段不会抛出错误。
 
-### Configuration
+### 配置
 
-For the first configuration, simply initialize the handler like this:
+对于第一种配置，只需这样初始化处理器：
 
 ```tsx
-const user_id = "user_id"; // should be a method which gets the user id
+const user_id = "user_id"; // 应为获取用户 ID 的方法
 const handler = new UpstashRatelimitHandler(user_id, {
   requestRatelimit: ratelimit,
 });
 ```
-For the second configuration, here is how to initialize the handler:
+对于第二种配置，这样初始化处理器：
 
 ```tsx
-const user_id = "user_id"; // should be a method which gets the user id
+const user_id = "user_id"; // 应为获取用户 ID 的方法
 const handler = new UpstashRatelimitHandler(user_id, {
   tokenRatelimit: ratelimit,
 });
 ```
-You can also employ ratelimiting based on requests and tokens at the same time, simply by passing both `request_ratelimit` and `token_ratelimit` parameters.
+你也可以同时使用基于请求和基于 token 的速率限制，只需同时传入 `request_ratelimit` 和 `token_ratelimit` 参数即可。
 
-For token usage to work correctly, the LLM step in LangChain.js should return a token usage field in the following format:
+要使 token 用量统计正常工作，LangChain.js 中的 LLM 步骤应以以下格式返回 token 用量字段：
 
 ```json
 {
@@ -135,7 +135,7 @@ For token usage to work correctly, the LLM step in LangChain.js should return a 
   "otherFields: "..."
 }
 ```
-Not all LLMs in LangChain.js comply with this format however. If your LLM returns the same values with different keys, you can use the parameters `llmOutputTokenUsageField`, `llmOutputTotalTokenField` and `llmOutputPromptTokenField` by passing them to the handler:
+但并非 LangChain.js 中的所有 LLM 都遵循此格式。如果你的 LLM 使用不同的键名返回相同的值，可以使用 `llmOutputTokenUsageField`、`llmOutputTotalTokenField` 和 `llmOutputPromptTokenField` 参数传递给处理器：
 
 ```tsx
 const handler = new UpstashRatelimitHandler(
@@ -148,7 +148,7 @@ const handler = new UpstashRatelimitHandler(
   }
 )
 ```
-Here is an example with a chain utilizing an LLM:
+以下是一个使用 LLM 的链式调用示例：
 
 ```tsx
 const UPSTASH_REDIS_REST_URL = "****";
@@ -164,30 +164,30 @@ import { OpenAI } from "@langchain/openai";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 
-// create ratelimit
+// 创建速率限制
 const ratelimit = new Ratelimit({
   redis: new Redis({
     url: UPSTASH_REDIS_REST_URL,
     token: UPSTASH_REDIS_REST_TOKEN,
   }),
-  // 500 tokens per window, where window size is 60 seconds:
+  // 每个窗口期 500 个 token，窗口大小为 60 秒：
   limiter: Ratelimit.fixedWindow(500, "60 s"),
 });
 
-// create handler
-const user_id = "user_id"; // should be a method which gets the user id
+// 创建处理器
+const user_id = "user_id"; // 应为获取用户 ID 的方法
 const handler = new UpstashRatelimitHandler(user_id, {
   tokenRatelimit: ratelimit,
 });
 
-// create mock chain
+// 创建模拟链式调用
 const asStr = new RunnableLambda({ func: (str: string): string => str });
 const model = new OpenAI({
   apiKey: OPENAI_API_KEY,
 });
 const chain = RunnableSequence.from([asStr, model]);
 
-// invoke chain with handler:
+// 使用处理器调用链式调用：
 try {
   const response = await chain.invoke("hello world", {
     callbacks: [handler],

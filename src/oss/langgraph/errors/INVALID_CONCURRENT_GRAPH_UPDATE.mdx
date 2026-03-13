@@ -2,11 +2,10 @@
 title: INVALID_CONCURRENT_GRAPH_UPDATE
 ---
 
-A LangGraph [`StateGraph`](https://langchain-ai.github.io/langgraph/reference/graphs/#langgraph.graph.state.StateGraph) received concurrent updates to its state from multiple nodes to a state property that doesn't
-support it.
+LangGraph [`StateGraph`](https://langchain-ai.github.io/langgraph/reference/graphs/#langgraph.graph.state.StateGraph) 从多个节点接收到对不支持并发更新的状态属性的并发更新。
 
-One way this can occur is if you are using a [fanout](/oss/langgraph/use-graph-api#map-reduce-and-the-send-api)
-or other parallel execution in your graph and you have defined a graph like this:
+发生这种情况的一种方式是在图中使用 [fanout](/oss/langgraph/use-graph-api#map-reduce-and-the-send-api)
+或其他并行执行，并且你定义了如下的图：
 
 :::python
 ```python
@@ -53,18 +52,16 @@ const graph = builder.compile();
 :::
 
 :::python
-If a node in the above graph returns `{ "some_key": "some_string_value" }`, this will overwrite the state value for `"some_key"` with `"some_string_value"`.
-However, if multiple nodes in e.g. a fanout within a single step return values for `"some_key"`, the graph will throw this error because
-there is uncertainty around how to update the internal state.
+如果上述图中的某个节点返回 `{ "some_key": "some_string_value" }`，这将用 `"some_string_value"` 覆盙 `"some_key"` 的状态值。
+但是，如果在单个步骤内的 fanout 中多个节点返回了 `"some_key"` 的值，图会抛出此错误，因为如何更新内部状态存在不确定性。
 :::
 
 :::js
-If a node in the above graph returns `{ someKey: "some_string_value" }`, this will overwrite the state value for `someKey` with `"some_string_value"`.
-However, if multiple nodes in e.g. a fanout within a single step return values for `someKey`, the graph will throw this error because
-there is uncertainty around how to update the internal state.
+如果上述图中的某个节点返回 `{ someKey: "some_string_value" }`，这将用 `"some_string_value"` 覆盙 `someKey` 的状态值。
+但是，如果在单个步骤内的 fanout 中多个节点返回了 `someKey` 的值，图会抛出此错误，因为如何更新内部状态存在不确定性。
 :::
 
-To get around this, you can define a reducer that combines multiple values:
+要解决此问题，你可以定义一个 reducer 来组合多个值：
 
 :::python
 ```python
@@ -94,10 +91,10 @@ const State = new StateSchema({  // [!code highlight]
 ```
 :::
 
-This will allow you to define logic that handles the same key returned from multiple nodes executed in parallel.
+这将允许你定义处理从并行执行的多个节点返回的相同键的逻辑。
 
-## Troubleshooting
+## 故障排除
 
-The following may help resolve this error:
+以下方法可能有助于解决此错误：
 
-* If your graph executes nodes in parallel, make sure you have defined relevant state keys with a reducer.
+* 如果你的图并行执行节点，确保你已为相关状态键定义了 reducer。

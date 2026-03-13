@@ -1,6 +1,6 @@
 ---
-title: Backends
-description: Choose and configure filesystem backends for deep agents. You can specify routes to different backends, implement virtual filesystems, and enforce policies.
+title: 后端
+description: 为 Deep Agent 选择和配置文件系统后端。你可以指定路由到不同后端的规则、实现虚拟文件系统，以及强制执行策略。
 ---
 
 import BackendState from '/snippets/backend-state.mdx';
@@ -9,13 +9,13 @@ import BackendLocalShell from '/snippets/backend-local-shell.mdx';
 import BackendStore from '/snippets/backend-store.mdx';
 import BackendComposite from '/snippets/backend-composite.mdx';
 
-Deep agents expose a filesystem surface to the agent via tools like `ls`, `read_file`, `write_file`, `edit_file`, `glob`, and `grep`. These tools operate through a pluggable backend. The `read_file` tool natively supports image files (`.png`, `.jpg`, `.jpeg`, `.gif`, `.webp`) across all backends, returning them as multimodal content blocks.
+Deep Agent 通过 `ls`、`read_file`、`write_file`、`edit_file`、`glob` 和 `grep` 等工具向 Agent 暴露文件系统接口。这些工具通过可插拔的后端来运行。`read_file` 工具原生支持所有后端上的图片文件（`.png`、`.jpg`、`.jpeg`、`.gif`、`.webp`），并将其作为多模态内容块返回。
 
-Sandboxes and the `LocalShellBackend` also provide and `execute` tool.
+沙箱和 `LocalShellBackend` 还提供 `execute` 工具。
 
 ```mermaid
 graph TB
-    Tools[Filesystem Tools] --> Backend[Backend]
+    Tools[文件系统工具] --> Backend[后端]
 
     Backend --> State[State]
     Backend --> Disk[Filesystem]
@@ -25,176 +25,165 @@ graph TB
     Backend --> Composite[Composite]
     Backend --> Custom[Custom]
 
-    Composite --> Router{Routes}
+    Composite --> Router{路由}
     Router --> State
     Router --> Disk
     Router --> Store
 
-    Sandbox --> Execute["#43; execute tool"]
-    LocalShell --> Execute["#43; execute tool"]
-
-    classDef trigger fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#14532D
-    classDef process fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#1E3A8A
-    classDef decision fill:#FEF3C7,stroke:#F59E0B,stroke-width:2px,color:#78350F
-    classDef output fill:#F3E8FF,stroke:#9333EA,stroke-width:2px,color:#581C87
-
-    class Tools trigger
-    class Backend,State,Disk,Store,Sandbox,LocalShell,Composite,Custom process
-    class Router decision
-    class Execute output
+    Sandbox --> Execute["+ execute 工具"]
+    LocalShell --> Execute["+ execute 工具"]
 ```
 
-This page explains how to [choose a backend](#specify-a-backend), [route different paths to different backends](#route-to-different-backends), [implement your own virtual filesystem](#use-a-virtual-filesystem) (e.g., S3 or Postgres), [add policy hooks](#add-policy-hooks), and [comply with the backend protocol](#protocol-reference).
+本页介绍如何[选择后端](#指定后端)、[将不同路径路由到不同后端](#路由到不同后端)、[实现自定义虚拟文件系统](#使用虚拟文件系统)（如 S3 或 Postgres）、[添加策略钩子](#添加策略钩子)以及[遵循后端协议](#协议参考)。
 
-## Quickstart
+## 快速开始
 
-Here are a few prebuilt filesystem backends that you can quickly use with your deep agent:
+以下是几个预构建的文件系统后端，你可以快速在 Deep Agent 中使用：
 
-| Built-in backend | Description |
+| 内置后端 | 说明 |
 |---|---|
-| [Default](#statebackend-ephemeral) | `agent = create_deep_agent()` <br></br> Ephemeral in state. The default filesystem backend for an agent is stored in `langgraph` state. Note that this filesystem only persists _for a single thread_. |
-| [Local filesystem persistence](#filesystembackend-local-disk) | `agent = create_deep_agent(backend=FilesystemBackend(root_dir="/Users/nh/Desktop/"))` <br></br>This gives the deep agent access to your local machine's filesystem. You can specify the root directory that the agent has access to. Note that any provided `root_dir` must be an absolute path. |
-| [Durable store (LangGraph store)](#storebackend-langgraph-store) | `agent = create_deep_agent(backend=lambda rt: StoreBackend(rt))` <br></br>This gives the agent access to long-term storage that is _persisted across threads_. This is great for storing longer term memories or instructions that are applicable to the agent over multiple executions. |
-| [Sandbox](/oss/deepagents/sandboxes) | `agent = create_deep_agent(backend=sandbox)` <br></br>Execute code in isolated environments. Sandboxes provide filesystem tools plus the `execute` tool for running shell commands. Choose from Modal, Daytona, Deno, or local VFS. |
-| [Local shell](#localshellbackend-local-shell) | `agent = create_deep_agent(backend=LocalShellBackend(root_dir=".", env={"PATH": "/usr/bin:/bin"}))` <br></br>Filesystem and shell execution directly on the host. No isolation—use only in controlled development environments. See [security considerations](#localshellbackend-local-shell) below. |
-| [Composite](#compositebackend-router) | Ephemeral by default, `/memories/` persisted. The Composite backend is maximally flexible. You can specify different routes in the filesystem to point towards different backends. See Composite routing below for a ready-to-paste example. |
+| [默认](#statebackend-临时存储) | `agent = create_deep_agent()` <br></br> 临时存储在状态中。Agent 的默认文件系统后端存储在 `langgraph` 状态中。注意该文件系统仅在_单个线程_内持久化。 |
+| [本地文件系统持久化](#filesystembackend-本地磁盘) | `agent = create_deep_agent(backend=FilesystemBackend(root_dir="/Users/nh/Desktop/"))` <br></br>为 Deep Agent 提供对本地机器文件系统的访问权限。你可以指定 Agent 可访问的根目录。注意提供的 `root_dir` 必须是绝对路径。 |
+| [持久 Store（LangGraph Store）](#storebackend-langgraph-store) | `agent = create_deep_agent(backend=lambda rt: StoreBackend(rt))` <br></br>为 Agent 提供_跨线程持久化_的长期存储访问。非常适合存储在多次执行中通用的长期记忆或指令。 |
+| [沙箱](/oss/deepagents/sandboxes) | `agent = create_deep_agent(backend=sandbox)` <br></br>在隔离环境中执行代码。沙箱提供文件系统工具以及用于运行 shell 命令的 `execute` 工具。可选择 Modal、Daytona、Deno 或本地 VFS。 |
+| [本地 Shell](#localshellbackend-本地-shell) | `agent = create_deep_agent(backend=LocalShellBackend(root_dir=".", env={"PATH": "/usr/bin:/bin"}))` <br></br>直接在宿主机上进行文件系统操作和 shell 执行。无隔离——仅在受控的开发环境中使用。参见下方[安全注意事项](#本地-shell)。 |
+| [组合后端](#compositebackend-路由器) | 默认临时存储，`/memories/` 持久化。组合后端具有最大的灵活性。你可以指定文件系统中的不同路由指向不同后端。参见下方的组合路由示例。 |
 
 
-## Built-in backends
+## 内置后端
 
-### StateBackend (ephemeral)
+### StateBackend（临时存储）
 
 <BackendState />
 
-**How it works:**
-- Stores files in LangGraph agent state for the current thread.
-- Persists across multiple agent turns on the same thread via checkpoints.
+**工作原理：**
+- 将文件存储在当前线程的 LangGraph Agent 状态中。
+- 通过检查点在同一线程的多个 Agent 轮次间持久化。
 
-**Best for:**
-- A scratch pad for the agent to write intermediate results.
-- Automatic eviction of large tool outputs which the agent can then read back in piece by piece.
+**最适合：**
+- 作为 Agent 写入中间结果的暂存区。
+- 自动驱逐大型工具输出，Agent 随后可以分段重新读取。
 
-Note that this backend is shared between the supervisor agent and subagents, and any files a subagent writes will remain in the LangGraph agent state
-even after that subagent's execution is complete. Those files will continue to be available to the supervisor agent and other subagents.
+注意此后端在主 Agent（supervisor）和子 Agent 之间共享，子 Agent 写入的任何文件在该子 Agent 执行完成后仍然保留在 LangGraph Agent 状态中。这些文件将继续对主 Agent 和其他子 Agent 可用。
 
-### FilesystemBackend (local disk)
+### FilesystemBackend（本地磁盘）
 
 <Warning>
-This backend grants agents direct filesystem read/write access.
-Use with caution and only in appropriate environments.
+此后端赋予 Agent 直接的文件系统读写权限。
+请谨慎使用，仅在适当的环境中使用。
 
-**Appropriate use cases:**
-- Local development CLIs (coding assistants, development tools)
-- CI/CD pipelines (see security considerations below)
+**适用场景：**
+- 本地开发 CLI（编码助手、开发工具）
+- CI/CD 流水线（参见下方安全注意事项）
 
-**Inappropriate use cases:**
-- Web servers or HTTP APIs - use `StateBackend`, `StoreBackend`, or a [sandbox backend](/oss/deepagents/sandboxes) instead
+**不适用场景：**
+- Web 服务器或 HTTP API——请改用 `StateBackend`、`StoreBackend` 或[沙箱后端](/oss/deepagents/sandboxes)
 
-**Security risks:**
-- Agents can read any accessible file, including secrets (API keys, credentials, `.env` files)
-- Combined with network tools, secrets may be exfiltrated via SSRF attacks
-- File modifications are permanent and irreversible
+**安全风险：**
+- Agent 可以读取任何可访问的文件，包括敏感信息（API 密钥、凭证、`.env` 文件）
+- 结合网络工具，敏感信息可能通过 SSRF 攻击被窃取
+- 文件修改是永久且不可逆的
 
-**Recommended safeguards:**
-1. Enable [Human-in-the-Loop (HITL) middleware](/oss/deepagents/human-in-the-loop) to review sensitive operations.
-1. Exclude secrets from accessible filesystem paths (especially in CI/CD).
-1. Use a [sandbox backend](/oss/deepagents/sandboxes) for production environments requiring filesystem interaction.
-1. **Always** use `virtual_mode=True` with `root_dir` to enable path-based access restrictions (blocks `..`, `~`, and absolute paths outside root).
-   Note that the default (`virtual_mode=False`) provides no security even with `root_dir` set.
+**建议的安全措施：**
+1. 启用[人工干预（HITL）中间件](/oss/deepagents/human-in-the-loop)来审查敏感操作。
+1. 将敏感信息从可访问的文件系统路径中排除（尤其在 CI/CD 中）。
+1. 在需要文件系统交互的生产环境中使用[沙箱后端](/oss/deepagents/sandboxes)。
+1. **务必**配合 `root_dir` 使用 `virtual_mode=True` 以启用基于路径的访问限制（阻止 `..`、`~` 和根目录外的绝对路径）。
+   注意默认设置（`virtual_mode=False`）即使设置了 `root_dir` 也不提供任何安全保障。
 </Warning>
 
 <BackendFilesystem />
 
-**How it works:**
-- Reads/writes real files under a configurable `root_dir`.
-- You can optionally set `virtual_mode=True` to sandbox and normalize paths under `root_dir`.
-- Uses secure path resolution, prevents unsafe symlink traversal when possible, can use ripgrep for fast `grep`.
+**工作原理：**
+- 在可配置的 `root_dir` 下读写真实文件。
+- 可选设置 `virtual_mode=True` 以对 `root_dir` 下的路径进行沙箱化和规范化。
+- 使用安全的路径解析，尽可能阻止不安全的符号链接遍历，可使用 ripgrep 进行快速 `grep`。
 
-**Best for:**
-- Local projects on your machine
-- CI sandboxes
-- Mounted persistent volumes
+**最适合：**
+- 本地机器上的项目
+- CI 沙箱
+- 挂载的持久化存储卷
 
-### LocalShellBackend (local shell)
+### LocalShellBackend（本地 Shell）
 
 <Warning>
-This backend grants agents direct filesystem read/write access **and** unrestricted shell execution on your host.
-Use with extreme caution and only in appropriate environments.
+此后端赋予 Agent 直接的文件系统读写权限**以及**在宿主机上不受限制的 shell 执行能力。
+请极其谨慎地使用，仅在适当的环境中使用。
 
-**Appropriate use cases:**
-- Local development CLIs (coding assistants, development tools)
-- Personal development environments where you trust the agent's code
-- CI/CD pipelines with proper secret management
+**适用场景：**
+- 本地开发 CLI（编码助手、开发工具）
+- 你信任 Agent 生成代码的个人开发环境
+- 具有适当密钥管理的 CI/CD 流水线
 
-**Inappropriate use cases:**
-- Production environments (such as web servers, APIs, multi-tenant systems)
-- Processing untrusted user input or executing untrusted code
+**不适用场景：**
+- 生产环境（如 Web 服务器、API、多租户系统）
+- 处理不受信任的用户输入或执行不受信任的代码
 
-**Security risks:**
-- Agents can execute **arbitrary shell commands** with your user's permissions
-- Agents can read any accessible file, including secrets (API keys, credentials, `.env` files)
-- Secrets may be exposed
-- File modifications and command execution are **permanent and irreversible**
-- Commands run directly on your host system
-- Commands can consume unlimited CPU, memory, disk
+**安全风险：**
+- Agent 可以以你的用户权限执行**任意 shell 命令**
+- Agent 可以读取任何可访问的文件，包括敏感信息（API 密钥、凭证、`.env` 文件）
+- 敏感信息可能被暴露
+- 文件修改和命令执行是**永久且不可逆的**
+- 命令直接在宿主系统上运行
+- 命令可以消耗无限的 CPU、内存和磁盘资源
 
-**Recommended safeguards:**
-1. Enable [Human-in-the-Loop (HITL) middleware](/oss/deepagents/human-in-the-loop) to review and approve operations before execution. This is **strongly recommended**.
-2. Run in dedicated development environments only. Never use on shared or production systems.
-3. Use a [sandbox backend](/oss/deepagents/sandboxes) for production environments requiring shell execution.
+**建议的安全措施：**
+1. 启用[人工干预（HITL）中间件](/oss/deepagents/human-in-the-loop)来在执行前审查和批准操作。这是**强烈推荐的**。
+2. 仅在专用开发环境中运行。切勿在共享或生产系统上使用。
+3. 在需要 shell 执行的生产环境中使用[沙箱后端](/oss/deepagents/sandboxes)。
 
-**Note:** `virtual_mode=True` provides no security with shell access enabled, since commands can access any path on the system.
+**注意：** 启用 shell 访问后 `virtual_mode=True` 不提供安全保障，因为命令可以访问系统上的任何路径。
 </Warning>
 
 <BackendLocalShell />
 
-**How it works:**
-- Extends `FilesystemBackend` with the `execute` tool for running shell commands on the host.
-- Commands run directly on your machine using `subprocess.run(shell=True)` with no sandboxing.
-- Supports `timeout` (default 120s), `max_output_bytes` (default 100,000), `env`, and `inherit_env` for environment variables.
-- Shell commands use `root_dir` as the working directory but can access any path on the system.
+**工作原理：**
+- 扩展 `FilesystemBackend`，增加用于在宿主机上运行 shell 命令的 `execute` 工具。
+- 命令使用 `subprocess.run(shell=True)` 直接在你的机器上运行，没有沙箱隔离。
+- 支持 `timeout`（默认 120 秒）、`max_output_bytes`（默认 100,000）、`env` 和 `inherit_env` 等环境变量配置。
+- Shell 命令以 `root_dir` 作为工作目录，但可以访问系统上的任何路径。
 
-**Best for:**
-- Local coding assistants and development tools
-- Quick iteration during development when you trust the agent
+**最适合：**
+- 本地编码助手和开发工具
+- 开发阶段你信任 Agent 时的快速迭代
 
-### StoreBackend (LangGraph store)
+### StoreBackend（LangGraph Store）
 
 <BackendStore />
 
-**How it works:**
-- Stores files in a LangGraph @[`BaseStore`] provided by the runtime, enabling cross‑thread durable storage.
+**工作原理：**
+- 将文件存储在运行时提供的 LangGraph @[`BaseStore`] 中，实现跨线程的持久化存储。
 
-**Best for:**
-- When you already run with a configured LangGraph store (for example, Redis, Postgres, or cloud implementations behind @[`BaseStore`]).
-- When you're deploying your agent through LangSmith Deployment (a store is automatically provisioned for your agent).
+**最适合：**
+- 已经配置了 LangGraph Store 运行的场景（例如，Redis、Postgres 或 @[`BaseStore`] 背后的云端实现）。
+- 通过 LangSmith Deployment 部署 Agent 时（会自动为你的 Agent 配置一个 Store）。
 
 
-### CompositeBackend (router)
+### CompositeBackend（路由器）
 
 <BackendComposite />
 
-**How it works:**
-- Routes file operations to different backends based on path prefix.
-- Preserves the original path prefixes in listings and search results.
+**工作原理：**
+- 根据路径前缀将文件操作路由到不同的后端。
+- 在列表和搜索结果中保留原始的路径前缀。
 
-**Best for:**
-- When you want to give your agent both ephemeral and cross-thread storage, a `CompositeBackend` allows you provide both a `StateBackend` and `StoreBackend`
-- When you have multiple sources of information that you want to provide to your agent as part of a single filesystem.
-    - e.g. You have long-term memories stored under `/memories/` in one Store and you also have a custom backend that has documentation accessible at /docs/.
+**最适合：**
+- 当你希望 Agent 同时拥有临时存储和跨线程存储时，`CompositeBackend` 允许你同时提供 `StateBackend` 和 `StoreBackend`。
+- 当你有多个信息来源需要作为单一文件系统提供给 Agent 时。
+    - 例如：你的长期记忆存储在某个 Store 的 `/memories/` 下，同时有一个自定义后端在 /docs/ 路径下提供文档。
 
-## Specify a backend
+## 指定后端
 
-- Pass a backend to `create_deep_agent(backend=...)`. The filesystem middleware uses it for all tooling.
-- You can pass either:
-    - An instance implementing `BackendProtocol` (for example, `FilesystemBackend(root_dir=".")`), or
-    - A factory `BackendFactory = Callable[[ToolRuntime], BackendProtocol]` (for backends that need runtime like `StateBackend` or `StoreBackend`).
-- If omitted, the default is `lambda rt: StateBackend(rt)`.
+- 通过 `create_deep_agent(backend=...)` 传入后端。文件系统中间件将使用它处理所有工具操作。
+- 你可以传入以下任一类型：
+    - 实现了 `BackendProtocol` 的实例（例如 `FilesystemBackend(root_dir=".")`），或
+    - 工厂函数 `BackendFactory = Callable[[ToolRuntime], BackendProtocol]`（用于需要运行时的后端，如 `StateBackend` 或 `StoreBackend`）。
+- 如果省略，默认为 `lambda rt: StateBackend(rt)`。
 
 
-## Route to different backends
+## 路由到不同后端
 
-Route parts of the namespace to different backends. Commonly used to persist `/memories/*` and keep everything else ephemeral.
+将命名空间的不同部分路由到不同后端。常用于将 `/memories/*` 持久化，其他内容保持临时存储。
 
 :::python
 ```python
@@ -227,27 +216,27 @@ const agent = createDeepAgent({ backend: compositeBackend });
 ```
 :::
 
-Behavior:
-- `/workspace/plan.md` → `StateBackend` (ephemeral)
-- `/memories/agent.md` → `FilesystemBackend` under `/deepagents/myagent`
-- `ls`, `glob`, `grep` aggregate results and show original path prefixes.
+行为说明：
+- `/workspace/plan.md` → `StateBackend`（临时存储）
+- `/memories/agent.md` → `FilesystemBackend`，位于 `/deepagents/myagent` 目录下
+- `ls`、`glob`、`grep` 会聚合结果并显示原始路径前缀。
 
-Notes:
-- Longer prefixes win (for example, route `"/memories/projects/"` can override `"/memories/"`).
-- For StoreBackend routing, ensure the agent runtime provides a store (`runtime.store`).
+注意事项：
+- 更长的前缀优先匹配（例如，路由 `"/memories/projects/"` 可以覆盖 `"/memories/"`）。
+- 对于 StoreBackend 路由，确保 Agent 运行时提供了 Store（`runtime.store`）。
 
-## Use a virtual filesystem
+## 使用虚拟文件系统
 
-Build a custom backend to project a remote or database filesystem (e.g., S3 or Postgres) into the tools namespace.
+构建自定义后端，将远程或数据库文件系统（如 S3 或 Postgres）映射到工具命名空间中。
 
-Design guidelines:
+设计指南：
 
-- Paths are absolute (`/x/y.txt`). Decide how to map them to your storage keys/rows.
-- Implement `ls_info` and `glob_info` efficiently (server-side listing where available, otherwise local filter).
-- Return user-readable error strings for missing files or invalid regex patterns.
-- For external persistence, set `files_update=None` in results; only in-state backends should return a `files_update` dict.
+- 路径是绝对路径（`/x/y.txt`）。决定如何将其映射到你的存储键/行。
+- 高效实现 `ls_info` 和 `glob_info`（尽可能使用服务端列表，否则本地过滤）。
+- 对于缺失文件或无效正则表达式，返回用户可读的错误字符串。
+- 对于外部持久化，在结果中设置 `files_update=None`；只有基于状态的后端才应返回 `files_update` 字典。
 
-S3-style outline:
+S3 风格实现大纲：
 
 :::python
 ```python
@@ -263,44 +252,44 @@ class S3Backend(BackendProtocol):
         return f"{self.prefix}{path}"
 
     def ls_info(self, path: str) -> list[FileInfo]:
-        # List objects under _key(path); build FileInfo entries (path, size, modified_at)
+        # 列出 _key(path) 下的对象；构建 FileInfo 条目（path, size, modified_at）
         ...
 
     def read(self, file_path: str, offset: int = 0, limit: int = 2000) -> str:
-        # Fetch object; return numbered content or an error string
+        # 获取对象；返回带行号的内容或错误字符串
         ...
 
     def grep_raw(self, pattern: str, path: str | None = None, glob: str | None = None) -> list[GrepMatch] | str:
-        # Optionally filter server‑side; else list and scan content
+        # 可选服务端过滤；否则列出并扫描内容
         ...
 
     def glob_info(self, pattern: str, path: str = "/") -> list[FileInfo]:
-        # Apply glob relative to path across keys
+        # 在键中相对于 path 应用 glob 匹配
         ...
 
     def write(self, file_path: str, content: str) -> WriteResult:
-        # Enforce create‑only semantics; return WriteResult(path=file_path, files_update=None)
+        # 强制仅创建语义；返回 WriteResult(path=file_path, files_update=None)
         ...
 
     def edit(self, file_path: str, old_string: str, new_string: str, replace_all: bool = False) -> EditResult:
-        # Read → replace (respect uniqueness vs replace_all) → write → return occurrences
+        # 读取 → 替换（遵循唯一性 vs replace_all）→ 写入 → 返回出现次数
         ...
 ```
 :::
 
-Postgres-style outline:
+Postgres 风格实现大纲：
 
-- Table `files(path text primary key, content text, created_at timestamptz, modified_at timestamptz)`
-- Map tool operations onto SQL:
-  - `ls_info` uses `WHERE path LIKE $1 || '%'`
-  - `glob_info` filter in SQL or fetch then apply glob in Python
-  - `grep_raw` can fetch candidate rows by extension or last modified time, then scan lines
+- 表结构 `files(path text primary key, content text, created_at timestamptz, modified_at timestamptz)`
+- 将工具操作映射到 SQL：
+  - `ls_info` 使用 `WHERE path LIKE $1 || '%'`
+  - `glob_info` 在 SQL 中过滤，或先获取再用 Python 应用 glob
+  - `grep_raw` 可以按扩展名或最后修改时间获取候选行，然后逐行扫描
 
-## Add policy hooks
+## 添加策略钩子
 
-Enforce enterprise rules by subclassing or wrapping a backend.
+通过子类化或包装后端来强制执行企业级规则。
 
-Block writes/edits under selected prefixes (subclass):
+阻止特定前缀下的写入/编辑操作（子类方式）：
 
 :::python
 ```python
@@ -324,7 +313,7 @@ class GuardedBackend(FilesystemBackend):
 ```
 :::
 
-Generic wrapper (works with any backend):
+通用包装器（适用于任何后端）：
 
 :::python
 ```python
@@ -358,26 +347,26 @@ class PolicyWrapper(BackendProtocol):
 ```
 :::
 
-## Protocol reference
+## 协议参考
 
-Backends must implement the `BackendProtocol`.
+后端必须实现 `BackendProtocol`。
 
-Required endpoints:
+必需的接口：
 - `ls_info(path: str) -> list[FileInfo]`
-  - Return entries with at least `path`. Include `is_dir`, `size`, `modified_at` when available. Sort by `path` for deterministic output.
+  - 返回至少包含 `path` 的条目。可用时包含 `is_dir`、`size`、`modified_at`。按 `path` 排序以确保输出确定性。
 - `read(file_path: str, offset: int = 0, limit: int = 2000) -> str`
-  - Return numbered content. On missing file, return `"Error: File '/x' not found"`.
+  - 返回带行号的内容。文件不存在时返回 `"Error: File '/x' not found"`。
 - `grep_raw(pattern: str, path: Optional[str] = None, glob: Optional[str] = None) -> list[GrepMatch] | str`
-  - Return structured matches. For an invalid regex, return a string like `"Invalid regex pattern: ..."` (do not raise).
+  - 返回结构化匹配结果。对于无效正则表达式，返回类似 `"Invalid regex pattern: ..."` 的字符串（不要抛出异常）。
 - `glob_info(pattern: str, path: str = "/") -> list[FileInfo]`
-  - Return matched files as `FileInfo` entries (empty list if none).
+  - 以 `FileInfo` 条目返回匹配的文件（无匹配时返回空列表）。
 - `write(file_path: str, content: str) -> WriteResult`
-  - Create-only. On conflict, return `WriteResult(error=...)`. On success, set `path` and for state backends set `files_update={...}`; external backends should use `files_update=None`.
+  - 仅创建语义。冲突时返回 `WriteResult(error=...)`。成功时设置 `path`，对于状态后端设置 `files_update={...}`；外部后端应使用 `files_update=None`。
 - `edit(file_path: str, old_string: str, new_string: str, replace_all: bool = False) -> EditResult`
-  - Enforce uniqueness of `old_string` unless `replace_all=True`. If not found, return error. Include `occurrences` on success.
+  - 除非 `replace_all=True`，否则强制 `old_string` 的唯一性。未找到时返回错误。成功时包含 `occurrences`。
 
-Supporting types:
+辅助类型：
 - `WriteResult(error, path, files_update)`
 - `EditResult(error, path, files_update, occurrences)`
-- `FileInfo` with fields: `path` (required), optionally `is_dir`, `size`, `modified_at`.
-- `GrepMatch` with fields: `path`, `line`, `text`.
+- `FileInfo` 字段：`path`（必需），可选 `is_dir`、`size`、`modified_at`。
+- `GrepMatch` 字段：`path`、`line`、`text`。

@@ -1,53 +1,53 @@
 ---
-title: "ChatCohere integration"
-description: "Integrate with the ChatCohere chat model using LangChain JavaScript."
+title: "ChatCohere 集成"
+description: "使用 LangChain JavaScript 集成 ChatCohere 对话模型。"
 ---
 
-[Cohere](https://cohere.com/) is a Canadian startup that provides natural language processing models that help companies improve human-machine interactions.
+[Cohere](https://cohere.com/) 是一家加拿大初创公司，提供自然语言处理模型，帮助企业改善人机交互。
 
-This will help you getting started with Cohere [chat models](/oss/langchain/models). For detailed documentation of all `ChatCohere` features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_cohere.ChatCohere.html).
+本文将帮助你开始使用 Cohere [对话模型](/oss/langchain/models)。所有 `ChatCohere` 功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain_cohere.ChatCohere.html)。
 
-## Overview
+## 概览
 
-### Integration details
+### 集成详情
 
 | Class | Package | Serializable | [PY support](https://python.langchain.com/docs/integrations/chat/cohere) | Downloads | Version |
 | :--- | :--- | :---: |  :---: | :---: | :---: |
 | [ChatCohere](https://api.js.langchain.com/classes/langchain_cohere.ChatCohere.html) | [`@langchain/cohere`](https://www.npmjs.com/package/@langchain/cohere) | beta | ✅ | ![NPM - Downloads](https://img.shields.io/npm/dm/@langchain/cohere?style=flat-square&label=%20&) | ![NPM - Version](https://img.shields.io/npm/v/@langchain/cohere?style=flat-square&label=%20&) |
 
-### Model features
+### 模型特性
 
-See the links in the table headers below for guides on how to use specific features.
+有关如何使用特定功能的指南，请参见下表标题中的链接。
 
 | [Tool calling](/oss/langchain/tools) | [Structured output](/oss/langchain/structured-output) | [Image input](/oss/langchain/messages#multimodal) | Audio input | Video input | [Token-level streaming](/oss/langchain/streaming/) | [Token usage](/oss/langchain/models#token-usage) | [Logprobs](/oss/langchain/models#log-probabilities) |
 | :---: | :---: | :---: |  :---: | :---: | :---: | :---: | :---: |
 | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 
-## Setup
+## 安装
 
-In order to use the LangChain.js Cohere integration you'll need an API key.
-You can [sign up for a Cohere account and create an API key](https://dashboard.cohere.com/welcome/register).
+要使用 LangChain.js Cohere 集成，你需要一个 API 密钥。
+你可以在[此处](https://dashboard.cohere.com/welcome/register)注册 Cohere 账户并创建 API 密钥。
 
-You'll first need to install the [`@langchain/cohere`](https://www.npmjs.com/package/@langchain/cohere) package.
+你需要先安装 [`@langchain/cohere`](https://www.npmjs.com/package/@langchain/cohere) 包。
 
-### Credentials
+### 凭据
 
-Head to [Cohere's website](https://dashboard.cohere.com/welcome/register) to sign up to Cohere and generate an API key. Once you've done this set the `COHERE_API_KEY` environment variable:
+前往 [Cohere 官网](https://dashboard.cohere.com/welcome/register)注册并生成 API 密钥。完成后设置 `COHERE_API_KEY` 环境变量：
 
 ```bash
 export COHERE_API_KEY="your-api-key"
 ```
 
-If you want to get automated tracing of your model calls you can also set your [LangSmith](/langsmith/home) API key by uncommenting below:
+如果你想获取模型调用的自动追踪，你还可以通过取消下方注释来设置你的 [LangSmith](/langsmith/home) API 密钥：
 
 ```bash
 # export LANGSMITH_TRACING="true"
 # export LANGSMITH_API_KEY="your-api-key"
 ```
 
-### Installation
+### 安装
 
-The LangChain ChatCohere integration lives in the `@langchain/cohere` package:
+LangChain ChatCohere 集成位于 `@langchain/cohere` 包中：
 
 <CodeGroup>
 ```bash npm
@@ -61,9 +61,9 @@ pnpm add @langchain/cohere @langchain/core
 ```
 </CodeGroup>
 
-## Instantiation
+## 实例化
 
-Now we can instantiate our model object and generate chat completions:
+现在我们可以实例化模型对象并生成对话补全：
 
 ```typescript
 import { ChatCohere } from "@langchain/cohere"
@@ -98,7 +98,7 @@ const llmWithCustomClient = new ChatCohere({
 });
 ```
 
-## Invocation
+## 调用
 
 ```typescript
 const aiMsg = await llm.invoke([
@@ -201,10 +201,10 @@ console.log(aiMsg.content)
 J'adore programmer.
 ```
 
-## RAG
+## RAG（检索增强生成）
 
-Cohere also comes out of the box with RAG support.
-You can pass in documents as context to the API request and Cohere's models will use them when generating responses.
+Cohere 原生支持 RAG。
+你可以将文档作为上下文传递给 API 请求，Cohere 的模型会在生成响应时使用它们。
 
 ```typescript
 import { ChatCohere } from "@langchain/cohere";
@@ -243,11 +243,11 @@ console.log(ragResponse.content);
 Harrison worked at Kensho as an engineer for 3 years.
 ```
 
-## Connectors
+## 连接器
 
-The API also allows for other connections which are not static documents.
-An example of this is their `web-search` connector which allows you to pass in a query and the API will search the web for relevant documents.
-The example below demonstrates how to use this feature.
+API 还允许使用非静态文档的其他连接。
+其中一个例子是 `web-search` 连接器，它允许你传入查询，API 会搜索网络上的相关文档。
+以下示例展示了如何使用该功能。
 
 ```typescript
 import { ChatCohere } from "@langchain/cohere";
@@ -1403,6 +1403,6 @@ We can see in the `additional_kwargs` object that the API request did a few thin
 
 ---
 
-## API reference
+## API 参考
 
-For detailed documentation of all ChatCohere features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_cohere.ChatCohere.html).
+所有 ChatCohere 功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain_cohere.ChatCohere.html)。

@@ -1,16 +1,16 @@
 ---
-title: "Python interpreter integration"
-description: "Integrate with the Python interpreter tool using LangChain JavaScript."
+title: "Python 解释器集成"
+description: "使用 LangChain JavaScript 集成 Python 解释器工具。"
 ---
 
 <Warning>
-This tool executes code and can potentially perform destructive actions. Be careful that you trust any code passed to it!
+此工具会执行代码，可能执行破坏性操作。请确保你信任传入的任何代码！
 </Warning>
 
-LangChain offers an experimental tool for executing arbitrary Python code.
-This can be useful in combination with an LLM that can generate code to perform more powerful computations.
+LangChain 提供了一个实验性工具，用于执行任意 Python 代码。
+这在与能生成代码的 LLM 结合使用时非常有用，可以执行更强大的计算。
 
-## Usage
+## 用法
 
 ```typescript
 import { OpenAI } from "@langchain/openai";
@@ -60,7 +60,7 @@ const micropip = interpreter.pyodideInstance.pyimport("micropip");
 await micropip.install("numpy");
 ```
 
-## Related
+## 相关
 
-- Tool [conceptual guide](/oss/langchain/tools)
-- Tool [how-to guides](/oss/langchain/tools)
+- 工具[概念指南](/oss/langchain/tools)
+- 工具[操作指南](/oss/langchain/tools)

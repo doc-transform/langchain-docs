@@ -1,115 +1,115 @@
 ---
-title: Context engineering in agents
-sidebarTitle: Context engineering
+title: Agent 中的上下文工程
+sidebarTitle: 上下文工程
 ---
 
-## Overview
+## 概述
 
-The hard part of building agents (or any LLM application) is making them reliable enough. While they may work for a prototype, they often fail in real-world use cases.
+构建 Agent（或任何 LLM 应用）最困难的部分在于使其足够可靠。原型阶段也许运行良好，但在真实场景中往往会出现问题。
 
-### Why do agents fail?
+### 为什么 Agent 会失败？
 
-When agents fail, it's usually because the LLM call inside the agent took the wrong action / didn't do what we expected. LLMs fail for one of two reasons:
+当 Agent 出现故障时，通常是因为内部的 LLM 调用执行了错误的操作，或没有按预期工作。LLM 失败的原因通常不外乎两点：
 
-1. The underlying LLM is not capable enough
-2. The "right" context was not passed to the LLM
+1. 底层 LLM 的能力不足
+2. 没有向 LLM 传递「正确」的上下文
 
-More often than not - it's actually the second reason that causes agents to not be reliable.
+在大多数情况下，真正导致 Agent 不够可靠的其实是第二个原因。
 
-**Context engineering** is providing the right information and tools in the right format so the LLM can accomplish a task. This is the number one job of AI Engineers. This lack of "right" context is the number one blocker for more reliable agents, and LangChain's agent abstractions are uniquely designed to facilitate context engineering.
+**上下文工程（Context Engineering）** 是指以正确的格式向 LLM 提供恰当的信息和工具，使其能够完成任务。这是 AI 工程师最核心的工作。缺乏「正确」的上下文是阻碍 Agent 可靠性提升的首要因素，而 LangChain 的 Agent 抽象正是为了便捷地实现上下文工程而专门设计的。
 
 <Tip>
-New to context engineering? Start with the [conceptual overview](/oss/concepts/context) to understand the different types of context and when to use them.
+初次接触上下文工程？建议先阅读[概念概述](/oss/concepts/context)，了解不同类型的上下文及其使用场景。
 </Tip>
 
-### The agent loop
+### Agent 循环
 
-A typical agent loop consists of two main steps:
+一个典型的 Agent 循环包含两个主要步骤：
 
-1. **Model call** - calls the LLM with a prompt and available tools, returns either a response or a request to execute tools
-2. **Tool execution** - executes the tools that the LLM requested, returns tool results
+1. **模型调用** - 使用提示词和可用工具调用 LLM，返回响应或请求执行工具
+2. **工具执行** - 执行 LLM 请求的工具，返回工具结果
 
 <div style={{ display: "flex", justifyContent: "center" }}>
   <img
     src="/oss/images/core_agent_loop.png"
-    alt="Core agent loop diagram"
+    alt="Agent 核心循环示意图"
     className="rounded-lg"
   />
 </div>
 
-This loop continues until the LLM decides to finish.
+该循环持续进行，直到 LLM 决定结束。
 
-### What you can control
+### 你可以控制什么
 
-To build reliable agents, you need to control what happens at each step of the agent loop, as well as what happens between steps.
+要构建可靠的 Agent，你需要控制循环中每一步发生的事情，以及步骤之间的行为。
 
-| Context Type | What You Control | Transient or Persistent |
+| 上下文类型 | 控制内容 | 临时性或持久性 |
 |--------------|------------------|-------------------------|
-| **[Model Context](#model-context)** | What goes into model calls (instructions, message history, tools, response format) | Transient |
-| **[Tool Context](#tool-context)** | What tools can access and produce (reads/writes to state, store, runtime context) | Persistent |
-| **[Life-cycle Context](#life-cycle-context)** | What happens between model and tool calls (summarization, guardrails, logging, etc.) | Persistent |
+| **[模型上下文](#model-context)** | 模型调用的输入（指令、消息历史、工具、响应格式） | 临时（Transient） |
+| **[工具上下文](#tool-context)** | 工具可以访问和产生的内容（对 State、Store、运行时上下文的读写） | 持久（Persistent） |
+| **[生命周期上下文](#life-cycle-context)** | 模型调用和工具调用之间发生的事情（摘要、护栏、日志等） | 持久（Persistent） |
 
 <CardGroup>
-  <Card title="Transient context" icon="bolt" iconType="duotone">
-    What the LLM sees for a single call. You can modify messages, tools, or prompts without changing what's saved in state.
+  <Card title="临时上下文" icon="bolt" iconType="duotone">
+    LLM 在单次调用中看到的内容。你可以修改消息、工具或提示词，而不影响 State 中保存的内容。
   </Card>
-  <Card title="Persistent context" icon="database" iconType="duotone">
-    What gets saved in state across turns. Life-cycle hooks and tool writes modify this permanently.
+  <Card title="持久上下文" icon="database" iconType="duotone">
+    跨轮次保存在 State 中的内容。生命周期钩子和工具写入会永久修改这些数据。
   </Card>
 </CardGroup>
 
-### Data sources
+### 数据源
 
-Throughout this process, your agent accesses (reads / writes) different sources of data:
+在整个过程中，Agent 会访问（读取/写入）不同的数据源：
 
-| Data Source | Also Known As | Scope | Examples |
+| 数据源 | 别名 | 作用域 | 示例 |
 |-------------|---------------|-------|----------|
-| **Runtime Context** | Static configuration | Conversation-scoped | User ID, API keys, database connections, permissions, environment settings |
-| **State** | Short-term memory | Conversation-scoped | Current messages, uploaded files, authentication status, tool results |
-| **Store** | Long-term memory | Cross-conversation | User preferences, extracted insights, memories, historical data |
+| **运行时上下文（Runtime Context）** | 静态配置 | 会话级 | 用户 ID、API 密钥、数据库连接、权限、环境设置 |
+| **状态（State）** | 短期记忆 | 会话级 | 当前消息、上传的文件、认证状态、工具结果 |
+| **存储（Store）** | 长期记忆 | 跨会话 | 用户偏好、提取的洞察、记忆、历史数据 |
 
-### How it works
+### 工作原理
 
-LangChain [middleware](/oss/langchain/middleware) is the mechanism under the hood that makes context engineering practical for developers using LangChain.
+LangChain [中间件](/oss/langchain/middleware)是底层机制，它使上下文工程在 LangChain 开发中切实可行。
 
-Middleware allows you to hook into any step in the agent lifecycle and:
+中间件允许你在 Agent 生命周期的任意步骤中插入钩子，实现以下操作：
 
-* Update context
-* Jump to a different step in the agent lifecycle
+* 更新上下文
+* 跳转到 Agent 生命周期的其他步骤
 
-Throughout this guide, you'll see frequent use of the middleware API as a means to the context engineering end.
+在本指南中，你会频繁看到中间件 API 的使用，它是实现上下文工程的核心手段。
 
-## Model context
+## 模型上下文
 
-Control what goes into each model call - instructions, available tools, which model to use, and output format. These decisions directly impact reliability and cost.
+控制每次模型调用的输入内容——指令、可用工具、使用哪个模型以及输出格式。这些决策直接影响可靠性和成本。
 
 <CardGroup cols={2}>
-    <Card title="System Prompt" icon="message-2" href="#system-prompt">
-        Base instructions from the developer to the LLM.
+    <Card title="系统提示词" icon="message-2" href="#system-prompt">
+        开发者给 LLM 的基本指令。
     </Card>
-    <Card title="Messages" icon="messages" href="#messages">
-        The full list of messages (conversation history) sent to the LLM.
+    <Card title="消息" icon="messages" href="#messages">
+        发送给 LLM 的完整消息列表（对话历史）。
     </Card>
-    <Card title="Tools" icon="tool" href="#tools">
-        Utilities the agent has access to for taking actions.
+    <Card title="工具" icon="tool" href="#tools">
+        Agent 可以用来执行操作的实用工具。
     </Card>
-    <Card title="Model" icon="cpu" href="#model">
-        The actual model (including configuration) to be called.
+    <Card title="模型" icon="cpu" href="#model">
+        实际被调用的模型（包括配置）。
     </Card>
-    <Card title="Response Format" icon="braces" href="#response-format">
-        Schema specification for the model's final response.
+    <Card title="响应格式" icon="braces" href="#response-format">
+        模型最终响应的 Schema 规范。
     </Card>
 </CardGroup>
 
-All of these types of model context can draw from **state** (short-term memory), **store** (long-term memory), or **runtime context** (static configuration).
+以上所有类型的模型上下文均可从 **State**（短期记忆）、**Store**（长期记忆）或 **运行时上下文**（静态配置）中获取。
 
-### System Prompt
+### 系统提示词
 
-The system prompt sets the LLM's behavior and capabilities. Different users, contexts, or conversation stages need different instructions. Successful agents draw on memories, preferences, and configuration to provide the right instructions for the current state of the conversation.
+系统提示词设定了 LLM 的行为和能力。不同的用户、场景或对话阶段可能需要不同的指令。成功的 Agent 会利用记忆、用户偏好和配置信息，为当前对话状态提供正确的指令。
 
 <Tabs>
   <Tab title="State">
-    Access message count or conversation context from state:
+    从 State 中读取消息数量或对话上下文：
 
     :::python
 
@@ -164,7 +164,7 @@ The system prompt sets the LLM's behavior and capabilities. Different users, con
   </Tab>
 
   <Tab title="Store">
-    Access user preferences from long-term memory:
+    从长期记忆中读取用户偏好：
 
     :::python
 
@@ -243,7 +243,7 @@ The system prompt sets the LLM's behavior and capabilities. Different users, con
   </Tab>
 
   <Tab title="Runtime Context">
-    Access user ID or configuration from Runtime Context:
+    从运行时上下文中读取用户 ID 或配置信息：
 
     :::python
 
@@ -328,14 +328,14 @@ The system prompt sets the LLM's behavior and capabilities. Different users, con
 
 </Tabs>
 
-### Messages
+### 消息
 
-Messages make up the prompt that is sent to the LLM.
-It's critical to manage the content of messages to ensure that the LLM has the right information to respond well.
+消息构成了发送给 LLM 的提示词。
+管理消息内容至关重要，这确保了 LLM 拥有正确的信息来给出良好的响应。
 
 <Tabs>
   <Tab title="State">
-    Inject uploaded file context from State when relevant to current query:
+    当用户查询与已上传文件相关时，从 State 中注入文件上下文：
 
     :::python
 
@@ -349,12 +349,12 @@ It's critical to manage the content of messages to ensure that the LLM has the r
         request: ModelRequest,
         handler: Callable[[ModelRequest], ModelResponse]
     ) -> ModelResponse:
-        """Inject context about files user has uploaded this session."""
-        # Read from State: get uploaded files metadata
+        """注入用户在本次会话中上传的文件上下文。"""
+        # 从 State 读取：获取已上传文件的元数据
         uploaded_files = request.state.get("uploaded_files", [])  # [!code highlight]
 
         if uploaded_files:
-            # Build context about available files
+            # 构建可用文件的上下文
             file_descriptions = []
             for file in uploaded_files:
                 file_descriptions.append(
@@ -366,7 +366,7 @@ It's critical to manage the content of messages to ensure that the LLM has the r
 
 Reference these files when answering questions."""
 
-            # Inject file context before recent messages
+            # 在近期消息之前注入文件上下文
             messages = [  # [!code highlight]
                 *request.messages,
                 {"role": "user", "content": file_context},
@@ -390,11 +390,11 @@ Reference these files when answering questions."""
     const injectFileContext = createMiddleware({
       name: "InjectFileContext",
       wrapModelCall: (request, handler) => {
-        // request.state is a shortcut for request.state.messages
+        // request.state 是 request.state.messages 的快捷方式
         const uploadedFiles = request.state.uploadedFiles || [];  // [!code highlight]
 
         if (uploadedFiles.length > 0) {
-          // Build context about available files
+          // 构建可用文件的上下文
           const fileDescriptions = uploadedFiles.map(file =>
             `- ${file.name} (${file.type}): ${file.summary}`
           );
@@ -404,9 +404,9 @@ ${fileDescriptions.join("\n")}
 
 Reference these files when answering questions.`;
 
-          // Inject file context before recent messages
+          // 在近期消息之前注入文件上下文
           const messages = [  // [!code highlight]
-            ...request.messages,  // Rest of conversation
+            ...request.messages,  // 其余对话内容
             { role: "user", content: fileContext }
           ];
           request = request.override({ messages });  // [!code highlight]
@@ -426,7 +426,7 @@ Reference these files when answering questions.`;
   </Tab>
 
   <Tab title="Store">
-    Inject user's email writing style from Store to guide drafting:
+    从 Store 中注入用户的邮件写作风格以指导起草：
 
     :::python
 
@@ -446,16 +446,16 @@ Reference these files when answering questions.`;
         request: ModelRequest,
         handler: Callable[[ModelRequest], ModelResponse]
     ) -> ModelResponse:
-        """Inject user's email writing style from Store."""
+        """从 Store 中注入用户的邮件写作风格。"""
         user_id = request.runtime.context.user_id  # [!code highlight]
 
-        # Read from Store: get user's writing style examples
+        # 从 Store 读取：获取用户的写作风格示例
         store = request.runtime.store  # [!code highlight]
         writing_style = store.get(("writing_style",), user_id)  # [!code highlight]
 
         if writing_style:
             style = writing_style.value
-            # Build style guide from stored examples
+            # 从存储的示例中构建风格指南
             style_context = f"""Your writing style:
 - Tone: {style.get('tone', 'professional')}
 - Typical greeting: "{style.get('greeting', 'Hi')}"
@@ -463,7 +463,7 @@ Reference these files when answering questions.`;
 - Example email you've written:
 {style.get('example_email', '')}"""
 
-            # Append at end - models pay more attention to final messages
+            # 追加到末尾 —— 模型对最后的消息关注度更高
             messages = [
                 *request.messages,
                 {"role": "user", "content": style_context}
@@ -497,13 +497,13 @@ Reference these files when answering questions.`;
       wrapModelCall: async (request, handler) => {
         const userId = request.runtime.context.userId;  // [!code highlight]
 
-        // Read from Store: get user's writing style examples
+        // 从 Store 读取：获取用户的写作风格示例
         const store = request.runtime.store;  // [!code highlight]
         const writingStyle = await store.get(["writing_style"], userId);  // [!code highlight]
 
         if (writingStyle) {
           const style = writingStyle.value;
-          // Build style guide from stored examples
+          // 从存储的示例中构建风格指南
           const styleContext = `Your writing style:
 - Tone: ${style.tone || 'professional'}
 - Typical greeting: "${style.greeting || 'Hi'}"
@@ -511,7 +511,7 @@ Reference these files when answering questions.`;
 - Example email you've written:
 ${style.exampleEmail || ''}`;
 
-          // Append at end - models pay more attention to final messages
+          // 追加到末尾 —— 模型对最后的消息关注度更高
           const messages = [
             ...request.messages,
             { role: "user", content: styleContext }
@@ -527,7 +527,7 @@ ${style.exampleEmail || ''}`;
   </Tab>
 
   <Tab title="Runtime Context">
-    Inject compliance rules from Runtime Context based on user's jurisdiction:
+    根据用户的管辖区域，从运行时上下文注入合规规则：
 
     :::python
 
@@ -548,13 +548,13 @@ ${style.exampleEmail || ''}`;
         request: ModelRequest,
         handler: Callable[[ModelRequest], ModelResponse]
     ) -> ModelResponse:
-        """Inject compliance constraints from Runtime Context."""
-        # Read from Runtime Context: get compliance requirements
+        """从运行时上下文注入合规约束。"""
+        # 从运行时上下文读取：获取合规要求
         jurisdiction = request.runtime.context.user_jurisdiction  # [!code highlight]
         industry = request.runtime.context.industry  # [!code highlight]
         frameworks = request.runtime.context.compliance_frameworks  # [!code highlight]
 
-        # Build compliance constraints
+        # 构建合规约束
         rules = []
         if "GDPR" in frameworks:
             rules.append("- Must obtain explicit consent before processing personal data")
@@ -569,7 +569,7 @@ ${style.exampleEmail || ''}`;
             compliance_context = f"""Compliance requirements for {jurisdiction}:
 {chr(10).join(rules)}"""
 
-            # Append at end - models pay more attention to final messages
+            # 追加到末尾 —— 模型对最后的消息关注度更高
             messages = [
                 *request.messages,
                 {"role": "user", "content": compliance_context}
@@ -604,11 +604,10 @@ ${style.exampleEmail || ''}`;
       name: "InjectComplianceRules",
       contextSchema,
       wrapModelCall: (request, handler) => {
-        // Read from Runtime Context: get compliance requirements
+        // 从运行时上下文读取：获取合规要求
         const { userJurisdiction, industry, complianceFrameworks } = request.runtime.context;  // [!code highlight]
 
-        // Build compliance constraints
-        const rules = [];
+        // 构建合规约束        const rules = [];
         if (complianceFrameworks.includes("GDPR")) {
           rules.push("- Must obtain explicit consent before processing personal data");
           rules.push("- Users have right to data deletion");
@@ -625,7 +624,7 @@ ${style.exampleEmail || ''}`;
           const complianceContext = `Compliance requirements for ${userJurisdiction}:
 ${rules.join("\n")}`;
 
-          // Append at end - models pay more attention to final messages
+          // 追加到末尾 —— 模型对最后的消息关注度更高
           const messages = [
             ...request.messages,
             { role: "user", content: complianceContext }
@@ -643,32 +642,20 @@ ${rules.join("\n")}`;
 </Tabs>
 
 <Note>
-**Transient vs Persistent Message Updates:**
+**临时更新 vs 持久更新：**
 
-The examples above use `wrap_model_call` to make **transient** updates - modifying what messages are sent to the model for a single call without changing what's saved in state.
+上述示例使用 `wrap_model_call` 进行**临时**更新 —— 修改发送给模型的消息，但不会改变 State 中保存的内容。
 
-For **persistent** updates that modify state, you can:
-
-:::python
-- Return a @[`ExtendedModelResponse`] with a @[`Command`] from `wrap_model_call` to inject state updates from the model call layer.
-- Use life-cycle hooks like `before_model`, `after_model`, or `wrap_tool_call` (for tool returns) to update the conversation history. See the [middleware documentation](/oss/langchain/middleware) for more details.
-:::
-
-:::js
-- Return a @[`Command`] directly from `wrapModelCall` to inject state updates from the model call layer.
-- Use life-cycle hooks like `beforeModel`, `afterModel`, or `wrapToolCall` (for tool returns) to update the conversation history. See the [middleware documentation](/oss/langchain/middleware) for more details.
-:::
-
-See [State updates](/oss/langchain/middleware/custom#state-updates) for more information.
+对于修改 State 的**持久**更新（如[生命周期上下文](#summarization)中的摘要示例），请使用 `before_model` 或 `after_model` 等生命周期钩子来永久更新对话历史。详见[中间件文档](/oss/langchain/middleware)。
 </Note>
 
-### Tools
+### 工具
 
-Tools let the model interact with databases, APIs, and external systems. How you define and select tools directly impacts whether the model can complete tasks effectively.
+工具让模型能够与数据库、API 和外部系统进行交互。工具的定义和选择方式直接影响模型能否有效完成任务。
 
-#### Defining tools
+#### 定义工具
 
-Each tool needs a clear name, description, argument names, and argument descriptions. These aren't just metadata—they guide the model's reasoning about when and how to use the tool.
+每个工具都需要清晰的名称、描述、参数名称和参数描述。这些不仅仅是元数据——它们会引导模型推理何时以及如何使用该工具。
 
 :::python
 ```python
@@ -720,13 +707,13 @@ const searchOrders = tool(
 ```
 :::
 
-#### Selecting tools
+#### 选择工具
 
-Not every tool is appropriate for every situation. Too many tools may overwhelm the model (overload context) and increase errors; too few limit capabilities. Dynamic tool selection adapts the available toolset based on authentication state, user permissions, feature flags, or conversation stage.
+并非每个工具都适合所有场景。工具太多可能会压垂模型（上下文过载）并增加错误；太少则限制能力。动态工具选择能根据认证状态、用户权限、功能开关或对话阶段来调整可用工具集。
 
 <Tabs>
   <Tab title="State">
-    Enable advanced tools only after certain conversation milestones:
+    仅在对话达到特定里程碑后才启用高级工具：
 
     :::python
 
@@ -740,18 +727,18 @@ Not every tool is appropriate for every situation. Too many tools may overwhelm 
         request: ModelRequest,
         handler: Callable[[ModelRequest], ModelResponse]
     ) -> ModelResponse:
-        """Filter tools based on conversation State."""
-        # Read from State: check if user has authenticated
+        """根据对话 State 过滤工具。"""
+        # 从 State 读取：检查用户是否已认证
         state = request.state  # [!code highlight]
         is_authenticated = state.get("authenticated", False)  # [!code highlight]
         message_count = len(state["messages"])
 
-        # Only enable sensitive tools after authentication
+        # 仅在认证后启用敏感工具
         if not is_authenticated:
             tools = [t for t in request.tools if t.name.startswith("public_")]
             request = request.override(tools=tools)  # [!code highlight]
         elif message_count < 5:
-            # Limit tools early in conversation
+            # 对话初期限制工具
             tools = [t for t in request.tools if t.name != "advanced_search"]
             request = request.override(tools=tools)  # [!code highlight]
 
@@ -772,14 +759,14 @@ Not every tool is appropriate for every situation. Too many tools may overwhelm 
     const stateBasedTools = createMiddleware({
       name: "StateBasedTools",
       wrapModelCall: (request, handler) => {
-        // Read from State: check authentication and conversation length
+        // 从 State 读取：检查认证状态和对话长度
         const state = request.state;  // [!code highlight]
         const isAuthenticated = state.authenticated || false;  // [!code highlight]
         const messageCount = state.messages.length;
 
         let filteredTools = request.tools;
 
-        // Only enable sensitive tools after authentication
+        // 仅在认证后启用敏感工具
         if (!isAuthenticated) {
           filteredTools = request.tools.filter(t => t.name.startsWith("public_"));  // [!code highlight]
         } else if (messageCount < 5) {
@@ -794,7 +781,7 @@ Not every tool is appropriate for every situation. Too many tools may overwhelm 
   </Tab>
 
   <Tab title="Store">
-    Filter tools based on user preferences or feature flags in Store:
+    根据 Store 中的用户偏好或功能开关过滤工具：
 
     :::python
 
@@ -814,16 +801,16 @@ Not every tool is appropriate for every situation. Too many tools may overwhelm 
         request: ModelRequest,
         handler: Callable[[ModelRequest], ModelResponse]
     ) -> ModelResponse:
-        """Filter tools based on Store preferences."""
+        """根据 Store 偏好过滤工具。"""
         user_id = request.runtime.context.user_id
 
-        # Read from Store: get user's enabled features
+        # 从 Store 读取：获取用户启用的功能
         store = request.runtime.store
         feature_flags = store.get(("features",), user_id)
 
         if feature_flags:
             enabled_features = feature_flags.value.get("enabled_tools", [])
-            # Only include tools that are enabled for this user
+            # 仅包含该用户启用的工具
             tools = [t for t in request.tools if t.name in enabled_features]
             request = request.override(tools=tools)
 
@@ -854,7 +841,7 @@ Not every tool is appropriate for every situation. Too many tools may overwhelm 
       wrapModelCall: async (request, handler) => {
         const userId = request.runtime.context.userId;  // [!code highlight]
 
-        // Read from Store: get user's enabled features
+        // 从 Store 读取：获取用户启用的功能
         const store = request.runtime.store;  // [!code highlight]
         const featureFlags = await store.get(["features"], userId);  // [!code highlight]
 
@@ -873,7 +860,7 @@ Not every tool is appropriate for every situation. Too many tools may overwhelm 
   </Tab>
 
   <Tab title="Runtime Context">
-    Filter tools based on user permissions from Runtime Context:
+    根据运行时上下文中的用户权限过滤工具：
 
     :::python
 
@@ -892,19 +879,19 @@ Not every tool is appropriate for every situation. Too many tools may overwhelm 
         request: ModelRequest,
         handler: Callable[[ModelRequest], ModelResponse]
     ) -> ModelResponse:
-        """Filter tools based on Runtime Context permissions."""
-        # Read from Runtime Context: get user role
+        """根据运行时上下文权限过滤工具。"""
+        # 从运行时上下文读取：获取用户角色
         user_role = request.runtime.context.user_role
 
         if user_role == "admin":
-            # Admins get all tools
+            # 管理员拥有所有工具
             pass
         elif user_role == "editor":
-            # Editors can't delete
+            # 编辑者无法删除
             tools = [t for t in request.tools if t.name != "delete_data"]
             request = request.override(tools=tools)
         else:
-            # Viewers get read-only tools
+            # 查看者只能使用只读工具
             tools = [t for t in request.tools if t.name.startswith("read_")]
             request = request.override(tools=tools)
 
@@ -932,13 +919,13 @@ Not every tool is appropriate for every situation. Too many tools may overwhelm 
       name: "ContextBasedTools",
       contextSchema,
       wrapModelCall: (request, handler) => {
-        // Read from Runtime Context: get user role
+        // 从运行时上下文读取：获取用户角色
         const userRole = request.runtime.context.userRole;  // [!code highlight]
 
         let filteredTools = request.tools;
 
         if (userRole === "admin") {
-          // Admins get all tools
+          // 管理员拥有所有工具
         } else if (userRole === "editor") {
           filteredTools = request.tools.filter(t => t.name !== "delete_data");  // [!code highlight]
         } else {
@@ -953,16 +940,15 @@ Not every tool is appropriate for every situation. Too many tools may overwhelm 
   </Tab>
 </Tabs>
 
-See [Dynamic tools](/oss/langchain/agents#dynamic-tools) for both filtering pre-registered tools and registering tools at runtime (e.g., from MCP servers).
+参见[动态工具](/oss/langchain/agents#dynamic-tools)，了解如何过滤预注册工具和在运行时注册工具（例如从 MCP 服务器注册）。
 
-### Model
+### 模型
 
-Different models have different strengths, costs, and context windows. Select the right model for the task at hand, which
-might change during an agent run.
+不同的模型有不同的优势、成本和上下文窗口。根据当前任务选择合适的模型，这个选择在 Agent 运行过程中可能会发生变化。
 
 <Tabs>
   <Tab title="State">
-    Use different models based on conversation length from State:
+    根据 State 中的对话长度使用不同的模型：
 
     :::python
 
@@ -972,7 +958,7 @@ might change during an agent run.
     from langchain.chat_models import init_chat_model
     from typing import Callable
 
-    # Initialize models once outside the middleware
+    # 在中间件外部一次性初始化模型
     large_model = init_chat_model("claude-sonnet-4-6")
     standard_model = init_chat_model("gpt-4.1")
     efficient_model = init_chat_model("gpt-4.1-mini")
@@ -982,18 +968,18 @@ might change during an agent run.
         request: ModelRequest,
         handler: Callable[[ModelRequest], ModelResponse]
     ) -> ModelResponse:
-        """Select model based on State conversation length."""
-        # request.messages is a shortcut for request.state["messages"]
+        """根据 State 对话长度选择模型。"""
+        # request.messages 是 request.state["messages"] 的快捷方式
         message_count = len(request.messages)  # [!code highlight]
 
         if message_count > 20:
-            # Long conversation - use model with larger context window
+            # 长对话 —— 使用上下文窗口更大的模型
             model = large_model
         elif message_count > 10:
-            # Medium conversation
+            # 中等长度对话
             model = standard_model
         else:
-            # Short conversation - use efficient model
+            # 短对话 —— 使用高效模型
             model = efficient_model
 
         request = request.override(model=model)  # [!code highlight]
@@ -1013,7 +999,7 @@ might change during an agent run.
     ```typescript
     import { createMiddleware, initChatModel } from "langchain";
 
-    // Initialize models once outside the middleware
+    // 在中间件外部一次性初始化模型
     const largeModel = initChatModel("claude-sonnet-4-6");
     const standardModel = initChatModel("gpt-4.1");
     const efficientModel = initChatModel("gpt-4.1-mini");
@@ -1021,7 +1007,7 @@ might change during an agent run.
     const stateBasedModel = createMiddleware({
       name: "StateBasedModel",
       wrapModelCall: (request, handler) => {
-        // request.messages is a shortcut for request.state.messages
+        // request.messages 是 request.state.messages 的快捷方式
         const messageCount = request.messages.length;  // [!code highlight]
         let model;
 
@@ -1041,7 +1027,7 @@ might change during an agent run.
   </Tab>
 
   <Tab title="Store">
-    Use user's preferred model from Store:
+    从 Store 中读取用户首选的模型：
 
     :::python
 
@@ -1057,7 +1043,7 @@ might change during an agent run.
     class Context:
         user_id: str
 
-    # Initialize available models once
+    # 一次性初始化可用模型
     MODEL_MAP = {
         "gpt-4.1": init_chat_model("gpt-4.1"),
         "gpt-4.1-mini": init_chat_model("gpt-4.1-mini"),
@@ -1069,10 +1055,10 @@ might change during an agent run.
         request: ModelRequest,
         handler: Callable[[ModelRequest], ModelResponse]
     ) -> ModelResponse:
-        """Select model based on Store preferences."""
+        """根据 Store 偏好选择模型。"""
         user_id = request.runtime.context.user_id
 
-        # Read from Store: get user's preferred model
+        # 从 Store 读取：获取用户首选的模型
         store = request.runtime.store
         user_prefs = store.get(("preferences",), user_id)
 
@@ -1103,7 +1089,7 @@ might change during an agent run.
       userId: z.string(),
     });
 
-    // Initialize available models once
+    // 一次性初始化可用模型
     const MODEL_MAP = {
       "gpt-4.1": initChatModel("gpt-4.1"),
       "gpt-4.1-mini": initChatModel("gpt-4.1-mini"),
@@ -1116,7 +1102,7 @@ might change during an agent run.
       wrapModelCall: async (request, handler) => {
         const userId = request.runtime.context.userId;  // [!code highlight]
 
-        // Read from Store: get user's preferred model
+        // 从 Store 读取：获取用户首选的模型
         const store = request.runtime.store;  // [!code highlight]
         const userPrefs = await store.get(["preferences"], userId);  // [!code highlight]
 
@@ -1137,7 +1123,7 @@ might change during an agent run.
   </Tab>
 
   <Tab title="Runtime Context">
-    Select model based on cost limits or environment from Runtime Context:
+    根据运行时上下文中的成本限制或环境选择模型：
 
     :::python
 
@@ -1153,7 +1139,7 @@ might change during an agent run.
         cost_tier: str
         environment: str
 
-    # Initialize models once outside the middleware
+    # 在中间件外部一次性初始化模型
     premium_model = init_chat_model("claude-sonnet-4-6")
     standard_model = init_chat_model("gpt-4.1")
     budget_model = init_chat_model("gpt-4.1-mini")
@@ -1163,19 +1149,19 @@ might change during an agent run.
         request: ModelRequest,
         handler: Callable[[ModelRequest], ModelResponse]
     ) -> ModelResponse:
-        """Select model based on Runtime Context."""
-        # Read from Runtime Context: cost tier and environment
+        """根据运行时上下文选择模型。"""
+        # 从运行时上下文读取：成本层级和环境
         cost_tier = request.runtime.context.cost_tier
         environment = request.runtime.context.environment
 
         if environment == "production" and cost_tier == "premium":
-            # Production premium users get best model
+            # 生产环境高级用户使用最佳模型
             model = premium_model
         elif cost_tier == "budget":
-            # Budget tier gets efficient model
+            # 经济层级使用高效模型
             model = budget_model
         else:
-            # Standard tier
+            # 标准层级
             model = standard_model
 
         request = request.override(model=model)
@@ -1202,7 +1188,7 @@ might change during an agent run.
       environment: z.string(),
     });
 
-    // Initialize models once outside the middleware
+    // 在中间件外部一次性初始化模型
     const premiumModel = initChatModel("claude-sonnet-4-6");
     const standardModel = initChatModel("gpt-4.1");
     const budgetModel = initChatModel("gpt-4.1-mini");
@@ -1211,7 +1197,7 @@ might change during an agent run.
       name: "ContextBasedModel",
       contextSchema,
       wrapModelCall: (request, handler) => {
-        // Read from Runtime Context: cost tier and environment
+        // 从运行时上下文读取：成本层级和环境
         const costTier = request.runtime.context.costTier;  // [!code highlight]
         const environment = request.runtime.context.environment;  // [!code highlight]
 
@@ -1233,17 +1219,17 @@ might change during an agent run.
   </Tab>
 </Tabs>
 
-See [Dynamic model](/oss/langchain/agents#dynamic-model) for more examples.
+参见[动态模型](/oss/langchain/agents#dynamic-model)了解更多示例。
 
-### Response format
+### 响应格式
 
-Structured output transforms unstructured text into validated, structured data. When extracting specific fields or returning data for downstream systems, free-form text isn't sufficient.
+结构化输出将非结构化文本转换为经过验证的结构化数据。当需要提取特定字段或为下游系统返回数据时，自由格式的文本是不够的。
 
-**How it works:** When you provide a schema as the response format, the model's final response is guaranteed to conform to that schema. The agent runs the model / tool calling loop until the model is done calling tools, then the final response is coerced into the provided format.
+**工作原理：** 当你提供一个 Schema 作为响应格式时，模型的最终响应保证符合该 Schema。Agent 运行模型/工具调用循环，直到模型完成工具调用，然后将最终响应强制转换为指定格式。
 
-#### Defining formats
+#### 定义格式
 
-Schema definitions guide the model. Field names, types, and descriptions specify exactly what format the output should adhere to.
+Schema 定义引导模型的行为。字段名称、类型和描述精确指定了输出应该遵循的格式。
 
 :::python
 ```python
@@ -1288,13 +1274,13 @@ const customerSupportTicket = z.object({
 ```
 :::
 
-#### Selecting formats
+#### 选择格式
 
-Dynamic response format selection adapts schemas based on user preferences, conversation stage, or role—returning simple formats early and detailed formats as complexity increases.
+动态响应格式选择根据用户偏好、对话阶段或角色调整 Schema——早期返回简单格式，随着复杂度增加返回详细格式。
 
 <Tabs>
   <Tab title="State">
-    Configure structured output based on conversation state:
+    根据对话状态配置结构化输出：
 
     :::python
 
@@ -1319,15 +1305,15 @@ Dynamic response format selection adapts schemas based on user preferences, conv
         request: ModelRequest,
         handler: Callable[[ModelRequest], ModelResponse]
     ) -> ModelResponse:
-        """Select output format based on State."""
-        # request.messages is a shortcut for request.state["messages"]
+        """根据 State 选择输出格式。"""
+        # request.messages 是 request.state["messages"] 的快捷方式
         message_count = len(request.messages)  # [!code highlight]
 
         if message_count < 3:
-            # Early conversation - use simple format
+            # 对话初期 —— 使用简单格式
             request = request.override(response_format=SimpleResponse)  # [!code highlight]
         else:
-            # Established conversation - use detailed format
+            # 对话已建立 —— 使用详细格式
             request = request.override(response_format=DetailedResponse)  # [!code highlight]
 
         return handler(request)
@@ -1359,15 +1345,15 @@ Dynamic response format selection adapts schemas based on user preferences, conv
     const stateBasedOutput = createMiddleware({
       name: "StateBasedOutput",
       wrapModelCall: (request, handler) => {
-        // request.state is a shortcut for request.state.messages
+        // request.state 是 request.state.messages 的快捷方式
         const messageCount = request.messages.length;  // [!code highlight]
 
         let responseFormat;
         if (messageCount < 3) {
-          // Early conversation - use simple format
+          // 对话初期 —— 使用简单格式
           responseFormat = simpleResponse; // [!code highlight]
         } else {
-          // Established conversation - use detailed format
+          // 对话已建立 —— 使用详细格式
           responseFormat = detailedResponse; // [!code highlight]
         }
 
@@ -1379,7 +1365,7 @@ Dynamic response format selection adapts schemas based on user preferences, conv
   </Tab>
 
   <Tab title="Store">
-    Configure output format based on user preferences in Store:
+    根据 Store 中的用户偏好配置输出格式：
 
     :::python
 
@@ -1409,10 +1395,10 @@ Dynamic response format selection adapts schemas based on user preferences, conv
         request: ModelRequest,
         handler: Callable[[ModelRequest], ModelResponse]
     ) -> ModelResponse:
-        """Select output format based on Store preferences."""
+        """根据 Store 偏好选择输出格式。"""
         user_id = request.runtime.context.user_id
 
-        # Read from Store: get user's preferred response style
+        # 从 Store 读取：获取用户首选的响应风格
         store = request.runtime.store
         user_prefs = store.get(("preferences",), user_id)
 
@@ -1459,7 +1445,7 @@ Dynamic response format selection adapts schemas based on user preferences, conv
       wrapModelCall: async (request, handler) => {
         const userId = request.runtime.context.userId;  // [!code highlight]
 
-        // Read from Store: get user's preferred response style
+        // 从 Store 读取：获取用户首选的响应风格
         const store = request.runtime.store;  // [!code highlight]
         const userPrefs = await store.get(["preferences"], userId);  // [!code highlight]
 
@@ -1480,7 +1466,7 @@ Dynamic response format selection adapts schemas based on user preferences, conv
   </Tab>
 
   <Tab title="Runtime Context">
-    Configure output format based on Runtime Context like user role or environment:
+    根据运行时上下文（如用户角色或环境）配置输出格式：
 
     :::python
 
@@ -1511,16 +1497,16 @@ Dynamic response format selection adapts schemas based on user preferences, conv
         request: ModelRequest,
         handler: Callable[[ModelRequest], ModelResponse]
     ) -> ModelResponse:
-        """Select output format based on Runtime Context."""
-        # Read from Runtime Context: user role and environment
+        """根据运行时上下文选择输出格式。"""
+        # 从运行时上下文读取：用户角色和环境
         user_role = request.runtime.context.user_role
         environment = request.runtime.context.environment
 
         if user_role == "admin" and environment == "production":
-            # Admins in production get detailed output
+            # 生产环境管理员获得详细输出
             request = request.override(response_format=AdminResponse)
         else:
-            # Regular users get simple output
+            # 普通用户获得简单输出
             request = request.override(response_format=UserResponse)
 
         return handler(request)
@@ -1558,7 +1544,7 @@ Dynamic response format selection adapts schemas based on user preferences, conv
     const contextBasedOutput = createMiddleware({
       name: "ContextBasedOutput",
       wrapModelCall: (request, handler) => {
-        // Read from Runtime Context: user role and environment
+        // 从运行时上下文读取：用户角色和环境
         const userRole = request.runtime.context.userRole;  // [!code highlight]
         const environment = request.runtime.context.environment;  // [!code highlight]
 
@@ -1577,21 +1563,21 @@ Dynamic response format selection adapts schemas based on user preferences, conv
   </Tab>
 </Tabs>
 
-## Tool context
+## 工具上下文
 
-Tools are special in that they both read and write context.
+工具的特殊之处在于它们既能读取又能写入上下文。
 
-In the most basic case, when a tool executes, it receives the LLM's request parameters and returns a tool message back. The tool does its work and produces a result.
+在最基本的情况下，工具执行时接收 LLM 的请求参数并返回工具消息。工具完成其工作并产生结果。
 
-Tools can also fetch important information for the model that allows it to perform and complete tasks.
+工具还可以为模型获取重要信息，使其能够执行和完成任务。
 
-### Reads
+### 读取
 
-Most real-world tools need more than just the LLM's parameters. They need user IDs for database queries, API keys for external services, or current session state to make decisions. Tools read from state, store, and runtime context to access this information.
+大多数实际工具不仅仅需要 LLM 的参数。它们需要用户 ID 来查询数据库、API 密钥来访问外部服务，或者当前会话状态来做决策。工具通过 State、Store 和运行时上下文来访问这些信息。
 
 <Tabs>
   <Tab title="State">
-    Read from State to check current session information:
+    从 State 中读取当前会话信息：
 
     :::python
 
@@ -1603,8 +1589,8 @@ Most real-world tools need more than just the LLM's parameters. They need user I
     def check_authentication(
         runtime: ToolRuntime
     ) -> str:
-        """Check if user is authenticated."""
-        # Read from State: check current auth status
+        """检查用户是否已认证。"""
+        # 从 State 读取：检查当前认证状态
         current_state = runtime.state
         is_authenticated = current_state.get("authenticated", False)
 
@@ -1628,7 +1614,7 @@ Most real-world tools need more than just the LLM's parameters. They need user I
 
     const checkAuthentication = tool(
       async (_, runtime: ToolRuntime) => {
-        // Read from State: check current auth status
+        // 从 State 读取：检查当前认证状态
         const currentState = runtime.state;
         const isAuthenticated = currentState.authenticated || false;
 
@@ -1649,7 +1635,7 @@ Most real-world tools need more than just the LLM's parameters. They need user I
   </Tab>
 
   <Tab title="Store">
-    Read from Store to access persisted user preferences:
+    从 Store 中读取已持久化的用户偏好：
 
     :::python
 
@@ -1668,10 +1654,10 @@ Most real-world tools need more than just the LLM's parameters. They need user I
         preference_key: str,
         runtime: ToolRuntime[Context]
     ) -> str:
-        """Get user preference from Store."""
+        """从 Store 获取用户偏好。"""
         user_id = runtime.context.user_id
 
-        # Read from Store: get existing preferences
+        # 从 Store 读取：获取已有偏好
         store = runtime.store
         existing_prefs = store.get(("preferences",), user_id)
 
@@ -1704,7 +1690,7 @@ Most real-world tools need more than just the LLM's parameters. They need user I
       async ({ preferenceKey }, runtime: ToolRuntime) => {
         const userId = runtime.context.userId;
 
-        // Read from Store: get existing preferences
+        // 从 Store 读取：获取已有偏好
         const store = runtime.store;
         const existingPrefs = await store.get(["preferences"], userId);
 
@@ -1728,7 +1714,7 @@ Most real-world tools need more than just the LLM's parameters. They need user I
   </Tab>
 
   <Tab title="Runtime Context">
-    Read from Runtime Context for configuration like API keys and user IDs:
+    从运行时上下文读取 API 密钥和用户 ID 等配置信息：
 
     :::python
 
@@ -1748,13 +1734,13 @@ Most real-world tools need more than just the LLM's parameters. They need user I
         query: str,
         runtime: ToolRuntime[Context]
     ) -> str:
-        """Fetch data using Runtime Context configuration."""
-        # Read from Runtime Context: get API key and DB connection
+        """使用运行时上下文配置获取数据。"""
+        # 从运行时上下文读取：获取 API 密钥和数据库连接
         user_id = runtime.context.user_id
         api_key = runtime.context.api_key
         db_connection = runtime.context.db_connection
 
-        # Use configuration to fetch data
+        # 使用配置获取数据
         results = perform_database_query(db_connection, query, api_key)
 
         return f"Found {len(results)} results for user {user_id}"
@@ -1765,7 +1751,7 @@ Most real-world tools need more than just the LLM's parameters. They need user I
         context_schema=Context
     )
 
-    # Invoke with runtime context
+    # 使用运行时上下文调用
     result = agent.invoke(
         {"messages": [{"role": "user", "content": "Get my data"}]},
         context=Context(
@@ -1792,10 +1778,10 @@ Most real-world tools need more than just the LLM's parameters. They need user I
 
     const fetchUserData = tool(
       async ({ query }, runtime: ToolRuntime<any, typeof contextSchema>) => {
-        // Read from Runtime Context: get API key and DB connection
+        // 从运行时上下文读取：获取 API 密钥和数据库连接
         const { userId, apiKey, dbConnection } = runtime.context;
 
-        // Use configuration to fetch data
+        // 使用配置获取数据
         const results = await performDatabaseQuery(dbConnection, query, apiKey);
 
         return `Found ${results.length} results for user ${userId}`;
@@ -1819,14 +1805,14 @@ Most real-world tools need more than just the LLM's parameters. They need user I
   </Tab>
 </Tabs>
 
-### Writes
+### 写入
 
-Tool results can be used to help an agent complete a given task. Tools can both return results directly to the model
-and update the memory of the agent to make important context available to future steps.
+工具结果可以用于帮助 Agent 完成给定任务。工具既可以直接向模型返回结果，
+也可以更新 Agent 的记忆，使重要的上下文可供后续步骤使用。
 
 <Tabs>
   <Tab title="State">
-    Write to State to track session-specific information using Command:
+    使用 Command 写入 State 以跟踪会话特定信息：
 
     :::python
 
@@ -1840,10 +1826,10 @@ and update the memory of the agent to make important context available to future
         password: str,
         runtime: ToolRuntime
     ) -> Command:
-        """Authenticate user and update State."""
-        # Perform authentication (simplified)
+        """认证用户并更新 State。"""
+        # 执行认证（简化示例）
         if password == "correct":
-            # Write to State: mark as authenticated using Command
+            # 写入 State：使用 Command 标记为已认证
             return Command(
                 update={"authenticated": True},
             )
@@ -1867,9 +1853,9 @@ and update the memory of the agent to make important context available to future
 
     const authenticateUser = tool(
       async ({ password }) => {
-        // Perform authentication
+        // 执行认证
         if (password === "correct") {
-          // Write to State: mark as authenticated using Command
+          // 写入 State：使用 Command 标记为已认证
           return new Command({
             update: { authenticated: true },
           });
@@ -1890,7 +1876,7 @@ and update the memory of the agent to make important context available to future
   </Tab>
 
   <Tab title="Store">
-    Write to Store to persist data across sessions:
+    写入 Store 以跨会话持久化数据：
 
     :::python
 
@@ -1910,18 +1896,18 @@ and update the memory of the agent to make important context available to future
         preference_value: str,
         runtime: ToolRuntime[Context]
     ) -> str:
-        """Save user preference to Store."""
+        """将用户偏好保存到 Store。"""
         user_id = runtime.context.user_id
 
-        # Read existing preferences
+        # 读取已有偏好
         store = runtime.store
         existing_prefs = store.get(("preferences",), user_id)
 
-        # Merge with new preference
+        # 与新偏好合并
         prefs = existing_prefs.value if existing_prefs else {}
         prefs[preference_key] = preference_value
 
-        # Write to Store: save updated preferences
+        # 写入 Store：保存更新后的偏好
         store.put(("preferences",), user_id, prefs)
 
         return f"Saved preference: {preference_key} = {preference_value}"
@@ -1945,15 +1931,15 @@ and update the memory of the agent to make important context available to future
       async ({ preferenceKey, preferenceValue }, runtime: ToolRuntime<any, typeof contextSchema>) => {
         const userId = runtime.context.userId;
 
-        // Read existing preferences
+        // 读取已有偏好
         const store = runtime.store;
         const existingPrefs = await store.get(["preferences"], userId);
 
-        // Merge with new preference
+        // 与新偏好合并
         const prefs = existingPrefs?.value || {};
         prefs[preferenceKey] = preferenceValue;
 
-        // Write to Store: save updated preferences
+        // 写入 Store：保存更新后的偏好
         await store.put(["preferences"], userId, prefs);
 
         return `Saved preference: ${preferenceKey} = ${preferenceValue}`;
@@ -1972,30 +1958,30 @@ and update the memory of the agent to make important context available to future
   </Tab>
 </Tabs>
 
-See [Tools](/oss/langchain/tools) for comprehensive examples of accessing state, store, and runtime context in tools.
+参见[工具](/oss/langchain/tools)，了解在工具中访问 State、Store 和运行时上下文的完整示例。
 
-## Life-cycle context
+## 生命周期上下文
 
-Control what happens **between** the core agent steps - intercepting data flow to implement cross-cutting concerns like summarization, guardrails, and logging.
+控制在核心 Agent 步骤**之间**发生的事情 —— 拦截数据流以实现摘要、护栏、日志记录等横切关注点。
 
-As you've seen in [Model Context](#model-context) and [Tool Context](#tool-context), [middleware](/oss/langchain/middleware) is the mechanism that makes context engineering practical. Middleware allows you to hook into any step in the agent lifecycle and either:
+正如你在[模型上下文](#model-context)和[工具上下文](#tool-context)中看到的，[中间件](/oss/langchain/middleware)是使上下文工程切实可行的机制。中间件允许你在 Agent 生命周期的任意步骤中插入钩子，实现以下操作：
 
-1. **Update context** - Modify state and store to persist changes, update conversation history, or save insights
-2. **Jump in the lifecycle** - Move to different steps in the agent cycle based on context (e.g., skip tool execution if a condition is met, repeat model call with modified context)
+1. **更新上下文** - 修改 State 和 Store 以持久化变更、更新对话历史或保存洞察
+2. **生命周期跳转** - 根据上下文跳转到 Agent 循环的不同步骤（例如，在满足条件时跳过工具执行，或使用修改后的上下文重新调用模型）
 
 <div style={{ display: "flex", justifyContent: "center" }}>
   <img
     src="/oss/images/middleware_final.png"
-    alt="Middleware hooks in the agent loop"
+    alt="Agent 循环中的中间件钩子"
     className="rounded-lg"
   />
 </div>
 
-### Example: Summarization
+### 示例：摘要
 
-One of the most common life-cycle patterns is automatically condensing conversation history when it gets too long. Unlike the transient message trimming shown in [Model Context](#messages), summarization **persistently updates state** - permanently replacing old messages with a summary that's saved for all future turns.
+最常见的生命周期模式之一是当对话历史过长时自动压缩。与[模型上下文](#messages)中展示的临时消息裁剪不同，摘要会**持久更新 State** —— 永久地用摘要替换旧消息，以供所有后续轮次使用。
 
-LangChain offers built-in middleware for this:
+LangChain 为此提供了内置中间件：
 
 :::python
 ```python
@@ -2034,30 +2020,30 @@ const agent = createAgent({
 ```
 :::
 
-When the conversation exceeds the token limit, `SummarizationMiddleware` automatically:
-1. Summarizes older messages using a separate LLM call
-2. Replaces them with a summary message in State (permanently)
-3. Keeps recent messages intact for context
+当对话超过 token 限制时，`SummarizationMiddleware` 会自动：
+1. 使用单独的 LLM 调用对较旧的消息进行摘要
+2. 在 State 中用摘要消息永久替换原始消息
+3. 保留近期消息以提供上下文
 
-The summarized conversation history is permanently updated - future turns will see the summary instead of the original messages.
+摘要后的对话历史会被永久更新 —— 后续轮次将看到摘要而非原始消息。
 
 <Note>
-For a complete list of built-in middleware, available hooks, and how to create custom middleware, see the [Middleware documentation](/oss/langchain/middleware).
+如需查看内置中间件的完整列表、可用钩子以及如何创建自定义中间件，请参见[中间件文档](/oss/langchain/middleware)。
 </Note>
 
-## Best practices
+## 最佳实践
 
-1. **Start simple** - Begin with static prompts and tools, add dynamics only when needed
-2. **Test incrementally** - Add one context engineering feature at a time
-3. **Monitor performance** - Track model calls, token usage, and latency
-4. **Use built-in middleware** - Leverage [`SummarizationMiddleware`](/oss/langchain/middleware#summarization), [`LLMToolSelectorMiddleware`](/oss/langchain/middleware#llm-tool-selector), etc.
-5. **Document your context strategy** - Make it clear what context is being passed and why
-6. **Understand transient vs persistent**: Model context changes are transient (per-call), while life-cycle context changes persist to state
+1. **从简单开始** - 先使用静态提示词和工具，在需要时再添加动态特性
+2. **增量式测试** - 每次只添加一个上下文工程特性
+3. **监控性能** - 跟踪模型调用次数、token 使用量和延迟
+4. **使用内置中间件** - 充分利用 [`SummarizationMiddleware`](/oss/langchain/middleware#summarization)、[`LLMToolSelectorMiddleware`](/oss/langchain/middleware#llm-tool-selector) 等
+5. **记录上下文策略** - 明确说明传递了哪些上下文以及原因
+6. **理解临时性与持久性的区别** ：模型上下文的变更是临时的（单次调用），而生命周期上下文的变更会持久化到 State
 
-## Related resources
+## 相关资源
 
-- [Context conceptual overview](/oss/concepts/context) - Understand context types and when to use them
-- [Middleware](/oss/langchain/middleware) - Complete middleware guide
-- [Tools](/oss/langchain/tools) - Tool creation and context access
-- [Memory](/oss/concepts/memory) - Short-term and long-term memory patterns
-- [Agents](/oss/langchain/agents) - Core agent concepts
+- [上下文概念概述](/oss/concepts/context) - 了解上下文类型及其使用场景
+- [中间件](/oss/langchain/middleware) - 完整的中间件指南
+- [工具](/oss/langchain/tools) - 工具创建与上下文访问
+- [记忆](/oss/concepts/memory) - 短期和长期记忆模式
+- [Agent](/oss/langchain/agents) - 核心 Agent 概念

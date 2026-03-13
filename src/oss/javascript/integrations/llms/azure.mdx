@@ -1,45 +1,45 @@
 ---
-title: "Azure OpenAI integration"
-description: "Integrate with the Azure OpenAI LLM using LangChain JavaScript."
+title: "Azure OpenAI 集成"
+description: "使用 LangChain JavaScript 集成 Azure OpenAI LLM 模型。"
 ---
 
 <Warning>
-**You are currently on a page documenting the use of Azure OpenAI text completion models. The latest and most popular Azure OpenAI models are [chat completion models](/oss/langchain/models).**
+**你当前正在查看 Azure OpenAI 文本补全模型的使用文档。最新且最流行的 Azure OpenAI 模型是[对话补全模型](/oss/langchain/models)。**
 
-Unless you are specifically using `gpt-3.5-turbo-instruct`, you are probably looking for [this page instead](/oss/integrations/chat/azure/).
+除非你正在专门使用 `gpt-3.5-turbo-instruct`，否则你可能需要的是[这个页面](/oss/integrations/chat/azure/)。
 </Warning>
 
 <Info>
-**Previously, LangChain.js supported integration with Azure OpenAI using the dedicated [Azure OpenAI SDK](https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/openai/openai). This SDK is now deprecated in favor of the new Azure integration in the OpenAI SDK, which allows to access the latest OpenAI models and features the same day they are released, and allows seamless transition between the OpenAI API and Azure OpenAI.**
+**此前，LangChain.js 支持通过专用的 [Azure OpenAI SDK](https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/openai/openai) 与 Azure OpenAI 集成。该 SDK 现已弃用，取而代之的是 OpenAI SDK 中的新 Azure 集成，它允许在发布当天即可访问最新的 OpenAI 模型和功能，并允许在 OpenAI API 和 Azure OpenAI 之间无缝切换。**
 
-If you are using Azure OpenAI with the deprecated SDK, see the [migration guide](#migration-from-azure-openai-sdk) to update to the new API.
+如果你正在使用已弃用的 SDK 的 Azure OpenAI，请参见[迁移指南](#migration-from-azure-openai-sdk)更新到新 API。
 </Info>
 
-[Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/) is a Microsoft Azure service that provides powerful language models from OpenAI.
+[Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/) 是 Microsoft Azure 服务，提供来自 OpenAI 的强大语言模型。
 
-This will help you get started with AzureOpenAI completion models (LLMs) using LangChain. For detailed documentation on `AzureOpenAI` features and configuration options, please refer to the [API reference](https://api.js.langchain.com/classes/langchain_openai.AzureOpenAI.html).
+本文将帮助你开始使用 AzureOpenAI 文本补全模型（LLM）。`AzureOpenAI` 所有功能和配置选项的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain_openai.AzureOpenAI.html)。
 
-## Overview
+## 概览
 
-### Integration details
+### 集成详情
 
 | Class | Package | Local | Serializable | [PY support](https://python.langchain.com/docs/integrations/llms/azure_openai) | Downloads | Version |
 | :--- | :--- | :---: | :---: |  :---: | :---: | :---: |
 | [AzureOpenAI](https://api.js.langchain.com/classes/langchain_openai.AzureOpenAI.html) | [@langchain/openai](https://api.js.langchain.com/modules/langchain_openai.html) | ❌ | ✅ | ✅ | ![NPM - Downloads](https://img.shields.io/npm/dm/@langchain/openai?style=flat-square&label=%20&) | ![NPM - Version](https://img.shields.io/npm/v/@langchain/openai?style=flat-square&label=%20&) |
 
-## Setup
+## 设置
 
-To access AzureOpenAI models you'll need to create an Azure account, get an API key, and install the `@langchain/openai` integration package.
+要访问 AzureOpenAI 模型，你需要创建 Azure 账户、获取 API 密钥，并安装 `@langchain/openai` 集成包。
 
-### Credentials
+### 凭据
 
-Head to [azure.microsoft.com](https://azure.microsoft.com/) to sign up to AzureOpenAI and generate an API key.
+前往 [azure.microsoft.com](https://azure.microsoft.com/) 注册 AzureOpenAI 并生成 API 密钥。
 
-You'll also need to have an Azure OpenAI instance deployed. You can deploy a version on Azure Portal following [this guide](https://learn.microsoft.com/azure/ai-services/openai/how-to/create-resource?pivots=web-portal).
+你还需要部署一个 Azure OpenAI 实例。你可以按照[此指南](https://learn.microsoft.com/azure/ai-services/openai/how-to/create-resource?pivots=web-portal)在 Azure 门户上部署一个版本。
 
-Once you have your instance running, make sure you have the name of your instance and key. You can find the key in the Azure Portal, under the "Keys and Endpoint" section of your instance.
+实例运行后，确保你有实例的名称和密钥。你可以在 Azure 门户中实例的“密钥和端点”部分找到密钥。
 
-If you're using Node.js, you can define the following environment variables to use the service:
+如果你使用 Node.js，可以定义以下环境变量来使用该服务：
 
 ```bash
 AZURE_OPENAI_API_INSTANCE_NAME=<YOUR_INSTANCE_NAME>
@@ -48,18 +48,18 @@ AZURE_OPENAI_API_KEY=<YOUR_KEY>
 AZURE_OPENAI_API_VERSION="2024-02-01"
 ```
 
-Alternatively, you can pass the values directly to the `AzureOpenAI` constructor.
+或者，你可以将值直接传递给 `AzureOpenAI` 构造函数。
 
-If you want to get automated tracing of your model calls you can also set your [LangSmith](/langsmith/home) API key by uncommenting below:
+如果你想获取模型调用的自动追踪，你还可以通过取消下方注释来设置你的 [LangSmith](/langsmith/home) API 密钥：
 
 ```bash
 # export LANGSMITH_TRACING="true"
 # export LANGSMITH_API_KEY="your-api-key"
 ```
 
-### Installation
+### 安装
 
-The LangChain AzureOpenAI integration lives in the `@langchain/openai` package:
+LangChain AzureOpenAI 集成位于 `@langchain/openai` 包中：
 
 <CodeGroup>
 ```bash npm
@@ -73,9 +73,9 @@ pnpm add @langchain/openai @langchain/core
 ```
 </CodeGroup>
 
-## Instantiation
+## 实例化
 
-Now we can instantiate our model object and generate chat completions:
+现在我们可以实例化模型对象并生成对话补全：
 
 ```typescript
 import { AzureOpenAI } from "@langchain/openai"
@@ -94,7 +94,7 @@ const llm = new AzureOpenAI({
 })
 ```
 
-## Invocation
+## 调用
 
 ```typescript
 const inputText = "AzureOpenAI is an AI company that "
@@ -107,9 +107,9 @@ completion
 provides AI solutions to businesses. They offer a range of services including natural language processing, computer vision, and machine learning. Their solutions are designed to help businesses automate processes, gain insights from data, and improve decision-making. AzureOpenAI also offers consulting services to help businesses identify and implement the best AI solutions for their specific needs. They work with a variety of industries, including healthcare, finance, and retail. With their expertise in AI and their partnership with Microsoft Azure, AzureOpenAI is a trusted provider of AI solutions for businesses looking to stay ahead in the rapidly evolving world of technology.
 ```
 
-## Using Azure Managed identity
+## 使用 Azure 托管身份
 
-If you're using Azure Managed Identity, you can configure the credentials like this:
+如果你使用 Azure 托管身份，可以像这样配置凭据：
 
 ```typescript
 import {
@@ -133,10 +133,10 @@ const managedIdentityLLM = new AzureOpenAI({
 
 ```
 
-## Using a different domain
+## 使用不同的域名
 
-If your instance is hosted under a domain other than the default `openai.azure.com`, you'll need to use the alternate `AZURE_OPENAI_BASE_PATH` environment variable.
-For example, here's how you would connect to the domain `https://westeurope.api.microsoft.com/openai/deployments/{DEPLOYMENT_NAME}`:
+如果你的实例托管在默认的 `openai.azure.com` 之外的域名下，你需要使用备用的 `AZURE_OPENAI_BASE_PATH` 环境变量。
+例如，以下是如何连接到域名 `https://westeurope.api.microsoft.com/openai/deployments/{DEPLOYMENT_NAME}` 的方法：
 
 ```typescript
 import { AzureOpenAI } from "@langchain/openai";
@@ -151,24 +151,24 @@ const differentDomainLLM = new AzureOpenAI({
 
 ```
 
-## Migration from Azure OpenAI SDK
+## 从 Azure OpenAI SDK 迁移
 
-If you are using the deprecated Azure OpenAI SDK with the `@langchain/azure-openai` package, you can update your code to use the new Azure integration following these steps:
+如果你正在使用已弃用的 Azure OpenAI SDK 和 `@langchain/azure-openai` 包，你可以按以下步骤更新代码以使用新的 Azure 集成：
 
-1. Install the new `@langchain/openai` package and remove the previous `@langchain/azure-openai` package:
+1. 安装新的 `@langchain/openai` 包并卸载之前的 `@langchain/azure-openai` 包：
 
    ```bash
    npm install @langchain/openai
    npm uninstall @langchain/azure-openai
    ```
 
-2. Update your imports to use the new `AzureOpenAI` and @[`AzureChatOpenAI`] classes from the `@langchain/openai` package:
+2. 更新导入以使用 `@langchain/openai` 包中的新 `AzureOpenAI` 和 @[`AzureChatOpenAI`] 类：
 
    ```typescript
    import { AzureOpenAI } from "@langchain/openai";
    ```
 
-3. Update your code to use the new `AzureOpenAI` and @[`AzureChatOpenAI`] classes and pass the required parameters:
+3. 更新代码以使用新的 `AzureOpenAI` 和 @[`AzureChatOpenAI`] 类并传入所需参数：
 
    ```typescript
    const model = new AzureOpenAI({
@@ -179,14 +179,14 @@ If you are using the deprecated Azure OpenAI SDK with the `@langchain/azure-open
    });
    ```
 
-   Notice that the constructor now requires the `azureOpenAIApiInstanceName` parameter instead of the `azureOpenAIEndpoint` parameter, and adds the `azureOpenAIApiVersion` parameter to specify the API version.
+   请注意，构造函数现在需要 `azureOpenAIApiInstanceName` 参数而不是 `azureOpenAIEndpoint` 参数，并新增了 `azureOpenAIApiVersion` 参数来指定 API 版本。
 
-   - If you were using Azure Managed Identity, you now need to use the `azureADTokenProvider` parameter to the constructor instead of `credentials`, see the [Azure Managed Identity](#using-azure-managed-identity) section for more details.
+   - 如果你之前使用的是 Azure 托管身份，现在需要在构造函数中使用 `azureADTokenProvider` 参数而不是 `credentials`，详见[使用 Azure 托管身份](#using-azure-managed-identity)部分。
 
-   - If you were using environment variables, you now have to set the `AZURE_OPENAI_API_INSTANCE_NAME` environment variable instead of `AZURE_OPENAI_API_ENDPOINT`, and add the `AZURE_OPENAI_API_VERSION` environment variable to specify the API version.
+   - 如果你之前使用的是环境变量，现在需要设置 `AZURE_OPENAI_API_INSTANCE_NAME` 环境变量而不是 `AZURE_OPENAI_API_ENDPOINT`，并新增 `AZURE_OPENAI_API_VERSION` 环境变量来指定 API 版本。
 
 ---
 
-## API reference
+## API 参考
 
-For detailed documentation of all AzureOpenAI features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_openai.AzureOpenAI.html).
+所有 AzureOpenAI 功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain_openai.AzureOpenAI.html)。

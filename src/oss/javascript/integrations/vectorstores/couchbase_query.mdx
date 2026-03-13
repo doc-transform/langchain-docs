@@ -1,38 +1,38 @@
 ---
-title: "Couchbase query integration"
-description: "Integrate with the Couchbase query vector store using LangChain JavaScript."
+title: "Couchbase Query 集成"
+description: "使用 LangChain JavaScript 集成 Couchbase Query 向量存储。"
 ---
 
-The `CouchbaseQueryVectorStore` is the preferred implementation of Vector Search in Couchbase. It uses the [Query Service](https://docs.couchbase.com/server/current/learn/services-and-indexes/services/query-service.html) (SQL++) and [Index Service](https://docs.couchbase.com/server/current/learn/services-and-indexes/services/index-service.html) for vector similarity search, instead of the Search service. This provides a more powerful and straightforward approach for vector operations using SQL++ queries with vector functions.
+`CouchbaseQueryVectorStore` 是 Couchbase 中向量搜索的首选实现。它使用 [Query 服务](https://docs.couchbase.com/server/current/learn/services-and-indexes/services/query-service.html)（SQL++）和[索引服务](https://docs.couchbase.com/server/current/learn/services-and-indexes/services/index-service.html)进行向量相似性搜索，而不是搜索服务。这提供了一种更强大、更直接的方法，使用 SQL++ 查询和向量函数进行向量操作。
 
-More information about Couchbase's vector search capabilities can be found in the official documentation: [Choose the Right Vector Index](https://docs.couchbase.com/server/current/vector-index/use-vector-indexes.html).
+更多关于 Couchbase 向量搜索功能的信息可以在官方文档中找到：[选择正确的向量索引](https://docs.couchbase.com/server/current/vector-index/use-vector-indexes.html)。
 
 <Warning>
-    This functionality is only available in [Couchbase 8.0](https://docs.couchbase.com/server/8.0/introduction/whats-new.html) and above.
+    此功能仅在 [Couchbase 8.0](https://docs.couchbase.com/server/8.0/introduction/whats-new.html) 及以上版本中可用。
 </Warning>
 
-## Key differences from `CouchbaseSearchVectorStore`
+## 与 `CouchbaseSearchVectorStore` 的主要区别
 
-(formerly `CouchbaseVectorStore`)
+（以前称为 `CouchbaseVectorStore`）
 
-- **Query and Index Service**: Uses Couchbase's Query service with SQL++ instead of the Search service
-- **No Index Required**: Does not require a pre-configured search index for basic operations
-- **SQL++ Syntax**: Supports WHERE clauses and SQL++ query syntax for filtering
-- **Vector Functions**: Uses `APPROX_VECTOR_DISTANCE` function for similarity calculations
-- **Distance Strategies**: Supports multiple distance strategies (Dot Product, Cosine, Euclidean, Euclidean Squared)
+- **Query 和索引服务**：使用 Couchbase 的 Query 服务和 SQL++，而不是搜索服务
+- **无需索引**：基本操作不需要预配置的搜索索引
+- **SQL++ 语法**：支持 WHERE 子句和 SQL++ 查询语法进行过滤
+- **向量函数**：使用 `APPROX_VECTOR_DISTANCE` 函数进行相似性计算
+- **距离策略**：支持多种距离策略（点积、余弦、欧几里得、欧几里得平方）
 
-## Installation
+## 安装
 
 ```bash npm
 npm install couchbase @langchain/openai @langchain/community @langchain/core
 ```
 
-## Create couchbase connection object
+## 创建 Couchbase 连接对象
 
-We create a connection to the Couchbase cluster and then pass the cluster object to the Vector Store. Here, we are connecting using the username and password.
-You can also connect to your cluster using any other supported method.
+我们创建一个到 Couchbase 集群的连接，然后将集群对象传递给向量存储。这里我们使用用户名和密码进行连接。
+你也可以使用任何其他支持的方法连接到集群。
 
-For more information on connecting to the Couchbase cluster, please check the [Node SDK documentation](https://docs.couchbase.com/nodejs-sdk/current/hello-world/start-using-sdk.html#connect).
+更多关于连接 Couchbase 集群的信息，请查看 [Node SDK 文档](https://docs.couchbase.com/nodejs-sdk/current/hello-world/start-using-sdk.html#connect)。
 
 ```typescript
 import { Cluster } from "couchbase";
@@ -48,7 +48,7 @@ const couchbaseClient = await Cluster.connect(connectionString, {
 });
 ```
 
-## Basic setup
+## 基本设置
 
 ```typescript
 import { CouchbaseQueryVectorStore, DistanceStrategy } from "@langchain/community/vectorstores/couchbase_query";
@@ -76,12 +76,12 @@ const vectorStore = await CouchbaseQueryVectorStore.initialize(embeddings, {
 });
 ```
 
-## Creating vector indexes
+## 创建向量索引
 
-The Query vector store supports creating vector indexes to improve search performance. There are two types of indexes available:
+Query 向量存储支持创建向量索引以提高搜索性能。有两种类型的索引可用：
 
-### Hyperscale index
-A specialized vector index optimized for vector operations using Couchbase's vector indexing capabilities:
+### 超大规模索引
+使用 Couchbase 向量索引功能优化向量操作的专用向量索引：
 
 ```typescript
 import { IndexType } from "@langchain/community/vectorstores/couchbase_query";
@@ -99,15 +99,15 @@ await vectorStore.createIndex({
 });
 ```
 
-**Generated SQL++:**
+**生成的 SQL++：**
 ```sql
 CREATE VECTOR INDEX `my_vector_index` ON `bucket`.`scope`.`collection`
 (`embedding` VECTOR) INCLUDE (`text`, `metadata`)
 WHERE type = 'document' USING GSI WITH {'dimension': 1536, 'similarity': 'cosine', 'description': 'IVF,SQ8'}
 ```
 
-### Composite index
-A general-purpose GSI index that includes vector fields alongside scalar fields:
+### 复合索引
+通用 GSI 索引，可包含向量字段和标量字段：
 
 ```typescript
 await vectorStore.createIndex({
@@ -122,7 +122,7 @@ await vectorStore.createIndex({
 });
 ```
 
-**Generated SQL++:**
+**生成的 SQL++：**
 ```sql
 CREATE INDEX `my_composite_index` ON `bucket`.`scope`.`collection`
 (`text`, `metadata.category`, `embedding` VECTOR)
@@ -130,22 +130,22 @@ WHERE created_date > '2023-01-01' USING GSI
 WITH {'dimension': 1536, 'similarity': 'dot', 'description': 'IVF1024,SQ8', 'scan_nprobes': 3, 'trainlist': 10000}
 ```
 
-### Key differences
+### 主要区别
 
-| Aspect | Hyperscale Index | Composite Index |
+| 方面 | 超大规模索引 | 复合索引 |
 |--------|-------------|-----------------|
-| **SQL++ Syntax** | `CREATE VECTOR INDEX` | `CREATE INDEX` |
-| **Vector Field** | `(field VECTOR)` with `INCLUDE` clause | `(field1, field2, vector_field VECTOR)` |
-| **Vector Parameters** | Supports all vector parameters | Supports all vector parameters |
-| **Optimization** | Specialized for vector operations | General-purpose GSI with vector support |
-| **Use Case** | Pure vector similarity search | Mixed vector and scalar queries |
-| **Performance** | Optimized for vector distance calculations | Good for hybrid queries |
-| **Tuning Parameters** | Supports `indexScanNprobes`, `indexTrainlist` | Supports `indexScanNprobes`, `indexTrainlist` |
-| **Limitations** | Only one vector field, uses INCLUDE for other fields | One vector field among multiple index keys |
+| **SQL++ 语法** | `CREATE VECTOR INDEX` | `CREATE INDEX` |
+| **向量字段** | `(field VECTOR)` 带 `INCLUDE` 子句 | `(field1, field2, vector_field VECTOR)` |
+| **向量参数** | 支持所有向量参数 | 支持所有向量参数 |
+| **优化** | 专为向量操作优化 | 通用 GSI 带向量支持 |
+| **用例** | 纯向量相似性搜索 | 混合向量和标量查询 |
+| **性能** | 针对向量距离计算优化 | 适合混合查询 |
+| **调优参数** | 支持 `indexScanNprobes`、`indexTrainlist` | 支持 `indexScanNprobes`、`indexTrainlist` |
+| **限制** | 只有一个向量字段，使用 INCLUDE 包含其他字段 | 一个向量字段在多个索引键中 |
 
-## Basic vector search example
+## 基本向量搜索示例
 
-The following example showcases how to use Couchbase Query vector search and perform similarity search.
+以下示例展示了如何使用 Couchbase Query 向量搜索和执行相似性搜索。
 
 ```typescript
 import { OpenAIEmbeddings } from "@langchain/openai";
@@ -181,7 +181,7 @@ const vectorStore = await CouchbaseQueryVectorStore.initialize(embeddings, {
   distanceStrategy: DistanceStrategy.COSINE,
 });
 
-// Add documents
+// 添加文档
 const documents = [
   new Document({
     pageContent: "Couchbase is a NoSQL database",
@@ -195,12 +195,12 @@ const documents = [
 
 await vectorStore.addDocuments(documents);
 
-// Perform similarity search
+// 执行相似性搜索
 const query = "What is a NoSQL database?";
 const results = await vectorStore.similaritySearch(query, 4);
 console.log("Search results:", results[0]);
 
-// Search with scores
+// 带分数搜索
 const resultsWithScores = await vectorStore.similaritySearchWithScore(query, 4);
 console.log("Document:", resultsWithScores[0][0]);
 console.log("Score:", resultsWithScores[0][1]);
@@ -235,7 +235,7 @@ const filteredResults = await vectorStore.similaritySearch(
 ### Search with scores
 
 ```typescript
-// Search with scores
+// 带分数搜索
 const resultsWithScores = await vectorStore.similaritySearchWithScore(
   "vector search capabilities",
   4

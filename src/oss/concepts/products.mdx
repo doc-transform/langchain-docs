@@ -1,37 +1,37 @@
 ---
-title: Frameworks, runtimes, and harnesses
+title: 框架、运行时与 Agent 套件
 sidebarTitle: LangChain vs. LangGraph vs. Deep Agents
-description: Understand the differences between LangChain, LangGraph, and Deep Agents and when to use each one
+description: 了解 LangChain、LangGraph 和 Deep Agents 之间的区别及各自的适用场景
 ---
 
 <div class="products-page">
 
-LangChain maintains several open source packages to help you build agents. Each serves a different purpose in the agent development stack. Understanding the distinctions between [agent frameworks](#agent-frameworks-like-langchain), [agent runtimes](#agent-runtimes-like-langgraph), and [agent harnesses](#agent-harnesses-like-the-deep-agents-sdk) helps you choose the right tool for your needs.
+LangChain 维护着多个开源软件包，帮助你构建 Agent。它们在 Agent 开发栈中各司其职。理解 [Agent 框架](#agent-frameworks-like-langchain)、[Agent 运行时](#agent-runtimes-like-langgraph)和 [Agent 套件](#agent-harnesses-like-the-deep-agents-sdk)之间的区别，有助于你根据需求选择合适的工具。
 
 <table>
   <thead>
     <tr>
       <th></th>
-      <th>Framework</th>
-      <th>Runtime</th>
-      <th>Harness</th>
+      <th>框架</th>
+      <th>运行时</th>
+      <th>套件</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>Value add</td>
-      <td class="tdlist"><ul><li>Abstractions</li><li>Integrations</li></ul></td>
-      <td class="tdlist"><ul><li>Durable execution</li><li>Streaming</li><li>HITL</li><li>Persistence</li></ul></td>
-      <td class="tdlist"><ul><li>Predefined tools</li><li>Prompts</li><li>Subagents</li></ul></td>
+      <td>核心价值</td>
+      <td class="tdlist"><ul><li>抽象封装</li><li>集成生态</li></ul></td>
+      <td class="tdlist"><ul><li>持久化执行</li><li>流式输出</li><li>人机协作</li><li>状态持久化</li></ul></td>
+      <td class="tdlist"><ul><li>内置工具</li><li>预置提示词</li><li>子 Agent</li></ul></td>
     </tr>
     <tr>
-      <td>When to use</td>
-      <td class="tdlist"><ul><li>Getting started quickly</li><li>Standardizing how a team builds</li></ul></td>
-      <td class="tdlist"><ul><li>Low-level control</li><li>Long running, stateful workflows and agents</li></ul></td>
-      <td class="tdlist"><ul><li>More autonomous agents</li><li>Agents faced with complex, non-deterministic tasks</li></ul></td>
+      <td>适用场景</td>
+      <td class="tdlist"><ul><li>快速上手</li><li>统一团队开发规范</li></ul></td>
+      <td class="tdlist"><ul><li>底层精细控制</li><li>长时运行的有状态工作流和 Agent</li></ul></td>
+      <td class="tdlist"><ul><li>高度自治的 Agent</li><li>面对复杂、非确定性任务的 Agent</li></ul></td>
     </tr>
     <tr>
-      <td>Options</td>
+      <td>可选方案</td>
       <td class="tdlist"><ul><li>LangChain</li><li>Vercel's AI SDK</li><li>CrewAI</li><li>OpenAI Agents SDK</li><li>Google ADK</li><li>LlamaIndex</li></ul></td>
       <td class="tdlist"><ul><li>LangGraph</li><li>Temporal</li><li>Inngest</li></ul></td>
       <td class="tdlist"><ul><li>Deep Agents SDK</li><li>Claude Agent SDK</li><li>Manus</li></ul></td>
@@ -39,84 +39,78 @@ LangChain maintains several open source packages to help you build agents. Each 
   </tbody>
 </table>
 
-## Agent frameworks (like LangChain)
+## Agent 框架（如 LangChain）
 
-Agent frameworks provide abstractions that make it easier to get started when building with LLMs.
+Agent 框架提供了一系列抽象，使基于 LLM 的开发更容易上手。
 
-[LangChain](/oss/langchain/overview) is an agent framework that provides abstractions like structured content blocks, the agent loop, and middleware.
+[LangChain](/oss/langchain/overview) 是一个 Agent 框架，提供了结构化内容块、Agent 循环和中间件等抽象。
 
-LangChain's abstractions are designed to be easy to get started with while still providing the flexibility needed for advanced use cases.
+LangChain 的抽象设计兼顾了易用性和高级场景所需的灵活性。
 
-While LangChain is built on top of [LangGraph](/oss/langgraph/overview), you don't need to know LangGraph to use LangChain.
+虽然 LangChain 构建在 [LangGraph](/oss/langgraph/overview) 之上，但使用 LangChain 并不需要了解 LangGraph。
 
-Other examples of agent frameworks include [Vercel’s AI SDK](https://ai-sdk.dev/docs/introduction), [CrewAI](https://www.crewai.com/), [OpenAI Agents SDK](https://openai.github.io/openai-agents-python/), [Google ADK](https://google.github.io/adk-docs/), [LlamaIndex](https://www.llamaindex.ai/), and many more.
+其他 Agent 框架还有 [Vercel's AI SDK](https://ai-sdk.dev/docs/introduction)、[CrewAI](https://www.crewai.com/)、[OpenAI Agents SDK](https://openai.github.io/openai-agents-python/)、[Google ADK](https://google.github.io/adk-docs/)、[LlamaIndex](https://www.llamaindex.ai/) 等。
+### 何时使用 LangChain
 
-### When to use LangChain
+在以下场景中推荐使用 LangChain：
 
-Use LangChain when:
+- 需要快速构建 Agent 和自治应用。
+- 需要模型、工具和 Agent 循环的标准化抽象。
+- 希望使用简单易用且仍具灵活性的框架。
+- 构建无需复杂编排的常规 Agent 应用。
 
-- You want to quickly build agents and autonomous applications.
-- You need standard abstractions for models, tools, and agent loops.
-- You want an easy-to-use framework that still provides flexibility.
-- You're building straightforward agent applications without complex orchestration needs.
+## Agent 运行时（如 LangGraph）
 
-## Agent runtimes (like LangGraph)
+Agent 运行时提供在生产环境中运行 Agent 所需的工具链，支持的能力包括：
 
-Agent runtimes provide the tooling for running agents in production.
-Supported tools may include:
+- **持久化执行**：Agent 在故障后仍能保持状态，可长时间运行，并从中断处恢复。
+- **流式输出**：支持工作流和响应的流式传输。
+- **人机协作**：通过检查和修改 Agent 状态引入人工监督。
+- **状态持久化**：支持线程级和跨线程的状态管理。
+- **底层控制**：无需高层抽象，直接控制 Agent 编排逻辑。
 
-- **Durable execution**: Agents persist through failures and can run for extended periods, resuming from where they left off.
-- **Streaming**: Support for streaming workflows and responses.
-- **Human-in-the-loop**: Incorporate human oversight by inspecting and modifying agent state.
-- **Persistence**: Thread-level and cross-thread persistence for state management.
-- **Low-level control**: Direct control over agent orchestration without high-level abstractions.
+[LangGraph](/oss/langgraph/overview) 是一个底层编排框架和运行时，用于构建、管理和部署长时运行的有状态 Agent。
 
-[LangGraph](/oss/langgraph/overview) is a low-level orchestration framework and runtime for building, managing, and deploying long-running, stateful agents.
+Agent 框架通常更高层级，运行在 Agent 运行时之上。例如，LangChain 1.0 就构建在 LangGraph 之上。
 
-Agent frameworks are generally higher level and run on agent runtimes.
-For example, LangChain 1.0 is built on top of LangGraph.
+其他 Agent 运行时还有 [Temporal](https://temporal.io/)、[Inngest](https://www.inngest.com/) 及其他持久化执行引擎。
 
-Other examples of agent runtimes include [Temporal](https://temporal.io/), [Inngest](https://www.inngest.com/), and other durable execution engines.
+### 何时使用 LangGraph
 
-### When to use LangGraph
+在以下场景中推荐使用 LangGraph：
 
-Use LangGraph when:
+- 需要对 Agent 编排进行底层精细控制。
+- 需要为长时运行的有状态 Agent 提供持久化执行。
+- 构建确定性步骤与 Agent 步骤相结合的复杂工作流。
+- 需要生产级别的 Agent 部署基础设施。
 
-- You need fine-grained, low-level control over agent orchestration.
-- You need durable execution for long-running, stateful agents.
-- You're building complex workflows that combine deterministic and agentic steps.
-- You need production-ready infrastructure for agent deployment.
+## Agent 套件（如 Deep Agents SDK）
 
-## Agent harnesses (like the Deep Agents SDK)
+Agent 套件是一类开箱即用的 Agent 框架，内置了丰富的工具和能力，使构建复杂的长时运行 Agent 变得更加容易。支持的能力包括：
 
-Agent harnesses are opinionated agent frameworks with that come batteries included with built-in tools and capabilities that make building sophisticated, long-running agents easier.
-Supported tools may include:
+- **规划能力**：通过待办列表跟踪和管理多项任务。
+- **任务委派**：通过子 Agent 委派工作，保持上下文清晰。
+- **文件系统**：对不同可插拔存储后端上的文件进行读写访问。
+- **Token 管理**：对话历史摘要和大型工具结果的自动清除。
 
-- **Planning capabilities**: Track multiple tasks with a to-do list.
-- **Task delegation**: Delegate work and keep context clean with subagents.
-- **File system**: Read and write access to files on different pluggable storage backends.
-- **Token management**: Conversation history summarization and large tool result eviction.
+[Deep Agents SDK](/oss/deepagents/overview) 构建在 LangGraph 之上，增加了规划能力、用于上下文管理的文件系统、生成子 Agent 的能力等。Deep Agents 专为需要规划和任务分解的复杂多步骤任务而设计。示例任务包括处理搜索结果、脚本以及状态中的其他产物。
 
-The [Deep Agents SDK](/oss/deepagents/overview) builds on top of LangGraph and adds planning capabilities, file systems for context management, the ability to spawn subagents, and more.
-DeepAgents is designed for complex, multi-step tasks that require planning and decomposition.
-Example tasks include working with search results, scripts, and other artifacts in state.
+其他 Agent 套件还有 [Claude Agent SDK](https://platform.claude.com/docs/en/agent-sdk/overview)、[Manus](https://manus.im/) 及其他编程 CLI 工具。
 
-Other examples of agent harnesses include [Claude Agent SDK](https://platform.claude.com/docs/en/agent-sdk/overview), [Manus](https://manus.im/), and other coding CLIs.
+### 何时使用 Deep Agents SDK
 
-### When to use the Deep Agents SDK
+在以下场景中推荐使用 [Deep Agents SDK](/oss/deepagents/overview)：
 
-Use the [Deep Agents SDK](/oss/deepagents/overview) when:
+- 构建长时间运行的 Agent。
+- 构建需要处理复杂多步骤任务的 Agent。
+- 希望使用预置工具，如文件系统操作、Bash 执行和自动化上下文工程。
+- 希望使用预置提示词和子 Agent。
 
-- You are building agents that run over long time periods.
-- You are building agents that need to handle complex, multi-step tasks.
-- You want to use predefined tools, such as filesystem operations, bash execution, and automated context engineering.
-- You want to use predefined prompts and subagents.
+## 功能对比
 
-## Feature comparison
+虽然使用 LangChain、LangGraph 和 Deep Agents 都能完成类似的任务，但它们的集成层级有所不同：
 
-While you can accomplish similar tasks with LangChain, LangGraph, and Deep Agents, the level at which you integrate them differ:
-
-| Feature | LangChain | LangGraph   | Deep Agents |
+| 功能 | LangChain | LangGraph   | Deep Agents |
 | ------- | --------- | ----------- | ----------- |
 | Short-term memory | [Short-term memory](/oss/langchain/short-term-memory) | [Short-term memory](/oss/langgraph/add-memory#add-short-term-memory) | [`StateBackend`](/oss/deepagents/backends#statebackend-ephemeral) |
 | Long-term memory | [Long-term memory](/oss/langchain/long-term-memory) | [Long-term memory](/oss/langgraph/add-memory#add-long-term-memory) | [Long-term memory](/oss/deepagents/long-term-memory) |
@@ -125,10 +119,10 @@ While you can accomplish similar tasks with LangChain, LangGraph, and Deep Agent
 | Human-in-the-loop | [Human-in-the-loop middleware](/oss/langchain/human-in-the-loop) | [Interrupts](/oss/langgraph/interrupts) | [`interrupt_on` parameter](/oss/deepagents/harness#human-in-the-loop) |
 | Streaming | [Agent Streaming](/oss/langchain/streaming/overview) | [Streaming](/oss/langgraph/streaming) | [Streaming](/oss/deepagents/streaming/overview) |
 
-## Learn more
+## 了解更多
 
-- [LangChain overview](/oss/langchain/overview)
-- [LangGraph overview](/oss/langgraph/overview)
-- [Deep Agents overview](/oss/deepagents/overview)
+- [LangChain 概览](/oss/langchain/overview)
+- [LangGraph 概览](/oss/langgraph/overview)
+- [Deep Agents 概览](/oss/deepagents/overview)
 
 </div>

@@ -1,37 +1,37 @@
 ---
-title: Choosing between Graph and Functional APIs
-sidebarTitle: Choosing APIs
+title: 在 Graph API 和 Functional API 之间选择
+sidebarTitle: 选择 API
 ---
 
-LangGraph provides two different APIs to build agent workflows: the **Graph API** and the **Functional API**. Both APIs share the same underlying runtime and can be used together in the same application, but they are designed for different use cases and development preferences.
+LangGraph 提供了两种不同的 API 来构建 Agent 工作流：**Graph API** 和 **Functional API**。两种 API 共享相同的底层运行时，可以在同一应用中组合使用，但它们是针对不同的用例和开发偏好设计的。
 
-This guide will help you understand when to use each API based on your specific requirements.
+本指南将帮助你根据具体需求理解何时使用哪种 API。
 
-## Quick decision guide
+## 快速决策指南
 
-Use the **Graph API** when you need:
-- **Complex workflow visualization** for debugging and documentation
-- **Explicit state management** with shared data across multiple nodes
-- **Conditional branching** with multiple decision points
-- **Parallel execution paths** that need to merge later
-- **Team collaboration** where visual representation aids understanding
+在以下情况使用 **Graph API**：
+- **复杂的工作流可视化**，用于调试和文档
+- **显式的状态管理**，跨多个节点共享数据
+- **条件分支**，包含多个决策点
+- **并行执行路径**，需要后续合并
+- **团队协作**，可视化表示有助于理解
 
-Use the **Functional API** when you want:
-- **Minimal code changes** to existing procedural code
-- **Standard control flow** (if/else, loops, function calls)
-- **Function-scoped state** without explicit state management
-- **Rapid prototyping** with less boilerplate
-- **Linear workflows** with simple branching logic
+在以下情况使用 **Functional API**：
+- **最小代码更改**，对现有过程式代码的改动最小
+- **标准控制流**（if/else、循环、函数调用）
+- **函数作用域状态**，无需显式状态管理
+- **快速原型开发**，较少的样板代码
+- **线性工作流**，具有简单的分支逻辑
 
-## Detailed comparison
+## 详细对比
 
-### When to use the Graph API
+### 何时使用 Graph API
 
-The [Graph API](/oss/langgraph/graph-api) uses a declarative approach where you define nodes, edges, and shared state to create a visual graph structure.
+[Graph API](/oss/langgraph/graph-api) 使用声明式方法，你定义节点、边和共享状态来创建可视化的图结构。
 
-**1. Complex decision trees and branching logic**
+**1. 复杂的决策树和分支逻辑**
 
-When your workflow has multiple decision points that depend on various conditions, the Graph API makes these branches explicit and easy to visualize.
+当你的工作流有多个依赖于各种条件的决策点时，Graph API 使这些分支显式且易于可视化。
 
 :::python
 
@@ -100,9 +100,9 @@ const workflow = new StateGraph(AgentState)
 
 :::
 
-**2. State management across multiple components**
+**2. 跨多个组件的状态管理**
 
-When you need to share and coordinate state between different parts of your workflow, the Graph API's explicit state management is beneficial.
+当你需要在工作流的不同部分之间共享和协调状态时，Graph API 的显式状态管理很有优势。
 
 :::python
 
@@ -156,9 +156,9 @@ const validationNode: GraphNode<typeof WorkflowState> = async (state) => {
 
 :::
 
-**3. Parallel processing with synchronization**
+**3. 并行处理与同步**
 
-When you need to run multiple operations in parallel and then combine their results, the Graph API handles this naturally.
+当你需要并行运行多个操作然后合并结果时，Graph API 可以自然地处理这种情况。
 
 :::python
 
@@ -205,9 +205,9 @@ workflow
 
 :::
 
-**4. Team development and documentation**
+**4. 团队开发和文档化**
 
-The visual nature of the Graph API makes it easier for teams to understand, document, and maintain complex workflows.
+Graph API 的可视化特性使团队更容易理解、记录和维护复杂的工作流。
 
 :::python
 
@@ -234,13 +234,13 @@ workflow
 
 :::
 
-### When to use the Functional API
+### 何时使用 Functional API
 
-The [Functional API](/oss/langgraph/functional-api) uses an imperative approach that integrates LangGraph features into standard procedural code.
+[Functional API](/oss/langgraph/functional-api) 使用命令式方法，将 LangGraph 功能集成到标准的过程式代码中。
 
-**1. Existing procedural code**
+**1. 现有的过程式代码**
 
-When you have existing code that uses standard control flow and want to add LangGraph features with minimal refactoring.
+当你有使用标准控制流的现有代码，并希望以最小的重构添加 LangGraph 功能时。
 
 :::python
 
@@ -302,9 +302,9 @@ const workflow = entrypoint(
 
 :::
 
-**2. Linear workflows with simple logic**
+**2. 具有简单逻辑的线性工作流**
 
-When your workflow is primarily sequential with straightforward conditional logic.
+当你的工作流主要是顺序执行的，具有简单直接的条件逻辑时。
 
 :::python
 
@@ -366,9 +366,9 @@ const essayWorkflow = entrypoint(
 
 :::
 
-**3. Rapid prototyping**
+**3. 快速原型开发**
 
-When you want to quickly test ideas without the overhead of defining state schemas and graph structures.
+当你希望快速测试想法，而不需要定义状态 schema 和图结构的开销时。
 
 :::python
 
@@ -403,9 +403,9 @@ const quickPrototype = entrypoint(
 
 :::
 
-**4. Function-scoped state management**
+**4. 函数作用域状态管理**
 
-When your state is naturally scoped to individual functions and doesn't need to be shared broadly.
+当你的状态自然地限定在各个函数内，不需要广泛共享时。
 
 :::python
 
@@ -462,9 +462,9 @@ const documentProcessor = entrypoint(
 
 :::
 
-## Combining both APIs
+## 组合使用两种 API
 
-You can use both APIs together in the same application. This is useful when different parts of your system have different requirements.
+你可以在同一应用中同时使用两种 API。当系统的不同部分有不同的需求时，这很有用。
 
 :::python
 
@@ -532,11 +532,11 @@ const coordinationGraph = new StateGraph(CoordinationState)
 
 :::
 
-## Migration between APIs
+## API 之间的迁移
 
-### From Functional to Graph API
+### 从 Functional 迁移到 Graph API
 
-When your functional workflow grows complex, you can migrate to the Graph API:
+当你的 Functional 工作流变得复杂时，你可以迁移到 Graph API：
 
 :::python
 
@@ -643,9 +643,9 @@ const workflow = new StateGraph(WorkflowState)
 
 :::
 
-### From Graph to Functional API
+### 从 Graph 迁移到 Functional API
 
-When your graph becomes overly complex for simple linear processes:
+当你的图对于简单的线性流程来说过于复杂时：
 
 :::python
 
@@ -694,10 +694,10 @@ const simpleWorkflow = entrypoint(
 
 :::
 
-## Summary
+## 总结
 
-Choose the **Graph API** when you need explicit control over workflow structure, complex branching, parallel processing, or team collaboration benefits.
+当你需要对工作流结构的显式控制、复杂分支、并行处理或团队协作优势时，选择 **Graph API**。
 
-Choose the **Functional API** when you want to add LangGraph features to existing code with minimal changes, have simple linear workflows, or need rapid prototyping capabilities.
+当你希望以最小的更改为现有代码添加 LangGraph 功能、拥有简单的线性工作流或需要快速原型开发能力时，选择 **Functional API**。
 
-Both APIs provide the same core LangGraph features (persistence, streaming, human-in-the-loop, memory) but package them in different paradigms to suit different development styles and use cases.
+两种 API 都提供相同的核心 LangGraph 功能（持久化、流式输出、人工干预、记忆），但以不同的范式包装它们，以适应不同的开发风格和用例。

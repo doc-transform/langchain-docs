@@ -1,107 +1,106 @@
 ---
-title: Learn
-description: Tutorials, conceptual guides, and resources to help you get started.
+title: 学习
+description: 教程、概念指南和相关资源，帮助你快速上手。
 ---
 
 
 
-In the **Learn** section of the documentation, you'll find a collection of tutorials, conceptual overviews, and additional resources to help you build powerful applications with LangChain and LangGraph.
+在文档的**学习**部分，你可以找到一系列教程、概念概述和扩展资源，帮助你使用 LangChain 和 LangGraph 构建强大的应用。
 
-## Use cases
+## 使用场景
 
-Below are tutorials for common use cases, organized by framework.
+以下是按框架分类的常见使用场景教程。
 
 ### Deep Agents
 
-[Deep agents](/oss/deepagents/overview) include built-in functionality for managing context, a virtual filesystem, and other common agent requirements.
+[Deep Agents](/oss/deepagents/overview) 内置了上下文管理、虚拟文件系统等常见 Agent 需求的功能。
 
-<Card title="Data analysis" icon="chart-pie" href="/oss/deepagents/data-analysis" horizontal>
-  Build a data analysis agent that sends reports to Slack.
+<Card title="数据分析" icon="chart-pie" href="/oss/deepagents/data-analysis" horizontal>
+  构建一个数据分析 Agent，自动将报告发送到 Slack。
 </Card>
 
 ### LangChain
 
-[LangChain](/oss/langchain/overview) [agent](/oss/langchain/agents) implementations make it easy to get started for simple use cases.
+[LangChain](/oss/langchain/overview) 的 [Agent](/oss/langchain/agents) 实现使简单场景的快速上手变得轻而易举。
 
-<Card title="Semantic Search" icon="search" href="/oss/langchain/knowledge-base" horizontal>
-  Build a semantic search engine over a PDF with LangChain components.
+<Card title="语义搜索" icon="search" href="/oss/langchain/knowledge-base" horizontal>
+  使用 LangChain 组件构建一个基于 PDF 的语义搜索引擎。
 </Card>
 
 <Card title="RAG Agent" icon="user-search" href="/oss/langchain/rag" horizontal>
-  Create a Retrieval Augmented Generation (RAG) agent.
+  创建一个检索增强生成（RAG）Agent。
 </Card>
 
 <Card title="SQL Agent" icon="database" href="/oss/langchain/sql-agent" horizontal>
-  Build a SQL agent to interact with databases with human-in-the-loop review.
+  构建一个 SQL Agent，通过人机协作审核与数据库进行交互。
 </Card>
 
-<Card title="Voice Agent" icon="microphone" href="/oss/langchain/voice-agent" horizontal>
-  Build an agent you can speak and listen to.
+<Card title="语音 Agent" icon="microphone" href="/oss/langchain/voice-agent" horizontal>
+  构建一个可以语音对话的 Agent。
 </Card>
 
 ### LangGraph
 
-LangChain's [agent](/oss/langchain/agents) implementations use [LangGraph](/oss/langgraph/overview) primitives.
-If deeper customization is required, agents can be implemented directly in LangGraph.
+LangChain 的 [Agent](/oss/langchain/agents) 实现底层使用了 [LangGraph](/oss/langgraph/overview) 原语。
+如果需要更深层的自定义，可以直接使用 LangGraph 来实现 Agent。
 
-<Card title="Custom RAG Agent" icon="user-search" href="/oss/langgraph/agentic-rag" horizontal>
-  Build a RAG agent using LangGraph primitives for fine-grained control.
+<Card title="自定义 RAG Agent" icon="user-search" href="/oss/langgraph/agentic-rag" horizontal>
+  使用 LangGraph 原语构建 RAG Agent，实现细粒度控制。
 </Card>
 
 :::python
-<Card title="Custom SQL Agent" icon="database" href="/oss/langgraph/sql-agent" horizontal>
-  Implement a SQL agent directly in LangGraph for maximum flexibility.
+<Card title="自定义 SQL Agent" icon="database" href="/oss/langgraph/sql-agent" horizontal>
+  直接在 LangGraph 中实现 SQL Agent，获得最大灵活性。
 </Card>
 :::
 
-### Multi-agent
+### 多 Agent 协作
 
-These tutorials demonstrate [multi-agent patterns](/oss/langchain/multi-agent), blending LangChain agents with LangGraph workflows.
+以下教程展示了 [多 Agent 模式](/oss/langchain/multi-agent)，将 LangChain Agent 与 LangGraph 工作流相结合。
 
 :::python
-<Card title="Subagents: Personal assistant" icon="sitemap" href="/oss/langchain/multi-agent/subagents-personal-assistant" horizontal>
-  Build a personal assistant that delegates to sub-agents.
+<Card title="子 Agent：个人助手" icon="sitemap" href="/oss/langchain/multi-agent/subagents-personal-assistant" horizontal>
+  构建一个将任务委派给子 Agent 的个人助手。
 </Card>
 
-<Card title="Handoffs: Customer support" icon="users" href="/oss/langchain/multi-agent/handoffs-customer-support" horizontal>
-  Build a customer support workflow where a single agent transitions between different states.
+<Card title="交接：客服系统" icon="users" href="/oss/langchain/multi-agent/handoffs-customer-support" horizontal>
+  构建一个客服工作流，单个 Agent 在不同状态之间进行切换。
 </Card>
 
-<Card title="Router: Knowledge base" icon="share" href="/oss/langchain/multi-agent/router-knowledge-base" horizontal>
-  Build a multi-source knowledge base that routes queries to specialized agents.
+<Card title="路由：知识库" icon="share" href="/oss/langchain/multi-agent/router-knowledge-base" horizontal>
+  构建一个多源知识库，将查询路由到专业 Agent 进行处理。
 </Card>
 
-<Card title="Skills: SQL assistant" icon="wand" href="/oss/langchain/multi-agent/skills-sql-assistant" horizontal>
-  Build an agent that loads specialized skills progressively using on-demand context loading.
+<Card title="技能：SQL 助手" icon="wand" href="/oss/langchain/multi-agent/skills-sql-assistant" horizontal>
+  构建一个通过按需加载上下文逐步获取专业技能的 Agent。
 </Card>
 :::
 
-## Conceptual overviews
+## 概念概述
 
-These guides explain the core concepts and APIs underlying LangChain and LangGraph.
+以下指南介绍了 LangChain 和 LangGraph 的核心概念与 API。
 
-<Card title="Memory" icon="brain" href="/oss/concepts/memory" horizontal>
-  Understand persistence of interactions within and across threads.
+<Card title="记忆" icon="brain" href="/oss/concepts/memory" horizontal>
+  了解线程内和跨线程的交互持久化机制。
 </Card>
 
-<Card title="Context engineering" icon="notebook" href="/oss/concepts/context" horizontal>
-  Learn methods for providing AI applications the right information and tools to accomplish a task.
+<Card title="上下文工程" icon="notebook" href="/oss/concepts/context" horizontal>
+  学习为 AI 应用提供正确信息和工具以完成任务的方法。
 </Card>
 
 <Card title="Graph API" icon="topology-star" href="/oss/langgraph/graph-api" horizontal>
-  Explore LangGraph’s declarative graph-building API.
+  探索 LangGraph 的声明式图构建 API。
 </Card>
-
 <Card title="Functional API" icon="code" href="/oss/langgraph/functional-api" horizontal>
-  Build agents as a single function.
+  将 Agent 构建为单个函数。
 </Card>
 
-## Additional resources
+## 扩展资源
 
 <Card title="LangChain Academy" icon="school" href="https://academy.langchain.com/" horizontal>
-  Courses and exercises to level up your LangChain skills.
+  通过课程和练习提升你的 LangChain 技能。
 </Card>
 
-<Card title="Case Studies" icon="presentation" href="/oss/langgraph/case-studies" horizontal>
-  See how teams are using LangChain and LangGraph in production.
+<Card title="案例研究" icon="presentation" href="/oss/langgraph/case-studies" horizontal>
+  了解各团队如何在生产环境中使用 LangChain 和 LangGraph。
 </Card>

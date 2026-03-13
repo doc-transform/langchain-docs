@@ -1,13 +1,13 @@
 ---
-title: "Taskade integration"
-description: "Integrate with the Taskade document loader using LangChain JavaScript."
+title: "Taskade 集成"
+description: "使用 LangChain JavaScript 集成 Taskade 文档加载器。"
 ---
 
-[Taskade](https://www.taskade.com) is the ultimate tool for AI-driven writing, project management, and task automation. Designed to be your second brain, Taskade simplifies project execution and enhances team collaboration from start to finish.
+[Taskade](https://www.taskade.com) 是 AI 驱动的写作、项目管理和任务自动化的终极工具。Taskade 旨在成为你的第二大脑，从头到尾简化项目执行并增强团队协作。
 
-## Overview
+## 概述
 
-With [Taskade](https://www.taskade.com), you can build, train, and deploy your own team of AI agents to automate tasks and streamline workflows. Taskade features a seamless blend of ideation, collaboration, and execution tools—from structured lists to modern tables and mind maps, all customizable to fit your unique workflow and adapt to your needs.
+通过 [Taskade](https://www.taskade.com)，你可以构建、训练和部署自己的 AI 代理团队来自动化任务和简化工作流程。Taskade 提供了构思、协作和执行工具的无缝融合——从结构化列表到现代表格和思维导图，所有功能都可自定义以适应你独特的工作流程和需求。
 
 ```typescript
 import { TaskadeProjectLoader } from "@langchain/community/document_loaders/web/taskade";
@@ -21,7 +21,7 @@ const docs = await loader.load();
 console.log({ docs });
 ```
 
-You can find your Taskade project id by opening the project in your browser and extracting them from the URL:
+你可以通过在浏览器中打开项目并从 URL 中提取来找到你的 Taskade 项目 ID：
 
 ```
 https://www.taskade.com/d/<YOUR PROJECT ID HERE>

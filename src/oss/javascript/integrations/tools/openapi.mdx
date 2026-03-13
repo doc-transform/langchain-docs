@@ -1,24 +1,24 @@
 ---
-title: "OpenAPI toolkit integration"
-description: "Integrate with the OpenAPI toolkit using LangChain JavaScript."
+title: "OpenAPI 工具包集成"
+description: "使用 LangChain JavaScript 集成 OpenAPI 工具包。"
 ---
 
 
 <Warning>
-This agent can make requests to external APIs. Use with caution, especially when granting access to users.
+此代理可以向外部 API 发送请求。请谨慎使用，尤其是向用户授予访问权限时。
 
-Be aware that this agent could theoretically send requests with provided credentials or other sensitive data to unverified or potentially malicious URLs --although it should never in theory.
+请注意，此代理理论上可能会将包含提供的凭据或其他敏感数据的请求发送到未验证或潜在恶意的 URL——尽管理论上永远不应该这样。
 
-Consider adding limitations to what actions can be performed via the agent, what APIs it can access, what headers can be passed, and more.
+建议对代理可执行的操作、可访问的 API、可传递的请求头等进行限制。
 
-In addition, consider implementing measures to validate URLs before sending requests, and to securely handle and protect sensitive data such as credentials.
+此外，考虑实施 URL 发送前验证措施，并安全地处理和保护凭据等敏感数据。
 
 </Warning>
 
 
-This will help you getting started with the [OpenApiToolkit](/oss/integrations/tools/openapi). For detailed documentation of all OpenApiToolkit features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain.agents.OpenApiToolkit.html).
+本文将帮助你开始使用 [OpenApiToolkit](/oss/langchain/tools#toolkits)。所有 OpenApiToolkit 功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain.agents.OpenApiToolkit.html)。
 
-The `OpenAPIToolkit` has access to the following tools:
+`OpenAPIToolkit` 可以访问以下工具：
 
 | Name            | Description |
 |-----------------|-------------|
@@ -26,20 +26,20 @@ The `OpenAPIToolkit` has access to the following tools:
 | `requests_post` | Use this when you want to POST to a website. Input should be a json string with two keys: "url" and "data". The value of "url" should be a string, and the value of "data" should be a dictionary of key-value pairs you want to POST to the URL as a JSON body. Be careful to always use double quotes for strings in the json string. The output will be the text response of the POST request. |
 | `json_explorer` | Can be used to answer questions about the openapi spec for the API. Always use this tool before trying to make a request. Example inputs to this tool: 'What are the required query parameters for a GET request to the /bar endpoint?' 'What are the required parameters in the request body for a POST request to the /foo endpoint?' Always give this tool a specific question. |
 
-## Setup
+## 设置
 
-This toolkit requires an OpenAPI spec file. The LangChain.js repository has a [sample OpenAPI spec file in the `examples` directory](https://github.com/langchain-ai/langchainjs/blob/cc21aa29102571204f4443a40b53d28581a12e30/examples/openai_openapi.yaml). You can use this file to test the toolkit.
+该工具包需要一个 OpenAPI 规范文件。LangChain.js 仓库在 [`examples` 目录中有一个示例 OpenAPI 规范文件](https://github.com/langchain-ai/langchainjs/blob/cc21aa29102571204f4443a40b53d28581a12e30/examples/openai_openapi.yaml)。你可以使用这个文件来测试工具包。
 
-If you want to get automated tracing from runs of individual tools, you can also set your [LangSmith](/langsmith/home) API key by uncommenting below:
+如果你想获取单个工具运行的自动追踪，你还可以通过取消下方注释来设置你的 [LangSmith](/langsmith/home) API 密钥：
 
 ```typescript
 process.env.LANGSMITH_TRACING="true"
 process.env.LANGSMITH_API_KEY="your-api-key"
 ```
 
-### Installation
+### 安装
 
-This toolkit lives in the `langchain` package:
+该工具包位于 `langchain` 包中：
 
 <CodeGroup>
 ```bash npm
@@ -53,9 +53,9 @@ pnpm add langchain @langchain/core
 ```
 </CodeGroup>
 
-## Instantiation
+## 实例化
 
-Now we can instantiate our toolkit. First, we need to define the LLM we would like to use in the toolkit.
+现在我们可以实例化工具包。首先，我们需要定义工具包中使用的 LLM。
 
 ```typescript
 // @lc-docs-hide-cell
@@ -89,9 +89,9 @@ const headers = {
 const toolkit = new OpenApiToolkit(new JsonSpec(data), llm, headers);
 ```
 
-## Tools
+## 工具
 
-View available tools:
+查看可用工具：
 
 ```typescript
 const tools = toolkit.getTools();
@@ -130,9 +130,9 @@ console.log(tools.map((tool) => ({
 ]
 ```
 
-## Use within an agent
+## 在代理中使用
 
-First, ensure you have LangGraph installed:
+首先，确保你已安装 LangGraph：
 
 
 <CodeGroup>
@@ -215,6 +215,6 @@ They don't have the guts!
 
 ---
 
-## API reference
+## API 参考
 
-For detailed documentation of all OpenApiToolkit features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain.agents.OpenApiToolkit.html).
+所有 OpenApiToolkit 功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain.agents.OpenApiToolkit.html)。

@@ -1,63 +1,55 @@
 ---
-title: "Google Vertex AI integration"
-description: "Integrate with the Google Vertex AI LLM using LangChain JavaScript."
+title: "Google Vertex AI 集成"
+description: "使用 LangChain JavaScript 集成 Google Vertex AI LLM 模型。"
 ---
 
 <Warning>
-**You are currently on a page documenting the use of Google Vertex models as text completion models. Many popular models available on Google Vertex are [chat completion models](/oss/langchain/models).**
+**你当前正在查看 Google Vertex 模型作为文本补全模型的使用文档。许多 Google Vertex 上的流行模型是[对话补全模型](/oss/langchain/models)。**
 
-You may be looking for [this page instead](/oss/integrations/chat/google_vertex_ai/).
+你可能需要的是[这个页面](/oss/integrations/chat/google_vertex_ai/)。
 </Warning>
 
-[Google Vertex](https://cloud.google.com/vertex-ai) is a service that exposes all foundation models available in Google Cloud, like `gemini-2.5-pro`, `gemini-2.5-flash`, etc.
+[Google Vertex](https://cloud.google.com/vertex-ai) 是一个服务，提供 Google Cloud 中所有可用的基础模型，如 `gemini-2.5-pro`、`gemini-2.5-flash` 等。
 
-This will help you get started with VertexAI completion models (LLMs) using LangChain. For detailed documentation on `VertexAI` features and configuration options, please refer to the [API reference](https://api.js.langchain.com/classes/langchain_google_vertexai.VertexAI.html).
+本文将帮助你开始使用 VertexAI 文本补全模型（LLM）。`VertexAI` 所有功能和配置选项的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain_google_vertexai.VertexAI.html)。
 
-## Overview
+## 概览
 
-### Integration details
+### 集成详情
 
 | Class | Package | Local | Serializable | PY support | Downloads | Version |
 | :--- | :--- | :---: | :---: |  :---: | :---: | :---: |
 | [VertexAI](https://api.js.langchain.com/classes/langchain_google_vertexai.VertexAI.html) | [`@langchain/google-vertexai`](https://www.npmjs.com/package/@langchain/google-vertexai) | ❌ | ✅ | ✅ | ![NPM - Downloads](https://img.shields.io/npm/dm/@langchain/google-vertexai?style=flat-square&label=%20&) | ![NPM - Version](https://img.shields.io/npm/v/@langchain/google-vertexai?style=flat-square&label=%20&) |
 
-## Setup
+## 设置
 
-LangChain.js supports two different authentication methods based on whether
-you're running in a Node.js environment or a web environment.
+LangChain.js 支持两种不同的身份验证方式，取决于你是在 Node.js 环境还是 Web 环境中运行。
 
-To access VertexAI models you'll need to create a Google Cloud Platform (GCP) account, get an API key, and install the `@langchain/google-vertexai` integration package.
+要访问 VertexAI 模型，你需要创建 Google Cloud Platform (GCP) 账户、获取 API 密钥，并安装 `@langchain/google-vertexai` 集成包。
 
-### Credentials
+### 凭据
 
 #### Node.js
 
-You should make sure the Vertex AI API is
-enabled for the relevant project and that you've authenticated to
-Google Cloud using one of these methods:
+你需要确保对应项目已启用 Vertex AI API，并且你已通过以下方式之一对 Google Cloud 进行身份验证：
 
-- You are logged into an account (using `gcloud auth application-default login`)
-  permitted to that project.
-- You are running on a machine using a service account that is permitted
-  to the project.
-- You have downloaded the credentials for a service account that is permitted
-  to the project and set the `GOOGLE_APPLICATION_CREDENTIALS` environment
-  variable to the path of this file.
-  **or**
-- You set the `GOOGLE_API_KEY` environment variable to the API key for the project.
+- 你已登录到有权访问该项目的账户（使用 `gcloud auth application-default login`）。
+- 你正在使用有权访问该项目的服务账户的机器上运行。
+- 你已下载有权访问该项目的服务账户的凭据，并将 `GOOGLE_APPLICATION_CREDENTIALS` 环境变量设置为该文件的路径。
+  **或者**
+- 你将 `GOOGLE_API_KEY` 环境变量设置为该项目的 API 密钥。
 
 #### Web
 
-To call Vertex AI models in web environments (like Edge functions), you'll need to install
-the `@langchain/google-vertexai-web` package.
+要在 Web 环境（如 Edge 函数）中调用 Vertex AI 模型，你需要安装 `@langchain/google-vertexai-web` 包。
 
-Then, you'll need to add your service account credentials directly as a `GOOGLE_VERTEX_AI_WEB_CREDENTIALS` environment variable:
+然后，你需要将服务账户凭据直接作为 `GOOGLE_VERTEX_AI_WEB_CREDENTIALS` 环境变量添加：
 
 ```
 GOOGLE_VERTEX_AI_WEB_CREDENTIALS={"type":"service_account","project_id":"YOUR_PROJECT-12345",...}
 ```
 
-You can also pass your credentials directly in code like this:
+你也可以直接在代码中传递凭据：
 
 ```typescript
 import { VertexAI } from "@langchain/google-vertexai";
@@ -71,16 +63,16 @@ const model = new VertexAI({
 });
 ```
 
-If you want to get automated tracing of your model calls you can also set your [LangSmith](/langsmith/home) API key by uncommenting below:
+如果你想获取模型调用的自动追踪，你还可以通过取消下方注释来设置你的 [LangSmith](/langsmith/home) API 密钥：
 
 ```bash
 # export LANGSMITH_TRACING="true"
 # export LANGSMITH_API_KEY="your-api-key"
 ```
 
-### Installation
+### 安装
 
-The LangChain VertexAI integration lives in the `@langchain/google-vertexai` package:
+LangChain VertexAI 集成位于 `@langchain/google-vertexai` 包中：
 
 <CodeGroup>
 ```bash npm
@@ -94,7 +86,7 @@ pnpm add @langchain/google-vertexai @langchain/core
 ```
 </CodeGroup>
 
-or for web environments:
+或者对于 Web 环境：
 
 <CodeGroup>
 ```bash npm
@@ -108,9 +100,9 @@ pnpm add @langchain/google-vertexai-web @langchain/core
 ```
 </CodeGroup>
 
-## Instantiation
+## 实例化
 
-Now we can instantiate our model object and generate chat completions:
+现在我们可以实例化模型对象并生成对话补全：
 
 ```typescript
 import { VertexAI } from "@langchain/google-vertexai-web"
@@ -123,7 +115,7 @@ const llm = new VertexAI({
 })
 ```
 
-## Invocation
+## 调用
 
 ```typescript
 const inputText = "VertexAI is an AI company that "
@@ -138,6 +130,6 @@ offers a wide range of cloud computing services and artificial intelligence solu
 
 ---
 
-## API reference
+## API 参考
 
-For detailed documentation of all VertexAI features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_google_vertexai.VertexAI.html).
+所有 VertexAI 功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain_google_vertexai.VertexAI.html)。

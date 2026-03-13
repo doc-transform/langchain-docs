@@ -1,87 +1,52 @@
 ---
-title: Comparison with Claude Agent SDK and Codex
-sidebarTitle: Comparison
-description: Compare LangChain Deep Agents with Claude Agent SDK and Codex SDK to choose the right tool for your use case
+title: 与 OpenCode 和 Claude Agent SDK 的对比
+sidebarTitle: 对比
+description: 将 LangChain Deep Agents 与 OpenCode 和 Claude Agent SDK 进行对比，帮助你选择适合你使用场景的工具
 ---
 
-This page helps you understand how [LangChain Deep Agents](/oss/deepagents/overview) compare to the [Claude Agent SDK](https://platform.anthropic.com/docs/en/agent-sdk/overview) and the [Codex SDK](https://developers.openai.com/codex/sdk).
+本页帮助你了解 [LangChain Deep Agents](/oss/deepagents/overview) 与 [OpenCode](https://opencode.ai/) 和 [Claude Agent SDK](https://platform.anthropic.com/docs/en/agent-sdk/overview) 的对比。
 
-## Overview
+## 概览
 
-| Aspect | **LangChain Deep Agents** | **Claude Agent SDK** | **Codex SDK** |
-| ------ | ------------------------- | -------------------- | ------------- |
-| **Use cases** | Custom general-purpose agents (including coding) | Custom AI coding agents | Prebuilt coding agent that can execute coding tasks |
-| **Model support** | Flexible and model-agnostic (Anthropic, OpenAI, and 100s others) | Tightly integrated with Claude models (Anthropic, Azure, Vertex AI, AWS Bedrock) | Tightly integrated with OpenAI models (GPT-5.3-Codex and variants) |
-| **Architecture** | Python SDK, TypeScript SDK, and CLI | Python SDK, TypeScript SDK | TypeScript SDK, CLI, desktop app, IDE extension, cloud interface |
-| **Execution environment** | Local, remote sandboxes, virtual filesystem | Local | Local, cloud |
-| **Deployment** | LangGraph Platform | Self-hosted | N/A |
-| **Frontend** | [Integration with React](/oss/langchain/streaming/frontend) | Server-side only | Server-side only |
-| **Observability** | LangSmith tracing & evaluations | N/A | OpenAI traces & command-line evaluations |
-| **Security configurability** | Composable, per-tool human-in-the-loop | Permission system with modes, rules and hooks | Built-in tiers using approval modes and OS-level sandboxes |
-| **License** | MIT | MIT (underlying Claude Code is proprietary) | Apache-2.0 |
+| 方面 | **Deep Agents** | **OpenCode** | **Claude Agent SDK** |
+| ------ | --------------- | ------------ | -------------------- |
+| **主要用途** | 以编程方式构建生产级 Agent | 终端、桌面或 IDE 中的交互式编码 Agent | 以编程方式构建生产级 Agent |
+| **模型支持** | 模型无关（Anthropic、OpenAI 及数百种其他模型） | 75+ 提供商，包括本地模型（Ollama） | Claude 模型（Anthropic、Azure、Vertex AI、AWS Bedrock） |
+| **许可证** | MIT | MIT | MIT（底层 Claude Code 为专有软件） |
+| **架构** | Python SDK、TypeScript SDK 和 CLI | TypeScript SDK，独立产品（终端界面、桌面应用、IDE 插件） | Python SDK、TypeScript SDK |
 
-### Key differences
+## 功能对比
 
-**LangChain Deep Agents**:
-- **Model flexibility**: Swap model providers (Anthropic, OpenAI, or 100+ others) at any time and run evaluations.
-- **Long-term memory**: Persist context across sessions and threads with the [Memory Store](/oss/deepagents/long-term-memory)
-- **Sandbox-as-tool pattern**: Run individual operations in isolated sandboxes from [different providers](/oss/deepagents/sandboxes) while the agent runs outside, or run the full agent inside a sandbox
-- **Virtual filesystem**: Use pluggable backends (in-memory, disk, durable stores, sandboxes) for context and checkpoint management
-- **Production deployment**: Deploy via [LangSmith](/oss/langgraph/deploy) or self-host with the Agent Server
-- **Observability**: Use [LangSmith](/langsmith/home) for native tracing and debugging
+| 功能 | **Deep Agents** | **OpenCode** | **Claude Agent SDK** |
+| ------- | --------------- | ------------ | -------------------- |
+<tr><td colspan="4"><strong>核心工具</strong></td></tr>
+| 文件读/写/编辑 | ✅ [`ls`, `read_file`, `write_file`, `edit_file`](/oss/python/deepagents/harness#virtual-filesystem-access) | ✅ [`list`, `read`, `write`, `edit`](https://opencode.ai/docs/tools/#built-in) | ✅ [读取、写入、编辑](https://platform.claude.com/docs/en/agent-sdk/overview#capabilities) |
+| Shell 执行 | ✅ [`execute`](/oss/python/deepagents/) | ✅ [`bash`](https://opencode.ai/docs/tools/#built-in) | ✅ [bash](https://platform.claude.com/docs/en/agent-sdk/overview#capabilities) |
+| 文件匹配/搜索 | ✅ [`glob`, `grep`](/oss/python/deepagents/harness#virtual-filesystem-access)| ✅ [`glob`, `grep`](https://opencode.ai/docs/tools/#built-in) | ✅ [glob, grep](https://platform.claude.com/docs/en/agent-sdk/overview#capabilities) |
+| 网络搜索 | ✅ 支持[第三方](/oss/deepagents/customization#tools)和[提供商原生](/oss/integrations/chat/openai#web-search) | ✅ [`webfetch`, `websearch`](https://opencode.ai/docs/tools/#built-in) | ✅ [WebSearch, WebFetch](https://platform.claude.com/docs/en/agent-sdk/overview#capabilities) |
+| 规划/待办事项 | ✅ [`write_todos`](/oss/deepagents/harness#planning-capabilities) | ✅ [规划模式（只读分析）](https://opencode.ai/docs/agents/#use-plan) | ✅ [待办列表](https://platform.claude.com/docs/en/agent-sdk/todo-tracking) |
+| 子 Agent | ✅ [子 Agent](/oss/deepagents/subagents) | ✅ [General 和 Explore Agent](https://opencode.ai/docs/agents/#subagents) | ✅ [子 Agent](https://platform.claude.com/docs/en/agent-sdk/subagents) |
+| MCP 支持 | ✅ | ✅ [MCP](https://opencode.ai/docs/mcp-servers/) | ✅ [MCP](https://platform.claude.com/docs/en/agent-sdk/mcp) |
+| 人工干预 | ✅ [批准/编辑/拒绝](/oss/deepagents/human-in-the-loop#decision-types) | ✅ [允许/询问/拒绝](https://opencode.ai/docs/permissions/) | ✅ [权限模式](https://platform.claude.com/docs/en/agent-sdk/permissions) |
+| 技能系统 | ✅ [技能](/oss/deepagents/skills) | ✅ [技能](https://opencode.ai/docs/skills/) | ✅ [技能](https://platform.claude.com/docs/en/agent-sdk/skills) |
+| 长期记忆 | ✅ [记忆存储](/oss/deepagents/long-term-memory) | ✅ [规则](https://opencode.ai/docs/rules/) | ✅ [CLAUDE.md 文件](https://platform.claude.com/docs/en/agent-sdk/modifying-system-prompts#method-1-claude-md-files-project-level-instructions) |
+| 流式输出 | ✅ [流式输出](/oss/deepagents/streaming/overview) | ✅ | ✅ [流式输出](https://platform.claude.com/docs/en/agent-sdk/streaming-output) |
+<tr><td colspan="4"><strong>沙箱集成</strong></td></tr>
+| Agent 在沙箱中运行 | ✅ [可在沙箱中运行](/oss/python/deepagents/sandboxes#agent-in-sandbox-pattern) | ✅ [可在沙箱中运行](https://opencode.ai/docs/#install) | ✅ [可在沙箱中运行](https://platform.claude.com/docs/en/agent-sdk/hosting) |
+| Agent 在沙箱中执行操作 | ✅ [将沙箱作为工具使用](/oss/deepagents/sandboxes#sandbox-as-tool-pattern) | ❌ | ❌ |
+<tr><td colspan="4"><strong>架构</strong></td></tr>
+| 可组合中间件 | ✅ | [插件](https://opencode.ai/docs/plugins/) | [Hooks](https://platform.claude.com/docs/en/agent-sdk/hooks) |
+| 可插拔存储后端 | ✅ [后端](http://localhost:3000/oss/python/deepagents/backends) | ❌ | ❌ |
+| 虚拟文件系统 | ✅ 带可插拔后端的[虚拟文件系统](/oss/deepagents/harness#virtual-filesystem-access) | ❌ | ❌ |
+<tr><td colspan="4"><strong>状态管理</strong></td></tr>
+| 会话恢复 | ✅ | ✅ [会话](https://opencode.ai/docs/sdk/#sessions) | ✅ [会话管理](https://platform.claude.com/docs/en/agent-sdk/sessions) |
+| 文件检查点 | ✅ [后端与检查点](/oss/deepagents/backends#built-in-backends) | ✅（基于 Git） | ✅ [文件检查点](https://platform.claude.com/docs/en/agent-sdk/file-checkpointing) |
+| 时间旅行（状态分支） | ✅ 完整支持 | ❌ | ✅ |
+<tr><td colspan="4"><strong>可观测性</strong></td></tr>
+| 原生追踪 | ✅ [LangSmith](/langsmith/home) | ❌ | ❌ |
+| 评估 | ✅ [LangSmith](/langsmith/evaluation-concepts) | ❌ | ❌ |
 
-**Claude Agent SDK**:
-- **Standardize on Claude**: First-class support for Claude models across Anthropic, Azure, Vertex AI, and AWS Bedrock
-- **Custom hosting**: Build your own HTTP/WebSocket layer and run the SDK in containers
-- **Hooks**: Easily intercept and control agent behavior
+## 发现错误？
 
-**Codex SDK**:
-- **Standardize on OpenAI**: GPT-5.3-Codex and OpenAI-specific tooling
-- **OS-level sandbox modes**: Use built-in `read-only`, `workspace-write`, or `danger-full-access` modes
-- **MCP server mode**: Expose your agent as an MCP server with `codex mcp-server`
-- **Observability**: Use [OpenAI Traces](https://developers.openai.com/codex/guides/agents-sdk/#trace-the-workflow)
-
-## Feature comparison
-
-| Feature | **Deep Agents** | **Claude Agent SDK** | **Codex SDK** |
-| ------- | --------------- | -------------------- | ------------- |
-<tr><td colspan="4"><strong>Core tools</strong></td></tr>
-| File Read/Write/Edit | ✅ [`read_file`, `write_file`, `edit_file`](/oss/deepagents/harness#virtual-filesystem-access) | ✅ [Read, write, edit](https://platform.claude.com/docs/en/agent-sdk/overview#capabilities) | ✅ Read, write, edit |
-| Shell Execution | ✅ [`execute`](/oss/deepagents/) | ✅ [bash](https://platform.claude.com/docs/en/agent-sdk/overview#capabilities) | ✅ [`exec`](https://developers.openai.com/codex/cli/features#scripting-codex) |
-| Glob/Grep | ✅ [`glob`, `grep`](/oss/deepagents/harness#virtual-filesystem-access)| ✅ [glob, grep](https://platform.claude.com/docs/en/agent-sdk/overview#capabilities) | ✅ Built-in |
-| Web Search | ✅ support for [third-party](/oss/deepagents/customization#tools) and [provider-native](/oss/integrations/chat/openai#web-search) | ✅ [WebSearch, WebFetch](https://platform.claude.com/docs/en/agent-sdk/overview#capabilities) | ✅ [`web_search`](https://developers.openai.com/codex/cli/features#web-search) |
-| Planning/Todos | ✅ [`write_todos`](/oss/deepagents/harness#planning-capabilities) | ✅ [Todo lists](https://platform.claude.com/docs/en/agent-sdk/todo-tracking) | ✅ [Plan before changes](https://developers.openai.com/codex/cli/features) |
-| Subagents | ✅ [Subagents](/oss/deepagents/subagents) | ✅ [Subagents](https://platform.claude.com/docs/en/agent-sdk/subagents) | ✅ [Multi-agent workflows](https://developers.openai.com/codex/concepts/multi-agents) (experimental) via MCP + Agents SDK |
-| MCP Client | ✅ | ✅ [MCP](https://platform.claude.com/docs/en/agent-sdk/mcp) | ✅ [MCP client](https://developers.openai.com/codex/mcp) |
-| Human-in-the-Loop | ✅ [Approve/edit/reject](/oss/deepagents/human-in-the-loop#decision-types) | ✅ [Permission modes](https://platform.claude.com/docs/en/agent-sdk/permissions) | ✅ [Approval modes](https://developers.openai.com/codex/cli/features#approval-modes) (Full Access, Read-only, Auto) |
-| Skills System | ✅ [Skills](/oss/deepagents/skills) | ✅ [Skills](https://platform.claude.com/docs/en/agent-sdk/skills) | ✅ [Skills](https://developers.openai.com/codex/skills) |
-| Additional instructions | ✅ [Memory](/oss/deepagents/customization#memory) | ✅ [CLAUDE.md files](https://platform.claude.com/docs/en/agent-sdk/modifying-system-prompts#method-1-claude-md-files-project-level-instructions) | ✅ [AGENTS.md](https://developers.openai.com/codex/guides/agents-md) |
-| Long-term memory | ✅ [Memory Store](/oss/deepagents/long-term-memory) | ❌ | ❌ |
-| Streaming | ✅ [Streaming](/oss/deepagents/streaming/overview) | ✅ [Streaming](https://platform.claude.com/docs/en/agent-sdk/streaming-output) | ✅ [Streaming](https://github.com/openai/codex/blob/main/sdk/typescript/README.md#streaming-responses) |
-<tr><td colspan="4"><strong>Sandbox Integrations</strong></td></tr>
-| Agent runs in sandbox | ✅ [Can run in sandbox](/oss/deepagents/sandboxes#agent-in-sandbox-pattern) | ✅ [Can run in sandbox](https://platform.claude.com/docs/en/agent-sdk/hosting) | ✅ [Can run in sandbox](https://developers.openai.com/codex/security#os-level-sandbox) |
-| Agent runs operations in sandboxes | ✅ [Uses sandboxes as tools](/oss/deepagents/sandboxes#sandbox-as-tool-pattern) | ❌ | ❌ |
-| OS-level sandbox modes | ❌ | ❌ | ✅ `read-only`, `workspace-write`, and `danger-full-access` |
-<tr><td colspan="4"><strong>Architecture</strong></td></tr>
-| Composable Middleware | ✅ | ✅ [Hooks](https://platform.claude.com/docs/en/agent-sdk/hooks) | ❌ |
-| Virtual Filesystems | ✅ [Virtual filesystem](/oss/deepagents/harness#virtual-filesystem-access) with [pluggable backends](/oss/deepagents/backends) | ❌ | ❌ |
-<tr><td colspan="4"><strong>Deployment</strong></td></tr>
-| Production hosting | ✅ [LangGraph Platform](/oss/langgraph/deploy), self-hosted, or standalone | Build your own HTTP/WebSocket layer; run SDK in [containers](https://platform.anthropic.com/docs/en/agent-sdk/hosting) | ❌ |
-| Local execution environment | ✅ | ✅ | ✅ |
-| Cloud execution environment | ❌ | ❌ | ✅ |
-<tr><td colspan="4"><strong>Supported protocols</strong></td></tr>
-| ACP server (IDE integration) | ✅ [ACP server](/oss/deepagents/acp) (python only) | ✅ (third-party) | ✅ (third-party) |
-| MCP server mode | [MCP endpoint through Agent Server](/langsmith/server-mcp) | ❌ | ✅ [`codex mcp-server`](https://developers.openai.com/codex/guides/agents-sdk) |
-| A2A endpoint | ✅ [A2A endpoint in Agent Server](https://docs.langchain.com/langsmith/server-a2a#a2a-endpoint-in-agent-server) | ✅ | ❌ |
-<tr><td colspan="4"><strong>State management</strong></td></tr>
-| Session Resume | ✅ | ✅ [Session management](https://platform.claude.com/docs/en/agent-sdk/sessions) | ✅ [Resume threads](https://developers.openai.com/codex/cli/features#resuming-conversations); SDK `resumeThread()` |
-| File Checkpointing | ✅ [Backends and checkpoints](/oss/deepagents/backends#built-in-backends) | ✅ [File checkpointing](https://platform.claude.com/docs/en/agent-sdk/file-checkpointing) | ✅ [Git checkpoints](https://developers.openai.com/codex/config-basic) |
-| Time Travel (state branching) | ✅ | ✅ | ✅ |
-<tr><td colspan="4"><strong>Observability</strong></td></tr>
-| Native Tracing | ✅ [LangSmith](/langsmith/home) | ❌ | ✅ [OpenAI Traces](https://developers.openai.com/codex/guides/agents-sdk/#trace-the-workflow) |
-| Evaluations | ✅ [LangSmith](/langsmith/evaluation-concepts) | ❌ | [Evals patterns](https://developers.openai.com/blog/eval-skills) (Command-line with `codex exec --json`) |
-
-## Notice a mistake?
-
-We drafted this comparison on March 4th, 2026.
-If you notice mistakes or changes in products, please [file an issue](https://github.com/langchain-ai/docs/issues).
+我们于 2026 年 3 月 4 日起草了本对比。
+如果你发现错误或产品有更新，请[提交 issue](https://github.com/langchain-ai/docs/issues)。

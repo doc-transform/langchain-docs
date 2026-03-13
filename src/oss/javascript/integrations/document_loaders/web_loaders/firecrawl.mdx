@@ -1,55 +1,55 @@
 ---
-title: "FirecrawlLoader integration"
-description: "Integrate with the FirecrawlLoader document loader using LangChain JavaScript."
+title: "FirecrawlLoader 集成"
+description: "使用 LangChain JavaScript 集成 FirecrawlLoader 文档加载器。"
 ---
 
 
-This notebook provides a quick overview for getting started with [FireCrawlLoader](/oss/integrations/document_loaders/). For detailed documentation of all FireCrawlLoader features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_community_document_loaders_web_firecrawl.FireCrawlLoader.html).
+本笔记提供了开始使用 [FireCrawlLoader](/oss/integrations/document_loaders/) 的快速概览。有关 FireCrawlLoader 所有功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain_community_document_loaders_web_firecrawl.FireCrawlLoader.html)。
 
-## Overview
+## 概览
 
-### Integration details
+### 集成详情
 
 | Class | Package | Local | Serializable | [PY support](https://python.langchain.com/docs/integrations/document_loaders/firecrawl)|
 | :--- | :--- | :---: | :---: |  :---: |
 | [FireCrawlLoader](https://api.js.langchain.com/classes/langchain_community_document_loaders_web_firecrawl.FireCrawlLoader.html) | [@langchain/community](https://api.js.langchain.com/modules/langchain_community_document_loaders_web_firecrawl.html) | 🟠 (see details below) | beta | ✅ |
 
-### Loader features
+### 加载器特性
 
 | Source | Web Loader | Node Envs Only
 | :---: | :---: | :---: |
 | FireCrawlLoader | ✅ | ❌ |
 
-[FireCrawl](https://firecrawl.dev) crawls and convert any website into LLM-ready data. It crawls all accessible sub-pages and give you clean markdown and metadata for each. No sitemap required.
+[FireCrawl](https://firecrawl.dev) 爬取并将任何网站转换为 LLM 就绪的数据。它爬取所有可访问的子页面，并为每个页面提供干净的 Markdown 和元数据。无需站点地图。
 
-FireCrawl handles complex tasks such as reverse proxies, caching, rate limits, and content blocked by JavaScript. Built by the [mendable.ai](https://mendable.ai) team.
+FireCrawl 处理复杂任务，如反向代理、缓存、速率限制和被 JavaScript 阻止的内容。由 [mendable.ai](https://mendable.ai) 团队构建。
 
-This guide shows how to scrap and crawl entire websites and load them using the `FireCrawlLoader` in LangChain.
+本指南展示如何使用 LangChain 中的 `FireCrawlLoader` 抓取和爬取整个网站并加载它们。
 
-## Setup
+## 设置
 
-To access `FireCrawlLoader` document loader you'll need to install the `@langchain/community` integration, and the `@mendable/firecrawl-js@0.0.36` package. Then create a **[FireCrawl](https://firecrawl.dev)** account and get an API key.
+要访问 `FireCrawlLoader` 文档加载器，你需要安装 `@langchain/community` 集成和 `@mendable/firecrawl-js@0.0.36` 包。然后创建一个 **[FireCrawl](https://firecrawl.dev)** 账户并获取 API 密钥。
 
-### Credentials
+### 凭据
 
-Sign up and get your free [FireCrawl API key](https://firecrawl.dev) to start. FireCrawl offers 300 free credits to get you started, and it's [open-source](https://github.com/mendableai/firecrawl) in case you want to self-host.
+注册并获取你的免费 [FireCrawl API 密钥](https://firecrawl.dev)开始使用。FireCrawl 提供 300 个免费额度帮你入门，而且它是[开源的](https://github.com/mendableai/firecrawl)，以便你自行托管。
 
-Once you've done this set the `FIRECRAWL_API_KEY` environment variable:
+完成后设置 `FIRECRAWL_API_KEY` 环境变量：
 
 ```bash
 export FIRECRAWL_API_KEY="your-api-key"
 ```
 
-If you want to get automated tracing of your model calls you can also set your [LangSmith](/langsmith/home) API key by uncommenting below:
+如果你想获得模型调用的自动追踪，你还可以通过取消下方注释来设置你的 [LangSmith](/langsmith/home) API 密钥：
 
 ```bash
 # export LANGSMITH_TRACING="true"
 # export LANGSMITH_API_KEY="your-api-key"
 ```
 
-### Installation
+### 安装
 
-The LangChain FireCrawlLoader integration lives in the `@langchain/community` package:
+LangChain FireCrawlLoader 集成位于 `@langchain/community` 包中：
 
 <CodeGroup>
 ```bash npm
@@ -63,15 +63,15 @@ pnpm add @langchain/community @langchain/core @mendable/firecrawl-js@0.0.36
 ```
 </CodeGroup>
 
-## Instantiation
+## 实例化
 
-Here's an example of how to use the `FireCrawlLoader` to load web search results:
+以下是如何使用 `FireCrawlLoader` 加载网络搜索结果的示例：
 
-Firecrawl offers 3 modes: `scrape`, `crawl`, and `map`. In `scrape` mode, Firecrawl will only scrape the page you provide. In `crawl` mode, Firecrawl will crawl the entire website. In `map` mode, Firecrawl will return semantic links related to the website.
+Firecrawl 提供 3 种模式：`scrape`、`crawl` 和 `map`。在 `scrape` 模式下，Firecrawl 只抓取你提供的页面。在 `crawl` 模式下，Firecrawl 将爬取整个网站。在 `map` 模式下，Firecrawl 将返回与网站相关的语义链接。
 
-The `formats` (`scrapeOptions.formats` for `crawl` mode) parameter allows selection from `"markdown"`, `"html"`, or `"rawHtml"`. However, the Loaded Document will return content in only one format, prioritizing as follows: `markdown`, then `html`, and finally `rawHtml`.
+`formats`（`crawl` 模式下为 `scrapeOptions.formats`）参数允许从 `"markdown"`、`"html"` 或 `"rawHtml"` 中选择。但加载的文档只会以一种格式返回内容，优先级为：`markdown`，然后 `html`，最后 `rawHtml`。
 
-Now we can instantiate our model object and load documents:
+现在我们可以实例化模型对象并加载文档：
 
 ```typescript
 import "@mendable/firecrawl-js";
@@ -88,7 +88,7 @@ const loader = new FireCrawlLoader({
 })
 ```
 
-## Load
+## 加载
 
 ```typescript
 const docs = await loader.load()
@@ -138,12 +138,12 @@ console.log(docs[0].metadata)
 }
 ```
 
-## Additional parameters
+## 额外参数
 
-For `params` you can pass any of the params according to the [Firecrawl documentation](https://docs.firecrawl.dev).
+对于 `params`，你可以根据 [Firecrawl 文档](https://docs.firecrawl.dev)传递任何参数。
 
 ---
 
-## API reference
+## API 参考
 
-For detailed documentation of all FireCrawlLoader features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_community_document_loaders_web_firecrawl.FireCrawlLoader.html).
+所有 FireCrawlLoader 功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain_community_document_loaders_web_firecrawl.FireCrawlLoader.html)。

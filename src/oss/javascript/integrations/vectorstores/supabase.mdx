@@ -1,27 +1,27 @@
 ---
-title: "SupabaseVectorStore integration"
-description: "Integrate with the SupabaseVectorStore using LangChain JavaScript."
+title: "SupabaseVectorStore 集成"
+description: "使用 LangChain JavaScript 集成 SupabaseVectorStore。"
 ---
 
-[Supabase](https://supabase.com/docs) is an open-source Firebase alternative. Supabase is built on top of PostgreSQL, which offers strong SQL querying capabilities and enables a simple interface with already-existing tools and frameworks.
+[Supabase](https://supabase.com/docs) 是一个开源的 Firebase 替代方案。Supabase 基于 PostgreSQL 构建，提供强大的 SQL 查询能力，并与已有的工具和框架提供简单的接口。
 
-LangChain.js supports using a Supabase Postgres database as a vector store, using the [`pgvector`](https://github.com/pgvector/pgvector) extension. Refer to the [Supabase blog post](https://supabase.com/blog/openai-embeddings-postgres-vector) for more information.
+LangChain.js 支持使用 Supabase Postgres 数据库作为向量存储，使用 [`pgvector`](https://github.com/pgvector/pgvector) 扩展。参见 [Supabase 博客文章](https://supabase.com/blog/openai-embeddings-postgres-vector)获取更多信息。
 
-This guide provides a quick overview for getting started with Supabase [vector stores](/oss/integrations/vectorstores). For detailed documentation of all `SupabaseVectorStore` features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_community_vectorstores_supabase.SupabaseVectorStore.html).
+本指南提供了开始使用 Supabase [向量存储](/oss/integrations/vectorstores)的快速概览。有关 `SupabaseVectorStore` 所有功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain_community_vectorstores_supabase.SupabaseVectorStore.html)。
 
-## Overview
+## 概览
 
-### Integration details
+### 集成详情
 
 | Class | Package | [PY support](https://python.langchain.com/docs/integrations/vectorstores/supabase/) |  Version |
 | :--- | :--- | :---: | :---: |
 | [`SupabaseVectorStore`](https://api.js.langchain.com/classes/langchain_community_vectorstores_supabase.SupabaseVectorStore.html) | [`@langchain/community`](https://npmjs.com/@langchain/community) | ✅ |  ![NPM - Version](https://img.shields.io/npm/v/@langchain/community?style=flat-square&label=%20&) |
 
-## Setup
+## 设置
 
-To use Supabase vector stores, you'll need to set up a Supabase database and install the `@langchain/community` integration package. You'll also need to install the official [`@supabase/supabase-js`](https://www.npmjs.com/package/@supabase/supabase-js) SDK as a peer dependency.
+要使用 Supabase 向量存储，你需要设置一个 Supabase 数据库并安装 `@langchain/community` 集成包。你还需要安装官方的 [`@supabase/supabase-js`](https://www.npmjs.com/package/@supabase/supabase-js) SDK 作为 peer 依赖。
 
-This guide will also use [OpenAI embeddings](/oss/integrations/embeddings/openai), which require you to install the `@langchain/openai` integration package. You can also use [other supported embeddings models](/oss/integrations/embeddings) if you wish.
+本指南还将使用 [OpenAI 嵌入](/oss/integrations/text_embedding/openai)，需要安装 `@langchain/openai` 集成包。你也可以使用[其他支持的嵌入模型](/oss/integrations/text_embedding)。
 
 <CodeGroup>
 ```bash npm
@@ -35,7 +35,7 @@ pnpm add @langchain/community @langchain/core @supabase/supabase-js @langchain/o
 ```
 </CodeGroup>
 
-Once you've created a database, run the following SQL to set up [`pgvector`](https://github.com/pgvector/pgvector) and create the necessary table and functions:
+设置好数据库后，运行以下 SQL 来设置 [`pgvector`](https://github.com/pgvector/pgvector) 并创建必要的表和函数：
 
 ```sql
 -- Enable the pgvector extension to work with embedding vectors
@@ -80,29 +80,29 @@ end;
 $$;
 ```
 
-### Credentials
+### 凭据
 
-Once you've done this set the `SUPABASE_PRIVATE_KEY` and `SUPABASE_URL` environment variables:
+完成上述步骤后，设置 `SUPABASE_PRIVATE_KEY` 和 `SUPABASE_URL` 环境变量：
 
 ```typescript
 process.env.SUPABASE_PRIVATE_KEY = "your-api-key";
 process.env.SUPABASE_URL = "your-supabase-db-url";
 ```
 
-If you are using OpenAI embeddings for this guide, you'll need to set your OpenAI key as well:
+如果你在本指南中使用 OpenAI 嵌入，你还需要设置 OpenAI 密钥：
 
 ```typescript
 process.env.OPENAI_API_KEY = "YOUR_API_KEY";
 ```
 
-If you want to get automated tracing of your model calls you can also set your [LangSmith](/langsmith/home) API key by uncommenting below:
+如果你想获得模型调用的自动追踪，你还可以通过取消下方注释来设置你的 [LangSmith](/langsmith/home) API 密钥：
 
 ```typescript
 // process.env.LANGSMITH_TRACING="true"
 // process.env.LANGSMITH_API_KEY="your-api-key"
 ```
 
-## Instantiation
+## 实例化
 
 ```typescript
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
@@ -126,9 +126,9 @@ const vectorStore = new SupabaseVectorStore(embeddings, {
 });
 ```
 
-## Manage vector store
+## 管理向量存储
 
-### Add items to vector store
+### 向向量存储添加项目
 
 ```typescript
 import type { Document } from "@langchain/core/documents";
@@ -162,19 +162,19 @@ await vectorStore.addDocuments(documents, { ids: ["1", "2", "3", "4"] });
 [ 1, 2, 3, 4 ]
 ```
 
-### Delete items from vector store
+### 从向量存储删除项目
 
 ```typescript
 await vectorStore.delete({ ids: ["4"] });
 ```
 
-## Query vector store
+## 查询向量存储
 
-Once your vector store has been created and the relevant documents have been added you will most likely wish to query it during the running of your chain or agent.
+创建向量存储并添加相关文档后，你很可能希望在链或代理运行过程中查询它。
 
-### Query directly
+### 直接查询
 
-Performing a simple similarity search can be done as follows:
+执行简单的相似性搜索可以如下进行：
 
 ```typescript
 const filter = { source: "https://example.com" };
@@ -191,7 +191,7 @@ for (const doc of similaritySearchResults) {
 * Mitochondria are made out of lipids [{"source":"https://example.com"}]
 ```
 
-If you want to execute a similarity search and receive the corresponding scores you can run:
+如果你想执行相似性搜索并获取相应的分数，你可以运行：
 
 ```typescript
 const similaritySearchWithScoreResults = await vectorStore.similaritySearchWithScore("biology", 2, filter)
@@ -206,9 +206,9 @@ for (const [doc, score] of similaritySearchWithScoreResults) {
 * [SIM=0.148] Mitochondria are made out of lipids [{"source":"https://example.com"}]
 ```
 
-### Metadata query builder filtering
+### 元数据查询构建器过滤
 
-You can also use query builder-style filtering similar to how the [Supabase JavaScript library](https://supabase.com/docs/reference/javascript/using-filters) works instead of passing an object. Note that since most of the filter properties are in the metadata column, you need to use arrow operators (-> for integer or ->> for text) as defined in [Postgrest API documentation](https://postgrest.org/en/stable/references/api/tables_views.html#json-columns) and specify the data type of the property (e.g. the column should look something like `metadata->some_int_prop_name::int`).
+你还可以使用类似于 [Supabase JavaScript 库](https://supabase.com/docs/reference/javascript/using-filters)工作方式的查询构建器风格过滤，而不是传递对象。注意，由于大多数过滤属性都在 metadata 列中，你需要使用箭头操作符（-> 用于整数或 ->> 用于文本），如 [Postgrest API 文档](https://postgrest.org/en/stable/references/api/tables_views.html#json-columns)中所定义的，并指定属性的数据类型（例如，列应该看起来像 `metadata->some_int_prop_name::int`）。
 
 ```typescript
 import { SupabaseFilterRPCCall } from "@langchain/community/vectorstores/supabase";
@@ -228,9 +228,9 @@ for (const doc of funcFilterSearchResults) {
 * Mitochondria are made out of lipids [{"source":"https://example.com"}]
 ```
 
-### Query by turning into retriever
+### 转换为检索器进行查询
 
-You can also transform the vector store into a [retriever](/oss/langchain/retrieval) for easier usage in your chains.
+你还可以将向量存储转换为[检索器](/oss/langchain/retrieval)，以便在链中更方便地使用。
 
 ```typescript
 const retriever = vectorStore.asRetriever({
@@ -256,16 +256,16 @@ await retriever.invoke("biology");
 ]
 ```
 
-### Usage for retrieval-augmented generation
+### 用于检索增强生成
 
-For guides on how to use this vector store for retrieval-augmented generation (RAG), see the following sections:
+有关如何将此向量存储用于检索增强生成（RAG）的指南，请参见以下章节：
 
-- [Build a RAG app with LangChain](/oss/langchain/rag).
+- [使用 LangChain 构建 RAG 应用](/oss/langchain/rag)。
 - [Agentic RAG](/oss/langgraph/agentic-rag)
-- [Retrieval docs](/oss/langchain/retrieval)
+- [检索文档](/oss/langchain/retrieval)
 
 ---
 
-## API reference
+## API 参考
 
-For detailed documentation of all `SupabaseVectorStore` features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_community_vectorstores_supabase.SupabaseVectorStore.html).
+有关 `SupabaseVectorStore` 所有功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain_community_vectorstores_supabase.SupabaseVectorStore.html)。

@@ -1,28 +1,23 @@
 ---
-title: Tools
+title: 工具
+sidebarTitle: 工具
+description: 了解如何在 LangChain 中创建和使用工具，扩展 Agent 的能力
 ---
 
-import ToolReturnValuesPy from '/snippets/code-samples/tool-return-values-py.mdx';
-import ToolReturnValuesJs from '/snippets/code-samples/tool-return-values-js.mdx';
-import ToolReturnObjectPy from '/snippets/code-samples/tool-return-object-py.mdx';
-import ToolReturnObjectJs from '/snippets/code-samples/tool-return-object-js.mdx';
-import ToolReturnCommandPy from '/snippets/code-samples/tool-return-command-py.mdx';
-import ToolReturnCommandJs from '/snippets/code-samples/tool-return-command-js.mdx';
+工具扩展了 [Agent](/oss/langchain/agents) 的能力——使其能够获取实时数据、执行代码、查询外部数据库，以及在真实环境中执行操作。
 
-Tools extend what [agents](/oss/langchain/agents) can do—letting them fetch real-time data, execute code, query external databases, and take actions in the world.
-
-Under the hood, tools are callable functions with well-defined inputs and outputs that get passed to a [chat model](/oss/langchain/models). The model decides when to invoke a tool based on the conversation context, and what input arguments to provide.
+在底层，工具是具有明确定义的输入和输出的可调用函数，会被传递给[聊天模型](/oss/langchain/models)。模型根据对话上下文决定何时调用工具以及提供什么输入参数。
 
 <Tip>
-    For details on how models handle tool calls, see [Tool calling](/oss/langchain/models#tool-calling).
+    关于模型如何处理工具调用的详细信息，请参阅[工具调用](/oss/langchain/models#tool-calling)。
 </Tip>
 
-## Create tools
+## 创建工具
 
-### Basic tool definition
+### 基本工具定义
 
 :::python
-The simplest way to create a tool is with the @[`@tool`] decorator. By default, the function's docstring becomes the tool's description that helps the model understand when to use it:
+创建工具最简单的方式是使用 @[`@tool`] 装饰器。默认情况下，函数的文档字符串会作为工具的描述，帮助模型理解何时应该使用该工具：
 
 ```python
 from langchain.tools import tool
@@ -38,11 +33,11 @@ def search_database(query: str, limit: int = 10) -> str:
     return f"Found {limit} results for '{query}'"
 ```
 
-Type hints are **required** as they define the tool's input schema. The docstring should be informative and concise to help the model understand the tool's purpose.
+类型提示是**必需的**，因为它们定义了工具的输入 schema。文档字符串应当简洁明了，帮助模型理解工具的用途。
 :::
 
 :::js
-The simplest way to create a tool is by importing the `tool` function from the `langchain` package. You can use [zod](https://zod.dev/) to define the tool's input schema:
+创建工具最简单的方式是从 `langchain` 包中导入 `tool` 函数。你可以使用 [zod](https://zod.dev/) 来定义工具的输入 schema：
 
 ```ts
 import * as z from "zod"
@@ -63,22 +58,22 @@ const searchDatabase = tool(
 :::
 
 <Note>
-    **Server-side tool use:** Some chat models feature built-in tools (web search, code interpreters) that are executed server-side. See [Server-side tool use](#server-side-tool-use) for details.
+    **服务端工具调用：** 部分聊天模型内置了工具（如网页搜索、代码解释器），这些工具在服务端执行。详见[服务端工具调用](#server-side-tool-use)。
 </Note>
 
 <Warning>
-    Prefer `snake_case` for tool names (e.g., `web_search` instead of `Web Search`). Some model providers have issues with or reject names containing spaces or special characters with errors. Sticking to alphanumeric characters, underscores, and hyphens helps to improve compatibility across providers.
+    工具名称推荐使用 `snake_case`（例如 `web_search` 而非 `Web Search`）。某些模型提供商对包含空格或特殊字符的名称支持不佳，甚至会报错。建议仅使用字母、数字、下划线和连字符，以确保跨提供商的兼容性。
 </Warning>
 
 :::python
-### Customize tool properties
+### 自定义工具属性
 
-#### Custom tool name
+#### 自定义工具名称
 
-By default, the tool name comes from the function name. Override it when you need something more descriptive:
+默认情况下，工具名称来自函数名。当你需要更具描述性的名称时，可以覆盖它：
 
 ```python
-@tool("web_search")  # Custom name
+@tool("web_search")  # 自定义名称
 def search(query: str) -> str:
     """Search the web for information."""
     return f"Results for: {query}"
@@ -86,9 +81,9 @@ def search(query: str) -> str:
 print(search.name)  # web_search
 ```
 
-#### Custom tool description
+#### 自定义工具描述
 
-Override the auto-generated tool description for clearer model guidance:
+覆盖自动生成的工具描述，为模型提供更清晰的指引：
 
 ```python
 @tool("calculator", description="Performs arithmetic calculations. Use this for any math problems.")
@@ -97,9 +92,9 @@ def calc(expression: str) -> str:
     return str(eval(expression))
 ```
 
-### Advanced schema definition
+### 高级 schema 定义
 
-Define complex inputs with Pydantic models or JSON schemas:
+使用 Pydantic 模型或 JSON schema 定义复杂的输入：
 
 <CodeGroup>
     ```python Pydantic model
@@ -150,33 +145,33 @@ Define complex inputs with Pydantic models or JSON schemas:
     ```
 </CodeGroup>
 
-### Reserved argument names
+### 保留参数名
 
-The following parameter names are reserved and cannot be used as tool arguments. Using these names will cause runtime errors.
+以下参数名是保留的，不能用作工具参数。使用这些名称将导致运行时错误。
 
-| Parameter name | Purpose |
-|----------------|---------|
-| `config` | Reserved for passing `RunnableConfig` to tools internally |
-| `runtime` | Reserved for `ToolRuntime` parameter (accessing state, context, store) |
+| 参数名 | 用途 |
+|--------|------|
+| `config` | 保留用于内部传递 `RunnableConfig` |
+| `runtime` | 保留用于 `ToolRuntime` 参数（访问 state、context、store） |
 
-To access runtime information, use the @[`ToolRuntime`] parameter instead of naming your own arguments `config` or `runtime`.
+要访问运行时信息，请使用 @[`ToolRuntime`] 参数，而不是自行命名 `config` 或 `runtime` 参数。
 :::
 
-## Access context
+## 访问上下文
 
-Tools are most powerful when they can access runtime information like conversation history, user data, and persistent memory. This section covers how to access and update this information from within your tools.
+工具在能够访问运行时信息（如对话历史、用户数据和持久化记忆）时最为强大。本节介绍如何在工具内部访问和更新这些信息。
 
 :::python
-Tools can access runtime information through the @[`ToolRuntime`] parameter, which provides:
+工具可以通过 @[`ToolRuntime`] 参数访问运行时信息，提供以下组件：
 
-| Component | Description | Use case |
-|-----------|-------------|----------|
-| **State** | Short-term memory - mutable data that exists for the current conversation (messages, counters, custom fields) | Access conversation history, track tool call counts |
-| **Context** | Immutable configuration passed at invocation time (user IDs, session info) | Personalize responses based on user identity |
-| **Store** | Long-term memory - persistent data that survives across conversations | Save user preferences, maintain knowledge base |
-| **Stream Writer** | Emit real-time updates during tool execution | Show progress for long-running operations |
-| **Config** | @[`RunnableConfig`] for the execution | Access callbacks, tags, and metadata |
-| **Tool Call ID** | Unique identifier for the current tool invocation | Correlate tool calls for logs and model invocations |
+| 组件 | 说明 | 使用场景 |
+|------|------|----------|
+| **State** | 短期记忆 - 当前对话期间存在的可变数据（消息、计数器、自定义字段） | 访问对话历史，追踪工具调用次数 |
+| **Context** | 调用时传入的不可变配置（用户 ID、会话信息） | 根据用户身份个性化响应 |
+| **Store** | 长期记忆 - 跨对话持久化的数据 | 保存用户偏好，维护知识库 |
+| **Stream Writer** | 在工具执行过程中发送实时更新 | 为长时间运行的操作显示进度 |
+| **Config** | 执行所用的 @[`RunnableConfig`] | 访问回调、标签和元数据 |
+| **Tool Call ID** | 当前工具调用的唯一标识符 | 关联工具调用的日志和模型调用 |
 
 ```mermaid
 graph LR
@@ -215,29 +210,19 @@ graph LR
     K --> O
     L --> O
     F --> P
-
-    classDef trigger fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#14532D
-    classDef process fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#1E3A8A
-    classDef output fill:#F3E8FF,stroke:#9333EA,stroke-width:2px,color:#581C87
-    classDef neutral fill:#F3F4F6,stroke:#9CA3AF,stroke-width:2px,color:#374151
-
-    class A trigger
-    class B,C,D,E,F process
-    class G,H,I,J,K,L neutral
-    class M,N,O,P output
 ```
 
-### Short-term memory (State)
+### 短期记忆（State）
 
-State represents short-term memory that exists for the duration of a conversation. It includes the message history and any custom fields you define in your [graph state](/oss/langgraph/graph-api#state).
+State 表示在对话期间存在的短期记忆。它包含消息历史以及你在[图状态](/oss/langgraph/graph-api#state)中定义的任何自定义字段。
 
 <Info>
-    Add `runtime: ToolRuntime` to your tool signature to access state. This parameter is automatically injected and hidden from the LLM - it won't appear in the tool's schema.
+    在工具签名中添加 `runtime: ToolRuntime` 即可访问 state。此参数会自动注入且对 LLM 不可见——它不会出现在工具的 schema 中。
 </Info>
 
-#### Access state
+#### 访问 state
 
-Tools can access the current conversation state using `runtime.state`:
+工具可以使用 `runtime.state` 访问当前对话状态：
 
 ```python
 from langchain.tools import tool, ToolRuntime
@@ -248,14 +233,14 @@ def get_last_user_message(runtime: ToolRuntime) -> str:
     """Get the most recent message from the user."""
     messages = runtime.state["messages"]
 
-    # Find the last human message
+    # 找到最后一条人类消息
     for message in reversed(messages):
         if isinstance(message, HumanMessage):
             return message.content
 
     return "No user messages found"
 
-# Access custom state fields
+# 访问自定义 state 字段
 @tool
 def get_user_preference(
     pref_name: str,
@@ -267,12 +252,12 @@ def get_user_preference(
 ```
 
 <Warning>
-    The `runtime` parameter is hidden from the model. For the example above, the model only sees `pref_name` in the tool schema.
+    `runtime` 参数对模型不可见。在上面的示例中，模型只能看到工具 schema 中的 `pref_name`。
 </Warning>
 
-#### Update state
+#### 更新 state
 
-Use @[`Command`] to update the agent's state. This is useful for tools that need to update custom state fields:
+使用 @[`Command`] 来更新 Agent 的状态。这在工具需要更新自定义 state 字段时非常有用：
 
 ```python
 from langgraph.types import Command
@@ -285,16 +270,16 @@ def set_user_name(new_name: str) -> Command:
 ```
 
 <Tip>
-    When tools update state variables, consider defining a [reducer](/oss/langgraph/graph-api#reducers) for those fields. Since LLMs can call multiple tools in parallel, a reducer determines how to resolve conflicts when the same state field is updated by concurrent tool calls.
+    当工具更新 state 变量时，建议为这些字段定义 [reducer](/oss/langgraph/graph-api#reducers)。由于 LLM 可能并行调用多个工具，reducer 决定了当同一 state 字段被并发工具调用同时更新时如何解决冲突。
 </Tip>
 :::
 
-### Context
+### 上下文（Context）
 
-Context provides immutable configuration data that is passed at invocation time. Use it for user IDs, session details, or application-specific settings that shouldn't change during a conversation.
+上下文提供调用时传入的不可变配置数据。用于用户 ID、会话详情或在对话期间不应改变的应用特定设置。
 
 :::python
-Access context through `runtime.context`:
+通过 `runtime.context` 访问上下文：
 
 ```python
 from dataclasses import dataclass
@@ -348,7 +333,7 @@ result = agent.invoke(
 :::
 
 :::js
-Tools can access an agent's runtime context through the `config` parameter:
+工具可以通过 `config` 参数访问 Agent 的运行时上下文：
 
 ```ts
 import * as z from "zod"
@@ -387,15 +372,15 @@ const result = await agent.invoke(
 ```
 :::
 
-### Long-term memory (Store)
+### 长期记忆（Store）
 
-The @[`BaseStore`] provides persistent storage that survives across conversations. Unlike state (short-term memory), data saved to the store remains available in future sessions.
+@[`BaseStore`] 提供跨对话持久化的存储。与 state（短期记忆）不同，保存到 store 中的数据在后续会话中仍然可用。
 
 :::python
-Access the store through `runtime.store`. The store uses a namespace/key pattern to organize data:
+通过 `runtime.store` 访问 store。store 使用命名空间/键模式来组织数据：
 
 <Tip>
-    For production deployments, use a persistent store implementation like @[`PostgresStore`] instead of `InMemoryStore`. See the [memory documentation](/oss/langgraph/memory) for setup details.
+    在生产环境中，请使用持久化 store 实现（如 @[`PostgresStore`]）替代 `InMemoryStore`。详见[记忆文档](/oss/langgraph/memory)。
 </Tip>
 
 ```python expandable
@@ -405,7 +390,7 @@ from langchain.agents import create_agent
 from langchain.tools import tool, ToolRuntime
 
 
-# Access memory
+# 访问记忆
 @tool
 def get_user_info(user_id: str, runtime: ToolRuntime) -> str:
     """Look up user info."""
@@ -413,7 +398,7 @@ def get_user_info(user_id: str, runtime: ToolRuntime) -> str:
     user_info = store.get(("users",), user_id)
     return str(user_info.value) if user_info else "Unknown user"
 
-# Update memory
+# 更新记忆
 @tool
 def save_user_info(user_id: str, user_info: dict[str, Any], runtime: ToolRuntime) -> str:
     """Save user info."""
@@ -428,12 +413,12 @@ agent = create_agent(
     store=store
 )
 
-# First session: save user info
+# 第一次会话：保存用户信息
 agent.invoke({
     "messages": [{"role": "user", "content": "Save the following user: userid: abc123, name: Foo, age: 25, email: foo@langchain.dev"}]
 })
 
-# Second session: get user info
+# 第二次会话：获取用户信息
 agent.invoke({
     "messages": [{"role": "user", "content": "Get user info for user with id 'abc123'"}]
 })
@@ -445,7 +430,7 @@ agent.invoke({
 :::
 
 :::js
-Access the store through `config.store`. The store uses a namespace/key pattern to organize data:
+通过 `config.store` 访问 store。store 使用命名空间/键模式来组织数据：
 
 ```ts expandable
 import * as z from "zod";
@@ -455,7 +440,7 @@ import { ChatOpenAI } from "@langchain/openai";
 
 const store = new InMemoryStore();
 
-// Access memory
+// 访问记忆
 const getUserInfo = tool(
   async ({ user_id }) => {
     const value = await store.get(["users"], user_id);
@@ -471,7 +456,7 @@ const getUserInfo = tool(
   }
 );
 
-// Update memory
+// 更新记忆
 const saveUserInfo = tool(
   async ({ user_id, name, age, email }) => {
     console.log("save_user_info", user_id, name, age, email);
@@ -496,7 +481,7 @@ const agent = createAgent({
   store,
 });
 
-// First session: save user info
+// 第一次会话：保存用户信息
 await agent.invoke({
   messages: [
     {
@@ -506,7 +491,7 @@ await agent.invoke({
   ],
 });
 
-// Second session: get user info
+// 第二次会话：获取用户信息
 const result = await agent.invoke({
   messages: [
     { role: "user", content: "Get user info for user with id 'abc123'" },
@@ -521,12 +506,12 @@ console.log(result);
 ```
 :::
 
-### Stream writer
+### 流式写入器（Stream Writer）
 
-Stream real-time updates from tools during execution. This is useful for providing progress feedback to users during long-running operations.
+在工具执行过程中向客户端流式发送实时更新。这在为长时间运行的操作提供进度反馈时非常有用。
 
 :::python
-Use `runtime.stream_writer` to emit custom updates:
+使用 `runtime.stream_writer` 发送自定义更新：
 
 ```python
 from langchain.tools import tool, ToolRuntime
@@ -536,7 +521,7 @@ def get_weather(city: str, runtime: ToolRuntime) -> str:
     """Get weather for a given city."""
     writer = runtime.stream_writer
 
-    # Stream custom updates as the tool executes
+    # 在工具执行过程中流式发送自定义更新
     writer(f"Looking up data for city: {city}")
     writer(f"Acquired data for city: {city}")
 
@@ -544,12 +529,12 @@ def get_weather(city: str, runtime: ToolRuntime) -> str:
 ```
 
 <Note>
-If you use `runtime.stream_writer` inside your tool, the tool must be invoked within a LangGraph execution context. See [Streaming](/oss/langchain/streaming) for more details.
+如果你在工具中使用了 `runtime.stream_writer`，该工具必须在 LangGraph 执行上下文中调用。详见[流式输出](/oss/langchain/streaming)。
 </Note>
 :::
 
 :::js
-Use `config.writer` to emit custom updates:
+使用 `config.writer` 发送自定义更新：
 
 ```ts
 import * as z from "zod";
@@ -559,7 +544,7 @@ const getWeather = tool(
   ({ city }, config: ToolRuntime) => {
     const writer = config.writer;
 
-    // Stream custom updates as the tool executes
+    // 在工具执行过程中流式发送自定义更新
     if (writer) {
       writer(`Looking up data for city: ${city}`);
       writer(`Acquired data for city: ${city}`);
@@ -580,13 +565,13 @@ const getWeather = tool(
 
 ## ToolNode
 
-@[`ToolNode`] is a prebuilt node that executes tools in LangGraph workflows. It handles parallel tool execution, error handling, and state injection automatically.
+@[`ToolNode`] 是一个预构建的节点，用于在 LangGraph 工作流中执行工具。它自动处理并行工具执行、错误处理和 state 注入。
 
 <Info>
-    For custom workflows where you need fine-grained control over tool execution patterns, use @[`ToolNode`] instead of @[`create_agent`]. It's the building block that powers agent tool execution.
+    当你需要对工具执行模式进行精细控制的自定义工作流时，请使用 @[`ToolNode`] 而非 @[`create_agent`]。它是驱动 Agent 工具执行的底层构建模块。
 </Info>
 
-### Basic usage
+### 基本用法
 
 :::python
 ```python
@@ -604,13 +589,13 @@ def calculator(expression: str) -> str:
     """Evaluate a math expression."""
     return str(eval(expression))
 
-# Create the ToolNode with your tools
+# 使用你的工具创建 ToolNode
 tool_node = ToolNode([search, calculator])
 
-# Use in a graph
+# 在图中使用
 builder = StateGraph(MessagesState)
 builder.add_node("tools", tool_node)
-# ... add other nodes and edges
+# ... 添加其他节点和边
 ```
 :::
 
@@ -638,117 +623,35 @@ const calculator = tool(
   }
 );
 
-// Create the ToolNode with your tools
+// 使用你的工具创建 ToolNode
 const toolNode = new ToolNode([search, calculator]);
 ```
 :::
 
-### Tool return values
+### 错误处理
 
-You can choose different return values for your tools:
-
-- Return a `string` for human-readable results.
-- Return an `object` for structured results the model should parse.
-- Return a `Command` with optional message when you need to write to state.
-
-#### Return a string
-
-Return a string when the tool should provide plain text for the model to read and use in its next response.
-
-:::python
-
-<ToolReturnValuesPy />
-
-:::
-
-:::js
-
-<ToolReturnValuesJs />
-
-:::
-
-Behavior:
-
-- The return value is converted to a `ToolMessage`.
-- The model sees that text and decides what to do next.
-- No agent state fields are changed unless the model or another tool does so later.
-
-Use this when the result is naturally human-readable text.
-
-#### Return an object
-
-Return an object (for example, a `dict`) when your tool produces structured data that the model should inspect.
-
-:::python
-
-<ToolReturnObjectPy />
-
-:::
-
-:::js
-
-<ToolReturnObjectJs />
-
-:::
-
-Behavior:
-
-- The object is serialized and sent back as tool output.
-- The model can read specific fields and reason over them.
-- Like string returns, this does not directly update graph state.
-
-Use this when downstream reasoning benefits from explicit fields instead of free-form text.
-
-#### Return a Command
-
-Return a @[`Command`] when the tool needs to update graph state (for example, setting user preferences or app state).
-You can return a `Command` with or without including a `ToolMessage`.
-If the model needs to see that the tool succeeded (for example, to confirm a preference change), include a `ToolMessage` in the update, using `runtime.tool_call_id` for the `tool_call_id` parameter.
-
-:::python
-
-<ToolReturnCommandPy />
-
-:::
-
-:::js
-
-<ToolReturnCommandJs />
-
-:::
-
-Behavior:
-
-- The command updates state using `update`.
-- Updated state is available to subsequent steps in the same run.
-- Use reducers for fields that may be updated by parallel tool calls.
-
-Use this when the tool is not just returning data, but also mutating agent state.
-
-### Error handling
-
-Configure how tool errors are handled. See the @[`ToolNode`] API reference for all options.
+配置工具错误的处理方式。所有选项请参阅 @[`ToolNode`] API 参考文档。
 
 :::python
 ```python
 from langgraph.prebuilt import ToolNode
 
-# Default: catch invocation errors, re-raise execution errors
+# 默认：捕获调用错误，重新抛出执行错误
 tool_node = ToolNode(tools)
 
-# Catch all errors and return error message to LLM
+# 捕获所有错误并将错误信息返回给 LLM
 tool_node = ToolNode(tools, handle_tool_errors=True)
 
-# Custom error message
+# 自定义错误信息
 tool_node = ToolNode(tools, handle_tool_errors="Something went wrong, please try again.")
 
-# Custom error handler
+# 自定义错误处理器
 def handle_error(e: ValueError) -> str:
     return f"Invalid input: {e}"
 
 tool_node = ToolNode(tools, handle_tool_errors=handle_error)
 
-# Only catch specific exception types
+# 仅捕获特定异常类型
 tool_node = ToolNode(tools, handle_tool_errors=(ValueError, TypeError))
 ```
 :::
@@ -757,22 +660,22 @@ tool_node = ToolNode(tools, handle_tool_errors=(ValueError, TypeError))
 ```typescript
 import { ToolNode } from "@langchain/langgraph/prebuilt";
 
-// Default behavior
+// 默认行为
 const toolNode = new ToolNode(tools);
 
-// Catch all errors
+// 捕获所有错误
 const toolNode = new ToolNode(tools, { handleToolErrors: true });
 
-// Custom error message
+// 自定义错误信息
 const toolNode = new ToolNode(tools, {
   handleToolErrors: "Something went wrong, please try again."
 });
 ```
 :::
 
-### Route with tools_condition
+### 使用 tools_condition 进行路由
 
-Use @[`tools_condition`] for conditional routing based on whether the LLM made tool calls:
+使用 @[`tools_condition`] 根据 LLM 是否发起了工具调用进行条件路由：
 
 :::python
 ```python
@@ -784,7 +687,7 @@ builder.add_node("llm", call_llm)
 builder.add_node("tools", ToolNode(tools))
 
 builder.add_edge(START, "llm")
-builder.add_conditional_edges("llm", tools_condition)  # Routes to "tools" or END
+builder.add_conditional_edges("llm", tools_condition)  # 路由到 "tools" 或 END
 builder.add_edge("tools", "llm")
 
 graph = builder.compile()
@@ -800,16 +703,16 @@ const builder = new StateGraph(MessagesAnnotation)
   .addNode("llm", callLlm)
   .addNode("tools", new ToolNode(tools))
   .addEdge("__start__", "llm")
-  .addConditionalEdges("llm", toolsCondition)  // Routes to "tools" or "__end__"
+  .addConditionalEdges("llm", toolsCondition)  // 路由到 "tools" 或 "__end__"
   .addEdge("tools", "llm");
 
 const graph = builder.compile();
 ```
 :::
 
-### State injection
+### State 注入
 
-Tools can access the current graph state through @[`ToolRuntime`]:
+工具可以通过 @[`ToolRuntime`] 访问当前图状态：
 
 :::python
 ```python
@@ -826,16 +729,16 @@ tool_node = ToolNode([get_message_count])
 ```
 :::
 
-For more details on accessing state, context, and long-term memory from tools, see [Access context](#access-context).
+关于从工具中访问 state、上下文和长期记忆的更多详情，请参阅[访问上下文](#access-context)。
 
-## Prebuilt tools
+## 预构建工具
 
-LangChain provides a large collection of prebuilt tools and toolkits for common tasks like web search, code interpretation, database access, and more. These ready-to-use tools can be directly integrated into your agents without writing custom code.
+LangChain 提供了大量预构建的工具和工具包，涵盖网页搜索、代码解释、数据库访问等常见任务。这些开箱即用的工具可以直接集成到你的 Agent 中，无需编写自定义代码。
 
-See the [tools and toolkits](/oss/integrations/tools) integration page for a complete list of available tools organized by category.
+完整的可用工具列表（按类别组织），请参阅[工具与工具包](/oss/integrations/tools)集成页面。
 
-## Server-side tool use
+## 服务端工具调用
 
-Some chat models feature built-in tools that are executed server-side by the model provider. These include capabilities like web search and code interpreters that don't require you to define or host the tool logic.
+部分聊天模型内置了由模型提供商在服务端执行的工具。这些工具包括网页搜索和代码解释器等能力，无需你自行定义或托管工具逻辑。
 
-Refer to the individual [chat model integration pages](/oss/integrations/providers) and the [tool calling documentation](/oss/langchain/models#server-side-tool-use) for details on enabling and using these built-in tools.
+关于启用和使用这些内置工具的详细信息，请参阅各[聊天模型集成页面](/oss/integrations/providers)和[工具调用文档](/oss/langchain/models#server-side-tool-use)。

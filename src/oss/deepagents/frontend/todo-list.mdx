@@ -1,45 +1,33 @@
 ---
-title: Todo List
-description: Track agent progress with a real-time todo list synced from agent state
+title: 待办列表
+description: 通过与 Agent 状态同步的实时待办列表追踪 Agent 进度
 ---
 
-Not every agent interaction is a chat. Sometimes the agent is executing a
-multi-step plan, and the best way to show progress is a **todo list** that
-updates in real time. The deep agent todo list pattern reads a `todos` array
-directly from the agent's state, rendering each item with its current status as
-the agent works through its plan. It's a progress dashboard built on the same
-`useStream` hook you use for chat. It shows that agent state can power any UI,
-not just message bubbles.
+并非所有 Agent 交互都是聊天。有时 Agent 正在执行多步计划，展示进度的最佳方式是一个实时更新的**待办列表**。Deep Agent 待办列表模式直接从 Agent 状态中读取 `todos` 数组，随着 Agent 执行计划渲染每个项目及其当前状态。它是构建在同一个 `useStream` 钩子之上的进度仪表板。它表明 Agent 状态可以驱动任何 UI，而不仅仅是消息气泡。
 
 import { PatternEmbed } from "/snippets/pattern-embed.jsx"
 
 <PatternEmbed pattern="deep-agent-todo-list" />
 
-## How it works
+## 工作原理
 
-In a LangGraph agent, state isn't limited to messages. You can define **custom
-state keys** that hold arbitrary data. In this case, a `todos` array. As the
-agent executes its plan, it updates each todo's status from `"pending"` to
-`"in_progress"` to `"completed"`. The `useStream` hook exposes these custom
-state values via `stream.values`, and your UI renders them reactively.
+在 LangGraph Agent 中，状态不仅限于消息。你可以定义**自定义状态键**来保存任意数据。在本例中，就是一个 `todos` 数组。当 Agent 执行计划时，它将每个待办项的状态从 `"pending"` 更新为 `"in_progress"` 再到 `"completed"`。`useStream` 钩子通过 `stream.values` 暴露这些自定义状态值，你的 UI 会响应式地渲染它们。
 
-The flow looks like this:
+流程如下：
 
-1. User submits a request
-2. Agent creates a plan and populates `todos` in its state
-3. Agent begins executing each todo transitions through `pending` →
-   `in_progress` → `completed`
-4. `stream.values.todos` updates in real time as the agent progresses
-5. Your UI re-renders the todo list with current statuses
+1. 用户提交请求
+2. Agent 创建计划并在其状态中填充 `todos`
+3. Agent 开始执行每个待办项，依次经历 `pending` → `in_progress` → `completed`
+4. `stream.values.todos` 随着 Agent 进度实时更新
+5. 你的 UI 用当前状态重新渲染待办列表
 
-## Setting up useStream
+## 设置 useStream
 
-No special configuration is needed. Point `useStream` at your agent and
-read the `todos` from `stream.values`.
+不需要特殊配置。将 `useStream` 指向你的 Agent，从 `stream.values` 读取 `todos`。
 
 :::python
 
-Define a TypeScript interface matching your agent's state schema and pass it as a type parameter to `useStream` for type-safe access to state values, including custom state keys like `todos`. In the examples below, replace `typeof myAgent` with your interface name:
+定义一个与 Agent 状态 schema 匹配的 TypeScript 接口，并将其作为类型参数传递给 `useStream`，以获得类型安全的状态值访问（包括 `todos` 等自定义状态键）。在下面的示例中，将 `typeof myAgent` 替换为你的接口名称：
 
 ```ts
 import type { BaseMessage } from "@langchain/core/messages";
@@ -60,7 +48,7 @@ interface AgentState {
 
 :::js
 
-Import your agent and pass `typeof myAgent` as a type parameter to `useStream` for type-safe access to state values:
+导入你的 Agent 并将 `typeof myAgent` 作为类型参数传递给 `useStream`，以获得类型安全的状态值访问：
 
 ```ts
 import type { myAgent } from "./agent";
@@ -170,9 +158,9 @@ export class TodoAgentComponent {
 ```
 </CodeGroup>
 
-## The Todo interface
+## Todo 接口
 
-Each todo in the array has a simple structure:
+数组中每个待办项都有简单的结构：
 
 ```ts
 interface Todo {
@@ -181,18 +169,16 @@ interface Todo {
 }
 ```
 
-| Property | Description |
+| 属性 | 描述 |
 | --- | --- |
-| `status` | The current state of this task. Options: `pending` (not started), `in_progress` (agent is working on it), `completed` (done) |
-| `content` | A human-readable description of what the task involves |
+| `status` | 此任务的当前状态。可选值：`pending`（未开始）、`in_progress`（Agent 正在处理）、`completed`（已完成） |
+| `content` | 任务内容的可读描述 |
 
-The agent populates this array when it creates its plan, then updates individual
-items as it executes each step.
+Agent 在创建计划时填充此数组，然后在执行每个步骤时更新各个项目。
 
-## Building the TodoList component
+## 构建 TodoList 组件
 
-The todo list renders each item with a status icon, color coding, and visual
-styling that reflects the current state:
+待办列表使用状态图标、颜色编码和视觉样式渲染每个项目，反映其当前状态：
 
 ```tsx
 function TodoList({ todos }: { todos: Todo[] }) {
@@ -222,9 +208,9 @@ function TodoList({ todos }: { todos: Todo[] }) {
 }
 ```
 
-## Progress bar
+## 进度条
 
-A visual progress bar gives users an at-a-glance summary of overall completion:
+视觉进度条让用户一目了然地了解整体完成情况：
 
 ```tsx
 function ProgressBar({ percentage }: { percentage: number }) {
@@ -245,10 +231,9 @@ function ProgressBar({ percentage }: { percentage: number }) {
 }
 ```
 
-## Individual todo items
+## 单个待办项
 
-Each item gets a status icon, color-coded text, and strikethrough styling for
-completed tasks:
+每个项目都有状态图标、颜色编码文本，已完成的任务带有删除线样式：
 
 ```tsx
 function TodoItem({ todo }: { todo: Todo }) {
@@ -288,12 +273,11 @@ function TodoItem({ todo }: { todo: Todo }) {
 }
 ```
 
-The `in_progress` icon uses `animate-pulse` to draw attention to the currently
-active task.
+`in_progress` 图标使用 `animate-pulse` 来引起用户对当前活跃任务的注意。
 
-## Calculating progress
+## 计算进度
 
-Derive progress metrics directly from the todos array:
+直接从 todos 数组推导进度指标：
 
 ```ts
 const todos = stream.values?.todos ?? [];
@@ -306,14 +290,11 @@ const percentage = todos.length
   : 0;
 ```
 
-These values update reactively as the agent modifies its state, keeping the
-progress bar and counters in sync.
+这些值随着 Agent 修改其状态而响应式更新，保持进度条和计数器同步。
 
-## Combining with chat messages
+## 与聊天消息结合
 
-The todo list works alongside the regular chat interface. A practical layout
-shows the todo list as a persistent sidebar or header panel, with chat messages
-below:
+待办列表与常规聊天界面配合使用。实用的布局是将待办列表作为持久的侧边栏或头部面板展示，聊天消息在下方：
 
 ```tsx
 function TodoAgentLayout() {
@@ -352,23 +333,17 @@ function TodoAgentLayout() {
 ```
 
 <Tip>
-Show the todo list only when `todos.length > 0`. Before the agent creates its
-plan, there's nothing to display. Showing an empty component wastes space.
+仅在 `todos.length > 0` 时展示待办列表。在 Agent 创建计划之前没有内容可展示，显示空组件会浪费空间。
 </Tip>
 
-## Custom state beyond todos
+## 超越 todos 的自定义状态
 
-This pattern demonstrates a powerful principle: `stream.values` can expose
-**any custom state** your agent defines, not just messages. The `todos` array is
-just one example. You could use the same approach for:
+这个模式展示了一个强大的原则：`stream.values` 可以暴露 Agent 定义的**任何自定义状态**，不仅限于消息。`todos` 数组只是一个例子。你可以用相同的方法实现：
 
-- **Progress metrics**: `stream.values.progress` with numeric completion data
-- **Generated artifacts**: `stream.values.document` with a structured document
-  the agent is building
-- **Decision logs**: `stream.values.decisions` tracking every choice the agent
-  made
-- **Resource lists**: `stream.values.sources` with links and references the
-  agent found
+- **进度指标**：`stream.values.progress` 包含数字完成数据
+- **生成的产物**：`stream.values.document` 包含 Agent 正在构建的结构化文档
+- **决策日志**：`stream.values.decisions` 跟踪 Agent 做出的每个选择
+- **资源列表**：`stream.values.sources` 包含 Agent 找到的链接和引用
 
 ```ts
 // Any custom state key your agent defines is accessible
@@ -378,15 +353,12 @@ const confidence = stream.values?.confidence_score;
 ```
 
 <Info>
-Custom state keys are defined in your LangGraph graph's state schema. The
-`useStream` hook automatically includes them in `stream.values` without any additional
-client-side configuration.
+自定义状态键在 LangGraph 图的状态 schema 中定义。`useStream` 钩子会自动将它们包含在 `stream.values` 中，无需额外的客户端配置。
 </Info>
 
-## Animating transitions
+## 动画过渡
 
-Todo status transitions happen in real time, and smooth animations make these
-changes feel polished rather than jarring:
+待办项状态变化是实时发生的，流畅的动画使这些变化感觉精致而非突兀：
 
 ```tsx
 function TodoItem({ todo }: { todo: Todo }) {
@@ -419,28 +391,21 @@ function TodoItem({ todo }: { todo: Todo }) {
 }
 ```
 
-The `transition-all duration-300` classes ensure that color changes,
-strikethrough, and opacity shifts all animate smoothly.
+`transition-all duration-300` 类确保颜色变化、删除线和透明度变化都能平滑过渡。
 
-## Use cases
+## 使用场景
 
-The todo list pattern fits any scenario where an agent executes a structured
-plan:
+待办列表模式适用于 Agent 执行结构化计划的任何场景：
 
-- **Project planning**: agent breaks a project into tasks and works through
-  them sequentially
-- **Research workflows**: each research question becomes a todo that the agent
-  investigates and completes
-- **Data processing**: steps like ingestion, validation, transformation, and
-  export each get their own todo
-- **Onboarding flows**: agent walks through setup steps, checking off each one
-  as it configures services
-- **Report generation**: sections of a report become todos: gather data,
-  analyze trends, write summary, format output
+- **项目规划**：Agent 将项目拆分为任务并依次执行
+- **研究工作流**：每个研究问题成为一个待办项，Agent 逐一调查并完成
+- **数据处理**：采集、验证、转换和导出等步骤各自成为一个待办项
+- **引导流程**：Agent 逐步完成设置步骤，配置服务时逐一打勾
+- **报告生成**：报告的各个章节成为待办项：收集数据、分析趋势、撰写摘要、格式化输出
 
-## Handling empty and loading states
+## 处理空状态和加载状态
 
-Handle the initial state before the agent has created its plan:
+处理 Agent 创建计划之前的初始状态：
 
 ```tsx
 function TodoList({ todos, isLoading }: { todos: Todo[]; isLoading: boolean }) {
@@ -467,21 +432,11 @@ function TodoList({ todos, isLoading }: { todos: Todo[]; isLoading: boolean }) {
 }
 ```
 
-## Best practices
+## 最佳实践
 
-- **Show the todo list prominently**. It's the primary progress indicator for
-  plan-based agents. Don't bury it below the fold.
-- **Animate status transitions**. Smooth transitions make the agent feel more
-  responsive. Use CSS transitions on background color, text decoration, and
-  opacity.
-- **Only highlight one `in_progress` item**. Agents typically work on one task
-  at a time. If multiple items show as `in_progress`, the UI gets noisy.
-  Consider only pulsing the first one.
-- **Collapse or dim completed items**. As the list grows, completed items
-  become less relevant. Reduce their visual weight so users focus on what's
-  still happening.
-- **Show the progress percentage**. A single number like "67% complete" is
-  immediately understandable, even from across the room.
-- **Keep the todo list in sync**. Because `stream.values` updates reactively,
-  the todo list stays current automatically. Don't add manual polling or
-  refresh logic.
+- **突出展示待办列表**。它是基于计划的 Agent 的主要进度指示器，不要把它隐藏在下方。
+- **为状态转换添加动画**。流畅的过渡让 Agent 感觉更灵敏。在背景色、文本装饰和透明度上使用 CSS 过渡。
+- **只高亮一个 `in_progress` 项**。Agent 通常一次只处理一个任务。如果多个项目显示为 `in_progress`，UI 会变得嘈杂。考虑只对第一个使用脉冲效果。
+- **折叠或淡化已完成项**。随着列表增长，已完成的项目变得不那么重要。降低它们的视觉权重，让用户关注仍在进行的内容。
+- **展示完成百分比**。一个简单的数字如"67% 已完成"即使在远处也能立即理解。
+- **保持待办列表同步**。因为 `stream.values` 响应式更新，待办列表会自动保持最新。不要添加手动轮询或刷新逻辑。

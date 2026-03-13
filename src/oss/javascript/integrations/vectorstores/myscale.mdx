@@ -1,21 +1,19 @@
 ---
-title: "MyScale integration"
-description: "Integrate with the MyScale vector store using LangChain JavaScript."
+title: "MyScale 集成"
+description: "使用 LangChain JavaScript 集成 MyScale 向量存储。"
 ---
 
 <Tip>
-**Compatibility**
-
-Only available on Node.js.
+**兼容性**：仅在 Node.js 上可用。
 </Tip>
 
-[MyScale](https://myscale.com/) is an emerging AI database that harmonizes the power of vector search and SQL analytics, providing a managed, efficient, and responsive experience.
+[MyScale](https://myscale.com/) 是一个新兴的 AI 数据库，将向量搜索和 SQL 分析的功能和谐统一，提供托管的、高效的、响应快速的体验。
 
-## Setup
+## 设置
 
-1. Launch a cluster through [MyScale's Web Console](https://console.myscale.com/). See [MyScale's official documentation](https://docs.myscale.com/en/quickstart/) for more information.
-2. After launching a cluster, view your `Connection Details` from your cluster's `Actions` menu. You will need the host, port, username, and password.
-3. Install the required Node.js peer dependency in your workspace.
+1. 通过 [MyScale Web 控制台](https://console.myscale.com/) 启动集群。更多信息请参见 [MyScale 官方文档](https://docs.myscale.com/en/quickstart/)。
+2. 启动集群后，从集群的 `Actions` 菜单中查看你的 `连接详情`。你将需要主机、端口、用户名和密码。
+3. 在你的工作区中安装所需的 Node.js peer 依赖。
 
 <Tip>
 See [this section for general instructions on installing LangChain packages](/oss/langchain/install).
@@ -25,7 +23,7 @@ See [this section for general instructions on installing LangChain packages](/os
 npm install -S @langchain/openai @clickhouse/client @langchain/community @langchain/core
 ```
 
-## Index and query docs
+## 索引和查询文档
 
 ```typescript
 import { MyScaleStore } from "@langchain/community/vectorstores/myscale";
@@ -58,7 +56,7 @@ const filteredResults = await vectorStore.similaritySearch("hello world", 1, {
 console.log(filteredResults);
 ```
 
-## Query docs from an existing collection
+## 从现有集合查询文档
 
 ```typescript
 import { MyScaleStore } from "@langchain/community/vectorstores/myscale";
@@ -85,7 +83,7 @@ const filteredResults = await vectorStore.similaritySearch("hello world", 1, {
 console.log(filteredResults);
 ```
 
-## Related
+## 相关
 
-- Vector store [conceptual guide](/oss/integrations/vectorstores)
-- Vector store [how-to guides](/oss/integrations/vectorstores)
+- 向量存储[概念指南](/oss/integrations/vectorstores)
+- 向量存储[操作指南](/oss/integrations/vectorstores)

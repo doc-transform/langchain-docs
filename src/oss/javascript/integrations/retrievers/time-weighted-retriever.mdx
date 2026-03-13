@@ -1,24 +1,24 @@
 ---
-title: "Time-weighted integration"
-description: "Integrate with the Time-weighted retriever using LangChain JavaScript."
+title: "时间加权检索器集成"
+description: "使用 LangChain JavaScript 集成时间加权检索器。"
 ---
 
-A Time-Weighted Retriever is a retriever that takes into account recency in addition to similarity. The scoring algorithm is:
+时间加权检索器是一种除了考虑相似度外，还考虑时间新近度的检索器。评分算法为：
 
 ```typescript
 let score = (1.0 - this.decayRate) ** hoursPassed + vectorRelevance;
 ```
 
-Notably, `hoursPassed` above refers to the time since the object in the retriever was last accessed, not since it was created. This means that frequently accessed objects remain "fresh" and score higher.
+需要注意的是，上面的 `hoursPassed` 指的是检索器中对象上次被访问以来的时间，而不是它被创建以来的时间。这意味着经常被访问的对象保持“新鲜”并获得更高的分数。
 
-`this.decayRate` is a configurable decimal number between 0 and 1. A lower number means that documents will be "remembered" for longer, while a higher number strongly weights more recently accessed documents.
+`this.decayRate` 是一个可配置的 0 到 1 之间的小数。较低的数值意味着文档将被“记忆”更长时间，而较高的数值则强烈偏向最近访问的文档。
 
-Note that setting a decay rate of exactly 0 or 1 makes `hoursPassed` irrelevant and makes this retriever equivalent to a standard vector lookup.
+请注意，将衰减率设置为恰好 0 或 1 会使 `hoursPassed` 变得无关紧要，这会使该检索器等同于标准的向量查找。
 
-## Usage
+## 用法
 
-This example shows how to initialize a `TimeWeightedVectorStoreRetriever` with a vector store.
-It is important to note that due to required metadata, all documents must be added to the backing vector store using the `addDocuments` method on the **retriever**, not the vector store itself.
+本示例展示了如何使用向量存储初始化 `TimeWeightedVectorStoreRetriever`。
+需要注意的是，由于需要元数据，所有文档必须通过**检索器**上的 `addDocuments` 方法添加，而不是向量存储本身。
 
 ```typescript
 import { TimeWeightedVectorStoreRetriever } from "@langchain/classic/retrievers/time_weighted";
@@ -66,6 +66,6 @@ console.log(results2);
  */
 ```
 
-## Related
+## 相关
 
-- [Retrieval guide](/oss/langchain/retrieval)
+- [检索指南](/oss/langchain/retrieval)

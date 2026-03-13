@@ -1,21 +1,20 @@
 ---
-title: "DeepInfra integration"
-description: "Integrate with the DeepInfra LLM using LangChain JavaScript."
+title: "DeepInfra 集成"
+description: "使用 LangChain JavaScript 集成 DeepInfra LLM 模型。"
 ---
 
-LangChain supports LLMs hosted by [Deep Infra](https://deepinfra.com/) through the `DeepInfra` wrapper.
-First, you'll need to install the `@langchain/community` package:
+LangChain 支持通过 `DeepInfra` 封装器调用 [Deep Infra](https://deepinfra.com/) 托管的 LLM。
+首先，你需要安装 `@langchain/community` 包：
 
 <Tip>
-See [this section for general instructions on installing LangChain packages](/oss/langchain/install).
+安装 LangChain 包的通用说明请参见[此章节](/oss/langchain/install)。
 </Tip>
 
 ```bash npm
 npm install @langchain/community @langchain/core
 ```
 
-You'll need to obtain an API key and set it as an environment variable named `DEEPINFRA_API_TOKEN`
-(or pass it into the constructor), then call the model as shown below:
+你需要获取 API 密钥并将其设置为名为 `DEEPINFRA_API_TOKEN` 的环境变量（或将其传入构造函数），然后按以下方式调用模型：
 
 ```typescript
 import { DeepInfraLLM } from "@langchain/community/llms/deepinfra";
@@ -38,7 +37,7 @@ const res = await llm.invoke(
 console.log({ res });
 ```
 
-## Related
+## 相关链接
 
 
-- [Models guide](/oss/langchain/models)
+- [模型指南](/oss/langchain/models)

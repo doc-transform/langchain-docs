@@ -1,11 +1,11 @@
 ---
-title: "Splitting code text splitter integration guide"
+title: "代码分割 - 文本分割器集成指南"
 ---
 
-@[RecursiveCharacterTextSplitter] includes prebuilt lists of separators that are useful for [splitting text](/oss/integrations/splitters/) in a specific programming language.
+@[RecursiveCharacterTextSplitter] 包含预置的分隔符列表，用于按特定编程语言[分割文本](/oss/integrations/splitters/)。
 
 :::python
-Supported languages are stored in the `langchain_text_splitters.Language` enum. They include:
+支持的语言存储在 `langchain_text_splitters.Language` 枚举中。它们包括：
 
 ```
 "cpp",
@@ -34,19 +34,19 @@ Supported languages are stored in the `langchain_text_splitters.Language` enum. 
 "haskell"
 ```
 
-To view the list of separators for a given language, pass a value from this enum into
+要查看给定语言的分隔符列表，请将此枚举的值传入
 ```python
 RecursiveCharacterTextSplitter.get_separators_for_language
 ```
 
-To instantiate a splitter that is tailored for a specific language, pass a value from the enum into
+要实例化一个针对特定语言的分割器，请将枚举值传入
 ```python
 RecursiveCharacterTextSplitter.from_language
 ```
 :::
 
 :::js
-Supported languages are kept in the `SupportedTextSplitterLanguages` type. They include:
+支持的语言保存在 `SupportedTextSplitterLanguages` 类型中。它们包括：
 
 ```
 "cpp",
@@ -67,18 +67,18 @@ Supported languages are kept in the `SupportedTextSplitterLanguages` type. They 
 "sol",
 ```
 
-To view the list of separators for a given language, pass a value from this enum into
+要查看给定语言的分隔符列表，请将此枚举的值传入
 ```ts
 RecursiveCharacterTextSplitter.getSeparatorsForLanguage()
 ```
 
-To instantiate a splitter that is tailored for a specific language, pass a value from the enum into
+要实例化一个针对特定语言的分割器，请将枚举值传入
 ```ts
 RecursiveCharacterTextSplitter.fromLanguage()
 ```
 :::
 
-Below we demonstrate examples for the various languages.
+下面展示各种语言的示例。
 
 :::python
 ```python
@@ -113,7 +113,7 @@ from langchain_text_splitters import (
 )
 ```
 
-To view the full list of supported languages:
+要查看支持的完整语言列表：
 
 
 ```python
@@ -153,7 +153,7 @@ To view the full list of supported languages:
 ```
 
 
-You can also see the separators used for a given language:
+你还可以查看给定语言使用的分隔符：
 
 
 ```python
@@ -170,7 +170,9 @@ RecursiveCharacterTextSplitter.get_separators_for_language(Language.PYTHON)
 ## Python
 :::python
 
-Here's an example using the PythonTextSplitter:
+
+
+以下是使用 Python 文本分割器的示例：
 
 ```python
 PYTHON_CODE = """
@@ -195,7 +197,7 @@ python_docs
 ```
 :::
 :::js
-Here's an example using the python text splitter:
+以下是使用 Python 文本分割器的示例：
 
 ```ts
 const pythonSplitter = RecursiveCharacterTextSplitter.fromLanguage(
@@ -215,7 +217,7 @@ console.log(pythonDocs);
 
 ## JS
 :::python
-Here's an example using the JS text splitter:
+以下是使用 JS 文本分割器的示例：
 
 ```python
 JS_CODE = """
@@ -240,7 +242,7 @@ js_docs
 ```
 :::
 :::js
-Here's an example using the JS text splitter:
+以下是使用 JS 文本分割器的示例：
 
 ```ts
 const JS_CODE = `
@@ -269,7 +271,7 @@ console.log(jsDocs);
 
 ## TS
 :::python
-Here's an example using the typescript text splitter:
+以下是使用 TypeScript 文本分割器的示例：
 
 ```python
 TS_CODE = """
@@ -295,7 +297,7 @@ ts_docs
 ```
 :::
 :::js
-Here's an example using the typescript text splitter:
+以下是使用 TypeScript 文本分割器的示例：
 
 ```ts
 const TS_CODE = `
@@ -325,7 +327,7 @@ console.log(tsDocs);
 
 ## Markdown
 :::python
-Here's an example using the Markdown text splitter:
+以下是使用 Markdown 文本分割器的示例：
 
 ```python
 markdown_text = """
@@ -361,7 +363,7 @@ md_docs
 ```
 :::
 :::js
-Here's an example using the Markdown text splitter:
+以下是使用 Markdown 文本分割器的示例：
 
 ```ts
 const markdownText = `
@@ -399,7 +401,7 @@ console.log(mdDocs);
 
 ## Latex
 :::python
-Here's an example on Latex text:
+以下是 Latex 文本的示例：
 
 ```python
 latex_text = """
@@ -456,7 +458,7 @@ latex_docs
 ```
 :::
 :::js
-Here's an example on Latex text:
+以下是 Latex 文本的示例：
 
 ```ts
 const latexText = `
@@ -515,7 +517,7 @@ console.log(latexDocs);
 
 ## HTML
 :::python
-Here's an example using an HTML text splitter:
+以下是使用 HTML 文本分割器的示例：
 
 ```python
 html_text = """
@@ -570,7 +572,7 @@ html_docs
 ```
 :::
 :::js
-Here's an example using an HTML text splitter:
+以下是使用 HTML 文本分割器的示例：
 
 ```ts
 const htmlText = `
@@ -627,7 +629,7 @@ console.log(htmlDocs);
 
 ## Solidity
 :::python
-Here's an example using the Solidity text splitter:
+以下是使用 Solidity 文本分割器的示例：
 
 ```python
 SOL_CODE = """
@@ -652,7 +654,7 @@ sol_docs
 ```
 :::
 :::js
-Here's an example using the Solidity text splitter:
+以下是使用 Solidity 文本分割器的示例：
 
 ```ts
 const SOL_CODE = `
@@ -681,7 +683,7 @@ console.log(solDocs);
 
 ## C#
 :::python
-Here's an example using the C# text splitter:
+以下是使用 C# 文本分割器的示例：
 
 ```python
 C_CODE = """
@@ -724,7 +726,7 @@ c_docs
 ```
 :::
 :::js
-Here's an example using the C# text splitter:
+以下是使用 C# 文本分割器的示例：
 
 ```ts
 const C_CODE = `
@@ -772,7 +774,7 @@ console.log(csharpDocs);
 
 ## Haskell
 :::python
-Here's an example using the Haskell text splitter:
+以下是使用 Haskell 文本分割器的示例：
 
 ```python
 HASKELL_CODE = """
@@ -798,7 +800,7 @@ haskell_docs
 ```
 :::
 :::js
-Here's an example using the Haskell text splitter:
+以下是使用 Haskell 文本分割器的示例：
 
 ```ts
 const HASKELL_CODE = `
@@ -829,7 +831,7 @@ console.log(haskellDocs);
 
 ## PHP
 :::python
-Here's an example using the PHP text splitter:
+以下是使用 PHP 文本分割器的示例：
 
 ```python
 PHP_CODE = """<?php
@@ -867,7 +869,7 @@ php_docs
 ```
 :::
 :::js
-Here's an example using the PHP text splitter:
+以下是使用 PHP 文本分割器的示例：
 
 ```ts
 const PHP_CODE = `<?php
@@ -910,7 +912,7 @@ console.log(phpDocs);
 
 ## PowerShell
 :::python
-Here's an example using the PowerShell text splitter:
+以下是使用 PowerShell 文本分割器的示例：
 
 ```python
 POWERSHELL_CODE = """
@@ -942,7 +944,7 @@ powershell_docs
 ```
 :::
 :::js
-Here's an example using the PowerShell text splitter:
+以下是使用 PowerShell 文本分割器的示例：
 
 ```ts
 const POWERSHELL_CODE = `

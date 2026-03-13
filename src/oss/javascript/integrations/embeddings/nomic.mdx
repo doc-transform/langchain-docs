@@ -1,15 +1,16 @@
 ---
-title: "Nomic integration"
-description: "Integrate with the Nomic embedding model using LangChain JavaScript."
+title: "Nomic 集成"
+description: "使用 LangChain JavaScript 集成 Nomic 嵌入模型。"
 ---
 
-The `NomicEmbeddings` class uses the Nomic AI API to generate embeddings for a given text.
+`NomicEmbeddings` 类使用 Nomic AI API 为给定文本生成嵌入。
 
-## Setup
+## 设置
 
-In order to use the Nomic API you'll need to [sign up for a Nomic account and create an API key](https://atlas.nomic.ai/).
+要使用 Nomic API，你需要一个 API 密钥。
+你可以在[这里](https://atlas.nomic.ai/)注册 Nomic 账户并创建 API 密钥。
 
-You'll first need to install the [`@langchain/nomic`](https://www.npmjs.com/package/@langchain/nomic) package:
+你需要先安装 [`@langchain/nomic`](https://www.npmjs.com/package/@langchain/nomic) 包：
 
 <Tip>
 See [this section for general instructions on installing LangChain packages](/oss/langchain/install).
@@ -19,7 +20,7 @@ See [this section for general instructions on installing LangChain packages](/os
 npm install @langchain/nomic @langchain/core
 ```
 
-## Usage
+## 用法
 
 ```typescript
 import { NomicEmbeddings } from "@langchain/nomic";
@@ -36,7 +37,7 @@ const documentRes = await nomicEmbeddings.embedDocuments([
 console.log(documentRes);
 ```
 
-## Related
+## 相关链接
 
-- Embedding model [conceptual guide](/oss/integrations/embeddings)
-- Embedding model [how-to guides](/oss/integrations/embeddings)
+- 嵌入模型[概念指南](/oss/integrations/text_embedding)
+- 嵌入模型[操作指南](/oss/integrations/text_embedding)

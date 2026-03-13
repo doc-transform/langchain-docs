@@ -1,12 +1,12 @@
 ---
-title: "Voy integration"
-description: "Integrate with the Voy vector store using LangChain JavaScript."
+title: "Voy 集成"
+description: "使用 LangChain JavaScript 集成 Voy 向量存储。"
 ---
 
-[Voy](https://github.com/tantaraio/voy) is a WASM vector similarity search engine written in Rust.
-It's supported in non-Node environments like browsers. You can use Voy as a vector store with LangChain.js.
+[Voy](https://github.com/tantaraio/voy) 是一个用 Rust 编写的 WASM 向量相似性搜索引擎。
+它支持在非 Node 环境（如浏览器）中使用。你可以将 Voy 作为 LangChain.js 的向量存储使用。
 
-### Install voy
+### 安装 voy
 
 <Tip>
 See [this section for general instructions on installing LangChain packages](/oss/langchain/install).
@@ -16,7 +16,7 @@ See [this section for general instructions on installing LangChain packages](/os
 npm install @langchain/openai voy-search @langchain/community @langchain/core
 ```
 
-## Usage
+## 用法
 
 ```typescript
 import { VoyVectorStore } from "@langchain/community/vectorstores/voy";
@@ -70,7 +70,7 @@ console.log(JSON.stringify(resultsWithScore, null, 2));
 */
 ```
 
-## Related
+## 相关
 
-- Vector store [conceptual guide](/oss/integrations/vectorstores)
-- Vector store [how-to guides](/oss/integrations/vectorstores)
+- 向量存储[概念指南](/oss/integrations/vectorstores)
+- 向量存储[操作指南](/oss/integrations/vectorstores)

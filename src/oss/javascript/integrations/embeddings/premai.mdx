@@ -1,15 +1,15 @@
 ---
-title: "Prem AI integration"
-description: "Integrate with the Prem AI embedding model using LangChain JavaScript."
+title: "Prem AI 集成"
+description: "使用 LangChain JavaScript 集成 Prem AI 嵌入模型。"
 ---
 
-The `PremEmbeddings` class uses the Prem AI API to generate embeddings for a given text.
+`PremEmbeddings` 类使用 Prem AI API 为给定文本生成嵌入。
 
-## Setup
+## 设置
 
-In order to use the Prem API you'll need to [sign up for a Prem account and create an API key](https://studio.premai.io/sign-up).
+要使用 Prem API，你需要一个 API 密钥。你可以在[这里](https://studio.premai.io/sign-up)注册 Prem 账户并创建 API 密钥。
 
-Then install the [`@langchain/community`](https://www.npmjs.com/package/@langchain/community) package:
+你需要先安装 [`@langchain/community`](https://www.npmjs.com/package/@langchain/community) 包：
 
 <Tip>
 See [this section for general instructions on installing LangChain packages](/oss/langchain/install).
@@ -19,7 +19,7 @@ See [this section for general instructions on installing LangChain packages](/os
 npm install @langchain/community @langchain/core
 ```
 
-## Usage
+## 用法
 
 ```typescript
 import { PremEmbeddings } from "@langchain/community/embeddings/premai";
@@ -38,7 +38,7 @@ const res = await embeddings.embedQuery(
 console.log({ res });
 ```
 
-## Related
+## 相关链接
 
-- Embedding model [conceptual guide](/oss/integrations/embeddings)
-- Embedding model [how-to guides](/oss/integrations/embeddings)
+- 嵌入模型[概念指南](/oss/integrations/text_embedding)
+- 嵌入模型[操作指南](/oss/integrations/text_embedding)

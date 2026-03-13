@@ -1,45 +1,45 @@
 ---
-title: "ClickSend integration"
-description: Send SMS, Email, and Voice messages from LangChain agents using ClickSend's communications platform.
+title: "ClickSend 集成"
+description: "使用 ClickSend 通信平台从 LangChain 代理发送短信、电子邮件和语音消息。"
 ---
 
-[ClickSend](https://www.clicksend.com/) is a cloud-based communications platform that enables developers to send SMS, Email, Voice, Fax, and Post messages through a unified API.
+[ClickSend](https://www.clicksend.com/) 是一个基于云的通信平台，使开发者能够通过统一的 API 发送短信、电子邮件、语音、传真和邮件。
 
-## Overview
+## 概览
 
-### Integration details
+### 集成详情
 
 | Class | Package | Serializable | [Python support](/oss/integrations/tools/clicksend) | Version |
 |:---|:---|:---:|:---:|:---:|
 | ClickSendTools | [@clicksend/langchain-clicksend-mcp](https://www.npmjs.com/package/@clicksend/langchain-clicksend-mcp) | ❌ | ❌ | ![npm version](https://img.shields.io/npm/v/@clicksend/langchain-clicksend-mcp?style=flat-square&label=%20) |
 
-### Tool features
+### 工具特性
 
-- **SMS Messaging**: Send text messages to mobile numbers worldwide
-- **Email**: Send transactional and marketing emails
-- **Voice**: Send automated voice messages and calls
-- **MCP Integration**: Connect via Model Context Protocol for seamless agent integration
+- **短信**：向全球手机号码发送短信
+- **电子邮件**：发送事务性和营销电子邮件
+- **语音**：发送自动语音消息和电话
+- **MCP 集成**：通过模型上下文协议连接，实现无缝代理集成
 
-## Setup
+## 设置
 
-The integration lives in the `@clicksend/langchain-clicksend-mcp` package.
+该集成位于 `@clicksend/langchain-clicksend-mcp` 包中。
 
 ```bash
 npm install @clicksend/langchain-clicksend-mcp
 ```
 
-### Credentials
+### 凭据
 
-You'll need a ClickSend account with API credentials. Sign up at [clicksend.com](https://www.clicksend.com/) to get your username and API key.
+你需要一个带 API 凭据的 ClickSend 账户。在 [clicksend.com](https://www.clicksend.com/) 注册以获取你的用户名和 API 密钥。
 
 ```typescript Set credentials
 import dotenv from 'dotenv';
 dotenv.config();
 ```
 
-## Instantiation
+## 实例化
 
-Initialize ClickSend tools by connecting to the ClickSend MCP server:
+通过连接到 ClickSend MCP 服务器来初始化 ClickSend 工具：
 
 ```typescript Initialize ClickSend
 import { ClickSendTools } from "@clicksend/langchain-clicksend-mcp";
@@ -53,9 +53,9 @@ const tools = await ClickSendTools.fromHTTP({
 console.log(`Loaded ${tools.length} ClickSend tools`);
 ```
 
-## Invocation
+## 调用
 
-Use the tools in your LangChain agent to send communications:
+在你的 LangChain 代理中使用工具发送通信：
 
 ```typescript Use with an agent
 import { ChatOpenAI } from "@langchain/openai";
@@ -63,9 +63,9 @@ import { createAgent } from "langchain";
 
 // Create agent with tools
 const agent = await createAgent({
-  model: new ChatOpenAI({ 
+  model: new ChatOpenAI({
     model: "gpt-4o-mini",
-    temperature: 0 
+    temperature: 0
   }),
   tools,
 });
@@ -80,8 +80,8 @@ const result = await agent.invoke({
 console.log(result);
 ```
 
-## API reference
+## API 参考
 
-For detailed documentation of all features and configurations, please refer to the [API reference](https://www.npmjs.com/package/@clicksend/langchain-clicksend-mcp).
+所有功能和配置的详细文档请参见 [API 参考](https://www.npmjs.com/package/@clicksend/langchain-clicksend-mcp)。
 
-For more information about ClickSend's services and pricing, visit [clicksend.com](https://www.clicksend.com/).
+有关 ClickSend 服务和定价的更多信息，请访问 [clicksend.com](https://www.clicksend.com/)。

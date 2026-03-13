@@ -1,59 +1,57 @@
 ---
-title: "ChatGoogle integration"
+title: "ChatGoogle 集成"
 sidebarTitle: "Chat"
-description: "Integrate with the ChatGoogle chat model using LangChain JavaScript."
+description: "使用 LangChain JavaScript 集成 ChatGoogle 对话模型。"
 ---
 
-This library supports access to a variety of Google's models, including the Gemini
-family of models and their Nano Banana image generation model. You can access these
-models through either Google's [Google AI](https://ai.google.dev/) API (sometimes also
-called the Generative AI API or the AI Studio API) or through the Google Cloud Platform
-[Vertex AI](https://cloud.google.com/vertex-ai) service.
+此库支持访问 Google 的多种模型，包括 Gemini
+系列模型和 Nano Banana 图像生成模型。你可以通过 Google 的 [Google AI](https://ai.google.dev/) API（有时也
+称为 Generative AI API 或 AI Studio API）或通过 Google Cloud Platform
+[Vertex AI](https://cloud.google.com/vertex-ai) 服务来访问这些模型。
 
-This will help you getting started with `ChatGoogle` [chat models](/oss/langchain/models).
-For detailed documentation of all `ChatGoogle` features and configurations head to the
-[API reference](https://api.js.langchain.com/classes/langchain_google.ChatGoogle.html).
+本文将帮助你开始使用 `ChatGoogle` [对话模型](/oss/langchain/models)。
+所有 `ChatGoogle` 功能和配置的详细文档请参见
+[API 参考](https://api.js.langchain.com/classes/langchain_google.ChatGoogle.html)。
 
 <Tip>
-  `@langchain/google` is the recommended package for all new Google Gemini integrations.
-  It replaces the older [`@langchain/google-genai`](/oss/integrations/chat/google_generative_ai)
-  and [`@langchain/google-vertexai`](/oss/integrations/chat/google_vertex_ai) packages.
-  See [legacy packages](/oss/integrations/providers/google#legacy-packages) for migration details.
+  `@langchain/google` 是所有新 Google Gemini 集成的推荐包。
+  它替代了旧的 [`@langchain/google-genai`](/oss/integrations/chat/google_generative_ai)
+  和 [`@langchain/google-vertexai`](/oss/integrations/chat/google_vertex_ai) 包。
+  有关迁移详情请参见[旧版包](/oss/integrations/providers/google#legacy-packages)。
 </Tip>
 
-## Overview
+## 概览
 
-### Integration details
+### 集成详情
 
 | Class                                                                               | Package                                                                        | Serializable | PY support |                                            Downloads                                             |                                            Version                                            |
 |:------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------| :---: |  :---: |:------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------:|
 | [ChatGoogle](https://api.js.langchain.com/classes/langchain_google.ChatGoogle.html) | [`@langchain/google`](https://www.npmjs.com/package/@langchain/google)         | ✅ | ✅ | ![NPM - Downloads](https://img.shields.io/npm/dm/@langchain/google?style=flat-square&label=%20&) | ![NPM - Version](https://img.shields.io/npm/v/@langchain/google?style=flat-square&label=%20&) |
 
-### Model features
+### 模型特性
 
-See the links in the table headers below for guides on how to use specific features.
+有关如何使用特定功能的指南，请参见下表标题中的链接。
 
 | [Tool calling](/oss/langchain/tools) | [Structured output](/oss/langchain/structured-output) | [Image input](/oss/langchain/messages#multimodal) | Audio input | Video input | [Token-level streaming](/oss/langchain/streaming/) | [Token usage](/oss/langchain/models#token-usage) | [Logprobs](/oss/langchain/models#log-probabilities) |
 | :---: | :---: | :---: |  :---: | :---: | :---: | :---: | :---: |
 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
-Note that while logprobs are supported, Gemini has fairly restricted usage of them.
+请注意，虽然支持 logprobs，但 Gemini 对其使用有相当严格的限制。
 
-## Setup
+## 安装
 
-### Credentials through AI Studio (API Key)
+### 通过 AI Studio 的凭据（API 密钥）
 
-To use the model through Google AI Studio (sometimes called the Generative AI
-API), you will need an API key. You can obtain one from the
-[Google AI Studio](https://aistudio.google.com/app/apikey).
+要通过 Google AI Studio（有时称为 Generative AI API）使用模型，你需要一个 API 密钥。你可以从
+[Google AI Studio](https://aistudio.google.com/app/apikey) 获取。
 
-Once you have your API key, you can set it as an environment variable:
+获取 API 密钥后，可以将其设置为环境变量：
 
 ```bash
 export GOOGLE_API_KEY="your-api-key"
 ```
 
-Or you can pass it directly to the model constructor:
+或者你可以直接将其传递给模型构造函数：
 
 ```typescript
 import { ChatGoogle } from "@langchain/google";

@@ -1,52 +1,52 @@
 ---
-title: "MistralAI integration"
-description: "Integrate with the MistralAI LLM using LangChain JavaScript."
+title: "MistralAI 集成"
+description: "使用 LangChain JavaScript 集成 MistralAI LLM 模型。"
 ---
 
 <Warning>
-You are currently on a page documenting the use of Mistral models as text completion models. Many popular models available on Mistral are [chat completion models](/oss/langchain/models).
+你当前正在查看 Mistral 模型作为文本补全模型的使用文档。许多 Mistral 上的流行模型是[对话补全模型](/oss/langchain/models)。
 
-You may be looking for [this page instead](/oss/integrations/chat/mistral/).
+你可能需要的是[这个页面](/oss/integrations/chat/mistral/)。
 </Warning>
 
 <Tip>
-**Want to run Mistral's models locally? Check out our [Ollama integration](/oss/integrations/chat/ollama).**
+**想在本地运行 Mistral 的模型？请查看我们的 [Ollama 集成](/oss/integrations/chat/ollama)。**
 </Tip>
 
-[Mistral AI](https://mistral.ai/) is a platform that offers hosting for their powerful [open source models](https://docs.mistral.ai/getting-started/models/).
+[Mistral AI](https://mistral.ai/) 是一个提供强大[开源模型](https://docs.mistral.ai/getting-started/models/)托管的平台。
 
-This will help you get started with MistralAI completion models (LLMs) using LangChain. For detailed documentation on `MistralAI` features and configuration options, please refer to the [API reference](https://api.js.langchain.com/classes/langchain_mistralai.MistralAI.html).
+本文将帮助你开始使用 MistralAI 文本补全模型（LLM）。`MistralAI` 所有功能和配置选项的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain_mistralai.MistralAI.html)。
 
-## Overview
+## 概览
 
-### Integration details
+### 集成详情
 
 | Class | Package | Local | Serializable | PY support | Downloads | Version |
 | :--- | :--- | :---: | :---: |  :---: | :---: | :---: |
 | [MistralAI](https://api.js.langchain.com/classes/langchain_mistralai.MistralAI.html) | [`@langchain/mistralai`](https://www.npmjs.com/package/@langchain/mistralai) | ❌ | ✅ | ❌ | ![NPM - Downloads](https://img.shields.io/npm/dm/@langchain/mistralai?style=flat-square&label=%20&) | ![NPM - Version](https://img.shields.io/npm/v/@langchain/mistralai?style=flat-square&label=%20&) |
 
-## Setup
+## 设置
 
-To access MistralAI models you'll need to create a MistralAI account, get an API key, and install the `@langchain/mistralai` integration package.
+要访问 MistralAI 模型，你需要创建 MistralAI 账户、获取 API 密钥，并安装 `@langchain/mistralai` 集成包。
 
-### Credentials
+### 凭据
 
-Head to [console.mistral.ai](https://console.mistral.ai/) to sign up to MistralAI and generate an API key. Once you've done this set the `MISTRAL_API_KEY` environment variable:
+前往 [console.mistral.ai](https://console.mistral.ai/) 注册 MistralAI 并生成 API 密钥。完成后设置 `MISTRAL_API_KEY` 环境变量：
 
 ```bash
 export MISTRAL_API_KEY="your-api-key"
 ```
 
-If you want to get automated tracing of your model calls you can also set your [LangSmith](/langsmith/home) API key by uncommenting below:
+如果你想获取模型调用的自动追踪，你还可以通过取消下方注释来设置你的 [LangSmith](/langsmith/home) API 密钥：
 
 ```bash
 # export LANGSMITH_TRACING="true"
 # export LANGSMITH_API_KEY="your-api-key"
 ```
 
-### Installation
+### 安装
 
-The LangChain MistralAI integration lives in the `@langchain/mistralai` package:
+LangChain MistralAI 集成位于 `@langchain/mistralai` 包中：
 
 <CodeGroup>
 ```bash npm
@@ -60,9 +60,9 @@ pnpm add @langchain/mistralai @langchain/core
 ```
 </CodeGroup>
 
-## Instantiation
+## 实例化
 
-Now we can instantiate our model object and generate chat completions:
+现在我们可以实例化模型对象并生成对话补全：
 
 ```typescript
 import { MistralAI } from "@langchain/mistralai"
@@ -76,7 +76,7 @@ const llm = new MistralAI({
 })
 ```
 
-## Invocation
+## 调用
 
 ```typescript
 const inputText = "MistralAI is an AI company that "
@@ -97,9 +97,9 @@ Mistral 7B is also a highly efficient model, capable of processing text at a fas
 Overall, Mistral 7B is a powerful and versatile large language model that is open-source and available for commercial use. Its ability to perform well on a variety of tasks, its efficiency, and its permissive license make it a popular choice for businesses and organizations that want to leverage the power of large language models.
 ```
 
-## Hooks
+## 钩子
 
-Mistral AI supports custom hooks for three events: beforeRequest, requestError, and response. Examples of the function signature for each hook type can be seen below:
+Mistral AI 支持三个事件的自定义钩子：beforeRequest、requestError 和 response。以下是每种钩子类型的函数签名示例：
 
 ```typescript
 const beforeRequestHook = (req: Request): Request | void | Promise<Request | void> => {
@@ -115,7 +115,7 @@ const responseHook = (res: Response, req: Request): void | Promise<void> => {
 };
 ```
 
-To add these hooks to the chat model, either pass them as arguments and they are automatically added:
+要将这些钩子添加到对话模型，可以将它们作为参数传入，它们会自动添加：
 
 ```typescript
 import { ChatMistralAI } from "@langchain/mistralai"
@@ -131,7 +131,7 @@ const modelWithHooks = new ChatMistralAI({
 });
 ```
 
-Or assign and add them manually after instantiation:
+或者在实例化后手动分配和添加：
 
 ```typescript
 import { ChatMistralAI } from "@langchain/mistralai"
@@ -150,9 +150,9 @@ model.responseHooks = [ ...model.responseHooks, responseHook ];
 model.addAllHooksToHttpClient();
 ```
 
-The method addAllHooksToHttpClient clears all currently added hooks before assigning the entire updated hook lists to avoid hook duplication.
+`addAllHooksToHttpClient` 方法在分配更新后的完整钩子列表之前会先清除所有当前添加的钩子，以避免钩子重复。
 
-Hooks can be removed one at a time, or all hooks can be cleared from the model at once.
+钩子可以逐个移除，也可以一次性清除模型上的所有钩子。
 
 ```typescript
 model.removeHookFromHttpClient(beforeRequestHook);
@@ -162,6 +162,6 @@ model.removeAllHooksFromHttpClient();
 
 ---
 
-## API reference
+## API 参考
 
-For detailed documentation of all MistralAI features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_mistralai.MistralAI.html).
+所有 MistralAI 功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain_mistralai.MistralAI.html)。

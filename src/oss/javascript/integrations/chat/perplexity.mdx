@@ -1,50 +1,50 @@
 ---
-title: "ChatPerplexity integration"
-description: "Integrate with the ChatPerplexity chat model using LangChain JavaScript."
+title: "ChatPerplexity 集成"
+description: "使用 LangChain JavaScript 集成 ChatPerplexity 对话模型。"
 ---
 
-This guide will help you getting started with Perplexity [chat models](/oss/langchain/models). For detailed documentation of all `ChatPerplexity` features and configurations head to the [API reference](https://api.js.langchain.com/classes/_langchain_community.chat_models_perplexity.ChatPerplexity.html).
+本指南将帮助你开始使用 Perplexity [对话模型](/oss/langchain/models)。所有 `ChatPerplexity` 功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/_langchain_community.chat_models_perplexity.ChatPerplexity.html)。
 
-## Overview
+## 概览
 
-### Integration details
+### 集成详情
 
 | Class | Package | Serializable | [PY support](https://python.langchain.com/docs/integrations/chat/perplexity/) | Downloads | Version |
 | :--- | :--- | :---: |  :---: | :---: | :---: |
 | [`ChatPerplexity`](https://api.js.langchain.com/classes/_langchain_community.chat_models_perplexity.ChatPerplexity.html) | [`@langchain/community`](https://npmjs.com/@langchain/community) | beta | ✅ | ![NPM - Downloads](https://img.shields.io/npm/dm/@langchain/community?style=flat-square&label=%20&) | ![NPM - Version](https://img.shields.io/npm/v/@langchain/community?style=flat-square&label=%20&) |
 
-### Model features
+### 模型特性
 
-See the links in the table headers below for guides on how to use specific features.
+有关如何使用特定功能的指南，请参见下表标题中的链接。
 
 | [Tool calling](/oss/langchain/tools) | [Structured output](/oss/langchain/structured-output) | [Image input](/oss/langchain/messages#multimodal) | Audio input | Video input | [Token-level streaming](/oss/langchain/streaming/) | [Token usage](/oss/langchain/models#token-usage) | [Logprobs](/oss/langchain/models#log-probabilities) |
 | :---: | :---: | :---: |  :---: | :---: | :---: | :---: | :---: |
 | ❌ | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | ❌ |
 
-Note that at the time of writing, Perplexity only supports structured outputs on certain usage tiers.
+请注意，截至撰写本文时，Perplexity 仅在某些使用层级上支持结构化输出。
 
-## Setup
+## 安装
 
-To access Perplexity models you'll need to create a Perplexity account, get an API key, and install the `@langchain/community` integration package.
+要访问 Perplexity 模型，你需要创建一个 Perplexity 账户、获取 API 密钥，并安装 `@langchain/community` 集成包。
 
-### Credentials
+### 凭据
 
-Head to [https://perplexity.ai](https://perplexity.ai) to sign up for Perplexity and generate an API key. Once you've done this set the `PERPLEXITY_API_KEY` environment variable:
+前往 [https://perplexity.ai](https://perplexity.ai) 注册 Perplexity 并生成 API 密钥。完成后设置 `PERPLEXITY_API_KEY` 环境变量：
 
 ```bash
 export PERPLEXITY_API_KEY="your-api-key"
 ```
 
-If you want to get automated tracing of your model calls you can also set your [LangSmith](/langsmith/home) API key by uncommenting below:
+如果你想获取模型调用的自动追踪，你还可以通过取消下方注释来设置你的 [LangSmith](/langsmith/home) API 密钥：
 
 ```bash
 # export LANGSMITH_TRACING="true"
 # export LANGSMITH_API_KEY="your-api-key"
 ```
 
-### Installation
+### 安装
 
-The LangChain Perplexity integration lives in the `@langchain/community` package:
+LangChain Perplexity 集成位于 `@langchain/community` 包中：
 
 <CodeGroup>
 ```bash npm
@@ -58,9 +58,9 @@ pnpm add @langchain/community @langchain/core
 ```
 </CodeGroup>
 
-## Instantiation
+## 实例化
 
-Now we can instantiate our model object and generate chat completions:
+现在我们可以实例化模型对象并生成对话补全：
 
 ```typescript
 import { ChatPerplexity } from "@langchain/community/chat_models/perplexity"
@@ -75,7 +75,7 @@ const llm = new ChatPerplexity({
 })
 ```
 
-## Invocation
+## 调用
 
 ```typescript
 const aiMsg = await llm.invoke([
@@ -126,6 +126,6 @@ J'adore la programmation.
 
 ---
 
-## API reference
+## API 参考
 
-For detailed documentation of all ChatPerplexity features and configurations head to the [API reference](https://api.js.langchain.com/classes/_langchain_community.chat_models_perplexity.ChatPerplexity.html).
+所有 ChatPerplexity 功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/_langchain_community.chat_models_perplexity.ChatPerplexity.html)。

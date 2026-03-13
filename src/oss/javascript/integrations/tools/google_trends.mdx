@@ -1,25 +1,25 @@
 ---
-title: "Google trends integration"
-description: "Integrate with the Google trends tool using LangChain JavaScript."
+title: "Google 趋势集成"
+description: "使用 LangChain JavaScript 集成 Google 趋势工具。"
 ---
 
-The Google Trends Tool allows your agent to utilize the Google Trends API from SerpApi to retrieve and analyze search interest data.
-This can be useful for understanding trending topics, regional search interest, and historical popularity of search terms.
+Google 趋势工具允许你的代理利用 SerpApi 的 Google Trends API 检索和分析搜索兴趣数据。
+这对于了解热门话题、区域搜索兴趣和搜索词的历史流行度非常有用。
 
-For API details see the [Google Trends API documentation](https://serpapi.com/google-trends-api)
+API 详情请参见[此处](https://serpapi.com/google-trends-api)
 
-SerpApi caches queries, so the first query will be slower while subsequent identical queries will be fast.
-Occasionally, related queries will not work while interest over time will be fine. You can [check your query in the SerpApi playground](https://serpapi.com/playground?engine=google_trends&q=monster&data_type=RELATED_QUERIES).
+SerpApi 会缓存查询，因此第一次查询会较慢，而后续相同查询会很快。
+偶尔相关查询可能无法工作，但随时间变化的兴趣会正常工作。你可以在[此处](https://serpapi.com/playground?engine=google_trends&q=monster&data_type=RELATED_QUERIES)检查你的查询。
 
-## Setup
+## 设置
 
-To use this tool, you will need to configure access to the Google Trends API from SerpApi.
+要使用此工具，你需要配置 SerpApi 的 Google Trends API 访问权限。
 
-Get an API key from [SerpApi](https://serpapi.com/users/sign_in)
+从 [SerpApi](https://serpapi.com/users/sign_in) 获取 API 密钥
 
-Then, set your API key as `process.env.SERPAPI_API_KEY` or pass it in as an `apiKey` constructor argument.
+然后将 API 密钥设置为 `process.env.SERPAPI_API_KEY` 或通过 `apiKey` 构造参数传入。
 
-## Usage
+## 用法
 
 <Tip>
 See [this section for general instructions on installing LangChain packages](/oss/langchain/install).
@@ -41,7 +41,7 @@ export async function run() {
 }
 ```
 
-## Related
+## 相关
 
-- Tool [conceptual guide](/oss/langchain/tools)
-- Tool [how-to guides](/oss/langchain/tools)
+- 工具[概念指南](/oss/langchain/tools)
+- 工具[操作指南](/oss/langchain/tools)

@@ -1,24 +1,24 @@
 ---
-title: "VectorStoreToolkit integration"
-description: "Integrate with the VectorStoreToolkit tool using LangChain JavaScript."
+title: "VectorStoreToolkit 集成"
+description: "使用 LangChain JavaScript 集成 VectorStoreToolkit 工具。"
 ---
 
-This will help you getting started with the [VectorStoreToolkit](/oss/langchain/tools#toolkits). For detailed documentation of all VectorStoreToolkit features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain.agents.VectorStoreToolkit.html).
+本文将帮助你开始使用 [VectorStoreToolkit](/oss/langchain/tools#toolkits)。所有 VectorStoreToolkit 功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain.agents.VectorStoreToolkit.html)。
 
-The `VectorStoreToolkit` is a toolkit which takes in a vector store, and converts it to a tool which can then be invoked, passed to LLMs, agents and more.
+`VectorStoreToolkit` 是一个工具包，它接受一个向量存储，并将其转换为可调用、传递给 LLM、代理等的工具。
 
-## Setup
+## 设置
 
-If you want to get automated tracing from runs of individual tools, you can also set your [LangSmith](/langsmith/home) API key by uncommenting below:
+如果你想获取单个工具运行的自动追踪，你还可以通过取消下方注释来设置你的 [LangSmith](/langsmith/home) API 密钥：
 
 ```typescript
 process.env.LANGSMITH_TRACING="true"
 process.env.LANGSMITH_API_KEY="your-api-key"
 ```
 
-### Installation
+### 安装
 
-This toolkit lives in the `langchain` package:
+该工具包位于 `langchain` 包中：
 
 <CodeGroup>
 ```bash npm
@@ -32,9 +32,9 @@ pnpm add langchain @langchain/core
 ```
 </CodeGroup>
 
-## Instantiation
+## 实例化
 
-Now we can instantiate our toolkit. First, we need to define the LLM we'll use in the toolkit.
+现在我们可以实例化工具包。首先，我们需要定义工具包中使用的 LLM。
 
 ```typescript
 // @lc-docs-hide-cell
@@ -72,9 +72,9 @@ const vectorStoreInfo: VectorStoreInfo = {
 const toolkit = new VectorStoreToolkit(vectorStoreInfo, llm);
 ```
 
-## Tools
+## 工具
 
-Here, we can see it converts our vector store into a tool:
+在这里，我们可以看到它将向量存储转换为了一个工具：
 
 ```typescript
 const tools = toolkit.getTools();
@@ -94,9 +94,9 @@ console.log(tools.map((tool) => ({
 ]
 ```
 
-## Use within an agent
+## 在代理中使用
 
-First, ensure you have LangGraph installed:
+首先，确保你已安装 LangGraph：
 
 
 <CodeGroup>
@@ -112,7 +112,7 @@ pnpm add @langchain/langgraph
 </CodeGroup>
 
 
-Then, instantiate the agent:
+然后，实例化代理：
 
 ```typescript
 import { createAgent } from "@langchain/classic"
@@ -155,6 +155,6 @@ In the State of the Union address, President Biden spoke about Ketanji Brown Jac
 
 ---
 
-## API reference
+## API 参考
 
-For detailed documentation of all VectorStoreToolkit features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain.agents.VectorStoreToolkit.html).
+所有 VectorStoreToolkit 功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain.agents.VectorStoreToolkit.html)。

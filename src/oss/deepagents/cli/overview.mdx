@@ -1,30 +1,29 @@
 ---
 title: Deep Agents CLI
-sidebarTitle: Use the CLI
-description: Terminal coding agent built on the Deep Agents SDK
+sidebarTitle: 使用 CLI
+description: 基于 Deep Agents SDK 构建的终端编码 Agent
 ---
 
-The Deep Agents CLI is an open source terminal coding agent built on the [Deep Agents SDK](/oss/deepagents/quickstart).
-It retains persistent memory, maintains context across sessions, learns project conventions, uses customizable skills, and executes code with approval controls.
+Deep Agents CLI 是一个基于 [Deep Agents SDK](/oss/deepagents/quickstart) 构建的开源终端编码 Agent。
+它保持持久记忆、跨会话维护上下文、学习项目规范、使用可自定义的技能，并通过审批控制执行代码。
 
 ![Deep Agents CLI](/oss/images/deepagents/deepagents-cli.png)
 
-The Deep Agents CLI has the following built-in capabilities:
+Deep Agents CLI 具有以下内置功能：
 
-* <Icon icon="file" size={16} /> **File operations** - read, write, and edit files in your project with tools that enable agents to manage and modify code and documentation.
-* <Icon icon="terminal" size={16} /> **Shell command execution** - execute shell commands to run tests, build projects, manage dependencies, and interact with version control systems.
-* <Icon icon="search" size={16} /> **Web search** - search the web for up-to-date information and documentation (requires Tavily API key).
-* <Icon icon="globe" size={16} /> **HTTP requests** - make HTTP requests to APIs and external services for data fetching and integration tasks.
-* <Icon icon="list-check" size={16} /> **Task planning and tracking** - break down complex tasks into discrete steps and track progress through the built-in todo system.
-* <Icon icon="brain" size={16} /> **Memory storage and retrieval** - store and retrieve information across sessions, enabling agents to remember project conventions and learned patterns.
-* <Icon icon="user" size={16} /> **Human-in-the-loop** - require human approval for sensitive tool operations.
-* <Icon icon="puzzle" size={16} /> **Skills** - extend agent capabilities with custom expertise and instructions stored in skill directories.
-* <Icon icon="plug" size={16} /> **[MCP tools](/oss/deepagents/cli/mcp-tools)** - load external tools from [Model Context Protocol](https://modelcontextprotocol.io/) servers via auto-discovered or explicit config files.
+* <Icon icon="file" size={16} /> **文件操作** - 读取、写入和编辑项目中的文件，通过工具让 Agent 能够管理和修改代码和文档。
+* <Icon icon="terminal" size={16} /> **Shell 命令执行** - 执行 shell 命令以运行测试、构建项目、管理依赖以及与版本控制系统交互。
+* <Icon icon="search" size={16} /> **网络搜索** - 搜索网络获取最新信息和文档（需要 Tavily API 密钥）。
+* <Icon icon="globe" size={16} /> **HTTP 请求** - 向 API 和外部服务发起 HTTP 请求，用于数据获取和集成任务。
+* <Icon icon="list-check" size={16} /> **任务规划和跟踪** - 将复杂任务分解为离散步骤，并通过内置的待办系统跟踪进度。
+* <Icon icon="brain" size={16} /> **记忆存储与检索** - 跨会话存储和检索信息，使 Agent 能够记住项目规范和学习到的模式。
+* <Icon icon="user" size={16} /> **人工干预** - 对敏感工具操作要求人工审批。
+* <Icon icon="puzzle" size={16} /> **技能** - 通过存储在技能目录中的自定义专业知识和指令扩展 Agent 能力。
 
-<Accordion title="Full list of built-in tools">
-    ## Built-in tools
+<Accordion title="内置工具完整列表">
+    ## 内置工具
 
-    The agent comes with the following built-in tools which are available without configuration:
+    Agent 自带以下内置工具，无需配置即可使用：
 
     | Tool | Description | Human-in-the-Loop |
     |------|-------------|-------------------|
@@ -41,8 +40,8 @@ The Deep Agents CLI has the following built-in capabilities:
     | `task` | Delegate work to subagents for parallel execution | Required<sup>1</sup> |
     | `write_todos` | Create and manage task lists for complex work | - |
 
-    <sup>1</sup>: Potentially destructive operations require user approval before execution.
-    To bypass human approval, you can toggle auto-approve or start the deep agent with the `auto-approve` option:
+    <sup>1</sup>: 潜在破坏性操作需要在执行前获得用户审批。
+    要绕过人工审批，你可以切换自动审批模式或使用 `auto-approve` 选项启动 Deep Agent：
 
     ```bash
     deepagents --auto-approve
@@ -50,63 +49,53 @@ The Deep Agents CLI has the following built-in capabilities:
 </Accordion>
 
 <Tip>
-    [Watch the demo video](https://youtu.be/IrnacLa9PJc?si=3yUnPbxnm2yaqVQb) to see how the Deep Agents CLI works.
+    [观看演示视频](https://youtu.be/IrnacLa9PJc?si=3yUnPbxnm2yaqVQb) 了解 Deep Agents CLI 的工作方式。
 </Tip>
 
-## Quickstart
+## 快速开始
 
 <Steps>
-    <Step title="Set model credentials" icon="key">
-        Select the model provider(s) you want to use and set credentials as environment variables.
+    <Step title="设置模型凭据" icon="key">
+        选择你要使用的模型提供商，并将凭据设置为环境变量。
 
         <Tabs>
             <Tab title="OpenAI">
-                Export as an environment variable:
+                导出为环境变量：
 
                 ```bash
                 export OPENAI_API_KEY="your-api-key"
                 ```
             </Tab>
             <Tab title="Anthropic">
-                Export as an environment variable:
+                导出为环境变量：
 
                 ```bash
                 export ANTHROPIC_API_KEY="your-api-key"
                 ```
             </Tab>
             <Tab title="Google">
-                Export as an environment variable:
+                导出为环境变量：
 
                 ```bash
                 export GOOGLE_API_KEY="your-api-key"
                 ```
             </Tab>
             <Tab title="Vertex AI">
-                Export your Google Cloud project:
+                导出你的 Google Cloud 项目：
 
                 ```bash
                 export GOOGLE_CLOUD_PROJECT="your-gcp-project-id"
                 ```
 
-                Vertex AI uses Application Default Credentials (ADC) for authentication.
+                Vertex AI 使用应用默认凭据（ADC）进行身份验证。
             </Tab>
         </Tabs>
     </Step>
 
-    <Step title="Install and run the CLI" icon="terminal">
+    <Step title="运行 CLI" icon="terminal">
         <CodeGroup>
-            ```bash Quick install (recommended)
-            curl -LsSf https://raw.githubusercontent.com/langchain-ai/deepagents/refs/heads/main/libs/cli/scripts/install.sh | bash
-            ```
-
-            ```bash Quick install with extra model providers
-            # (OpenAI is included by default)
-            DEEPAGENTS_EXTRAS="anthropic,groq" curl -LsSf https://raw.githubusercontent.com/langchain-ai/deepagents/refs/heads/main/libs/cli/scripts/install.sh | bash
-            ```
-
-            ```bash Install globally with uv
-            # Install with chosen model providers (OpenAI is included by default)
-            uv tool install 'deepagents-cli[anthropic,groq]'
+            ```bash Install globally
+            uv tool install deepagents-cli
             deepagents
             ```
 
@@ -114,23 +103,19 @@ The Deep Agents CLI has the following built-in capabilities:
             uvx deepagents-cli
             ```
         </CodeGroup>
-
-        ```bash Run the CLI
-        deepagents
-        ```
     </Step>
 
-    <Step title="Give the agent a task" icon="message">
+    <Step title="给 Agent 一个任务" icon="message">
         ```txt
-        Create a Python script that prints "Hello, World!"
+        > Create a Python script that prints "Hello, World!"
         ```
 
-        The agent proposes changes with diffs for your approval before modifying files.
+        Agent 会在修改文件前以 diff 形式提议更改，供你审批。
     </Step>
 </Steps>
 
-<Accordion title="Additional installation and configuration options">
-Each model provider requires installing its corresponding LangChain integration package. These are available as optional extras when installing the CLI:
+<Accordion title="其他安装和配置选项">
+每个模型提供商需要安装其对应的 LangChain 集成包。安装 CLI 时可以作为可选额外包使用：
 
 ```bash
 # Install with one provider
@@ -143,55 +128,57 @@ uv tool install 'deepagents-cli[ollama,groq]'
 uv tool upgrade deepagents-cli --with langchain-xai
 ```
 
-For the full list of supported providers and configuration options, see [Custom model providers](/oss/deepagents/cli/providers).
+关于支持的提供商和配置选项的完整列表，请参见[自定义模型提供商](/oss/deepagents/cli/providers)。
 
-On first launch (when no `[models].default` or `[models].recent` is set), the CLI auto-selects the first available startup credential in this order: `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GOOGLE_API_KEY`, then `GOOGLE_CLOUD_PROJECT` (Vertex AI). This startup fallback is intentionally narrow; other supported providers (for example, Groq) are still available via `--model`, `/model`, or a saved default model.
+首次启动时（未设置 `[models].default` 或 `[models].recent`），CLI 会按以下顺序自动选择第一个可用的启动凭据：`OPENAI_API_KEY`、`ANTHROPIC_API_KEY`、`GOOGLE_API_KEY`，然后是 `GOOGLE_CLOUD_PROJECT`（Vertex AI）。此启动回退机制有意限定范围；其他支持的提供商（如 Groq）仍可通过 `--model`、`/model` 或保存的默认模型使用。
 
 ```bash
 deepagents --model anthropic:claude-opus-4-5
 ```
 
-Enable web search (optional):
+启用网络搜索（可选）：
 
 ```bash
 export TAVILY_API_KEY="your-key"
 ```
 
-API keys can be set as environment variables or in a `.env` file.
+API 密钥可以设置为环境变量或写在 `.env` 文件中。
 </Accordion>
 
-## Tracing with LangSmith
+## 使用 LangSmith 追踪
 
-Enable LangSmith tracing to see agent operations in a LangSmith project:
+启用 LangSmith 追踪以在 LangSmith 仪表板中查看 Agent 操作：
 
-1. Enable LangSmith tracing:
+1. 启用 LangSmith 追踪：
 
    ```bash
    export LANGCHAIN_TRACING=true
    export LANGCHAIN_API_KEY="your-api-key"
    ```
 
-1. Configure agent tracing for deep agent operations such as tool calls and agent decisions:
+1. 为 Deep Agent 操作（如工具调用和 Agent 决策）配置 Agent 追踪：
 
    ```bash
    export DEEPAGENTS_LANGSMITH_PROJECT="my-deep-agent-execution"
    ```
 
-1. If you are building a LangChain app with deep agents, and want to separate agent traces from your app's traces, also configure `LANGSMITH_PROJECT`:
+1. 如果你正在使用 Deep Agent 构建 LangChain 应用，并希望将 Agent 追踪与应用追踪分开，还可以配置 `LANGSMITH_PROJECT`：
 
    ```bash
    export LANGSMITH_PROJECT="my-app-calls-to-langchain"
    ```
 
-When configured, the CLI displays:
+配置后，CLI 显示：
 
 ```sh
 ✓ LangSmith tracing: 'my-project'
 ```
 
-## Configuration
+## 配置
 
-Each agent has its own configuration directory at `~/.deepagents/<agent_name>/`. The default agent name is `agent`.
+每个 Agent 有自己的配置目录，位于 `~/.deepagents/<agent_name>/`。
+默认 Agent 名称是 `agent`。
+启动 Agent 时，如果该 Agent 名称的文件夹不存在，则会在 `~/.deepagents/<new_agent>/` 路径创建。
 
 ```bash
 # List all configured agents
@@ -224,17 +211,14 @@ deepagents --sandbox-id dbx_123   # reuse existing sandbox
         | `-r`, `--resume [ID]`  | Resume a session: `-r` for most recent, `-r <ID>` for a specific thread |
         | `-m`, `--message TEXT` | Initial prompt to auto-submit when the session starts (interactive mode) |
         | `-n`, `--non-interactive TEXT` | Run a single task non-interactively and exit. Shell is disabled unless `--shell-allow-list` is set |
-        | `-q`, `--quiet`        | Clean output for piping—only the agent's response goes to stdout. Requires `-n` or piped stdin |
+        | `-q`, `--quiet`        | Clean output for piping — only the agent's response goes to stdout. Requires `-n` or piped stdin |
         | `--no-stream`          | Buffer the full response and write to stdout at once instead of streaming. Requires `-n` or piped stdin |
         | `--auto-approve`       | Auto-approve all tool calls without prompting (disables human-in-the-loop). Toggle with `Shift+Tab` during an interactive session |
-        | `--shell-allow-list LIST` | Comma-separated shell commands to auto-approve, `'recommended'` for safe defaults, or `'all'` to allow any command. Applies to both `-n` and interactive modes |
-        | `--json`               | Emit machine-readable JSON from management subcommands (`list`, `reset`, `threads`, `skills`). Output envelope: `{"schema_version": 1, "command": "...", "data": ...}` |
+        | `--shell-allow-list LIST` | Comma-separated shell commands to auto-approve, or `'recommended'` for safe defaults. Applies to both `-n` and interactive modes |
         | `--sandbox TYPE`       | Remote sandbox for code execution: `none` (default), `modal`, `daytona`, `runloop`, `langsmith` |
         | `--sandbox-id ID`      | Reuse an existing sandbox (skips creation and cleanup)      |
         | `--sandbox-setup PATH` | Path to setup script to run in sandbox after creation       |
-        | `--mcp-config PATH`    | Add an explicit MCP config as the highest-precedence source (merged with auto-discovered configs) |
-        | `--no-mcp`             | Disable all MCP tool loading                                |
-        | `--trust-project-mcp`  | Trust project-level MCP configs with stdio servers (skip approval prompt) |
+        | `--profile-override JSON` | (Advanced) Override model profile fields at runtime as a JSON string (e.g., `'{"max_input_tokens": 4096}'`) |
         | `-v`, `--version`      | Display version                                             |
         | `-h`, `--help`         | Show help                                                   |
     </Accordion>
@@ -250,53 +234,49 @@ deepagents --sandbox-id dbx_123   # reuse existing sandbox
         | `deepagents skills create NAME [--project]`    | Create a new skill with template `SKILL.md` |
         | `deepagents skills info NAME [--project]`      | Show detailed information about a skill |
         | `deepagents skills delete NAME [--project] [-f]` | Delete a skill and its contents |
-        | `deepagents threads list [--agent NAME] [--limit N]` | List sessions (alias: `ls`). Default limit: 20. `-n` is a short flag for `--limit`. Additional flags: `--sort {created,updated}`, `--branch TEXT` (filter by git branch), `-v`/`--verbose` (show all columns including branch, created time, and initial prompt), `-r`/`--relative` (relative timestamps) |
+        | `deepagents threads list [--agent NAME] [--limit N]` | List sessions (alias: `ls`). Default limit: 20 |
         | `deepagents threads delete ID`       | Delete a session                       |
-
-        All management subcommands support `--json` for machine-readable output. See [command-line options](#command-line-options) for details.
     </Accordion>
 </AccordionGroup>
 
-## Interactive mode
+## 交互模式
 
-Type naturally as you would in a chat interface.
-The agent will use its built-in tools, skills, and memory to help you with tasks.
+像聊天界面一样自然地输入。
+Agent 将使用其内置工具、技能和记忆来帮助你完成任务。
 
 <AccordionGroup>
-    <Accordion title="Slash commands" icon="slash">
-        Use these commands within the CLI session:
+    <Accordion title="斜杠命令" icon="slash">
+        在 CLI 会话中使用以下命令：
 
-        - `/model` - Open the interactive model selector. The selector shows a detail footer with context window size, input modalities, and capabilities for the highlighted model
+        - `/model` - Open the interactive model selector
         - `/model <provider:model>` - Switch directly to a specific model (e.g., `/model anthropic:claude-sonnet-4-5`)
-        - `/model --model-params JSON [provider:model]` - Switch with extra model constructor params (e.g., `/model --model-params '{"temperature": 0.7}' anthropic:claude-sonnet-4-5`). Use `Tab` to autocomplete the currently highlighted model name
         - `/model --default <provider:model>` - Set a persistent default model
         - `/model --default --clear` - Clear the saved default model
         - `/remember [context]` - Review conversation and update memory and skills. Optionally pass additional context
-        - `/tokens` - Display current context window token usage with a tree breakdown showing system prompt and conversation sizes
+        - `/tokens` - Display current context window token usage
         - `/clear` - Clear conversation history and start a new thread
-        - `/threads` - Browse and resume previous conversation threads. Supports fuzzy search, configurable columns (`thread_id`, `agent_name`, `messages`, `created_at`, `updated_at`, `git_branch`, `initial_prompt`), sort order toggle, and inline deletion with `Ctrl+D`. Column visibility and sort preferences persist to `config.toml`
-        - `/reload` - Refresh runtime configuration (API keys, `.env` changes, project root, shell allow-list) without restarting the session. Conversation state is preserved. Reports which fields changed (API keys are masked). Does not reload the active model or agent graph
+        - `/threads` - Browse and resume previous conversation threads
         - `/trace` - Open the current thread in LangSmith (requires `LANGSMITH_API_KEY`)
         - `/changelog` - Open the CLI changelog in your browser
         - `/docs` - Open the documentation in your browser
         - `/feedback` - Open the GitHub issues page to file a bug report or feature request
         - `/version` - Show installed `deepagents-cli` and SDK versions
         - `/help` - Show help and available commands
-        - `/quit` - Exit the CLI
+        - `/quit` (or `/q`) - Exit the CLI
     </Accordion>
 
-    <Accordion title="Shell commands" icon="terminal">
-        Type `!` to enter shell mode, then type your command.
+    <Accordion title="Bash 命令" icon="terminal">
+        通过 `!` 前缀直接执行 shell 命令：
 
         ```bash
-        git status
-        npm test
-        ls -la
+        !git status
+        !npm test
+        !ls -la
         ```
     </Accordion>
 
-    <Accordion title="Keyboard shortcuts" icon="keyboard">
-        **General**
+    <Accordion title="键盘快捷键" icon="keyboard">
+        **通用**
 
         | Shortcut | Action |
         |-|-|
@@ -312,15 +292,15 @@ The agent will use its built-in tools, skills, and memory to help you with tasks
     </Accordion>
 </AccordionGroup>
 
-## Non-interactive mode and piping
+## 非交互模式和管道
 
-Use `-n` to run a single task without launching the interactive UI:
+使用 `-n` 运行单个任务，无需启动交互界面：
 
 ```bash
 deepagents -n "Write a Python script that prints hello world"
 ```
 
-You can also pipe input via stdin. When input is piped, the CLI automatically runs non-interactively:
+你也可以通过 stdin 管道输入。当输入被管道传入时，CLI 自动以非交互模式运行：
 
 ```bash
 echo "Explain this code" | deepagents
@@ -328,41 +308,29 @@ cat error.log | deepagents -n "What's causing this error?"
 git diff | deepagents -n "Review these changes"
 ```
 
-When piped input is combined with `-n` or `-m`, the piped content is prepended to the flag's value.
+当管道输入与 `-n` 或 `-m` 组合使用时，管道内容会被前置到参数值之前。
 
 <Note>
-    The maximum piped input size is 10 MiB.
+    管道输入的最大大小为 10 MiB。
 </Note>
 
-Use `-q` for clean output suitable for piping into other commands, and `--no-stream` to buffer the full response (instead of streaming) before writing to stdout:
+使用 `-q` 获取适合管道传递给其他命令的干净输出，使用 `--no-stream` 缓冲完整响应（而非流式输出）后再写入 stdout：
 
 ```bash
 deepagents -n "Generate a .gitignore for Python" -q > .gitignore
 deepagents -n "List dependencies" -q --no-stream | sort
 ```
 
-In non-interactive mode, the agent is instructed to make reasonable assumptions and proceed autonomously rather than ask clarifying questions. It also favors non-interactive command variants (e.g., `npm init -y`, `apt-get install -y`).
-
-By default, shell execution is disabled in non-interactive mode. Use `--shell-allow-list` to enable it:
+默认情况下，非交互模式下 shell 执行被禁用。使用 `--shell-allow-list` 允许特定命令：
 
 ```bash
-# Allow specific commands (validated against the list)
 deepagents -n "Run the tests and fix failures" --shell-allow-list "pytest,git,make"
-
-# Use the curated safe-command list
 deepagents -n "Build the project" --shell-allow-list recommended
-
-# Allow any shell command
-deepagents -n "Fix the build" --shell-allow-list all
 ```
 
-<Warning>
-    `--shell-allow-list all` lets the agent execute arbitrary shell commands with no human confirmation. Use with caution.
-</Warning>
+## 切换模型
 
-## Switch models
-
-You can switch models during a session without restarting the CLI using the `/model` command, or at launch with the `--model` flag:
+你可以在会话期间使用 `/model` 命令切换模型，无需重启 CLI，或在启动时通过 `--model` 标志指定：
 
 ```txt
 > /model anthropic:claude-opus-4-5
@@ -373,28 +341,19 @@ You can switch models during a session without restarting the CLI using the `/mo
 deepagents --model openai:gpt-4o
 ```
 
-Run `/model` with no arguments to open an interactive model selector that displays available models grouped by provider. The selector shows a detail footer for the highlighted model with context window size, input modalities (text, image, audio, PDF, video), and capabilities (reasoning, tool calling, structured output). Values overridden by `--profile-override` or `config.toml` are marked with a yellow `*` prefix.
+不带参数运行 `/model` 可打开交互式模型选择器，按提供商分组显示可用模型。
 
-You can also pass extra model constructor parameters when switching mid-session using `--model-params`:
+关于切换模型、设置默认值、配置自定义提供商以及使用 `~/.deepagents/config.toml` 配置文件的完整详情，请参见[自定义模型提供商](/oss/deepagents/cli/providers)。
 
-```txt
-> /model --model-params '{"temperature": 0.7}' anthropic:claude-sonnet-4-5
-> /model --model-params '{"temperature": 0.7}'  # opens selector, applies params to chosen model
-```
+## 教 Agent 学习项目规范
 
-These are session-only overrides and take the highest priority, overriding values from config file `params`. `--model-params` cannot be combined with `--default`.
+随着你使用 Agent，它会自动将信息以 markdown 文件的形式存储在 `~/.deepagents/<agent_name>/memories/` 中，采用记忆优先协议：
 
-For full details on switching models, setting a default, and configuring custom providers, see [Model providers](/oss/deepagents/cli/providers). For `config.toml` reference and lifecycle hooks, see [Configuration](/oss/deepagents/cli/configuration).
+1. **研究**：在开始任务前搜索记忆中的相关上下文
+2. **响应**：在执行过程中不确定时检查记忆
+3. **学习**：自动保存新信息供未来会话使用
 
-## Teach your agent project conventions
-
-As you use the agent, it automatically stores information in `~/.deepagents/<agent_name>/memories/` as markdown files using a memory-first protocol:
-
-1. **Research**: Searches memory for relevant context before starting tasks
-2. **Response**: Checks memory when uncertain during execution
-3. **Learning**: Automatically saves new information for future sessions
-
-The agent organizes its memories by topic with descriptive filenames:
+Agent 按主题组织记忆，使用描述性文件名：
 
 ```
 ~/.deepagents/backend-dev/memories/
@@ -403,82 +362,82 @@ The agent organizes its memories by topic with descriptive filenames:
 └── deployment-process.md
 ```
 
-When you teach the agent conventions:
+当你教 Agent 规范时：
 
 ```bash
 uvx deepagents-cli --agent backend-dev
 > Our API uses snake_case and includes created_at/updated_at timestamps
 ```
 
-It remembers for future sessions:
+它会在未来的会话中记住：
 
 ```bash
 > Create a /users endpoint
 # Applies conventions without prompting
 ```
 
-## Customize your deep agent
+## 自定义你的 Deep Agent
 
-There are two primary ways to customize any agent:
+自定义任何 Agent 有两种主要方式：
 
-- **Memory**: Global and project-specific `AGENTS.md` files which are loaded in full at session start.
-  Use memory for general coding style and preferences.
+- **记忆**：全局和项目级别的 `AGENTS.md` 文件，在会话开始时完整加载。
+  用于通用编码风格和偏好。
 
-- **Skills**: Global and project-specific context, conventions, guidelines, or instructions.
-  Use skills for context that is only required when performing specific tasks.
+- **技能**：全局和项目级别的上下文、规范、指南或指令。
+  用于仅在执行特定任务时才需要的上下文。
 
-### Provide project or user context
+### 提供项目或用户上下文
 
-[`AGENTS.md` files](https://agents.md/) provide persistent memory that is always loaded at session start.
+[`AGENTS.md` 文件](https://agents.md/) 提供持久记忆，始终在会话开始时加载。
 
-You can provide global user memory for the agent in `~/.deepagents/<agent_name>/AGENTS.md`.
-This file is always loaded when you start a new deep agent session.
-The agent may also read its memory files when answering project-specific questions or when you reference past work or patterns.
+你可以在 `~/.deepagents/<agent_name>/AGENTS.md` 中为 Agent 提供全局用户记忆。
+此文件在你启动新的 Deep Agent 会话时始终被加载。
+Agent 也可能在回答项目特定问题或你引用过往工作或模式时读取其记忆文件。
 
-For project-specific memory, you can add context to `.deepagents/AGENTS.md` in any project's root folder as long as the project uses git.
-When you start the CLI from anywhere within the project's folder, the CLI will find the project's root folder by checking for a containing `.git` folder.
+对于项目级别的记忆，你可以在任何项目的根目录下的 `.deepagents/AGENTS.md` 中添加上下文，前提是该项目使用 git。
+当你从项目文件夹内的任何位置启动 CLI 时，CLI 会通过检查包含 `.git` 文件夹来查找项目根目录。
 
-Both global and project-level `AGENTS.md` files are loaded together and appended to the system prompt at startup.
-The agent will update them as you use the agent and provide it with additional information on how it should behave, feedback on its work, or instructions to remember something.
-The agent will also update its memory if it identifies patterns or preferences from your interactions.
+全局和项目级别的 `AGENTS.md` 文件会一起加载，并在启动时追加到系统提示词中。
+Agent 会随着你的使用更新它们，并根据你提供的关于行为方式的额外信息、对其工作的反馈或记忆指令来更新。
+Agent 还会在从你的交互中识别到模式或偏好时更新记忆。
 
-If you would like to explicitly prompt your deep agent to update skills and memory based on the current context from the thread use the `/remember` command which loads a custom instruction to review the context and perform updates.
+如果你希望明确提示 Deep Agent 根据当前线程的上下文更新技能和记忆，使用 `/remember` 命令，它会加载一个自定义指令来审查上下文并执行更新。
 
-To add more structured project knowledge in additional memory files, you can add them in `.deepagents/` and reference them in the `AGENTS.md` file.
-You must reference additional files in the `AGENTS.md` file for the agent to be aware of these files.
-The additional files will not be read on startup but the agent can reference and update them when needed.
+要在额外记忆文件中添加更结构化的项目知识，你可以将它们添加在 `.deepagents/` 中并在 `AGENTS.md` 文件中引用它们。
+你必须在 `AGENTS.md` 文件中引用额外文件，Agent 才能知道这些文件的存在。
+额外文件不会在启动时读取，但 Agent 可以在需要时引用和更新它们。
 
-<Accordion title="When to use global vs. project `AGENTS.md`">
-**Global `AGENTS.md`** (`~/.deepagents/agent/AGENTS.md`)
+<Accordion title="何时使用全局 vs. 项目 AGENTS.md">
+**全局 `AGENTS.md`**（`~/.deepagents/agent/AGENTS.md`）
 
-- Your personality, style, and universal coding preferences
-- General tone and communication style
-- Universal coding preferences (formatting, type hints, etc.)
-- Tool usage patterns that apply everywhere
-- Workflows and methodologies that don't change per-project
+- 你的个性、风格和通用编码偏好
+- 通用的语气和沟通风格
+- 通用编码偏好（格式化、类型提示等）
+- 适用于所有场景的工具使用模式
+- 不随项目变化的工作流程和方法论
 
-**Project `AGENTS.md`** (`.deepagents/AGENTS.md` in project root)
+**项目 `AGENTS.md`**（项目根目录中的 `.deepagents/AGENTS.md`）
 
-- Project-specific context and conventions
-- Project architecture and design patterns
-- Coding conventions specific to this codebase
-- Testing strategies and deployment processes
-- Team guidelines and project structure
+- 项目特定的上下文和规范
+- 项目架构和设计模式
+- 此代码库特定的编码规范
+- 测试策略和部署流程
+- 团队指南和项目结构
 </Accordion>
 
-## Use remote sandboxes
+## 使用远程沙箱
 
-Execute code in isolated remote environments for safety and flexibility. Remote sandboxes provide the following benefits:
+在隔离的远程环境中执行代码，以确保安全性和灵活性。远程沙箱提供以下优势：
 
-  - **Safety**: Protect your local machine from potentially harmful code execution
-  - **Clean environments**: Use specific dependencies or OS configurations without local setup
-  - **Parallel execution**: Run multiple agents simultaneously in isolated environments
-  - **Long-running tasks**: Execute time-intensive operations without blocking your machine
-  - **Reproducibility**: Ensure consistent execution environments across teams
+  - **安全性**：保护本地机器免受潜在有害代码执行的影响
+  - **干净环境**：无需本地设置即可使用特定的依赖或操作系统配置
+  - **并行执行**：在隔离环境中同时运行多个 Agent
+  - **长时间任务**：执行耗时操作而不会阻塞你的机器
+  - **可复现性**：确保团队间执行环境的一致性
 
-To use a remote sandbox, follow these steps:
+要使用远程沙箱，请执行以下步骤：
 
-1. Configure your sandbox provider ([Runloop](https://www.runloop.ai/), [Daytona](https://www.daytona.io/), or [Modal](https://modal.com/)):
+1. 配置你的沙箱提供商（[Runloop](https://www.runloop.ai/)、[Daytona](https://www.daytona.io/) 或 [Modal](https://modal.com/)）：
 
     ```bash
     # Runloop
@@ -491,15 +450,15 @@ To use a remote sandbox, follow these steps:
     modal setup
     ```
 
-1. Run the CLI with a sandbox:
+1. 使用沙箱运行 CLI：
 
     ```bash
     uvx deepagents-cli --sandbox runloop --sandbox-setup ./setup.sh
     ```
 
-    The agent runs locally but executes all code operations in the remote sandbox. Optional setup scripts can configure environment variables, clone repositories, and prepare dependencies.
+    Agent 在本地运行，但在远程沙箱中执行所有代码操作。可选的设置脚本可以配置环境变量、克隆仓库和准备依赖。
 
-1. (Optional) Create a `setup.sh` file to configure your sandbox environment:
+1. （可选）创建 `setup.sh` 文件来配置沙箱环境：
 
     ```bash
     #!/bin/bash
@@ -519,45 +478,41 @@ To use a remote sandbox, follow these steps:
     source ~/.bashrc
     ```
 
-    Store secrets in a local `.env` file for the setup script to access.
+    将密钥存储在本地 `.env` 文件中供设置脚本访问。
 
 <Warning>
-    Sandboxes isolate code execution, but agents remain vulnerable to prompt injection with untrusted inputs. Use human-in-the-loop approval, short-lived secrets, and trusted setup scripts only.
+    沙箱隔离了代码执行，但 Agent 对不受信任的输入仍然易受提示注入攻击。仅使用人工干预审批、短期密钥和受信任的设置脚本。
 
-    Note that sandbox APIs are evolving rapidly, and we expect more providers to support proxies that help mitigate prompt injection and secrets management concerns.
+    注意沙箱 API 正在快速演进，我们预计更多提供商将支持有助于缓解提示注入和密钥管理问题的代理。
 </Warning>
 
-## Use MCP tools
+## 使用技能
 
-Extend the CLI with tools from external [MCP (Model Context Protocol)](https://modelcontextprotocol.io/) servers. Place a `.mcp.json` at your project root and the CLI discovers it automatically. See the [MCP tools guide](/oss/deepagents/cli/mcp-tools) for configuration format, auto-discovery, and troubleshooting.
+技能是可复用的 Agent 能力，提供专业工作流和领域知识。
+你可以使用[技能](/oss/deepagents/skills)为 Deep Agent 提供新的能力和专业知识。
+Deep Agent 技能遵循 [Agent Skills 标准](https://agentskills.io/)。
+添加技能后，Deep Agent 会自动使用它们，并随着你的使用和提供的额外信息进行更新。
 
-## Use skills
+如果你希望明确提示 Deep Agent 根据当前线程的上下文更新技能和记忆，使用 `/remember` 命令，它会加载一个自定义指令来审查上下文并执行更新。
 
-Skills are reusable agent capabilities that provide specialized workflows and domain knowledge.
-You can use [skills](/oss/deepagents/skills) to provide your deep agent with new capabilities and expertise.
-Deep agent skills follow the [Agent Skills standard](https://agentskills.io/).
-Once you have added skills your deep agent will automatically make use of them and update them as you use the agent and provide it with additional information.
+### 添加技能
 
-If you would like to explicitly prompt your deep agent to update skills and memory based on the current context from the thread use the `/remember` command which loads a custom instruction to review the context and perform updates.
-
-### Add skills
-
-1. Start by creating a skill:
+1. 首先创建一个技能：
 
    <Tabs>
-       <Tab title="User skill">
+       <Tab title="用户技能">
            ```bash
            deepagents skills create test-skill
            ```
 
-           This will generate the correct the following files in your `~/.deepagents/<agent_name>` folder:
+           这将在你的 `~/.deepagents/<agent_name>` 文件夹中生成以下文件：
        </Tab>
-       <Tab title="Project skill">
+       <Tab title="项目技能">
            ```bash
            deepagents skills create test-skill --project
            ```
 
-           This will generate the correct the following files in your `~/{project}/.deepagents/skills` folder:
+           这将在你的 `~/{project}/.deepagents/skills` 文件夹中生成以下文件：
        </Tab>
    </Tabs>
 
@@ -567,19 +522,19 @@ If you would like to explicitly prompt your deep agent to update skills and memo
        └── SKILL.md
    ```
 
-1. Open the generated `SKILL.md` and edit the file to include your instructions.
+1. 打开生成的 `SKILL.md` 并编辑文件以包含你的指令。
 
-1. Optionally add additional scripts or other resources to the `test-skill` folder.
-   For more information, see [Examples](/oss/deepagents/skills#example).
+1. 可选地将额外的脚本或其他资源添加到 `test-skill` 文件夹中。
+   更多信息请参见[示例](/oss/deepagents/skills#examples)。
 
-If you already have a skills folder with containing skills files, you can also copy them directly to the agent's folder:
+如果你已经有包含技能文件的技能文件夹，也可以直接复制到 Agent 的文件夹：
 
 ```bash
 mkdir -p ~/.deepagents/<agent_name>/skills
 cp -r examples/skills/web-research ~/.deepagents/<agent_name>/skills/
 ```
 
-At startup, the CLI discovers skills from both Deep Agents and shared alias directories:
+启动时，CLI 会从 Deep Agents 和共享别名目录中发现技能：
 
 ```text
 `~/.deepagents/<agent_name>/skills/`
@@ -587,40 +542,40 @@ At startup, the CLI discovers skills from both Deep Agents and shared alias dire
 `.deepagents/skills/`
 `.agents/skills/`.
 ```
-When duplicate skill names exist, later-precedence directories override earlier ones (see [App data](/oss/deepagents/data-locations#skills)).
+当存在重名技能时，后置优先级目录会覆盖前置目录（参见[应用数据](/oss/deepagents/data-locations#skills)）。
 
-For project-specific skills, the project's root folder must have a `.git` folder.
-When you start the CLI from anywhere within the project's folder, the CLI will find the project's root folder by checking for a containing `.git` folder.
+对于项目级别的技能，项目的根目录必须有 `.git` 文件夹。
+当你从项目文件夹内的任何位置启动 CLI 时，CLI 会通过检查包含 `.git` 文件夹来查找项目根目录。
 
-For each skill, the CLI reads the name and the description from the `SKILL.md` file's frontmatter.
-As you use the CLI, if a task matches the skill's description, the agent will read the skill file and follow its instructions.
+对于每个技能，CLI 从 `SKILL.md` 文件的 frontmatter 中读取名称和描述。
+当你使用 CLI 时，如果任务与技能的描述匹配，Agent 会读取该技能文件并遵循其指令。
 
-### List skills
+### 列出技能
 
-To see the lists you have installed, run:
+要查看你已安装的技能列表，运行：
 
 <Tabs>
-    <Tab title="User skill">
+    <Tab title="用户技能">
         ```bash
         deepagents skills list
         ```
     </Tab>
-    <Tab title="Project skill">
+    <Tab title="项目技能">
         ```bash
         deepagents skills list --project
         ```
     </Tab>
 </Tabs>
 
-To get more information for a specific skill, run:
+要获取特定技能的更多信息，运行：
 
 <Tabs>
-    <Tab title="User skill">
+    <Tab title="用户技能">
         ```bash
         deepagents skills info test-skill
         ```
     </Tab>
-    <Tab title="Project skill">
+    <Tab title="项目技能">
         ```bash
         deepagents skills info test-skill --project
         ```

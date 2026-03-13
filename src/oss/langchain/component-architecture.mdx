@@ -1,153 +1,117 @@
 ---
-title: Component architecture
+title: 组件架构
 ---
 
-LangChain's power comes from how its components work together to create sophisticated AI applications. This page provides diagrams showcasing the relationships between different components.
+LangChain 的强大之处在于各组件之间的协同工作，共同构建出功能丰富的 AI 应用。本页通过图表展示不同组件之间的关系。
 
-## Core component ecosystem
+## 核心组件生态
 
-The diagram below shows how LangChain's major components connect to form complete AI applications:
+下图展示了 LangChain 的主要组件如何连接，构成完整的 AI 应用：
 
 ```mermaid
 graph TD
-    %% Input processing
-    subgraph "📥 Input processing"
-        A[Text input] --> B[Document loaders]
-        B --> C[Text splitters]
-        C --> D[Documents]
+    %% 输入处理
+    subgraph "📥 输入处理"
+        A[文本输入] --> B[文档加载器]
+        B --> C[文本分割器]
+        C --> D[文档]
     end
 
-    %% Embedding & storage
-    subgraph "🔢 Embedding & storage"
-        D --> E[Embedding models]
-        E --> F[Vectors]
-        F --> G[(Vector stores)]
+    %% 向量化与存储
+    subgraph "🔢 向量化与存储"
+        D --> E[Embedding 模型]
+        E --> F[向量]
+        F --> G[(向量存储)]
     end
 
-    %% Retrieval
-    subgraph "🔍 Retrieval"
-        H[User Query] --> I[Embedding models]
-        I --> J[Query vector]
-        J --> K[Retrievers]
+    %% 检索
+    subgraph "🔍 检索"
+        H[用户查询] --> I[Embedding 模型]
+        I --> J[查询向量]
+        J --> K[检索器]
         K --> G
-        G --> L[Relevant context]
+        G --> L[相关上下文]
     end
 
-    %% Generation
-    subgraph "🤖 Generation"
-        M[Chat models] --> N[Tools]
-        N --> O[Tool results]
+    %% 生成
+    subgraph "🤖 生成"
+        M[聊天模型] --> N[工具]
+        N --> O[工具结果]
         O --> M
         L --> M
-        M --> P[AI response]
+        M --> P[AI 响应]
     end
 
-    %% Orchestration
-    subgraph "🎯 Orchestration"
-        Q[Agents] --> M
+    %% 编排
+    subgraph "🎯 编排"
+        Q[Agent] --> M
         Q --> N
         Q --> K
-        Q --> R[Memory]
+        Q --> R[记忆]
     end
-
-    classDef trigger fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#14532D
-    classDef process fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#1E3A8A
-    classDef output fill:#F3E8FF,stroke:#9333EA,stroke-width:2px,color:#581C87
-    classDef neutral fill:#F3F4F6,stroke:#9CA3AF,stroke-width:2px,color:#374151
-
-    class A,H trigger
-    class B,C,E,I,K,M,N,Q process
-    class D,F,J,L,O,P,R neutral
-    class G output
 ```
 
-### How components connect
+### 组件如何连接
 
-Each component layer builds on the previous ones:
+每一层组件都建立在前一层之上：
 
-1. **Input processing** – Transform raw data into structured documents
-2. **Embedding & storage** – Convert text into searchable vector representations
-3. **Retrieval** – Find relevant information based on user queries
-4. **Generation** – Use AI models to create responses, optionally with tools
-5. **Orchestration** – Coordinate everything through agents and memory systems
+1. **输入处理** – 将原始数据转换为结构化文档
+2. **向量化与存储** – 将文本转换为可搜索的向量表示
+3. **检索** – 根据用户查询查找相关信息
+4. **生成** – 使用 AI 模型生成响应，可选配工具
+5. **编排** – 通过 Agent 和记忆系统协调所有组件
 
-## Component categories
+## 组件分类
 
-LangChain organizes components into these main categories:
+LangChain 将组件划分为以下主要类别：
 
-| Category | Purpose | Key Components | Use Cases |
-|----------|---------|---------------|-----------|
-| **[Models](/oss/langchain/models)** | AI reasoning and generation | Chat models, LLMs, Embedding models | Text generation, reasoning, semantic understanding |
-| **[Tools](/oss/langchain/tools)** | External capabilities | APIs, databases, etc. | Web search, data access, computations |
-| **[Agents](/oss/langchain/agents)** | Orchestration and reasoning | ReAct agents, tool calling agents | Nondeterministic workflows, decision making |
-| **[Memory](/oss/langchain/short-term-memory)** | Context preservation | Message history, custom state | Conversations, stateful interactions |
-| **[Retrievers](/oss/integrations/retrievers)** | Information access | Vector retrievers, web retrievers | RAG, knowledge base search |
-| **[Document processing](/oss/integrations/document_loaders)** | Data ingestion | Loaders, splitters, transformers | PDF processing, web scraping |
-| **[Vector Stores](/oss/integrations/vectorstores)** | Semantic search | Chroma, Pinecone, FAISS | Similarity search, embeddings storage |
+| 类别 | 用途 | 核心组件 | 应用场景 |
+|------|------|----------|----------|
+| **[模型](/oss/langchain/models)** | AI 推理与生成 | 聊天模型、LLM、Embedding 模型 | 文本生成、推理、语义理解 |
+| **[工具](/oss/langchain/tools)** | 外部能力扩展 | API、数据库等 | 网络搜索、数据访问、计算 |
+| **[Agent](/oss/langchain/agents)** | 编排与推理 | ReAct Agent、工具调用 Agent | 非确定性工作流、决策 |
+| **[记忆](/oss/langchain/short-term-memory)** | 上下文保持 | 消息历史、自定义 state | 对话、有状态交互 |
+| **[检索器](/oss/integrations/retrievers)** | 信息获取 | 向量检索器、网络检索器 | RAG、知识库搜索 |
+| **[文档处理](/oss/integrations/document_loaders)** | 数据接入 | 加载器、分割器、转换器 | PDF 处理、网页抓取 |
+| **[向量存储](/oss/integrations/vectorstores)** | 语义搜索 | Chroma、Pinecone、FAISS | 相似性搜索、向量存储 |
 
-## Common patterns
+## 常见模式
 
-### RAG (Retrieval-Augmented generation)
+### RAG（检索增强生成）
 ```mermaid
 graph LR
-    A[User question] --> B[Retriever]
-    B --> C[Relevant docs]
-    C --> D[Chat model]
+    A[用户问题] --> B[检索器]
+    B --> C[相关文档]
+    C --> D[聊天模型]
     A --> D
-    D --> E[Informed response]
-
-    classDef trigger fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#14532D
-    classDef process fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#1E3A8A
-    classDef neutral fill:#F3F4F6,stroke:#9CA3AF,stroke-width:2px,color:#374151
-
-    class A trigger
-    class B,D process
-    class C,E neutral
+    D --> E[增强响应]
 ```
 
-### Agent with tools
+### 带工具的 Agent
 ```mermaid
 graph LR
-    A[User request] --> B[Agent]
-    B --> C{Need tool?}
-    C -->|Yes| D[Call tool]
-    D --> E[Tool result]
+    A[用户请求] --> B[Agent]
+    B --> C{需要工具?}
+    C -->|是| D[调用工具]
+    D --> E[工具结果]
     E --> B
-    C -->|No| F[Final answer]
-
-    classDef trigger fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#14532D
-    classDef process fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#1E3A8A
-    classDef decision fill:#FEF3C7,stroke:#F59E0B,stroke-width:2px,color:#78350F
-    classDef neutral fill:#F3F4F6,stroke:#9CA3AF,stroke-width:2px,color:#374151
-
-    class A trigger
-    class B,D process
-    class C decision
-    class E,F neutral
+    C -->|否| F[最终回答]
 ```
 
-### Multi-agent system
+### 多 Agent 系统
 ```mermaid
 graph LR
-    A[Complex Task] --> B[Supervisor agent]
-    B --> C[Specialist agent 1]
-    B --> D[Specialist agent 2]
-    C --> E[Results]
+    A[复杂任务] --> B[协调者 Agent]
+    B --> C[专家 Agent 1]
+    B --> D[专家 Agent 2]
+    C --> E[结果]
     D --> E
     E --> B
-    B --> F[Coordinated response]
-
-    classDef trigger fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#14532D
-    classDef process fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#1E3A8A
-    classDef neutral fill:#F3F4F6,stroke:#9CA3AF,stroke-width:2px,color:#374151
-
-    class A trigger
-    class B,C,D process
-    class E,F neutral
+    B --> F[协调后的响应]
 ```
 
-## Learn more
+## 了解更多
 
-- [Creating agents](/oss/langchain/agents)
-- [Working with tools](/oss/langchain/tools)
-- [Browse integrations](/oss/integrations/providers/overview)
+- [创建 Agent](/oss/langchain/agents)
+- [使用工具](/oss/langchain/tools)
+- [浏览集成](/oss/integrations/providers/overview)

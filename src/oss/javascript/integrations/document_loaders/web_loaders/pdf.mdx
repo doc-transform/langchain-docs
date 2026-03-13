@@ -1,44 +1,44 @@
 ---
-title: "WebPDFLoader integration"
-description: "Integrate with the WebPDFLoader document loader using LangChain JavaScript."
+title: "WebPDFLoader 集成"
+description: "使用 LangChain JavaScript 集成 WebPDFLoader 文档加载器。"
 ---
 
 
-This notebook provides a quick overview for getting started with [WebPDFLoader](/oss/integrations/document_loaders/). For detailed documentation of all WebPDFLoader features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_community_document_loaders_web_pdf.WebPDFLoader.html).
+本笔记提供了开始使用 [WebPDFLoader](/oss/integrations/document_loaders/) 的快速概览。有关 WebPDFLoader 所有功能和配置的详细文档请参览 [API 参考](https://api.js.langchain.com/classes/langchain_community_document_loaders_web_pdf.WebPDFLoader.html)。
 
-## Overview
+## 概览
 
-### Integration details
+### 集成详情
 
 | Class | Package | Local | Serializable | PY support |
 | :--- | :--- | :---: | :---: |  :---: |
 | [WebPDFLoader](https://api.js.langchain.com/classes/langchain_community_document_loaders_web_pdf.WebPDFLoader.html) | [@langchain/community](https://api.js.langchain.com/modules/langchain_community_document_loaders_web_pdf.html) | ✅ | beta | ❌ |
 
-### Loader features
+### 加载器特性
 
 | Source | Web Loader | Node Envs Only
 | :---: | :---: | :---: |
 | WebPDFLoader | ✅ | ❌ |
 
-You can use this version of the popular PDFLoader in web environments.
-By default, one document will be created for each page in the PDF file, you can change this behavior by setting the `splitPages` option to `false`.
+你可以在 Web 环境中使用这个流行的 PDFLoader 版本。
+默认情况下，PDF 文件中的每一页都会创建一个文档，你可以通过将 `splitPages` 选项设置为 `false` 来更改此行为。
 
-## Setup
+## 设置
 
-To access `WebPDFLoader` document loader you'll need to install the `@langchain/community` integration, along with the `pdf-parse` package:
+要访问 `WebPDFLoader` 文档加载器，你需要安装 `@langchain/community` 集成和 `pdf-parse` 包：
 
-### Credentials
+### 凭据
 
-If you want to get automated tracing of your model calls you can also set your [LangSmith](/langsmith/home) API key by uncommenting below:
+如果你想获得模型调用的自动追踪，你还可以通过取消下方注释来设置你的 [LangSmith](/langsmith/home) API 密钥：
 
 ```bash
 # export LANGSMITH_TRACING="true"
 # export LANGSMITH_API_KEY="your-api-key"
 ```
 
-### Installation
+### 安装
 
-The LangChain WebPDFLoader integration lives in the `@langchain/community` package:
+LangChain WebPDFLoader 集成位于 `@langchain/community` 包中：
 
 <CodeGroup>
 ```bash npm
@@ -52,9 +52,9 @@ pnpm add @langchain/community @langchain/core pdf-parse
 ```
 </CodeGroup>
 
-## Instantiation
+## 实例化
 
-Now we can instantiate our model object and load documents:
+现在我们可以实例化模型对象并加载文档：
 
 ```typescript
 import fs from "fs/promises";
@@ -74,7 +74,7 @@ const loader = new WebPDFLoader(nike10kPDFBlob, {
 })
 ```
 
-## Load
+## 加载
 
 ```typescript
 const docs = await loader.load()
@@ -181,11 +181,11 @@ console.log(docs[0].metadata)
 }
 ```
 
-## Usage, custom `pdfjs` build
+## 用法，自定义 `pdfjs` 构建
 
-By default we use the `pdfjs` build bundled with `pdf-parse`, which is compatible with most environments, including Node.js and modern browsers. If you want to use a more recent version of `pdfjs-dist` or if you want to use a custom build of `pdfjs-dist`, you can do so by providing a custom `pdfjs` function that returns a promise that resolves to the `PDFJS` object.
+默认情况下我们使用 `pdf-parse` 附带的 `pdfjs` 构建，它与大多数环境兼容，包括 Node.js 和现代浏览器。如果你想使用更新版本的 `pdfjs-dist` 或自定义构建的 `pdfjs-dist`，可以通过提供一个自定义的 `pdfjs` 函数来实现，该函数返回一个解析为 `PDFJS` 对象的 Promise。
 
-In the following example we use the "legacy" (see [pdfjs docs](https://github.com/mozilla/pdf.js/wiki/Frequently-Asked-Questions#which-browsersenvironments-are-supported)) build of `pdfjs-dist`, which includes several polyfills not included in the default build.
+在以下示例中，我们使用 `pdfjs-dist` 的“legacy”构建（请参见 [pdfjs 文档](https://github.com/mozilla/pdf.js/wiki/Frequently-Asked-Questions#which-browsersenvironments-are-supported)），它包含了默认构建中未包含的多个 polyfill。
 
 <CodeGroup>
 ```bash npm
@@ -212,10 +212,9 @@ const customBuildLoader = new WebPDFLoader(blob, {
 });
 ```
 
-## Eliminating extra spaces
+## 消除多余空格
 
-PDFs come in many varieties, which makes reading them a challenge. The loader parses individual text elements and joins them together with a space by default, but
-if you are seeing excessive spaces, this may not be the desired behavior. In that case, you can override the separator with an empty string like this:
+PDF 有很多种类，这使得读取它们成为一个挑战。加载器解析单个文本元素并默认使用空格连接它们，但如果你看到过多的空格，这可能不是你期望的行为。在这种情况下，你可以用空字符串覆盖分隔符：
 
 ```typescript
 import { WebPDFLoader } from "@langchain/community/document_loaders/web/pdf";
@@ -228,6 +227,6 @@ const eliminatingExtraSpacesLoader = new WebPDFLoader(new Blob(), {
 
 ---
 
-## API reference
+## API 参考
 
-For detailed documentation of all WebPDFLoader features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_community_document_loaders_web_pdf.WebPDFLoader.html).
+所有 WebPDFLoader 功能和配置的详细文档请参览 [API 参考](https://api.js.langchain.com/classes/langchain_community_document_loaders_web_pdf.WebPDFLoader.html)。

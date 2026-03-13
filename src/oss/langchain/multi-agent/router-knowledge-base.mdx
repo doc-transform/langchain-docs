@@ -1,22 +1,22 @@
 ---
-title: Build a multi-source knowledge base with routing
-sidebarTitle: "Router: Knowledge base"
+title: 构建带路由的多源知识库
+sidebarTitle: "路由器：知识库"
 ---
 
 import ChatModelTabsPy from '/snippets/chat-model-tabs.mdx';
 import ChatModelTabsJs from '/snippets/chat-model-tabs-js.mdx';
 
-## Overview
+## 概述
 
-The **router pattern** is a [multi-agent](/oss/langchain/multi-agent) architecture where a routing step classifies input and directs it to specialized agents, with results synthesized into a combined response. This pattern excels when your organization's knowledge lives across distinct **verticals** (separate knowledge domains that each require their own agent with specialized tools and prompts).
+**路由器模式**是一种[多 Agent](/oss/langchain/multi-agent)架构，其中路由步骤对输入进行分类并将其导向专门化的 Agent，结果综合成一个组合响应。当你的组织知识分布在不同的**垂直领域** —— 各自需要拥有专门工具和提示词的独立知识领域时，此模式尤为出色。
 
-In this tutorial, you'll build a multi-source knowledge base router that demonstrates these benefits through a realistic enterprise scenario. The system will coordinate three specialists:
+在本教程中，你将构建一个多源知识库路由器，通过真实的企业场景展示这些优势。系统将协调三个专家：
 
-- A **GitHub agent** that searches code, issues, and pull requests.
-- A **Notion agent** that searches internal documentation and wikis.
-- A **Slack agent** that searches relevant threads and discussions.
+- **GitHub Agent**：搜索代码、Issue 和 Pull Request。
+- **Notion Agent**：搜索内部文档和 Wiki。
+- **Slack Agent**：搜索相关的主题和讨论。
 
-When a user asks "How do I authenticate API requests?", the router decomposes the query into source-specific sub-questions, routes them to the relevant agents in parallel, and synthesizes results into a coherent answer.
+当用户问“如何认证 API 请求？”时，路由器将查询分解为针对每个数据源的子问题，并行路由到相关 Agent，然后将结果综合为一个连贯的答案。
 
 ```mermaid
 graph LR
@@ -28,41 +28,35 @@ graph LR
     D --> F
     E --> F
     F --> G([Combined answer])
-
-    classDef trigger fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#14532D
-    classDef process fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#1E3A8A
-
-    class A,G trigger
-    class B,C,D,E,F process
 ```
 
-### Why use a router?
+### 为什么使用路由器？
 
-The router pattern provides several advantages:
+路由器模式提供了以下优势：
 
-- **Parallel execution**: Query multiple sources simultaneously, reducing latency compared to sequential approaches.
-- **Specialized agents**: Each vertical has focused tools and prompts optimized for its domain.
-- **Selective routing**: Not every query needs every source—the router intelligently selects relevant verticals.
-- **Targeted sub-questions**: Each agent receives a question tailored to its domain, improving result quality.
-- **Clean synthesis**: Results from multiple sources are combined into a single, coherent response.
+- **并行执行**：同时查询多个数据源，相比顺序方式减少延迟。
+- **专门化 Agent**：每个垂直领域拥有针对其领域优化的专门工具和提示词。
+- **选择性路由**：并非每个查询都需要每个数据源 —— 路由器智能地选择相关的垂直领域。
+- **精准的子问题**：每个 Agent 收到针对其领域定制的问题，提高结果质量。
+- **清晰的综合**：多个数据源的结果被组合成一个单一、连贯的响应。
 
-### Concepts
+### 概念
 
-We will cover the following concepts:
+本教程将涵盖以下概念：
 
-- [Multi-agent systems](/oss/langchain/multi-agent)
-- [StateGraph](/oss/langgraph/graph-api) for workflow orchestration
-- [Send API](/oss/langgraph/graph-api#send) for parallel execution
+- [多 Agent 系统](/oss/langchain/multi-agent)
+- 用于工作流编排的 [StateGraph](/oss/langgraph/graph-api)
+- 用于并行执行的 [Send API](/oss/langgraph/graph-api#send)
 
 <Tip>
-**Router vs. Subagents**: The [subagents pattern](/oss/langchain/multi-agent/subagents) can also route to multiple agents. Use the router pattern when you need specialized preprocessing, custom routing logic, or want explicit control over parallel execution. Use the subagents pattern when you want the LLM to decide which agents to call dynamically.
+**路由器 vs. 子 Agent**：[子 Agent 模式](/oss/langchain/multi-agent/subagents)也可以路由到多个 Agent。当你需要专门的预处理、自定义路由逻辑或想要对并行执行进行显式控制时，使用路由器模式。当你想让 LLM 动态决定调用哪些 Agent 时，使用子 Agent 模式。
 </Tip>
 
-## Setup
+## 设置
 
-### Installation
+### 安装
 
-This tutorial requires the `langchain` and `langgraph` packages:
+本教程需要 `langchain` 和 `langgraph` 包：
 
 :::python
 <CodeGroup>
@@ -92,11 +86,11 @@ pnpm add langchain @langchain/langgraph
 </CodeGroup>
 :::
 
-For more details, see our [Installation guide](/oss/langchain/install).
+更多详情请参见我们的[安装指南](/oss/langchain/install)。
 
 ### LangSmith
 
-Set up [LangSmith](https://smith.langchain.com) to inspect what is happening inside your agent. Then set the following environment variables:
+设置 [LangSmith](https://smith.langchain.com) 来检查 Agent 内部的运行情况。然后设置以下环境变量：
 
 :::python
 <CodeGroup>
@@ -127,9 +121,9 @@ process.env.LANGSMITH_API_KEY = "...";
 </CodeGroup>
 :::
 
-### Select an LLM
+### 选择 LLM
 
-Select a chat model from LangChain's suite of integrations:
+从 LangChain 的集成套件中选择一个聊天模型：
 
 :::python
 <ChatModelTabsPy />
@@ -139,13 +133,13 @@ Select a chat model from LangChain's suite of integrations:
 <ChatModelTabsJs />
 :::
 
-## 1. Define state
+## 1. 定义状态
 
-First, define the state schemas. We use three types:
+首先，定义状态 Schema。我们使用三种类型：
 
-- **`AgentInput`**: Simple state passed to each subagent (just a query)
-- **`AgentOutput`**: Result returned by each subagent (source name + result)
-- **`RouterState`**: Main workflow state tracking the query, classifications, results, and final answer
+- **`AgentInput`**：传递给每个子 Agent 的简单状态（仅查询）
+- **`AgentOutput`**：每个子 Agent 返回的结果（源名称 + 结果）
+- **`RouterState`**：主工作流状态，跟踪查询、分类、结果和最终答案
 
 :::python
 ```python
@@ -205,11 +199,11 @@ const RouterState = new StateSchema({
 ```
 :::
 
-The `results` field uses a **reducer** (`operator.add` in Python, a concat function in JS) to collect outputs from parallel agent executions into a single list.
+`results` 字段使用 **reducer**（Python 中的 `operator.add`，JS 中的 concat 函数）将并行 Agent 执行的输出收集到单个列表中。
 
-## 2. Define tools for each vertical
+## 2. 为每个垂直领域定义工具
 
-Create tools for each knowledge domain. In a production system, these would call actual APIs. For this tutorial, we use stub implementations that return mock data. We define 7 tools across 3 verticals: GitHub (search code, issues, PRs), Notion (search docs, get page), and Slack (search messages, get thread).
+为每个知识领域创建工具。在生产系统中，这些将调用实际 API。本教程使用返回模拟数据的存根实现。我们在 3 个垂直领域定义了 7 个工具：GitHub（搜索代码、Issue、PR）、Notion（搜索文档、获取页面）和 Slack（搜索消息、获取主题）。
 
 :::python
 ```python expandable
@@ -358,9 +352,9 @@ const getThread = tool(
 ```
 :::
 
-## 3. Create specialized agents
+## 3. 创建专门化 Agent
 
-Create an agent for each vertical. Each agent has domain-specific tools and a prompt optimized for its knowledge source. All three follow the same pattern—only the tools and system prompt differ.
+为每个垂直领域创建一个 Agent。每个 Agent 拥有针对其知识源优化的领域专用工具和提示词。三个 Agent 遵循相同的模式 —— 只有工具和系统提示词不同。
 
 :::python
 ```python expandable
@@ -440,14 +434,14 @@ shared knowledge and solutions.
 ```
 :::
 
-## 4. Build the router workflow
+## 4. 构建路由器工作流
 
-Now build the router workflow using a StateGraph. The workflow has four main steps:
+现在使用 StateGraph 构建路由器工作流。工作流有四个主要步骤：
 
-1. **Classify**: Analyze the query and determine which agents to invoke with what sub-questions
-2. **Route**: Fan out to selected agents in parallel using `Send`
-3. **Query agents**: Each agent receives a simple `AgentInput` and returns an `AgentOutput`
-4. **Synthesize**: Combine collected results into a coherent response
+1. **分类**：分析查询并确定调用哪些 Agent 以及用什么子问题
+2. **路由**：使用 `Send` 并行分发到选定的 Agent
+3. **查询 Agent**：每个 Agent 接收一个简单的 `AgentInput` 并返回 `AgentOutput`
+4. **综合**：将收集到的结果组合成连贯的响应
 
 :::python
 ```python
@@ -660,9 +654,9 @@ async function synthesizeResults(state: typeof RouterState.State) {
 ```
 :::
 
-## 5. Compile the workflow
+## 5. 编译工作流
 
-Now assemble the workflow by connecting nodes with edges. The key is using `add_conditional_edges` with the routing function to enable parallel execution:
+现在通过连接节点和边来组装工作流。关键是使用 `add_conditional_edges` 配合路由函数来实现并行执行：
 
 :::python
 ```python
@@ -702,11 +696,11 @@ const workflow = new StateGraph(RouterState)
 ```
 :::
 
-The `add_conditional_edges` call connects the classify node to the agent nodes through the `route_to_agents` function. When `route_to_agents` returns multiple `Send` objects, those nodes execute in parallel.
+`add_conditional_edges` 调用通过 `route_to_agents` 函数将分类节点连接到 Agent 节点。当 `route_to_agents` 返回多个 `Send` 对象时，这些节点会并行执行。
 
-## 6. Use the router
+## 6. 使用路由器
 
-Test your router with queries that span multiple knowledge domains:
+用跨多个知识领域的查询来测试你的路由器：
 
 :::python
 ```python
@@ -741,7 +735,7 @@ console.log(result.finalAnswer);
 ```
 :::
 
-Expected output:
+预期输出：
 ```
 Original query: How do I authenticate API requests?
 
@@ -767,25 +761,25 @@ For token refresh handling, see issue #203 and PR #178 for the latest
 OAuth scope updates.
 ```
 
-The router analyzed the query, classified it to determine which agents to invoke (GitHub and Notion, but not Slack for this technical question), queried both agents in parallel, and synthesized the results into a coherent answer.
+路由器分析了查询，进行分类以确定调用哪些 Agent（GitHub 和 Notion，但对于这个技术问题排除了 Slack），并行查询两个 Agent，然后将结果综合成一个连贯的答案。
 
-## 7. Understanding the architecture
+## 7. 理解架构
 
-The router workflow follows a clear pattern:
+路由器工作流遵循一个清晰的模式：
 
-### Classification phase
+### 分类阶段
 
-The `classify_query` function uses **structured output** to analyze the user's query and determine which agents to invoke. This is where the routing intelligence lives:
+`classify_query` 函数使用**结构化输出**来分析用户查询并确定调用哪些 Agent。路由智能就在这里：
 
-- Uses a Pydantic model (Python) or Zod schema (JS) to ensure valid output
-- Returns a list of `Classification` objects, each with a `source` and targeted `query`
-- Only includes relevant sources—irrelevant ones are simply omitted
+- 使用 Pydantic 模型（Python）或 Zod Schema（JS）确保有效输出
+- 返回 `Classification` 对象列表，每个包含 `source` 和精准的 `query`
+- 只包含相关的数据源 —— 不相关的会被简单省略
 
-This structured approach is more reliable than free-form JSON parsing and makes the routing logic explicit.
+这种结构化方法比自由格式 JSON 解析更可靠，且使路由逻辑更加明确。
 
-### Parallel execution with send
+### 使用 Send 并行执行
 
-The `route_to_agents` function maps classifications to `Send` objects. Each `Send` specifies the target node and the state to pass:
+`route_to_agents` 函数将分类结果映射为 `Send` 对象。每个 `Send` 指定目标节点和要传递的状态：
 
 :::python
 ```python
@@ -805,11 +799,11 @@ The `route_to_agents` function maps classifications to `Send` objects. Each `Sen
 ```
 :::
 
-Each agent node receives a simple `AgentInput` with just a `query` field—not the full router state. This keeps the interface clean and explicit.
+每个 Agent 节点收到一个只包含 `query` 字段的简单 `AgentInput` —— 而不是完整的路由器状态。这保持了接口的清晰和明确。
 
-### Result collection with reducers
+### 使用 Reducer 收集结果
 
-Agent results flow back to the main state via a **reducer**. Each agent returns:
+Agent 结果通过 **reducer** 流回主状态。每个 Agent 返回：
 
 :::python
 ```python
@@ -823,25 +817,25 @@ Agent results flow back to the main state via a **reducer**. Each agent returns:
 ```
 :::
 
-The reducer (`operator.add` in Python) concatenates these lists, collecting all parallel results into `state["results"]`.
+reducer（Python 中的 `operator.add`）将这些列表连接起来，将所有并行结果收集到 `state["results"]` 中。
 
-### Synthesis phase
+### 综合阶段
 
-After all agents complete, the `synthesize_results` function iterates over the collected results:
+所有 Agent 完成后，`synthesize_results` 函数遍历收集到的结果：
 
-- Waits for all parallel branches to complete (LangGraph handles this automatically)
-- References the original query to ensure the answer addresses what the user asked
-- Combines information from all sources without redundancy
+- 等待所有并行分支完成（LangGraph 自动处理）
+- 引用原始查询以确保答案回应用户的问题
+- 组合所有数据源的信息，避免冗余
 
 <Note>
-**Partial results**: In this tutorial, all selected agents must complete before synthesis.
+**部分结果**：在本教程中，所有选定的 Agent 必须全部完成后才进行综合。
 </Note>
 
-## 8. Complete working example
+## 8. 完整可运行示例
 
-Here's everything together in a runnable script:
+以下是一个可运行的完整脚本：
 
-<Expandable title="View complete code" defaultOpen={false}>
+<Expandable title="查看完整代码" defaultOpen={false}>
 
 :::python
 ```python
@@ -1386,13 +1380,13 @@ console.log(result.finalAnswer);
 
 </Expandable>
 
-## 9. Advanced: Stateful routers
+## 9. 进阶：有状态路由器
 
-The router we've built so far is **stateless** (each request is handled independently with no memory between calls). For multi-turn conversations, you need a **stateful** approach.
+到目前为止，我们构建的路由器是**无状态**的 —— 每个请求独立处理，调用之间没有记忆。对于多轮对话，你需要一种**有状态**的方法。
 
-### Tool wrapper approach
+### 工具包装方法
 
-The simplest way to add conversation memory is to wrap the stateless router as a tool that a conversational agent can call:
+添加对话记忆最简单的方法是将无状态路由器包装为一个工具，供对话式 Agent 调用：
 
 :::python
 ```python
@@ -1454,7 +1448,7 @@ documentation, and team discussions.
 ```
 :::
 
-This approach keeps the router stateless while the conversational agent handles memory and context. The user can have a multi-turn conversation, and the agent will call the router tool as needed.
+这种方法保持路由器无状态，而由对话式 Agent 处理记忆和上下文。用户可以进行多轮对话，Agent 会根据需要调用路由器工具。
 
 :::python
 ```python
@@ -1503,38 +1497,38 @@ console.log(conversationalAgentResult.messages.at(-1)?.content);
 :::
 
 <Tip>
-The tool wrapper approach is recommended for most use cases. It provides clean separation: the router handles multi-source querying, while the conversational agent handles context and memory.
+对于大多数用例，推荐使用工具包装方法。它提供了清晰的职责分离：路由器处理多源查询，而对话式 Agent 处理上下文和记忆。
 </Tip>
 
-### Full persistence approach
+### 完全持久化方法
 
-If you need the router itself to maintain state—for example, to use previous search results in routing decisions—use [persistence](/oss/langchain/short-term-memory) to store message history at the router level.
+如果你需要路由器本身维护状态 —— 例如在路由决策中使用之前的搜索结果 —— 使用[持久化](/oss/langchain/short-term-memory)在路由器级别存储消息历史。
 
 <Warning>
-**Stateful routers add complexity.** When routing to different agents across turns, conversations may feel inconsistent if agents have different tones or prompts. Consider the [handoffs pattern](/oss/langchain/multi-agent/handoffs) or [subagents pattern](/oss/langchain/multi-agent/subagents) instead—both provide clearer semantics for multi-turn conversations with different agents.
+**有状态路由器会增加复杂性。** 当跨轮次路由到不同 Agent 时，如果 Agent 具有不同的风格或提示词，对话可能会感觉不一致。可以考虑使用[交接模式](/oss/langchain/multi-agent/handoffs)或[子 Agent 模式](/oss/langchain/multi-agent/subagents) —— 两者都为与不同 Agent 的多轮对话提供了更清晰的语义。
 </Warning>
 
-## 10. Key takeaways
+## 10. 关键要点
 
-The router pattern excels when you have:
+路由器模式在以下场景中表现出色：
 
-- **Distinct verticals**: Separate knowledge domains that each require specialized tools and prompts
-- **Parallel query needs**: Questions that benefit from querying multiple sources simultaneously
-- **Synthesis requirements**: Results from multiple sources need to be combined into a coherent response
+- **独立的垂直领域**：各自需要专门工具和提示词的独立知识领域
+- **并行查询需求**：受益于同时查询多个数据源的问题
+- **综合需求**：多个数据源的结果需要组合成连贯的响应
 
-The pattern has three phases: **decompose** (analyze the query and generate targeted sub-questions), **route** (execute queries in parallel), and **synthesize** (combine results).
+该模式包含三个阶段：**分解**（分析查询并生成精准的子问题）、**路由**（并行执行查询）和**综合**（组合结果）。
 
 <Tip>
-**When to use the router pattern**
+**何时使用路由器模式**
 
-Use the router pattern when you have multiple independent knowledge sources, need low-latency parallel queries, and want explicit control over routing logic.
+当你有多个独立的知识源、需要低延迟的并行查询、并想对路由逻辑进行显式控制时，使用路由器模式。
 
-For simpler cases with dynamic tool selection, consider the [subagents pattern](/oss/langchain/multi-agent/subagents). For workflows where agents need to converse with users sequentially, consider [handoffs](/oss/langchain/multi-agent/handoffs).
+对于动态工具选择的简单场景，考虑使用[子 Agent 模式](/oss/langchain/multi-agent/subagents)。对于 Agent 需要与用户顺序对话的工作流，考虑使用[交接模式](/oss/langchain/multi-agent/handoffs)。
 </Tip>
 
-## Next steps
+## 下一步
 
-- Learn about [handoffs](/oss/langchain/multi-agent/handoffs) for agent-to-agent conversations
-- Explore the [subagents pattern](/oss/langchain/multi-agent/subagents-personal-assistant) for centralized orchestration
-- Read the [multi-agent overview](/oss/langchain/multi-agent) to compare different patterns
-- Use [LangSmith](https://smith.langchain.com) to debug and monitor your router
+- 了解[交接](/oss/langchain/multi-agent/handoffs)用于 Agent 间对话
+- 探索[子 Agent 模式](/oss/langchain/multi-agent/subagents-personal-assistant)用于集中化编排
+- 阅读[多 Agent 概述](/oss/langchain/multi-agent)比较不同模式
+- 使用 [LangSmith](https://smith.langchain.com) 调试和监控你的路由器

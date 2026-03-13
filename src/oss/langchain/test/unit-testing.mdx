@@ -1,15 +1,15 @@
 ---
-title: Unit testing
-description: Test agent logic without API calls using fake chat models and in-memory persistence.
+title: 单元测试
+description: 使用 Mock 聊天模型和内存持久化测试 Agent 逻辑，无需 API 调用。
 ---
 
-Unit tests exercise small, deterministic pieces of your agent in isolation. By replacing the real LLM with an in-memory fake (AKA fixture), you can script exact responses (text, tool calls, and errors) so tests are fast, free, and repeatable without API keys.
+单元测试隔离测试 Agent 的小型确定性组件。通过用内存假对象（即 fixture）替代真实 LLM，你可以编排精确的响应（文本、工具调用和错误），使测试快速、免费且可重复，无需 API 密钥。
 
 :::python
 
-## Mock chat model
+## Mock 聊天模型
 
-LangChain provides @[`GenericFakeChatModel`] for mocking text responses. It accepts an iterator of responses (@[`AIMessage`] objects or strings) and returns one per invocation. It supports both regular and streaming usage.
+LangChain 提供 @[`GenericFakeChatModel`] 用于模拟文本响应。它接受一个响应迭代器（@[`AIMessage`] 对象或字符串），每次调用返回一个。它支持常规和流式使用。
 
 ```python
 from langchain_core.language_models.fake_chat_models import GenericFakeChatModel
@@ -23,16 +23,16 @@ model.invoke("hello")
 # AIMessage(content='', ..., tool_calls=[{'name': 'foo', 'args': {'bar': 'baz'}, 'id': 'call_1', 'type': 'tool_call'}])
 ```
 
-If we invoke the model again, it will return the next item in the iterator:
+如果再次调用模型，它将返回迭代器中的下一个项：
 
 ```python
 model.invoke("hello, again!")
 # AIMessage(content='bar', ...)
 ```
 
-## InMemorySaver checkpointer
+## InMemorySaver 检查点器
 
-To enable persistence during testing, you can use the @[`InMemorySaver`] checkpointer. This allows you to simulate multiple turns to test state-dependent behavior:
+要在测试中启用持久化，你可以使用 @[`InMemorySaver`] 检查点器。这允许你模拟多轮对话来测试状态相关的行为：
 
 ```python
 from langgraph.checkpoint.memory import InMemorySaver
@@ -59,17 +59,17 @@ agent.invoke(
 
 :::js
 
-## Mock chat model with `fakeModel`
+## 使用 `fakeModel` Mock 聊天模型
 
-@[`fakeModel`] is a builder-style fake chat model that lets you script exact responses (text, tool calls, errors) and assert what the model received. It extends @[`BaseChatModel`], so it works anywhere a real model is expected.
+@[`fakeModel`] 是一个构建器风格的假聊天模型，让你可以编排精确的响应（文本、工具调用、错误）并断言模型接收到的内容。它继承自 @[`BaseChatModel`]，因此可以在任何需要真实模型的地方使用。
 
 ```typescript
 import { fakeModel } from "langchain";
 ```
 
-### Quick start
+### 快速开始
 
-Create a model, queue responses with `.respond()`, and invoke. Each `invoke()` consumes the next queued response in order:
+创建模型，使用 `.respond()` 排队响应，然后调用。每次 `invoke()` 按顺序消费下一个排队的响应：
 
 ```typescript
 import { fakeModel } from "langchain";
@@ -90,7 +90,7 @@ const r3 = await model.invoke([new HumanMessage("Thanks!")]);
 // r3.content === "You're welcome!"
 ```
 
-If the model is invoked more times than there are queued responses, it throws a descriptive error:
+如果模型被调用的次数超过排队响应的数量，它会抛出一个描述性错误：
 
 ```typescript
 const model = fakeModel()
@@ -100,9 +100,9 @@ await model.invoke([new HumanMessage("first")]);  // works
 await model.invoke([new HumanMessage("second")]); // throws: "no response queued for invocation 1"
 ```
 
-### Tool calling responses
+### 工具调用响应
 
-`.respond()` supports tool calls by passing an @[`AIMessage`] with `tool_calls`:
+`.respond()` 支持通过传递带有 `tool_calls` 的 @[`AIMessage`] 来实现工具调用：
 
 ```typescript
 import { fakeModel } from "langchain";
@@ -124,7 +124,7 @@ const r2 = await model.invoke([new HumanMessage("Thanks")]);
 console.log(r2.content); // "It's 72°F and sunny in San Francisco."
 ```
 
-`.respondWithTools()` is a shorthand for the same thing. Instead of constructing the full `AIMessage`, provide just the tool name and arguments:
+`.respondWithTools()` 是同样功能的简写。不需要构造完整的 `AIMessage`，只需提供工具名称和参数：
 
 ```typescript
 // These two queue entries produce identical responses:
@@ -142,17 +142,17 @@ model.respondWithTools([  // [!code highlight]
 ]);  // [!code highlight]
 ```
 
-The `id` field is optional. If omitted, a unique ID is auto-generated.
+`id` 字段是可选的。如果省略，将自动生成唯一 ID。
 
 <Tip>
-    `.respond()` and `.respondWithTools()` can be mixed freely in any order. This is particularly useful for testing agentic loops where the model alternates between tool calls and text responses.
+    `.respond()` 和 `.respondWithTools()` 可以以任意顺序自由混合使用。这在测试 Agent 循环时特别有用，因为模型会交替进行工具调用和文本响应。
 </Tip>
 
-### Simulate errors
+### 模拟错误
 
-#### Errors at specific turns
+#### 在特定轮次出错
 
-Passing an `Error` to `.respond()` makes the model throw on that specific invocation. Errors can appear at any position in the sequence:
+将 `Error` 传递给 `.respond()` 会使模型在该特定调用中抛出异常。错误可以出现在序列的任意位置：
 
 ```typescript
 import { fakeModel } from "langchain";
@@ -172,9 +172,9 @@ const result = await model.invoke([new HumanMessage("retry")]);
 console.log(result.content); // "Recovered!"
 ```
 
-#### Errors on every call
+#### 每次调用都出错
 
-`.alwaysThrow()` makes every invocation throw, regardless of the queue. This is useful for testing error handling and retry logic:
+`.alwaysThrow()` 使每次调用都抛出异常，不管队列中有什么。这对测试错误处理和重试逻辑很有用：
 
 ```typescript
 import { fakeModel } from "langchain";
@@ -186,9 +186,9 @@ await model.invoke([new HumanMessage("a")]); // throws "service unavailable"
 await model.invoke([new HumanMessage("b")]); // throws "service unavailable"
 ```
 
-### Dynamic responses with factory functions
+### 使用工厂函数的动态响应
 
-`.respond()` also accepts a function that computes the response based on the input messages. The function receives the full message array and returns either a @[`BaseMessage`] or an `Error`:
+`.respond()` 也接受一个函数，根据输入消息计算响应。函数接收完整的消息数组，返回一个 @[`BaseMessage`] 或 `Error`：
 
 ```typescript
 import { fakeModel } from "langchain";
@@ -204,7 +204,7 @@ const result = await model.invoke([new HumanMessage("hello")]);
 console.log(result.content); // "You said: hello"
 ```
 
-Factory functions can also return errors:
+工厂函数也可以返回错误：
 
 ```typescript
 import { fakeModel } from "langchain";
@@ -223,12 +223,12 @@ await model.invoke([new HumanMessage("forbidden topic")]); // throws "Content po
 ```
 
 <Note>
-    Each function is a single queue entry, consumed once. To reuse the same dynamic logic for multiple turns, queue multiple `respond` function calls.
+    每个函数是一个单独的队列条目，只消费一次。要对多轮复用相同的动态逻辑，需排队多个 `respond` 函数调用。
 </Note>
 
-### Structured output
+### 结构化输出
 
-For code that uses `.withStructuredOutput()`, configure the fake return value with `.structuredResponse()`:
+对于使用 `.withStructuredOutput()` 的代码，使用 `.structuredResponse()` 配置假返回值：
 
 ```typescript
 import { fakeModel } from "langchain";
@@ -250,11 +250,11 @@ console.log(result);
 // { temperature: 72, unit: "fahrenheit" }
 ```
 
-The schema passed to `.withStructuredOutput()` is ignored. The model always returns the value configured with `.structuredResponse()`. This keeps tests focused on application logic rather than parsing.
+传递给 `.withStructuredOutput()` 的 schema 会被忽略。模型始终返回通过 `.structuredResponse()` 配置的值。这使测试专注于应用逻辑而非解析。
 
-### Assert what the model received
+### 断言模型接收到的内容
 
-`fakeModel` records every invocation, including the messages and options passed to the model. This works like a spy or mock in traditional testing frameworks:
+`fakeModel` 记录每次调用，包括传递给模型的消息和选项。这类似于传统测试框架中的 spy 或 mock：
 
 ```typescript
 import { fakeModel } from "langchain";
@@ -273,7 +273,7 @@ console.log(model.calls[0].messages[0].content); // "question 1"
 console.log(model.calls[1].messages[0].content); // "question 2"
 ```
 
-Calls are recorded even when the model throws:
+即使模型抛出异常，调用也会被记录：
 
 ```typescript
 import { fakeModel } from "langchain";
@@ -291,9 +291,9 @@ console.log(model.callCount); // 1
 console.log(model.calls[0].messages[0].content); // "will fail"
 ```
 
-### Use with `bindTools`
+### 配合 `bindTools` 使用
 
-Agent frameworks like LangChain agents and LangGraph call `model.bindTools(tools)` internally. `fakeModel` handles this automatically. The bound model shares the same response queue and call recording as the original, so no special setup is needed:
+Agent 框架（如 LangChain Agent 和 LangGraph）会在内部调用 `model.bindTools(tools)`。`fakeModel` 会自动处理。绑定后的模型与原始模型共享相同的响应队列和调用记录，因此不需要特殊设置：
 
 ```typescript
 import { fakeModel } from "langchain";
@@ -323,7 +323,7 @@ console.log(r2.content); // "The weather is sunny."
 console.log(model.callCount); // 2
 ```
 
-<Accordion title="Full example: test a tool-calling agent with vitest">
+<Accordion title="完整示例：使用 vitest 测试一个工具调用 Agent">
 
 ```typescript
 import { describe, test, expect } from "vitest";
@@ -401,6 +401,6 @@ describe("weather agent", () => {
 
 :::
 
-## Next steps
+## 下一步
 
-Learn how to test your agent with real model provider APIs in [Integration testing](/oss/langchain/test/integration-testing).
+了解如何使用真实模型提供商 API 测试你的 Agent，请参阅[集成测试](/oss/langchain/test/integration-testing)。

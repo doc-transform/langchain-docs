@@ -1,27 +1,27 @@
 ---
-title: Test
-sidebarTitle: Overview
-description: Strategies for testing LangChain agents, including unit tests, integration tests, and trajectory evaluations.
+title: 测试
+sidebarTitle: 概览
+description: LangChain Agent 的测试策略，包括单元测试、集成测试和轨迹评估。
 ---
 
-Agentic applications let an LLM decide its own next steps to solve a problem. That flexibility is powerful, but the model's black-box nature makes it hard to predict how a tweak in one part of your agent will affect the whole. To build production-ready agents, thorough testing is essential.
+Agent 应用让 LLM 自主决定下一步操作来解决问题。这种灵活性非常强大，但模型的黑盒特性使得很难预测修改某个部分会如何影响整个 Agent。要构建生产级 Agent，全面的测试至关重要。
 
-There are a few approaches to testing your agents:
+测试 Agent 有以下几种方法：
 
-- **Unit tests** exercise small, deterministic pieces of your agent in isolation using in-memory fakes so you can assert exact behavior quickly and deterministically.
-- **Integration tests** test the agent using real network calls to confirm that components work together, credentials and schemas line up, and latency is acceptable.
-- **Evals** use evaluators to assess your agent's execution trajectory, either via deterministic matching or an LLM judge.
+- **单元测试** 使用内存中的假对象隔离测试 Agent 的小型确定性组件，以便快速、确定性地断言精确行为。
+- **集成测试** 使用真实网络调用测试 Agent，确认组件协同工作、凭证和模式匹配、延迟可接受。
+- **评估（Evals）** 使用评估器评估 Agent 的执行轨迹，可以通过确定性匹配或 LLM 评判实现。
 
-Agentic applications tend to lean more on integration because they chain multiple components together and must deal with flakiness due to the nondeterministic nature of LLMs.
+Agent 应用通常更依赖集成测试，因为它们串联多个组件，并且必须处理 LLM 非确定性特性带来的不稳定性。
 
 <CardGroup cols={1}>
-    <Card title="Unit testing" icon="flask" href="/oss/langchain/test/unit-testing" arrow>
-        Mock chat models and use in-memory persistence to test agent logic without API calls.
+    <Card title="单元测试" icon="flask" href="/oss/langchain/test/unit-testing" arrow>
+        使用 Mock 聊天模型和内存持久化测试 Agent 逻辑，无需 API 调用。
     </Card>
-    <Card title="Integration testing" icon="plug" href="/oss/langchain/test/integration-testing" arrow>
-        Test your agent with real LLM APIs. Organize tests, manage keys, handle flakiness, and control costs.
+    <Card title="集成测试" icon="plug" href="/oss/langchain/test/integration-testing" arrow>
+        使用真实 LLM API 测试 Agent。组织测试、管理密钥、处理不稳定性并控制成本。
     </Card>
-    <Card title="Evals" icon="scale" href="/oss/langchain/test/evals" arrow>
-        Evaluate agent trajectories with deterministic matching or LLM-as-judge evaluators.
+    <Card title="评估" icon="scale" href="/oss/langchain/test/evals" arrow>
+        使用确定性匹配或 LLM 评判评估器评估 Agent 轨迹。
     </Card>
 </CardGroup>

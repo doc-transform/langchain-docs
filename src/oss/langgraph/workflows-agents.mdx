@@ -1,30 +1,30 @@
 ---
-title: Workflows and agents
-sidebarTitle: Workflows + agents
+title: 工作流与代理
+sidebarTitle: 工作流 + 代理
 ---
 
 
 
-This guide reviews common workflow and agent patterns.
+本指南回顾常见的工作流和代理模式。
 
-- Workflows have predetermined code paths and are designed to operate in a certain order.
-- Agents are dynamic and define their own processes and tool usage.
+- 工作流具有预定的代码路径，旨在按照特定顺序运行。
+- 代理是动态的，能自行定义处理流程和工具使用。
 
 ![Agent Workflow](/oss/images/agent_workflow.png)
 
-LangGraph offers several benefits when building agents and workflows, including [persistence](/oss/langgraph/persistence), [streaming](/oss/langgraph/streaming), and support for debugging as well as [deployment](/oss/langgraph/deploy).
+LangGraph 在构建代理和工作流时提供了许多优势，包括[持久化](/oss/langgraph/persistence)、[流式输出](/oss/langgraph/streaming)，以及对调试和[部署](/oss/langgraph/deploy)的支持。
 
-## Setup
+## 设置
 
-To build a workflow or agent, you can use [any chat model](/oss/integrations/chat) that supports structured outputs and tool calling. The following example uses Anthropic:
+要构建工作流或代理，你可以使用任何支持结构化输出和工具调用的[聊天模型](/oss/integrations/chat)。以下示例使用 Anthropic：
 
 :::python
-1. Install dependencies:
+1. 安装依赖：
 ```bash
 pip install langchain_core langchain-anthropic langgraph
 ```
 
-2. Initialize the LLM:
+2. 初始化 LLM：
 
 ```python
 import os
@@ -44,7 +44,7 @@ llm = ChatAnthropic(model="claude-sonnet-4-6")
 :::
 
 :::js
-1. Install dependencies
+1. 安装依赖
 <CodeGroup>
 ```bash npm
 npm install @langchain/langgraph @langchain/core
@@ -63,7 +63,7 @@ bun add @langchain/langgraph @langchain/core
 ```
 </CodeGroup>
 
-2. Initialize the LLM:
+2. 初始化 LLM：
 
 ```typescript
 import { ChatAnthropic } from "@langchain/anthropic";
@@ -75,15 +75,15 @@ const llm = new ChatAnthropic({
 ```
 :::
 
-## LLMs and augmentations
+## LLM 和增强功能
 
-Workflows and agentic systems are based on LLMs and the various augmentations you add to them. [Tool calling](/oss/langchain/tools), [structured outputs](/oss/langchain/structured-output), and [short term memory](/oss/langchain/short-term-memory) are a few options for tailoring LLMs to your needs.
+工作流和代理系统基于 LLM 以及你为其添加的各种增强功能。[工具调用](/oss/langchain/tools)、[结构化输出](/oss/langchain/structured-output)和[短期记忆](/oss/langchain/short-term-memory)是将 LLM 调整为满足你需求的几个选项。
 
 ![LLM augmentations](/oss/images/augmented_llm.png)
 
 :::python
 ```python
-# Schema for structured output
+# 结构化输出的 Schema
 from pydantic import BaseModel, Field
 
 
@@ -94,23 +94,23 @@ class SearchQuery(BaseModel):
     )
 
 
-# Augment the LLM with schema for structured output
+# 使用结构化输出 Schema 增强 LLM
 structured_llm = llm.with_structured_output(SearchQuery)
 
-# Invoke the augmented LLM
+# 调用增强后的 LLM
 output = structured_llm.invoke("How does Calcium CT score relate to high cholesterol?")
 
-# Define a tool
+# 定义工具
 def multiply(a: int, b: int) -> int:
     return a * b
 
-# Augment the LLM with tools
+# 使用工具增强 LLM
 llm_with_tools = llm.bind_tools([multiply])
 
-# Invoke the LLM with input that triggers the tool call
+# 使用触发工具调用的输入调用 LLM
 msg = llm_with_tools.invoke("What is 2 times 3?")
 
-# Get the tool call
+# 获取工具调用
 msg.tool_calls
 ```
 :::
@@ -120,7 +120,7 @@ msg.tool_calls
 import * as z from "zod";
 import { tool } from "langchain";
 
-// Schema for structured output
+// 结构化输出的 Schema
 const SearchQuery = z.object({
   search_query: z.string().describe("Query that is optimized web search."),
   justification: z
@@ -128,15 +128,15 @@ const SearchQuery = z.object({
     .describe("Why this query is relevant to the user's request."),
 });
 
-// Augment the LLM with schema for structured output
+// 使用结构化输出 Schema 增强 LLM
 const structuredLlm = llm.withStructuredOutput(SearchQuery);
 
-// Invoke the augmented LLM
+// 调用增强后的 LLM
 const output = await structuredLlm.invoke(
   "How does Calcium CT score relate to high cholesterol?"
 );
 
-// Define a tool
+// 定义工具
 const multiply = tool(
   ({ a, b }) => {
     return a * b;
@@ -151,23 +151,23 @@ const multiply = tool(
   }
 );
 
-// Augment the LLM with tools
+// 使用工具增强 LLM
 const llmWithTools = llm.bindTools([multiply]);
 
-// Invoke the LLM with input that triggers the tool call
+// 使用触发工具调用的输入调用 LLM
 const msg = await llmWithTools.invoke("What is 2 times 3?");
 
-// Get the tool call
+// 获取工具调用
 console.log(msg.tool_calls);
 ```
 :::
 
-## Prompt chaining
+## 提示链
 
-Prompt chaining is when each LLM call processes the output of the previous call. It's often used for performing well-defined tasks that can be broken down into smaller, verifiable steps. Some examples include:
+提示链是指每个 LLM 调用处理前一个调用的输出。它通常用于执行可以分解为更小、可验证步骤的明确定义的任务。一些示例包括：
 
-- Translating documents into different languages
-- Verifying generated content for consistency
+- 将文档翻译成不同语言
+- 验证生成内容的一致性
 
 ![Prompt chaining](/oss/images/prompt_chain.png)
 
@@ -179,7 +179,7 @@ from langgraph.graph import StateGraph, START, END
 from IPython.display import Image, display
 
 
-# Graph state
+# 图状态
 class State(TypedDict):
     topic: str
     joke: str
@@ -187,45 +187,45 @@ class State(TypedDict):
     final_joke: str
 
 
-# Nodes
+# 节点
 def generate_joke(state: State):
-    """First LLM call to generate initial joke"""
+"""第一个 LLM 调用生成初始笑话"""
 
     msg = llm.invoke(f"Write a short joke about {state['topic']}")
     return {"joke": msg.content}
 
 
 def check_punchline(state: State):
-    """Gate function to check if the joke has a punchline"""
+"""门控函数检查笑话是否有妙语"""
 
-    # Simple check - does the joke contain "?" or "!"
+    # 简单检查 - 笑话是否包含 "?" 或 "!"
     if "?" in state["joke"] or "!" in state["joke"]:
         return "Pass"
     return "Fail"
 
 
 def improve_joke(state: State):
-    """Second LLM call to improve the joke"""
+"""第二个 LLM 调用改进笑话"""
 
     msg = llm.invoke(f"Make this joke funnier by adding wordplay: {state['joke']}")
     return {"improved_joke": msg.content}
 
 
 def polish_joke(state: State):
-    """Third LLM call for final polish"""
+"""第三个 LLM 调用进行最终润色"""
     msg = llm.invoke(f"Add a surprising twist to this joke: {state['improved_joke']}")
     return {"final_joke": msg.content}
 
 
-# Build workflow
+# 构建工作流
 workflow = StateGraph(State)
 
-# Add nodes
+# 添加节点
 workflow.add_node("generate_joke", generate_joke)
 workflow.add_node("improve_joke", improve_joke)
 workflow.add_node("polish_joke", polish_joke)
 
-# Add edges to connect nodes
+    # 添加边来连接节点
 workflow.add_edge(START, "generate_joke")
 workflow.add_conditional_edges(
     "generate_joke", check_punchline, {"Fail": "improve_joke", "Pass": END}
@@ -233,13 +233,13 @@ workflow.add_conditional_edges(
 workflow.add_edge("improve_joke", "polish_joke")
 workflow.add_edge("polish_joke", END)
 
-# Compile
+# 编译
 chain = workflow.compile()
 
-# Show workflow
+# 显示工作流
 display(Image(chain.get_graph().draw_mermaid_png()))
 
-# Invoke
+# 调用
 state = chain.invoke({"topic": "cats"})
 print("Initial joke:")
 print(state["joke"])
@@ -262,14 +262,14 @@ from langgraph.func import entrypoint, task
 # Tasks
 @task
 def generate_joke(topic: str):
-    """First LLM call to generate initial joke"""
+"""第一个 LLM 调用生成初始笑话"""
     msg = llm.invoke(f"Write a short joke about {topic}")
     return msg.content
 
 
 def check_punchline(joke: str):
-    """Gate function to check if the joke has a punchline"""
-    # Simple check - does the joke contain "?" or "!"
+"""门控函数检查笑话是否有妙语"""
+    # 简单检查 - 笑话是否包含 "?" 或 "!"
     if "?" in joke or "!" in joke:
         return "Fail"
 
@@ -278,14 +278,14 @@ def check_punchline(joke: str):
 
 @task
 def improve_joke(joke: str):
-    """Second LLM call to improve the joke"""
+"""第二个 LLM 调用改进笑话"""
     msg = llm.invoke(f"Make this joke funnier by adding wordplay: {joke}")
     return msg.content
 
 
 @task
 def polish_joke(joke: str):
-    """Third LLM call for final polish"""
+"""第三个 LLM 调用进行最终润色"""
     msg = llm.invoke(f"Add a surprising twist to this joke: {joke}")
     return msg.content
 
@@ -299,7 +299,7 @@ def prompt_chaining_workflow(topic: str):
     improved_joke = improve_joke(original_joke).result()
     return polish_joke(improved_joke).result()
 
-# Invoke
+# 调用
 for step in prompt_chaining_workflow.stream("cats", stream_mode="updates"):
     print(step)
     print("\n")
@@ -313,7 +313,7 @@ for step in prompt_chaining_workflow.stream("cats", stream_mode="updates"):
 import { StateGraph, StateSchema, GraphNode, ConditionalEdgeRouter } from "@langchain/langgraph";
 import { z } from "zod/v4";
 
-// Graph state
+// 图状态
 const State = new StateSchema({
   topic: z.string(),
   joke: z.string(),
@@ -321,7 +321,7 @@ const State = new StateSchema({
   finalJoke: z.string(),
 });
 
-// Define node functions
+// 定义节点函数
 
 // First LLM call to generate initial joke
 const generateJoke: GraphNode<typeof State> = async (state) => {
@@ -329,9 +329,9 @@ const generateJoke: GraphNode<typeof State> = async (state) => {
   return { joke: msg.content };
 };
 
-// Gate function to check if the joke has a punchline
+// 门控函数检查笑话是否有妙语
 const checkPunchline: ConditionalEdgeRouter<typeof State, "improveJoke"> = (state) => {
-  // Simple check - does the joke contain "?" or "!"
+// 简单检查 - 笑话是否包含 "?" 或 "!"
   if (state.joke?.includes("?") || state.joke?.includes("!")) {
     return "Pass";
   }
@@ -354,7 +354,7 @@ const polishJoke: GraphNode<typeof State> = async (state) => {
   return { finalJoke: msg.content };
 };
 
-// Build workflow
+// 构建工作流
 const chain = new StateGraph(State)
   .addNode("generateJoke", generateJoke)
   .addNode("improveJoke", improveJoke)
@@ -368,7 +368,7 @@ const chain = new StateGraph(State)
   .addEdge("polishJoke", "__end__")
   .compile();
 
-// Invoke
+// 调用
 const state = await chain.invoke({ topic: "cats" });
 console.log("Initial joke:");
 console.log(state.joke);
@@ -395,9 +395,9 @@ const generateJoke = task("generateJoke", async (topic: string) => {
   return msg.content;
 });
 
-// Gate function to check if the joke has a punchline
+// 门控函数检查笑话是否有妙语
 function checkPunchline(joke: string) {
-  // Simple check - does the joke contain "?" or "!"
+// 简单检查 - 笑话是否包含 "?" 或 "!"
   if (joke.includes("?") || joke.includes("!")) {
     return "Pass";
   }
@@ -444,24 +444,24 @@ for await (const step of stream) {
 </CodeGroup>
 :::
 
-## Parallelization
+## 并行化
 
-With parallelization, LLMs work simultaneously on a task. This is either done by running multiple independent subtasks at the same time, or running the same task multiple times to check for different outputs. Parallelization is commonly used to:
+通过并行化，LLM 同时处理一个任务。这可以通过同时运行多个独立子任务，或多次运行同一任务以检查不同输出来实现。并行化通常用于：
 
-- Split up subtasks and run them in parallel, which increases speed
-- Run tasks multiple times to check for different outputs, which increases confidence
+- 拆分子任务并行运行，以提高速度
+- 多次运行任务以检查不同输出，以提高置信度
 
-Some examples include:
+一些示例包括：
 
-- Running one subtask that processes a document for keywords, and a second subtask to check for formatting errors
-- Running a task multiple times that scores a document for accuracy based on different criteria, like the number of citations, the number of sources used, and the quality of the sources
+- 运行一个处理文档关键词的子任务，同时运行第二个检查格式错误的子任务
+- 多次运行一个根据不同标准（如引用数量、使用的来源数量和来源质量）对文档准确性评分的任务
 
 ![parallelization.png](/oss/images/parallelization.png)
 
 :::python
 <CodeGroup>
 ```python Graph API
-# Graph state
+# 图状态
 class State(TypedDict):
     topic: str
     joke: str
@@ -470,30 +470,30 @@ class State(TypedDict):
     combined_output: str
 
 
-# Nodes
+# 节点
 def call_llm_1(state: State):
-    """First LLM call to generate initial joke"""
+"""第一个 LLM 调用生成初始笑话"""
 
     msg = llm.invoke(f"Write a joke about {state['topic']}")
     return {"joke": msg.content}
 
 
 def call_llm_2(state: State):
-    """Second LLM call to generate story"""
+"""第二个 LLM 调用生成故事"""
 
     msg = llm.invoke(f"Write a story about {state['topic']}")
     return {"story": msg.content}
 
 
 def call_llm_3(state: State):
-    """Third LLM call to generate poem"""
+"""第三个 LLM 调用生成诗歌"""
 
     msg = llm.invoke(f"Write a poem about {state['topic']}")
     return {"poem": msg.content}
 
 
 def aggregator(state: State):
-    """Combine the joke, story and poem into a single output"""
+"""将笑话、故事和诗歌合并为单个输出"""
 
     combined = f"Here's a story, joke, and poem about {state['topic']}!\n\n"
     combined += f"STORY:\n{state['story']}\n\n"
@@ -502,16 +502,16 @@ def aggregator(state: State):
     return {"combined_output": combined}
 
 
-# Build workflow
+# 构建工作流
 parallel_builder = StateGraph(State)
 
-# Add nodes
+# 添加节点
 parallel_builder.add_node("call_llm_1", call_llm_1)
 parallel_builder.add_node("call_llm_2", call_llm_2)
 parallel_builder.add_node("call_llm_3", call_llm_3)
 parallel_builder.add_node("aggregator", aggregator)
 
-# Add edges to connect nodes
+    # 添加边来连接节点
 parallel_builder.add_edge(START, "call_llm_1")
 parallel_builder.add_edge(START, "call_llm_2")
 parallel_builder.add_edge(START, "call_llm_3")
@@ -521,38 +521,38 @@ parallel_builder.add_edge("call_llm_3", "aggregator")
 parallel_builder.add_edge("aggregator", END)
 parallel_workflow = parallel_builder.compile()
 
-# Show workflow
+# 显示工作流
 display(Image(parallel_workflow.get_graph().draw_mermaid_png()))
 
-# Invoke
+# 调用
 state = parallel_workflow.invoke({"topic": "cats"})
 print(state["combined_output"])
 ```
 ```python Functional API
 @task
 def call_llm_1(topic: str):
-    """First LLM call to generate initial joke"""
+"""第一个 LLM 调用生成初始笑话"""
     msg = llm.invoke(f"Write a joke about {topic}")
     return msg.content
 
 
 @task
 def call_llm_2(topic: str):
-    """Second LLM call to generate story"""
+"""第二个 LLM 调用生成故事"""
     msg = llm.invoke(f"Write a story about {topic}")
     return msg.content
 
 
 @task
 def call_llm_3(topic):
-    """Third LLM call to generate poem"""
+"""第三个 LLM 调用生成诗歌"""
     msg = llm.invoke(f"Write a poem about {topic}")
     return msg.content
 
 
 @task
 def aggregator(topic, joke, story, poem):
-    """Combine the joke and story into a single output"""
+"""将笑话和故事合并为单个输出"""
 
     combined = f"Here's a story, joke, and poem about {topic}!\n\n"
     combined += f"STORY:\n{story}\n\n"
@@ -561,7 +561,7 @@ def aggregator(topic, joke, story, poem):
     return combined
 
 
-# Build workflow
+# 构建工作流
 @entrypoint()
 def parallel_workflow(topic: str):
     joke_fut = call_llm_1(topic)
@@ -571,7 +571,7 @@ def parallel_workflow(topic: str):
         topic, joke_fut.result(), story_fut.result(), poem_fut.result()
     ).result()
 
-# Invoke
+# 调用
 for step in parallel_workflow.stream("cats", stream_mode="updates"):
     print(step)
     print("\n")
@@ -585,7 +585,7 @@ for step in parallel_workflow.stream("cats", stream_mode="updates"):
 import { StateGraph, StateSchema, GraphNode } from "@langchain/langgraph";
 import * as z from "zod";
 
-// Graph state
+// 图状态
 const State = new StateSchema({
   topic: z.string(),
   joke: z.string(),
@@ -594,7 +594,7 @@ const State = new StateSchema({
   combinedOutput: z.string(),
 });
 
-// Nodes
+// 节点
 // First LLM call to generate initial joke
 const callLlm1: GraphNode<typeof State> = async (state) => {
   const msg = await llm.invoke(`Write a joke about ${state.topic}`);
@@ -613,7 +613,7 @@ const callLlm3: GraphNode<typeof State> = async (state) => {
   return { poem: msg.content };
 };
 
-// Combine the joke, story and poem into a single output
+// 将笑话、故事和诗歌合并为单个输出
 const aggregator: GraphNode<typeof State> = async (state) => {
   const combined = `Here's a story, joke, and poem about ${state.topic}!\n\n` +
     `STORY:\n${state.story}\n\n` +
@@ -622,7 +622,7 @@ const aggregator: GraphNode<typeof State> = async (state) => {
   return { combinedOutput: combined };
 };
 
-// Build workflow
+// 构建工作流
 const parallelWorkflow = new StateGraph(State)
   .addNode("callLlm1", callLlm1)
   .addNode("callLlm2", callLlm2)
@@ -637,7 +637,7 @@ const parallelWorkflow = new StateGraph(State)
   .addEdge("aggregator", "__end__")
   .compile();
 
-// Invoke
+// 调用
 const result = await parallelWorkflow.invoke({ topic: "cats" });
 console.log(result.combinedOutput);
 ```
@@ -664,7 +664,7 @@ const callLlm3 = task("generatePoem", async (topic: string) => {
   return msg.content;
 });
 
-// Combine outputs
+// 合并输出
 const aggregator = task("aggregator", async (params: {
   topic: string;
   joke: string;
@@ -678,7 +678,7 @@ const aggregator = task("aggregator", async (params: {
     `POEM:\n${poem}`;
 });
 
-// Build workflow
+// 构建工作流
 const workflow = entrypoint(
   "parallelWorkflow",
   async (topic: string) => {
@@ -692,7 +692,7 @@ const workflow = entrypoint(
   }
 );
 
-// Invoke
+// 调用
 const stream = await workflow.stream("cats", {
   streamMode: "updates",
 });
@@ -704,9 +704,9 @@ for await (const step of stream) {
 </CodeGroup>
 :::
 
-## Routing
+## 路由
 
-Routing workflows process inputs and then directs them to context-specific tasks. This allows you to define specialized flows for complex tasks. For example, a workflow built to answer product related questions might process the type of question first, and then route the request to specific processes for pricing, refunds, returns, etc.
+路由工作流处理输入并将其引导到特定上下文的任务。这允许你为复杂任务定义专门的流程。例如，一个用于回答产品相关问题的工作流可能会先处理问题类型，然后将请求路由到定价、退款、退货等特定流程。
 
 ![routing.png](/oss/images/routing.png)
 
@@ -717,14 +717,14 @@ from typing_extensions import Literal
 from langchain.messages import HumanMessage, SystemMessage
 
 
-# Schema for structured output to use as routing logic
+# 用于路由逻辑的结构化输出 Schema
 class Route(BaseModel):
     step: Literal["poem", "story", "joke"] = Field(
         None, description="The next step in the routing process"
     )
 
 
-# Augment the LLM with schema for structured output
+# 使用结构化输出 Schema 增强 LLM
 router = llm.with_structured_output(Route)
 
 
@@ -735,32 +735,32 @@ class State(TypedDict):
     output: str
 
 
-# Nodes
+# 节点
 def llm_call_1(state: State):
-    """Write a story"""
+"""写一个故事"""
 
     result = llm.invoke(state["input"])
     return {"output": result.content}
 
 
 def llm_call_2(state: State):
-    """Write a joke"""
+"""写一个笑话"""
 
     result = llm.invoke(state["input"])
     return {"output": result.content}
 
 
 def llm_call_3(state: State):
-    """Write a poem"""
+"""写一首诗"""
 
     result = llm.invoke(state["input"])
     return {"output": result.content}
 
 
 def llm_call_router(state: State):
-    """Route the input to the appropriate node"""
+"""将输入路由到适当的节点"""
 
-    # Run the augmented LLM with structured output to serve as routing logic
+    # 运行增强后的 LLM，使用结构化输出作为路由逻辑
     decision = router.invoke(
         [
             SystemMessage(
@@ -773,9 +773,9 @@ def llm_call_router(state: State):
     return {"decision": decision.step}
 
 
-# Conditional edge function to route to the appropriate node
+    # 条件边函数路由到适当的节点
 def route_decision(state: State):
-    # Return the node name you want to visit next
+    # 返回你想访问的下一个节点名称
     if state["decision"] == "story":
         return "llm_call_1"
     elif state["decision"] == "joke":
@@ -784,21 +784,21 @@ def route_decision(state: State):
         return "llm_call_3"
 
 
-# Build workflow
+# 构建工作流
 router_builder = StateGraph(State)
 
-# Add nodes
+# 添加节点
 router_builder.add_node("llm_call_1", llm_call_1)
 router_builder.add_node("llm_call_2", llm_call_2)
 router_builder.add_node("llm_call_3", llm_call_3)
 router_builder.add_node("llm_call_router", llm_call_router)
 
-# Add edges to connect nodes
+    # 添加边来连接节点
 router_builder.add_edge(START, "llm_call_router")
 router_builder.add_conditional_edges(
     "llm_call_router",
     route_decision,
-    {  # Name returned by route_decision : Name of next node to visit
+    {  # route_decision 返回的名称 : 下一个要访问的节点名称
         "llm_call_1": "llm_call_1",
         "llm_call_2": "llm_call_2",
         "llm_call_3": "llm_call_3",
@@ -808,13 +808,13 @@ router_builder.add_edge("llm_call_1", END)
 router_builder.add_edge("llm_call_2", END)
 router_builder.add_edge("llm_call_3", END)
 
-# Compile workflow
+# 编译工作流
 router_workflow = router_builder.compile()
 
-# Show the workflow
+    # 显示工作流
 display(Image(router_workflow.get_graph().draw_mermaid_png()))
 
-# Invoke
+# 调用
 state = router_workflow.invoke({"input": "Write me a joke about cats"})
 print(state["output"])
 ```
@@ -824,41 +824,41 @@ from pydantic import BaseModel
 from langchain.messages import HumanMessage, SystemMessage
 
 
-# Schema for structured output to use as routing logic
+# 用于路由逻辑的结构化输出 Schema
 class Route(BaseModel):
     step: Literal["poem", "story", "joke"] = Field(
         None, description="The next step in the routing process"
     )
 
 
-# Augment the LLM with schema for structured output
+# 使用结构化输出 Schema 增强 LLM
 router = llm.with_structured_output(Route)
 
 
 @task
 def llm_call_1(input_: str):
-    """Write a story"""
+"""写一个故事"""
     result = llm.invoke(input_)
     return result.content
 
 
 @task
 def llm_call_2(input_: str):
-    """Write a joke"""
+"""写一个笑话"""
     result = llm.invoke(input_)
     return result.content
 
 
 @task
 def llm_call_3(input_: str):
-    """Write a poem"""
+"""写一首诗"""
     result = llm.invoke(input_)
     return result.content
 
 
 def llm_call_router(input_: str):
-    """Route the input to the appropriate node"""
-    # Run the augmented LLM with structured output to serve as routing logic
+"""将输入路由到适当的节点"""
+    # 运行增强后的 LLM，使用结构化输出作为路由逻辑
     decision = router.invoke(
         [
             SystemMessage(
@@ -870,7 +870,7 @@ def llm_call_router(input_: str):
     return decision.step
 
 
-# Create workflow
+# 创建工作流
 @entrypoint()
 def router_workflow(input_: str):
     next_step = llm_call_router(input_)
@@ -883,7 +883,7 @@ def router_workflow(input_: str):
 
     return llm_call(input_).result()
 
-# Invoke
+# 调用
 for step in router_workflow.stream("Write me a joke about cats", stream_mode="updates"):
     print(step)
     print("\n")
@@ -897,25 +897,25 @@ for step in router_workflow.stream("Write me a joke about cats", stream_mode="up
 import { StateGraph, StateSchema, GraphNode, ConditionalEdgeRouter } from "@langchain/langgraph";
 import * as z from "zod";
 
-// Schema for structured output to use as routing logic
+// 用于路由逻辑的结构化输出 Schema
 const routeSchema = z.object({
   step: z.enum(["poem", "story", "joke"]).describe(
     "The next step in the routing process"
   ),
 });
 
-// Augment the LLM with schema for structured output
+// 使用结构化输出 Schema 增强 LLM
 const router = llm.withStructuredOutput(routeSchema);
 
-// Graph state
+// 图状态
 const State = new StateSchema({
   input: z.string(),
   decision: z.string(),
   output: z.string(),
 });
 
-// Nodes
-// Write a story
+// 节点
+    // 写一个故事
 const llmCall1: GraphNode<typeof State> = async (state) => {
   const result = await llm.invoke([{
     role: "system",
@@ -927,7 +927,7 @@ const llmCall1: GraphNode<typeof State> = async (state) => {
   return { output: result.content };
 };
 
-// Write a joke
+    // 写一个笑话
 const llmCall2: GraphNode<typeof State> = async (state) => {
   const result = await llm.invoke([{
     role: "system",
@@ -939,7 +939,7 @@ const llmCall2: GraphNode<typeof State> = async (state) => {
   return { output: result.content };
 };
 
-// Write a poem
+    // 写一首诗
 const llmCall3: GraphNode<typeof State> = async (state) => {
   const result = await llm.invoke([{
     role: "system",
@@ -952,7 +952,7 @@ const llmCall3: GraphNode<typeof State> = async (state) => {
 };
 
 const llmCallRouter: GraphNode<typeof State> = async (state) => {
-  // Route the input to the appropriate node
+    // 将输入路由到适当的节点
   const decision = await router.invoke([
     {
       role: "system",
@@ -967,9 +967,9 @@ const llmCallRouter: GraphNode<typeof State> = async (state) => {
   return { decision: decision.step };
 };
 
-// Conditional edge function to route to the appropriate node
+    // 条件边函数路由到适当的节点
 const routeDecision: ConditionalEdgeRouter<typeof State, "llmCall1" | "llmCall2" | "llmCall3"> = (state) => {
-  // Return the node name you want to visit next
+    // 返回你想访问的下一个节点名称
   if (state.decision === "story") {
     return "llmCall1";
   } else if (state.decision === "joke") {
@@ -979,7 +979,7 @@ const routeDecision: ConditionalEdgeRouter<typeof State, "llmCall1" | "llmCall2"
   }
 };
 
-// Build workflow
+// 构建工作流
 const routerWorkflow = new StateGraph(State)
   .addNode("llmCall1", llmCall1)
   .addNode("llmCall2", llmCall2)
@@ -996,7 +996,7 @@ const routerWorkflow = new StateGraph(State)
   .addEdge("llmCall3", "__end__")
   .compile();
 
-// Invoke
+// 调用
 const state = await routerWorkflow.invoke({
   input: "Write me a joke about cats"
 });
@@ -1006,18 +1006,18 @@ console.log(state.output);
 import * as z from "zod";
 import { task, entrypoint } from "@langchain/langgraph";
 
-// Schema for structured output to use as routing logic
+// 用于路由逻辑的结构化输出 Schema
 const routeSchema = z.object({
   step: z.enum(["poem", "story", "joke"]).describe(
     "The next step in the routing process"
   ),
 });
 
-// Augment the LLM with schema for structured output
+// 使用结构化输出 Schema 增强 LLM
 const router = llm.withStructuredOutput(routeSchema);
 
 // Tasks
-// Write a story
+    // 写一个故事
 const llmCall1 = task("generateStory", async (input: string) => {
   const result = await llm.invoke([{
     role: "system",
@@ -1029,7 +1029,7 @@ const llmCall1 = task("generateStory", async (input: string) => {
   return result.content;
 });
 
-// Write a joke
+    // 写一个笑话
 const llmCall2 = task("generateJoke", async (input: string) => {
   const result = await llm.invoke([{
     role: "system",
@@ -1041,7 +1041,7 @@ const llmCall2 = task("generateJoke", async (input: string) => {
   return result.content;
 });
 
-// Write a poem
+    // 写一首诗
 const llmCall3 = task("generatePoem", async (input: string) => {
   const result = await llm.invoke([{
     role: "system",
@@ -1053,7 +1053,7 @@ const llmCall3 = task("generatePoem", async (input: string) => {
   return result.content;
 });
 
-// Route the input to the appropriate node
+    // 将输入路由到适当的节点
 const llmCallRouter = task("router", async (input: string) => {
   const decision = await router.invoke([
     {
@@ -1068,7 +1068,7 @@ const llmCallRouter = task("router", async (input: string) => {
   return decision.step;
 });
 
-// Build workflow
+// 构建工作流
 const workflow = entrypoint(
   "routerWorkflow",
   async (input: string) => {
@@ -1088,7 +1088,7 @@ const workflow = entrypoint(
   }
 );
 
-// Invoke
+// 调用
 const stream = await workflow.stream("Write me a joke about cats", {
   streamMode: "updates",
 });
@@ -1100,17 +1100,17 @@ for await (const step of stream) {
 </CodeGroup>
 :::
 
-## Orchestrator-worker
+## 编排器-工作器
 
-In an orchestrator-worker configuration, the orchestrator:
+在编排器-工作器配置中，编排器：
 
-- Breaks down tasks into subtasks
-- Delegates subtasks to workers
-- Synthesizes worker outputs into a final result
+- 将任务分解为子任务
+- 将子任务委派给工作器
+- 将工作器的输出综合成最终结果
 
 ![worker.png](/oss/images/worker.png)
 
-Orchestrator-worker workflows provide more flexibility and are often used when subtasks cannot be predefined the way they can with [parallelization](#parallelization). This is common with workflows that write code or need to update content across multiple files. For example, a workflow that needs to update installation instructions for multiple Python libraries across an unknown number of documents might use this pattern.
+编排器-工作器工作流提供了更多的灵活性，通常在子任务无法像[并行化](#parallelization)那样预先定义时使用。这在编写代码或需要更新多个文件内容的工作流中很常见。例如，一个需要在未知数量的文档中更新多个 Python 库安装说明的工作流可能会使用这种模式。
 
 :::python
 <CodeGroup>
@@ -1119,7 +1119,7 @@ from typing import Annotated, List
 import operator
 
 
-# Schema for structured output to use in planning
+# 用于规划的结构化输出 Schema
 class Section(BaseModel):
     name: str = Field(
         description="Name for this section of the report.",
@@ -1135,14 +1135,14 @@ class Sections(BaseModel):
     )
 
 
-# Augment the LLM with schema for structured output
+# 使用结构化输出 Schema 增强 LLM
 planner = llm.with_structured_output(Sections)
 ```
 ```python Functional API
 from typing import List
 
 
-# Schema for structured output to use in planning
+# 用于规划的结构化输出 Schema
 class Section(BaseModel):
     name: str = Field(
         description="Name for this section of the report.",
@@ -1158,14 +1158,14 @@ class Sections(BaseModel):
     )
 
 
-# Augment the LLM with schema for structured output
+# 使用结构化输出 Schema 增强 LLM
 planner = llm.with_structured_output(Sections)
 
 
 @task
 def orchestrator(topic: str):
-    """Orchestrator that generates a plan for the report"""
-    # Generate queries
+"""编排器为报告生成计划"""
+# 生成查询
     report_sections = planner.invoke(
         [
             SystemMessage(content="Generate a plan for the report."),
@@ -1178,9 +1178,9 @@ def orchestrator(topic: str):
 
 @task
 def llm_call(section: Section):
-    """Worker writes a section of the report"""
+"""工作器编写报告的一个章节"""
 
-    # Generate section
+# 生成章节
     result = llm.invoke(
         [
             SystemMessage(content="Write a report section."),
@@ -1190,13 +1190,13 @@ def llm_call(section: Section):
         ]
     )
 
-    # Write the updated section to completed sections
+    # 将更新后的章节写入已完成章节
     return result.content
 
 
 @task
 def synthesizer(completed_sections: list[str]):
-    """Synthesize full report from sections"""
+"""从各章节综合完整报告"""
     final_report = "\n\n---\n\n".join(completed_sections)
     return final_report
 
@@ -1210,7 +1210,7 @@ def orchestrator_worker(topic: str):
     ).result()
     return final_report
 
-# Invoke
+# 调用
 report = orchestrator_worker.invoke("Create a report on LLM scaling laws")
 from IPython.display import Markdown
 Markdown(report)
@@ -1230,14 +1230,14 @@ type SectionsSchema = {
     sections: SectionSchema[];
 }
 
-// Augment the LLM with schema for structured output
+// 使用结构化输出 Schema 增强 LLM
 const planner = llm.withStructuredOutput(sectionsSchema);
 ```
 ```typescript Functional API
 import * as z from "zod";
 import { task, entrypoint } from "@langchain/langgraph";
 
-// Schema for structured output to use in planning
+// 用于规划的结构化输出 Schema
 const sectionSchema = z.object({
   name: z.string().describe("Name for this section of the report."),
   description: z.string().describe(
@@ -1249,12 +1249,12 @@ const sectionsSchema = z.object({
   sections: z.array(sectionSchema).describe("Sections of the report."),
 });
 
-// Augment the LLM with schema for structured output
+// 使用结构化输出 Schema 增强 LLM
 const planner = llm.withStructuredOutput(sectionsSchema);
 
 // Tasks
 const orchestrator = task("orchestrator", async (topic: string) => {
-  // Generate queries
+// 生成查询
   const reportSections = await planner.invoke([
     { role: "system", content: "Generate a plan for the report." },
     { role: "user", content: `Here is the report topic: ${topic}` },
@@ -1264,7 +1264,7 @@ const orchestrator = task("orchestrator", async (topic: string) => {
 });
 
 const llmCall = task("sectionWriter", async (section: z.infer<typeof sectionSchema>) => {
-  // Generate section
+// 生成章节
   const result = await llm.invoke([
     {
       role: "system",
@@ -1280,11 +1280,11 @@ const llmCall = task("sectionWriter", async (section: z.infer<typeof sectionSche
 });
 
 const synthesizer = task("synthesizer", async (completedSections: string[]) => {
-  // Synthesize full report from sections
+// 从各章节综合完整报告
   return completedSections.join("\n\n---\n\n");
 });
 
-// Build workflow
+// 构建工作流
 const workflow = entrypoint(
   "orchestratorWorker",
   async (topic: string) => {
@@ -1296,7 +1296,7 @@ const workflow = entrypoint(
   }
 );
 
-// Invoke
+// 调用
 const stream = await workflow.stream("Create a report on LLM scaling laws", {
   streamMode: "updates",
 });
@@ -1308,9 +1308,9 @@ for await (const step of stream) {
 </CodeGroup>
 :::
 
-### Creating workers in LangGraph
+### 在 LangGraph 中创建工作器
 
-Orchestrator-worker workflows are common and LangGraph has built-in support for them. The `Send` API lets you dynamically create worker nodes and send them specific inputs. Each worker has its own state, and all worker outputs are written to a shared state key that is accessible to the orchestrator graph. This gives the orchestrator access to all worker output and allows it to synthesize them into a final output. The example below iterates over a list of sections and uses the `Send` API to send a section to each worker.
+编排器-工作器工作流很常见，LangGraph 内置了对它们的支持。`Send` API 允许你动态创建工作器节点并向它们发送特定输入。每个工作器都有自己的状态，所有工作器的输出都写入一个共享状态键，编排器图可以访问该键。这让编排器能够访问所有工作器的输出并将它们综合成最终输出。以下示例遍历一个章节列表，并使用 `Send` API 将每个章节发送给各个工作器。
 
 
 :::python
@@ -1318,27 +1318,27 @@ Orchestrator-worker workflows are common and LangGraph has built-in support for 
 from langgraph.types import Send
 
 
-# Graph state
+# 图状态
 class State(TypedDict):
-    topic: str  # Report topic
-    sections: list[Section]  # List of report sections
+    topic: str  # 报告主题
+    sections: list[Section]  # 报告章节列表
     completed_sections: Annotated[
         list, operator.add
-    ]  # All workers write to this key in parallel
-    final_report: str  # Final report
+    ]  # 所有工作器并行写入此键
+    final_report: str  # 最终报告
 
 
-# Worker state
+# 工作器状态
 class WorkerState(TypedDict):
     section: Section
     completed_sections: Annotated[list, operator.add]
 
 
-# Nodes
+# 节点
 def orchestrator(state: State):
-    """Orchestrator that generates a plan for the report"""
+"""编排器为报告生成计划"""
 
-    # Generate queries
+# 生成查询
     report_sections = planner.invoke(
         [
             SystemMessage(content="Generate a plan for the report."),
@@ -1350,9 +1350,9 @@ def orchestrator(state: State):
 
 
 def llm_call(state: WorkerState):
-    """Worker writes a section of the report"""
+"""工作器编写报告的一个章节"""
 
-    # Generate section
+# 生成章节
     section = llm.invoke(
         [
             SystemMessage(
@@ -1364,39 +1364,39 @@ def llm_call(state: WorkerState):
         ]
     )
 
-    # Write the updated section to completed sections
+    # 将更新后的章节写入已完成章节
     return {"completed_sections": [section.content]}
 
 
 def synthesizer(state: State):
-    """Synthesize full report from sections"""
+"""从各章节综合完整报告"""
 
-    # List of completed sections
+    # 已完成章节列表
     completed_sections = state["completed_sections"]
 
-    # Format completed section to str to use as context for final sections
+    # 将已完成章节格式化为字符串，作为最终章节的上下文
     completed_report_sections = "\n\n---\n\n".join(completed_sections)
 
     return {"final_report": completed_report_sections}
 
 
-# Conditional edge function to create llm_call workers that each write a section of the report
+    # 条件边函数，创建 LLM 调用工作器，每个工作器编写报告的一个章节
 def assign_workers(state: State):
-    """Assign a worker to each section in the plan"""
+"""为计划中的每个章节分配一个工作器"""
 
-    # Kick off section writing in parallel via Send() API
+    # 通过 Send() API 并行启动章节编写
     return [Send("llm_call", {"section": s}) for s in state["sections"]]
 
 
-# Build workflow
+# 构建工作流
 orchestrator_worker_builder = StateGraph(State)
 
-# Add the nodes
+    # 添加节点
 orchestrator_worker_builder.add_node("orchestrator", orchestrator)
 orchestrator_worker_builder.add_node("llm_call", llm_call)
 orchestrator_worker_builder.add_node("synthesizer", synthesizer)
 
-# Add edges to connect nodes
+    # 添加边来连接节点
 orchestrator_worker_builder.add_edge(START, "orchestrator")
 orchestrator_worker_builder.add_conditional_edges(
     "orchestrator", assign_workers, ["llm_call"]
@@ -1404,13 +1404,13 @@ orchestrator_worker_builder.add_conditional_edges(
 orchestrator_worker_builder.add_edge("llm_call", "synthesizer")
 orchestrator_worker_builder.add_edge("synthesizer", END)
 
-# Compile the workflow
+    # 编译工作流
 orchestrator_worker = orchestrator_worker_builder.compile()
 
-# Show the workflow
+    # 显示工作流
 display(Image(orchestrator_worker.get_graph().draw_mermaid_png()))
 
-# Invoke
+# 调用
 state = orchestrator_worker.invoke({"topic": "Create a report on LLM scaling laws"})
 
 from IPython.display import Markdown
@@ -1422,7 +1422,7 @@ Markdown(state["final_report"])
 import { StateGraph, StateSchema, ReducedValue, GraphNode, Send } from "@langchain/langgraph";
 import * as z from "zod";
 
-// Graph state
+// 图状态
 const State = new StateSchema({
   topic: z.string(),
   sections: z.array(z.custom<SectionsSchema>()),
@@ -1433,7 +1433,7 @@ const State = new StateSchema({
   finalReport: z.string(),
 });
 
-// Worker state
+// 工作器状态
 const WorkerState = new StateSchema({
   section: z.custom<SectionsSchema>(),
   completedSections: new ReducedValue(
@@ -1442,9 +1442,9 @@ const WorkerState = new StateSchema({
   ),
 });
 
-// Nodes
+// 节点
 const orchestrator: GraphNode<typeof State> = async (state) => {
-  // Generate queries
+// 生成查询
   const reportSections = await planner.invoke([
     { role: "system", content: "Generate a plan for the report." },
     { role: "user", content: `Here is the report topic: ${state.topic}` },
@@ -1454,7 +1454,7 @@ const orchestrator: GraphNode<typeof State> = async (state) => {
 };
 
 const llmCall: GraphNode<typeof WorkerState> = async (state) => {
-  // Generate section
+// 生成章节
   const section = await llm.invoke([
     {
       role: "system",
@@ -1466,29 +1466,29 @@ const llmCall: GraphNode<typeof WorkerState> = async (state) => {
     },
   ]);
 
-  // Write the updated section to completed sections
+    // 将更新后的章节写入已完成章节
   return { completedSections: [section.content] };
 };
 
 const synthesizer: GraphNode<typeof State> = async (state) => {
-  // List of completed sections
+    // 已完成章节列表
   const completedSections = state.completedSections;
 
-  // Format completed section to str to use as context for final sections
+    // 将已完成章节格式化为字符串，作为最终章节的上下文
   const completedReportSections = completedSections.join("\n\n---\n\n");
 
   return { finalReport: completedReportSections };
 };
 
-// Conditional edge function to create llm_call workers that each write a section of the report
+    // 条件边函数，创建 LLM 调用工作器，每个工作器编写报告的一个章节
 const assignWorkers: ConditionalEdgeRouter<typeof State, "llmCall"> = (state) => {
-  // Kick off section writing in parallel via Send() API
+    // 通过 Send() API 并行启动章节编写
   return state.sections.map((section) =>
     new Send("llmCall", { section })
   );
 };
 
-// Build workflow
+// 构建工作流
 const orchestratorWorker = new StateGraph(State)
   .addNode("orchestrator", orchestrator)
   .addNode("llmCall", llmCall)
@@ -1503,7 +1503,7 @@ const orchestratorWorker = new StateGraph(State)
   .addEdge("synthesizer", "__end__")
   .compile();
 
-// Invoke
+// 调用
 const state = await orchestratorWorker.invoke({
   topic: "Create a report on LLM scaling laws"
 });
@@ -1511,18 +1511,18 @@ console.log(state.finalReport);
 ```
 :::
 
-## Evaluator-optimizer
+## 评估器-优化器
 
-In evaluator-optimizer workflows, one LLM call creates a response and the other evaluates that response. If the evaluator or a [human-in-the-loop](/oss/langgraph/interrupts) determines the response needs refinement, feedback is provided and the response is recreated. This loop continues until an acceptable response is generated.
+在评估器-优化器工作流中，一个 LLM 调用创建响应，另一个评估该响应。如果评估器或[人工干预](/oss/langgraph/interrupts)确定响应需要改进，就会提供反馈并重新创建响应。此循环继续直到生成可接受的响应。
 
-Evaluator-optimizer workflows are commonly used when there's particular success criteria for a task, but iteration is required to meet that criteria. For example, there's not always a perfect match when translating text between two languages. It might take a few iterations to generate a translation with the same meaning across the two languages.
+评估器-优化器工作流通常用于任务有特定成功标准但需要迭代才能达到该标准的场景。例如，在两种语言之间翻译文本时并不总是能完美匹配。可能需要几次迭代才能生成在两种语言中含义相同的翻译。
 
 ![evaluator_optimizer.png](/oss/images/evaluator_optimizer.png)
 
 :::python
 <CodeGroup>
 ```python Graph API
-# Graph state
+# 图状态
 class State(TypedDict):
     joke: str
     topic: str
@@ -1530,7 +1530,7 @@ class State(TypedDict):
     funny_or_not: str
 
 
-# Schema for structured output to use in evaluation
+# 用于评估的结构化输出 Schema
 class Feedback(BaseModel):
     grade: Literal["funny", "not funny"] = Field(
         description="Decide if the joke is funny or not.",
@@ -1540,13 +1540,13 @@ class Feedback(BaseModel):
     )
 
 
-# Augment the LLM with schema for structured output
+# 使用结构化输出 Schema 增强 LLM
 evaluator = llm.with_structured_output(Feedback)
 
 
-# Nodes
+# 节点
 def llm_call_generator(state: State):
-    """LLM generates a joke"""
+"""LLM 生成笑话"""
 
     if state.get("feedback"):
         msg = llm.invoke(
@@ -1558,15 +1558,15 @@ def llm_call_generator(state: State):
 
 
 def llm_call_evaluator(state: State):
-    """LLM evaluates the joke"""
+"""LLM 评估笑话"""
 
     grade = evaluator.invoke(f"Grade the joke {state['joke']}")
     return {"funny_or_not": grade.grade, "feedback": grade.feedback}
 
 
-# Conditional edge function to route back to joke generator or end based upon feedback from the evaluator
+    # 条件边函数，根据评估器反馈路由回笑话生成器或结束
 def route_joke(state: State):
-    """Route back to joke generator or end based upon feedback from the evaluator"""
+"""根据评估器反馈路由回笑话生成器或结束"""
 
     if state["funny_or_not"] == "funny":
         return "Accepted"
@@ -1574,37 +1574,37 @@ def route_joke(state: State):
         return "Rejected + Feedback"
 
 
-# Build workflow
+# 构建工作流
 optimizer_builder = StateGraph(State)
 
-# Add the nodes
+    # 添加节点
 optimizer_builder.add_node("llm_call_generator", llm_call_generator)
 optimizer_builder.add_node("llm_call_evaluator", llm_call_evaluator)
 
-# Add edges to connect nodes
+    # 添加边来连接节点
 optimizer_builder.add_edge(START, "llm_call_generator")
 optimizer_builder.add_edge("llm_call_generator", "llm_call_evaluator")
 optimizer_builder.add_conditional_edges(
     "llm_call_evaluator",
     route_joke,
-    {  # Name returned by route_joke : Name of next node to visit
+    {  # route_joke 返回的名称 : 下一个要访问的节点名称
         "Accepted": END,
         "Rejected + Feedback": "llm_call_generator",
     },
 )
 
-# Compile the workflow
+    # 编译工作流
 optimizer_workflow = optimizer_builder.compile()
 
-# Show the workflow
+    # 显示工作流
 display(Image(optimizer_workflow.get_graph().draw_mermaid_png()))
 
-# Invoke
+# 调用
 state = optimizer_workflow.invoke({"topic": "Cats"})
 print(state["joke"])
 ```
 ```python Functional API
-# Schema for structured output to use in evaluation
+# 用于评估的结构化输出 Schema
 class Feedback(BaseModel):
     grade: Literal["funny", "not funny"] = Field(
         description="Decide if the joke is funny or not.",
@@ -1614,14 +1614,14 @@ class Feedback(BaseModel):
     )
 
 
-# Augment the LLM with schema for structured output
+# 使用结构化输出 Schema 增强 LLM
 evaluator = llm.with_structured_output(Feedback)
 
 
-# Nodes
+# 节点
 @task
 def llm_call_generator(topic: str, feedback: Feedback):
-    """LLM generates a joke"""
+"""LLM 生成笑话"""
     if feedback:
         msg = llm.invoke(
             f"Write a joke about {topic} but take into account the feedback: {feedback}"
@@ -1633,7 +1633,7 @@ def llm_call_generator(topic: str, feedback: Feedback):
 
 @task
 def llm_call_evaluator(joke: str):
-    """LLM evaluates the joke"""
+"""LLM 评估笑话"""
     feedback = evaluator.invoke(f"Grade the joke {joke}")
     return feedback
 
@@ -1649,7 +1649,7 @@ def optimizer_workflow(topic: str):
 
     return joke
 
-# Invoke
+# 调用
 for step in optimizer_workflow.stream("Cats", stream_mode="updates"):
     print(step)
     print("\n")
@@ -1663,7 +1663,7 @@ for step in optimizer_workflow.stream("Cats", stream_mode="updates"):
 import { StateGraph, StateSchema, GraphNode, ConditionalEdgeRouter } from "@langchain/langgraph";
 import * as z from "zod";
 
-// Graph state
+// 图状态
 const State = new StateSchema({
   joke: z.string(),
   topic: z.string(),
@@ -1671,7 +1671,7 @@ const State = new StateSchema({
   funnyOrNot: z.string(),
 });
 
-// Schema for structured output to use in evaluation
+// 用于评估的结构化输出 Schema
 const feedbackSchema = z.object({
   grade: z.enum(["funny", "not funny"]).describe(
     "Decide if the joke is funny or not."
@@ -1681,10 +1681,10 @@ const feedbackSchema = z.object({
   ),
 });
 
-// Augment the LLM with schema for structured output
+// 使用结构化输出 Schema 增强 LLM
 const evaluator = llm.withStructuredOutput(feedbackSchema);
 
-// Nodes
+// 节点
 const llmCallGenerator: GraphNode<typeof State> = async (state) => {
   // LLM generates a joke
   let msg;
@@ -1704,9 +1704,9 @@ const llmCallEvaluator: GraphNode<typeof State> = async (state) => {
   return { funnyOrNot: grade.grade, feedback: grade.feedback };
 };
 
-// Conditional edge function to route back to joke generator or end based upon feedback from the evaluator
+    // 条件边函数，根据评估器反馈路由回笑话生成器或结束
 const routeJoke: ConditionalEdgeRouter<typeof State, "llmCallGenerator"> = (state) => {
-  // Route back to joke generator or end based upon feedback from the evaluator
+    // 根据评估器反馈路由回笑话生成器或结束
   if (state.funnyOrNot === "funny") {
     return "Accepted";
   } else {
@@ -1714,7 +1714,7 @@ const routeJoke: ConditionalEdgeRouter<typeof State, "llmCallGenerator"> = (stat
   }
 };
 
-// Build workflow
+// 构建工作流
 const optimizerWorkflow = new StateGraph(State)
   .addNode("llmCallGenerator", llmCallGenerator)
   .addNode("llmCallEvaluator", llmCallEvaluator)
@@ -1724,14 +1724,14 @@ const optimizerWorkflow = new StateGraph(State)
     "llmCallEvaluator",
     routeJoke,
     {
-      // Name returned by routeJoke : Name of next node to visit
+      // routeJoke 返回的名称 : 下一个要访问的节点名称
       "Accepted": "__end__",
       "Rejected + Feedback": "llmCallGenerator",
     }
   )
   .compile();
 
-// Invoke
+// 调用
 const state = await optimizerWorkflow.invoke({ topic: "Cats" });
 console.log(state.joke);
 ```
@@ -1739,7 +1739,7 @@ console.log(state.joke);
 import * as z from "zod";
 import { task, entrypoint } from "@langchain/langgraph";
 
-// Schema for structured output to use in evaluation
+// 用于评估的结构化输出 Schema
 const feedbackSchema = z.object({
   grade: z.enum(["funny", "not funny"]).describe(
     "Decide if the joke is funny or not."
@@ -1749,7 +1749,7 @@ const feedbackSchema = z.object({
   ),
 });
 
-// Augment the LLM with schema for structured output
+// 使用结构化输出 Schema 增强 LLM
 const evaluator = llm.withStructuredOutput(feedbackSchema);
 
 // Tasks
@@ -1771,7 +1771,7 @@ const llmCallEvaluator = task("jokeEvaluator", async (joke: string) => {
   return evaluator.invoke(`Grade the joke ${joke}`);
 });
 
-// Build workflow
+// 构建工作流
 const workflow = entrypoint(
   "optimizerWorkflow",
   async (topic: string) => {
@@ -1791,7 +1791,7 @@ const workflow = entrypoint(
   }
 );
 
-// Invoke
+// 调用
 const stream = await workflow.stream("Cats", {
   streamMode: "updates",
 });
@@ -1804,14 +1804,14 @@ for await (const step of stream) {
 </CodeGroup>
 :::
 
-## Agents
+## 代理
 
-Agents are typically implemented as an LLM performing actions using [tools](/oss/langchain/tools). They operate in continuous feedback loops, and are used in situations where problems and solutions are unpredictable. Agents have more autonomy than workflows, and can make decisions about the tools they use and how to solve problems. You can still define the available toolset and guidelines for how agents behave.
+代理通常被实现为 LLM 使用[工具](/oss/langchain/tools)执行操作。它们在持续的反馈循环中运行，用于问题和解决方案不可预测的场景。代理比工作流有更多的自主性，可以自行决定使用哪些工具以及如何解决问题。你仍然可以定义可用的工具集和代理行为指南。
 
 ![agent.png](/oss/images/agent.png)
 
 <Note>
-To get started with agents, see the [quickstart](/oss/langchain/quickstart) or read more about [how they work](/oss/langchain/agents) in LangChain.
+要开始使用代理，请参阅[快速入门](/oss/langchain/quickstart)或了解更多关于它们在 LangChain 中[如何工作](/oss/langchain/agents)的信息。
 </Note>
 
 :::python
@@ -1819,7 +1819,7 @@ To get started with agents, see the [quickstart](/oss/langchain/quickstart) or r
 from langchain.tools import tool
 
 
-# Define tools
+# 定义工具
 @tool
 def multiply(a: int, b: int) -> int:
     """Multiply `a` and `b`.
@@ -1853,7 +1853,7 @@ def divide(a: int, b: int) -> float:
     return a / b
 
 
-# Augment the LLM with tools
+# 使用工具增强 LLM
 tools = [add, multiply, divide]
 tools_by_name = {tool.name: tool for tool in tools}
 llm_with_tools = llm.bind_tools(tools)
@@ -1865,9 +1865,9 @@ from langgraph.graph import MessagesState
 from langchain.messages import SystemMessage, HumanMessage, ToolMessage
 
 
-# Nodes
+# 节点
 def llm_call(state: MessagesState):
-    """LLM decides whether to call a tool or not"""
+    """LLM 决定是否调用工具"""
 
     return {
         "messages": [
@@ -1884,7 +1884,7 @@ def llm_call(state: MessagesState):
 
 
 def tool_node(state: dict):
-    """Performs the tool call"""
+    """执行工具调用"""
 
     result = []
     for tool_call in state["messages"][-1].tool_calls:
@@ -1894,14 +1894,14 @@ def tool_node(state: dict):
     return {"messages": result}
 
 
-# Conditional edge function to route to the tool node or end based upon whether the LLM made a tool call
+    # 条件边函数，根据 LLM 是否进行了工具调用来路由到工具节点或结束
 def should_continue(state: MessagesState) -> Literal["tool_node", END]:
-    """Decide if we should continue the loop or stop based upon whether the LLM made a tool call"""
+    """根据 LLM 是否进行了工具调用来决定是继续循环还是停止"""
 
     messages = state["messages"]
     last_message = messages[-1]
 
-    # If the LLM makes a tool call, then perform an action
+    # 如果 LLM 进行了工具调用，则执行操作
     if last_message.tool_calls:
         return "tool_node"
 
@@ -1909,14 +1909,14 @@ def should_continue(state: MessagesState) -> Literal["tool_node", END]:
     return END
 
 
-# Build workflow
+# 构建工作流
 agent_builder = StateGraph(MessagesState)
 
-# Add nodes
+# 添加节点
 agent_builder.add_node("llm_call", llm_call)
 agent_builder.add_node("tool_node", tool_node)
 
-# Add edges to connect nodes
+    # 添加边来连接节点
 agent_builder.add_edge(START, "llm_call")
 agent_builder.add_conditional_edges(
     "llm_call",
@@ -1925,13 +1925,13 @@ agent_builder.add_conditional_edges(
 )
 agent_builder.add_edge("tool_node", "llm_call")
 
-# Compile the agent
+    # 编译代理
 agent = agent_builder.compile()
 
-# Show the agent
+    # 显示代理
 display(Image(agent.get_graph(xray=True).draw_mermaid_png()))
 
-# Invoke
+# 调用
 messages = [HumanMessage(content="Add 3 and 4.")]
 messages = agent.invoke({"messages": messages})
 for m in messages["messages"]:
@@ -1949,7 +1949,7 @@ from langchain_core.messages import BaseMessage
 
 @task
 def call_llm(messages: list[BaseMessage]):
-    """LLM decides whether to call a tool or not"""
+    """LLM 决定是否调用工具"""
     return llm_with_tools.invoke(
         [
             SystemMessage(
@@ -1962,7 +1962,7 @@ def call_llm(messages: list[BaseMessage]):
 
 @task
 def call_tool(tool_call: ToolCall):
-    """Performs the tool call"""
+    """执行工具调用"""
     tool = tools_by_name[tool_call["name"]]
     return tool.invoke(tool_call)
 
@@ -1975,7 +1975,7 @@ def agent(messages: list[BaseMessage]):
         if not llm_response.tool_calls:
             break
 
-        # Execute tools
+    # 执行工具
         tool_result_futures = [
             call_tool(tool_call) for tool_call in llm_response.tool_calls
         ]
@@ -1986,7 +1986,7 @@ def agent(messages: list[BaseMessage]):
     messages = add_messages(messages, llm_response)
     return messages
 
-# Invoke
+# 调用
 messages = [HumanMessage(content="Add 3 and 4.")]
 for chunk in agent.stream(messages, stream_mode="updates"):
     print(chunk)
@@ -2000,7 +2000,7 @@ for chunk in agent.stream(messages, stream_mode="updates"):
 import { tool } from "@langchain/core/tools";
 import * as z from "zod";
 
-// Define tools
+// 定义工具
 const multiply = tool(
   ({ a, b }) => {
     return a * b;
@@ -2043,7 +2043,7 @@ const divide = tool(
   }
 );
 
-// Augment the LLM with tools
+// 使用工具增强 LLM
 const tools = [add, multiply, divide];
 const toolsByName = Object.fromEntries(tools.map((tool) => [tool.name, tool]));
 const llmWithTools = llm.bindTools(tools);
@@ -2058,12 +2058,12 @@ import {
   ToolMessage
 } from "@langchain/core/messages";
 
-// Graph state
+// 图状态
 const State = new StateSchema({
   messages: MessagesValue,
 });
 
-// Nodes
+// 节点
 const llmCall: GraphNode<typeof State> = async (state) => {
   // LLM decides whether to call a tool or not
   const result = await llmWithTools.invoke([
@@ -2081,12 +2081,12 @@ const llmCall: GraphNode<typeof State> = async (state) => {
 
 const toolNode = new ToolNode(tools);
 
-// Conditional edge function to route to the tool node or end
+// 条件边函数，根据 LLM 是否进行了工具调用来路由到工具节点或结束
 const shouldContinue: ConditionalEdgeRouter<typeof State, "toolNode"> = (state) => {
   const messages = state.messages;
   const lastMessage = messages.at(-1);
 
-  // If the LLM makes a tool call, then perform an action
+  // 如果 LLM 进行了工具调用，则执行操作
   if (lastMessage?.tool_calls?.length) {
     return "toolNode";
   }
@@ -2094,11 +2094,11 @@ const shouldContinue: ConditionalEdgeRouter<typeof State, "toolNode"> = (state) 
   return "__end__";
 };
 
-// Build workflow
+// 构建工作流
 const agentBuilder = new StateGraph(State)
   .addNode("llmCall", llmCall)
   .addNode("toolNode", toolNode)
-  // Add edges to connect nodes
+  // 添加边来连接节点
   .addEdge("__start__", "llmCall")
   .addConditionalEdges(
     "llmCall",
@@ -2108,7 +2108,7 @@ const agentBuilder = new StateGraph(State)
   .addEdge("toolNode", "llmCall")
   .compile();
 
-// Invoke
+// 调用
 const messages = [{
   role: "user",
   content: "Add 3 and 4."
@@ -2132,7 +2132,7 @@ const callLlm = task("llmCall", async (messages: BaseMessageLike[]) => {
 });
 
 const callTool = task("toolCall", async (toolCall: ToolCall) => {
-  // Performs the tool call
+// 执行工具调用
   const tool = toolsByName[toolCall.name];
   return tool.invoke(toolCall.args);
 });
@@ -2147,7 +2147,7 @@ const agent = entrypoint(
         break;
       }
 
-      // Execute tools
+// 执行工具
       const toolResults = await Promise.all(
         llmResponse.tool_calls.map((toolCall) => callTool(toolCall))
       );
@@ -2161,7 +2161,7 @@ const agent = entrypoint(
   }
 );
 
-// Invoke
+// 调用
 const messages = [{
   role: "user",
   content: "Add 3 and 4."

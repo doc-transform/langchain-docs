@@ -1,50 +1,50 @@
 ---
-title: "ChatOllama integration"
-description: "Integrate with the ChatOllama chat model using LangChain JavaScript."
+title: "ChatOllama 集成"
+description: "使用 LangChain JavaScript 集成 ChatOllama 对话模型。"
 ---
 
-[Ollama](https://ollama.ai/) allows you to run open-source Large Language Models (LLMs), such as Llama 3.1, locally.
+[Ollama](https://ollama.ai/) 允许你在本地运行开源大语言模型（LLM），如 Llama 3.1。
 
-Ollama bundles model weights, configuration, and data into a single package, defined by a Modelfile. It optimizes setup and configuration details, including GPU usage.
+Ollama 将模型权重、配置和数据打包到一个由 Modelfile 定义的单一包中。它优化了设置和配置细节，包括 GPU 的使用。
 
-This guide will help you getting started with `ChatOllama` [chat models](/oss/langchain/models). For detailed documentation of all `ChatOllama` features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_ollama.ChatOllama.html).
+本指南将帮助你开始使用 `ChatOllama` [对话模型](/oss/langchain/models)。所有 `ChatOllama` 功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain_ollama.ChatOllama.html)。
 
-## Overview
+## 概览
 
-### Integration details
+### 集成详情
 
-Ollama allows you to use a wide range of models with different capabilities. Some of the fields in the details table below only apply to a subset of models that Ollama offers.
+Ollama 允许你使用具有不同能力的各种模型。下表中的某些字段仅适用于 Ollama 提供的部分模型。
 
-For a complete list of supported models and model variants, see the [Ollama model library](https://ollama.com/search) and search by tag.
+支持的模型和模型变体的完整列表，请参见 [Ollama 模型库](https://ollama.com/search)并按标签搜索。
 
 | Class | Package | Serializable | [PY support](https://python.langchain.com/docs/integrations/chat/ollama) | Downloads | Version |
 | :--- | :--- | :---: |  :---: | :---: | :---: |
 | [ChatOllama](https://api.js.langchain.com/classes/langchain_ollama.ChatOllama.html) | [`@langchain/ollama`](https://www.npmjs.com/package/@langchain/ollama) | beta | ✅ | ![NPM - Downloads](https://img.shields.io/npm/dm/@langchain/ollama?style=flat-square&label=%20&) | ![NPM - Version](https://img.shields.io/npm/v/@langchain/ollama?style=flat-square&label=%20&) |
 
-### Model features
+### 模型特性
 
-See the links in the table headers below for guides on how to use specific features.
+有关如何使用特定功能的指南，请参见下表标题中的链接。
 
 | [Tool calling](/oss/langchain/tools) | [Structured output](/oss/langchain/structured-output) | [Image input](/oss/langchain/messages#multimodal) | Audio input | Video input | [Token-level streaming](/oss/langchain/streaming/) | [Token usage](/oss/langchain/models#token-usage) | [Logprobs](/oss/langchain/models#log-probabilities) |
 | :---: | :---: | :---: |  :---: | :---: | :---: | :---: | :---: |
 | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ❌ |
 
-## Setup
+## 安装
 
-Follow [these instructions](https://github.com/ollama/ollama) to set up and run a local Ollama instance. Then, download the `@langchain/ollama` package.
+按照[这些说明](https://github.com/ollama/ollama)设置并运行本地 Ollama 实例。然后，下载 `@langchain/ollama` 包。
 
-### Credentials
+### 凭据
 
-If you want to get automated tracing of your model calls you can also set your [LangSmith](/langsmith/home) API key by uncommenting below:
+如果你想获取模型调用的自动追踪，你还可以通过取消下方注释来设置你的 [LangSmith](/langsmith/home) API 密钥：
 
 ```bash
 # export LANGSMITH_TRACING="true"
 # export LANGSMITH_API_KEY="your-api-key"
 ```
 
-### Installation
+### 安装
 
-The LangChain ChatOllama integration lives in the `@langchain/ollama` package:
+LangChain ChatOllama 集成位于 `@langchain/ollama` 包中：
 
 <CodeGroup>
 ```bash npm
@@ -58,9 +58,9 @@ pnpm add @langchain/ollama @langchain/core
 ```
 </CodeGroup>
 
-## Instantiation
+## 实例化
 
-Now we can instantiate our model object and generate chat completions:
+现在我们可以实例化模型对象并生成对话补全：
 
 ```typescript
 import { ChatOllama } from "@langchain/ollama"
@@ -73,7 +73,7 @@ const llm = new ChatOllama({
 })
 ```
 
-## Invocation
+## 调用
 
 ```typescript
 const aiMsg = await llm.invoke([
@@ -122,9 +122,9 @@ Je adore le programmation.
 (Note: "programmation" is the feminine form of the noun in French, but if you want to use the masculine form, it would be "le programme" instead.)
 ```
 
-## Tools
+## 工具
 
-Ollama now offers support for native tool calling [for a subset of their available models](https://ollama.com/search?c=tools). The example below demonstrates how you can invoke a tool from an Ollama model.
+Ollama 现已对[部分可用模型](https://ollama.com/search?c=tools)支持原生工具调用。以下示例展示了如何从 Ollama 模型调用工具。
 
 ```typescript
 import { tool } from "@langchain/core/tools";
@@ -189,9 +189,9 @@ AIMessage {
 }
 ```
 
-## Structured output
+## 结构化输出
 
-Ollama natively supports [structured output](https://docs.ollama.com/capabilities/structured-outputs) for all models, allowing you to force the model to return a specific format by calling `.withStructuredOutput()`.
+Ollama 原生支持所有模型的[结构化输出](https://docs.ollama.com/capabilities/structured-outputs)，允许你通过调用 `.withStructuredOutput()` 强制模型返回特定格式。
 
 ```typescript
 import { ChatOllama } from "@langchain/ollama";
@@ -225,7 +225,7 @@ console.log(result);
 }
 ```
 
-If you prefer to use structured output via tool calling, pass the `method: "functionCalling"` option:
+如果你更喜欢通过工具调用使用结构化输出，请传入 `method: "functionCalling"` 选项：
 
 ```typescript
 import { ChatOllama } from "@langchain/ollama";
@@ -253,10 +253,10 @@ console.log(result);
 { nouns: [ 'cat', 'Luna', 'years', 'yarn', 'fur' ] }
 ```
 
-## Multimodal models
+## 多模态模型
 
-Ollama supports open source multimodal models like [LLaVA](https://ollama.ai/library/llava) in versions 0.1.15 and up.
-You can pass images as part of a message's `content` field to [multimodal-capable](/oss/langchain/messages#multimodal) models like this:
+Ollama 在 0.1.15 及更高版本中支持开源多模态模型，如 [LLaVA](https://ollama.ai/library/llava)。
+你可以将图片作为消息 `content` 字段的一部分传递给[支持多模态](/oss/langchain/messages#multimodal)的模型，如下所示：
 
 ```typescript
 import { ChatOllama } from "@langchain/ollama";
@@ -313,6 +313,6 @@ AIMessage {
 
 ---
 
-## API reference
+## API 参考
 
-For detailed documentation of all ChatOllama features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_ollama.ChatOllama.html).
+所有 ChatOllama 功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain_ollama.ChatOllama.html)。

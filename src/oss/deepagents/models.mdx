@@ -1,17 +1,17 @@
 ---
-title: Models
+title: 模型
 ---
 
-Deep agents work with any [LangChain chat model](/oss/langchain/models) that supports [tool calling](/oss/langchain/models#tool-calling).
+Deep agents 可与任何支持[工具调用](/oss/langchain/models#tool-calling)的 [LangChain 聊天模型](/oss/langchain/models)配合使用。
 
-## Pass a model string
+## 传递模型字符串
 
 :::python
-The simplest way to specify a model is to pass a string to @[create_deep_agent]. Use the `provider:model` format to select a specific provider:
+指定模型最简单的方式是向 @[create_deep_agent] 传递一个字符串。使用 `provider:model` 格式来选择特定的提供商：
 :::
 
 :::js
-The simplest way to specify a model is to pass a string to @[createDeepAgent]. Use the `provider:model` format to select a specific provider:
+指定模型最简单的方式是向 @[createDeepAgent] 传递一个字符串。使用 `provider:model` 格式来选择特定的提供商：
 :::
 
 :::python
@@ -26,11 +26,11 @@ const agent = createDeepAgent({ model: "openai:gpt-5.3-codex" });
 ```
 :::
 
-Under the hood, this calls @[init_chat_model] with default parameters.
+在底层，这会使用默认参数调用 @[init_chat_model]。
 
-## Configure model parameters
+## 配置模型参数
 
-To configure model-specific parameters, use @[init_chat_model] or instantiate a provider model class directly:
+要配置模型特定的参数，请使用 @[init_chat_model] 或直接实例化提供商的模型类：
 
 :::python
 <CodeGroup>
@@ -45,7 +45,7 @@ To configure model-specific parameters, use @[init_chat_model] or instantiate a 
     agent = create_deep_agent(model=model)
     ```
 
-    ```python Provider package
+    ```python 提供商包
     from langchain_anthropic import ChatAnthropic
     from deepagents import create_deep_agent
 
@@ -71,7 +71,7 @@ To configure model-specific parameters, use @[init_chat_model] or instantiate a 
     const agent = createDeepAgent({ model });
     ```
 
-    ```typescript Provider package
+    ```typescript 提供商包
     import { ChatAnthropic } from "@langchain/anthropic";
     import { createDeepAgent } from "deepagents";
 
@@ -86,32 +86,22 @@ To configure model-specific parameters, use @[init_chat_model] or instantiate a 
 :::
 
 <Note>
-  Available parameters vary by provider. See the [chat model integrations](/oss/integrations/chat) page for provider-specific configuration options.
+  可用参数因提供商而异。有关特定提供商的配置选项，请参阅[聊天模型集成](/oss/integrations/chat)页面。
 </Note>
 
-## Supported models
+## 支持的模型
 
-Deep agents work with any chat model that supports [tool calling](/oss/langchain/models#tool-calling). See [chat model integrations](/oss/integrations/chat) for the full list of supported providers.
+Deep agents 可与任何支持[工具调用](/oss/langchain/models#tool-calling)的聊天模型配合使用。完整的支持提供商列表请参阅[聊天模型集成](/oss/integrations/chat)。
 
-### Suggested models
+### 推荐模型
 
-These models perform well on the [Deep Agents eval suite](https://github.com/langchain-ai/deepagents/tree/main/libs/deepagents/tests/evals), which tests basic agent operations. Passing these evals is necessary but not sufficient for strong performance on longer, more complex tasks.
+以下模型在 [Deep Agents 评测套件](https://github.com/langchain-ai/deepagents/tree/main/libs/deepagents/tests/evals)中表现良好，该套件测试基本的 Agent 操作。通过这些评测是必要条件，但不足以保证在更长、更复杂的任务上有出色表现。
 
-| Provider | Models |
-|----------|--------|
-| [Anthropic](/oss/integrations/providers/anthropic) | `claude-opus-4-6`, `claude-opus-4-5`, `claude-sonnet-4-6`, `claude-sonnet-4`, `claude-sonnet-4-5`, `claude-haiku-4-5`, `claude-opus-4-1` |
-| [OpenAI](/oss/integrations/providers/openai) | `gpt-5.4`, `gpt-4o`, `gpt-4.1`, `o4-mini`, `gpt-5.2-codex`, `gpt-4o-mini`, `o3` |
-| [Google](/oss/integrations/providers/google) | `gemini-3-flash-preview`, `gemini-3.1-pro-preview` |
-| Open-weight | `GLM-5`, `Kimi-K2.5`, `MiniMax-M2.5`, `qwen3.5-397B-A17B`, `devstral-2-123B` |
+- **[Anthropic](/oss/integrations/providers/anthropic)**：`claude-opus-4-6`、`claude-opus-4-5`、`claude-sonnet-4-6`、`claude-sonnet-4`、`claude-sonnet-4-5`、`claude-haiku-4-5`、`claude-opus-4-1`
+- **[OpenAI](/oss/integrations/providers/openai)**：`gpt-5.4`、`gpt-4o`、`gpt-4.1`、`o4-mini`、`gpt-5.2-codex`、`gpt-4o-mini`、`o3`
+- **[Google](/oss/integrations/providers/google)**：`gemini-3-flash-preview`、`gemini-3.1-pro-preview`
+- **开源权重模型**：`GLM-5`、`Kimi-K2.5`、`MiniMax-M2.5`、`qwen3.5-397B-A17B`、`devstral-2-123B`
 
-:::python
-Open-weight models are available through providers like [OpenRouter](/oss/integrations/providers/openrouter), [Baseten](/oss/integrations/providers/baseten), and [Ollama](/oss/integrations/providers/ollama).
-:::
+## 了解更多
 
-:::js
-Open-weight models are available through providers like [OpenRouter](/oss/integrations/providers/openrouter).
-:::
-
-## Learn more
-
-- [Models in LangChain](/oss/langchain/models): chat model features including tool calling, structured output, and multimodality
+- [LangChain 中的模型](/oss/langchain/models)：聊天模型功能，包括工具调用、结构化输出和多模态

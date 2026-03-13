@@ -1,64 +1,64 @@
 ---
-title: Prebuilt middleware
-description: Prebuilt middleware for common agent use cases
+title: 内置中间件
+description: 适用于常见 Agent 场景的内置中间件
 ---
 
-LangChain and [Deep Agents](/oss/deepagents/overview) provide prebuilt middleware for common use cases. Each middleware is production-ready and configurable for your specific needs.
+LangChain 和 [Deep Agents](/oss/deepagents/overview) 提供了适用于常见场景的内置中间件。每个中间件都已准备好用于生产环境，并可根据你的需求进行配置。
 
-## Provider-agnostic middleware
+## 与提供商无关的中间件
 
-The following middleware work with any LLM provider:
+以下中间件可与任何 LLM 提供商配合使用：
 
 :::python
 
-| Middleware | Description |
+| 中间件 | 说明 |
 |------------|-------------|
-| [Summarization](#summarization) | Automatically summarize conversation history when approaching token limits. |
-| [Human-in-the-loop](#human-in-the-loop) | Pause execution for human approval of tool calls. |
-| [Model call limit](#model-call-limit) | Limit the number of model calls to prevent excessive costs. |
-| [Tool call limit](#tool-call-limit) | Control tool execution by limiting call counts. |
-| [Model fallback](#model-fallback) | Automatically fallback to alternative models when primary fails. |
-| [PII detection](#pii-detection) | Detect and handle Personally Identifiable Information (PII). |
-| [To-do list](#to-do-list) | Equip agents with task planning and tracking capabilities. |
-| [LLM tool selector](#llm-tool-selector) | Use an LLM to select relevant tools before calling main model. |
-| [Tool retry](#tool-retry) | Automatically retry failed tool calls with exponential backoff. |
-| [Model retry](#model-retry) | Automatically retry failed model calls with exponential backoff. |
-| [LLM tool emulator](#llm-tool-emulator) | Emulate tool execution using an LLM for testing purposes. |
-| [Context editing](#context-editing) | Manage conversation context by trimming or clearing tool uses. |
-| [Shell tool](#shell-tool) | Expose a persistent shell session to agents for command execution. |
-| [File search](#file-search) | Provide Glob and Grep search tools over filesystem files. |
-| [Filesystem](#filesystem-middleware) | Provide agents with a filesystem for storing context and long-term memories. |
-| [Subagent](#subagent) | Add the ability to spawn subagents. |
+| [摘要](#summarization) | 当接近 token 限制时自动摘要对话历史。 |
+| [人工审核](#human-in-the-loop) | 暂停执行，等待人工审批工具调用。 |
+| [模型调用限制](#model-call-limit) | 限制模型调用次数以防止过度开支。 |
+| [工具调用限制](#tool-call-limit) | 通过限制调用次数控制工具执行。 |
+| [模型回退](#model-fallback) | 当主模型失败时自动回退到备用模型。 |
+| [PII 检测](#pii-detection) | 检测和处理个人身份信息（PII）。 |
+| [任务列表](#to-do-list) | 为 Agent 提供任务规划和追踪能力。 |
+| [LLM 工具选择器](#llm-tool-selector) | 使用 LLM 在调用主模型前选择相关工具。 |
+| [工具重试](#tool-retry) | 自动重试失败的工具调用（指数退避）。 |
+| [模型重试](#model-retry) | 自动重试失败的模型调用（指数退避）。 |
+| [LLM 工具模拟器](#llm-tool-emulator) | 使用 LLM 模拟工具执行，用于测试。 |
+| [上下文编辑](#context-editing) | 通过清理工具使用记录来管理对话上下文。 |
+| [Shell 工具](#shell-tool) | 为 Agent 提供持久化 Shell 会话以执行命令。 |
+| [文件搜索](#file-search) | 提供文件系统上的 Glob 和 Grep 搜索工具。 |
+| [文件系统](#filesystem-deepagents) | 为 Agent 提供文件系统以存储上下文和长期记忆。 |
+| [子 Agent](#subagent-deepagents) | 添加生成子 Agent 的能力。 |
 
 :::
 
 :::js
 
-| Middleware | Description |
+| 中间件 | 说明 |
 |------------|-------------|
-| [Summarization](#summarization) | Automatically summarize conversation history when approaching token limits. |
-| [Human-in-the-loop](#human-in-the-loop) | Pause execution for human approval of tool calls. |
-| [Model call limit](#model-call-limit) | Limit the number of model calls to prevent excessive costs. |
-| [Tool call limit](#tool-call-limit) | Control tool execution by limiting call counts. |
-| [Model fallback](#model-fallback) | Automatically fallback to alternative models when primary fails. |
-| [PII detection](#pii-detection) | Detect and handle Personally Identifiable Information (PII). |
-| [To-do list](#to-do-list) | Equip agents with task planning and tracking capabilities. |
-| [LLM tool selector](#llm-tool-selector) | Use an LLM to select relevant tools before calling main model. |
-| [Tool retry](#tool-retry) | Automatically retry failed tool calls with exponential backoff. |
-| [Model retry](#model-retry) | Automatically retry failed model calls with exponential backoff. |
-| [LLM tool emulator](#llm-tool-emulator) | Emulate tool execution using an LLM for testing purposes. |
-| [Context editing](#context-editing) | Manage conversation context by trimming or clearing tool uses. |
-| [Filesystem](#filesystem-middleware) | Provide agents with a filesystem for storing context and long-term memories. |
-| [Subagent middleware](#subagent) | Add the ability to spawn subagents. |
+| [摘要](#summarization) | 当接近 token 限制时自动摘要对话历史。 |
+| [人工审核](#human-in-the-loop) | 暂停执行，等待人工审批工具调用。 |
+| [模型调用限制](#model-call-limit) | 限制模型调用次数以防止过度开支。 |
+| [工具调用限制](#tool-call-limit) | 通过限制调用次数控制工具执行。 |
+| [模型回退](#model-fallback) | 当主模型失败时自动回退到备用模型。 |
+| [PII 检测](#pii-detection) | 检测和处理个人身份信息（PII）。 |
+| [任务列表](#to-do-list) | 为 Agent 提供任务规划和追踪能力。 |
+| [LLM 工具选择器](#llm-tool-selector) | 使用 LLM 在调用主模型前选择相关工具。 |
+| [工具重试](#tool-retry) | 自动重试失败的工具调用（指数退避）。 |
+| [模型重试](#model-retry) | 自动重试失败的模型调用（指数退避）。 |
+| [LLM 工具模拟器](#llm-tool-emulator) | 使用 LLM 模拟工具执行，用于测试。 |
+| [上下文编辑](#context-editing) | 通过清理工具使用记录来管理对话上下文。 |
+| [文件系统](#filesystem-deepagents) | 为 Agent 提供文件系统以存储上下文和长期记忆。 |
+| [子 Agent 中间件](#subagent-deepagents) | 添加生成子 Agent 的能力。 |
 
 :::
 
-### Summarization
+### 摘要
 
-Automatically summarize conversation history when approaching token limits, preserving recent messages while compressing older context. Summarization is useful for the following:
-- Long-running conversations that exceed context windows.
-- Multi-turn dialogues with extensive history.
-- Applications where preserving full conversation context matters.
+当接近 token 限制时自动摘要对话历史，保留近期消息的同时压缩较早的上下文。摘要中间件适用于以下场景：
+- 超出上下文窗口的长时间对话。
+- 具有大量历史的多轮对话。
+- 需要保留完整对话上下文的应用。
 
 :::python
 **API reference:** @[`SummarizationMiddleware`]
@@ -99,12 +99,14 @@ const agent = createAgent({
 ```
 :::
 
-<Accordion title="Configuration options">
+<Accordion title="配置选项">
 
 :::python
 
 <Tip>
     The `fraction` conditions for `trigger` and `keep` (shown below) rely on a chat model's [profile data](/oss/langchain/models#model-profiles) if using `langchain>=1.1`. If data are not available, use another condition or specify manually:
+
+    `trigger` 和 `keep` 的 `fraction` 条件（如下所示）依赖于聊天模型的[配置数据](/oss/langchain/models#model-profiles)（需 `langchain>=1.1`）。如果数据不可用，请使用其他条件或手动指定：
 
     ```python
     from langchain.chat_models import init_chat_model
@@ -119,21 +121,25 @@ const agent = createAgent({
 
 <ParamField body="model" type="string | BaseChatModel" required>
     Model for generating summaries. Can be a model identifier string (e.g., `'openai:gpt-4.1-mini'`) or a `BaseChatModel` instance. See @[`init_chat_model`][init_chat_model(model)] for more information.
+
+    用于生成摘要的模型。可以是模型标识符字符串（如 `'openai:gpt-4.1-mini'`）或 `BaseChatModel` 实例。详见 @[`init_chat_model`][init_chat_model(model)]。
 </ParamField>
 
 <ParamField body="trigger" type="ContextSize | list[ContextSize] | None">
     Condition(s) for triggering summarization. Can be:
 
-    - A single @[`ContextSize`] tuple (specified condition must be met)
-    - A list of @[`ContextSize`] tuples (any condition must be met - OR logic)
+    触发摘要的条件。可以是：
 
-    Condition should be one of the following:
+    - 单个 @[`ContextSize`] 元组（指定条件必须满足）
+    - @[`ContextSize`] 元组列表（任一条件满足即触发 —— OR 逻辑）
 
-    - `fraction` (float): Fraction of model's context size (0-1)
-    - `tokens` (int): Absolute token count
-    - `messages` (int): Message count
+    条件应为以下之一：
 
-    At least one condition must be specified. If not provided, summarization will not trigger automatically.
+    - `fraction`（float）：模型上下文大小的比例（0-1）
+    - `tokens`（int）：绝对 token 数
+    - `messages`（int）：消息数
+
+    必须指定至少一个条件。如果未提供，摘要不会自动触发。
 
     See the API reference for @[`ContextSize`] for more information.
 </ParamField>
@@ -141,23 +147,31 @@ const agent = createAgent({
 <ParamField body="keep" type="ContextSize" default="('messages', 20)">
     How much context to preserve after summarization. Specify exactly one of:
 
-    - `fraction` (float): Fraction of model's context size to keep (0-1)
-    - `tokens` (int): Absolute token count to keep
-    - `messages` (int): Number of recent messages to keep
+    摘要后保留多少上下文。指定以下之一：
+
+    - `fraction`（float）：保留模型上下文大小的比例（0-1）
+    - `tokens`（int）：保留的绝对 token 数
+    - `messages`（int）：保留的近期消息数
 
     See the API reference for @[`ContextSize`] for more information.
 </ParamField>
 
 <ParamField body="token_counter" type="function">
     Custom token counting function. Defaults to character-based counting.
+
+    自定义 token 计数函数。默认使用基于字符的计数。
 </ParamField>
 
 <ParamField body="summary_prompt" type="string">
     Custom prompt template for summarization. Uses built-in template if not specified. The template should include `{messages}` placeholder where conversation history will be inserted.
+
+    自定义摘要提示词模板。未指定时使用内置模板。模板应包含 `{messages}` 占位符，用于插入对话历史。
 </ParamField>
 
 <ParamField body="trim_tokens_to_summarize" type="number" default="4000">
     Maximum number of tokens to include when generating the summary. Messages will be trimmed to fit this limit before summarization.
+
+    生成摘要时包含的最大 token 数。消息将在摘要前被截断以适应此限制。
 </ParamField>
 
 <ParamField body="summary_prefix" type="string" deprecated>
@@ -176,6 +190,8 @@ const agent = createAgent({
 :::js
 <Tip>
     The `fraction` conditions for `trigger` and `keep` (shown below) rely on a chat model's [profile data](/oss/langchain/models#model-profiles) if using `langchain@1.1.0`. If data are not available, use another condition or specify manually:
+
+    `trigger` 和 `keep` 的 `fraction` 条件（如下所示）依赖于聊天模型的[配置数据](/oss/langchain/models#model-profiles)（需 `langchain@1.1.0`）。如果数据不可用，请使用其他条件或手动指定：
     ```typescript
     const customProfile: ModelProfile = {
         maxInputTokens: 100_000,
@@ -240,19 +256,19 @@ const agent = createAgent({
 
 </Accordion>
 
-<Accordion title="Full example">
+<Accordion title="完整示例">
 
-The summarization middleware monitors message token counts and automatically summarizes older messages when thresholds are reached.
+摘要中间件会监控消息 token 数，并在达到阈值时自动摘要旧消息。
 
-**Trigger conditions** control when summarization runs:
-- Single condition object (specified must be met)
-- Array of conditions (any condition must be met - OR logic)
-- Each condition can use `fraction` (of model's context size), `tokens` (absolute count), or `messages` (message count)
+**触发条件**控制摘要何时运行：
+- 单个条件对象（指定条件必须满足）
+- 条件数组（任一条件满足即触发 —— OR 逻辑）
+- 每个条件可使用 `fraction`（模型上下文大小的比例）、`tokens`（绝对数）或 `messages`（消息数）
 
-**Keep condition** control how much context to preserve (specify exactly one):
-- `fraction` - Fraction of model's context size to keep
-- `tokens` - Absolute token count to keep
-- `messages` - Number of recent messages to keep
+**保留条件**控制保留多少上下文（指定一个）：
+- `fraction` —— 保留模型上下文大小的比例
+- `tokens` —— 保留的绝对 token 数
+- `messages` —— 保留的近期消息数
 
 :::python
 ```python
@@ -353,20 +369,20 @@ const agent3 = createAgent({
 
 </Accordion>
 
-### Human-in-the-loop
+### 人工审核
 
-Pause agent execution for human approval, editing, or rejection of tool calls before they execute. [Human-in-the-loop](/oss/langchain/human-in-the-loop) is useful for the following:
+在工具调用执行前暂停 Agent 执行，等待人工审批、编辑或拒绝。[人工审核](/oss/langchain/human-in-the-loop)适用于以下场景：
 
-- High-stakes operations requiring human approval (e.g. database writes, financial transactions).
-- Compliance workflows where human oversight is mandatory.
-- Long-running conversations where human feedback guides the agent.
+- 需要人工审批的高风险操作（如数据库写入、金融交易）。
+- 强制要求人工监督的合规工作流。
+- 需要人工反馈引导 Agent 的长时间对话。
 
 :::python
 **API reference:** @[`HumanInTheLoopMiddleware`]
 :::
 
 <Warning>
-    Human-in-the-loop middleware requires a [checkpointer](/oss/langgraph/persistence#checkpoints) to maintain state across interruptions.
+    人工审核中间件需要一个 [checkpointer](/oss/langgraph/persistence#checkpoints) 来在中断期间维护状态。
 </Warning>
 
 :::python
@@ -434,28 +450,32 @@ const agent = createAgent({
 :::
 
 <Tip>
-    For complete examples, configuration options, and integration patterns, see the [Human-in-the-loop documentation](/oss/langchain/human-in-the-loop).
+    有关完整示例、配置选项和集成模式，请参见[人工审核文档](/oss/langchain/human-in-the-loop)。
 </Tip>
 
 :::python
 <Callout icon="player-play" iconType="solid">
     Watch this [video guide](https://www.youtube.com/watch?v=SpfT6-YAVPk) demonstrating Human-in-the-loop middleware behavior.
+
+    观看此[视频指南](https://www.youtube.com/watch?v=SpfT6-YAVPk)了解人工审核中间件的行为。
 </Callout>
 :::
 
 :::js
 <Callout icon="player-play" iconType="solid">
     Watch this [video guide](https://www.youtube.com/watch?v=tdOeUVERukA) demonstrating Human-in-the-loop middleware behavior.
+
+    观看此[视频指南](https://www.youtube.com/watch?v=tdOeUVERukA)了解人工审核中间件的行为。
 </Callout>
 :::
 
-### Model call limit
+### 模型调用限制
 
-Limit the number of model calls to prevent infinite loops or excessive costs. Model call limit is useful for the following:
+限制模型调用次数以防止无限循环或过度开支。模型调用限制适用于以下场景：
 
-- Preventing runaway agents from making too many API calls.
-- Enforcing cost controls on production deployments.
-- Testing agent behavior within specific call budgets.
+- 防止失控的 Agent 进行太多 API 调用。
+- 在生产环境部署中强制成本控制。
+- 在特定调用预算内测试 Agent 行为。
 
 :::python
 **API reference:** @[`ModelCallLimitMiddleware`]
@@ -503,16 +523,20 @@ const agent = createAgent({
 :::python
 <Callout icon="player-play" iconType="solid">
     Watch this [video guide](https://www.youtube.com/watch?v=nJEER0uaNkE) demonstrating Model Call Limit middleware behavior.
+
+    观看此[视频指南](https://www.youtube.com/watch?v=nJEER0uaNkE)了解模型调用限制中间件的行为。
 </Callout>
 :::
 
 :::js
 <Callout icon="player-play" iconType="solid">
     Watch this [video guide](https://www.youtube.com/watch?v=x5jLQTFXR0Y) demonstrating Model Call Limit middleware behavior.
+
+    观看此[视频指南](https://www.youtube.com/watch?v=x5jLQTFXR0Y)了解模型调用限制中间件的行为。
 </Callout>
 :::
 
-<Accordion title="Configuration options">
+<Accordion title="配置选项">
 
 :::python
 <ParamField body="thread_limit" type="number">
@@ -545,14 +569,14 @@ const agent = createAgent({
 </Accordion>
 
 
-### Tool call limit
+### 工具调用限制
 
-Control agent execution by limiting the number of tool calls, either globally across all tools or for specific tools. Tool call limits are useful for the following:
+通过限制工具调用次数来控制 Agent 执行，可以是全局所有工具或特定工具。工具调用限制适用于以下场景：
 
-- Preventing excessive calls to expensive external APIs.
-- Limiting web searches or database queries.
-- Enforcing rate limits on specific tool usage.
-- Protecting against runaway agent loops.
+- 防止对昂贵外部 API 的过度调用。
+- 限制网络搜索或数据库查询。
+- 对特定工具使用强制速率限制。
+- 防止 Agent 失控循环。
 
 :::python
 **API reference:** @[`ToolCallLimitMiddleware`]
@@ -600,16 +624,20 @@ const agent = createAgent({
 :::python
 <Callout icon="player-play" iconType="solid">
     Watch this [video guide](https://www.youtube.com/watch?v=6gYlaJJ8t0w) demonstrating Tool Call Limit middleware behavior.
+
+    观看此[视频指南](https://www.youtube.com/watch?v=6gYlaJJ8t0w)了解工具调用限制中间件的行为。
 </Callout>
 :::
 
 :::js
 <Callout icon="player-play" iconType="solid">
     Watch this [video guide](https://www.youtube.com/watch?v=oL6am5UqODY) demonstrating Tool Call Limit middleware behavior.
+
+    观看此[视频指南](https://www.youtube.com/watch?v=oL6am5UqODY)了解工具调用限制中间件的行为。
 </Callout>
 :::
 
-<Accordion title="Configuration options">
+<Accordion title="配置选项">
 
 :::python
 <ParamField body="tool_name" type="string">
@@ -661,16 +689,25 @@ const agent = createAgent({
 
 </Accordion>
 
-<Accordion title="Full example">
+<Accordion title="完整示例">
 
 Specify limits with:
 - **Thread limit** - Max calls across all runs in a conversation (requires checkpointer)
 - **Run limit** - Max calls per single invocation (resets each turn)
 
+通过以下方式指定限制：
+- **线程限制** —— 对话中所有运行的最大调用次数（需要 checkpointer）
+- **运行限制** —— 单次调用的最大次数（每轮重置）
+
 Exit behaviors:
 - `'continue'` (default) - Block exceeded calls with error messages, agent continues
 - `'error'` - Raise exception immediately
 - `'end'` - Stop with ToolMessage + AI message (single-tool scenarios only)
+
+退出行为：
+- `'continue'`（默认）—— 用错误消息阻止超限调用，Agent 继续运行
+- `'error'` —— 立即抛出异常
+- `'end'` —— 以 ToolMessage + AI 消息停止（仅适用于单工具场景）
 
 :::python
 ```python
@@ -711,13 +748,13 @@ const agent = createAgent({
 </Accordion>
 
 
-### Model fallback
+### 模型回退
 
-Automatically fallback to alternative models when the primary model fails. Model fallback is useful for the following:
+当主模型失败时自动回退到备用模型。模型回退适用于以下场景：
 
-- Building resilient agents that handle model outages.
-- Cost optimization by falling back to cheaper models.
-- Provider redundancy across OpenAI, Anthropic, etc.
+- 构建能处理模型宕机的弹性 Agent。
+- 通过回退到更便宜的模型进行成本优化。
+- 跨 OpenAI、Anthropic 等提供商的冗余。
 
 :::python
 **API reference:** @[`ModelFallbackMiddleware`]
@@ -759,10 +796,12 @@ const agent = createAgent({
 :::python
 <Callout icon="player-play" iconType="solid">
     Watch this [video guide](https://www.youtube.com/watch?v=8rCRO0DUeIM) demonstrating Model Fallback middleware behavior.
+
+    观看此[视频指南](https://www.youtube.com/watch?v=8rCRO0DUeIM)了解模型回退中间件的行为。
 </Callout>
 :::
 
-<Accordion title="Configuration options">
+<Accordion title="配置选项">
 
 :::python
 <ParamField body="first_model" type="string | BaseChatModel" required>
@@ -776,6 +815,8 @@ const agent = createAgent({
 
 :::js
 The middleware accepts a variable number of string arguments representing fallback models in order:
+
+该中间件接受可变数量的字符串参数，按顺序表示回退模型：
 
 <ParamField body="...models" type="string[]" required>
   One or more fallback model strings to try in order when the primary model fails
@@ -792,13 +833,13 @@ The middleware accepts a variable number of string arguments representing fallba
 
 </Accordion>
 
-### PII detection
+### PII 检测
 
-Detect and handle Personally Identifiable Information (PII) in conversations using configurable strategies. PII detection is useful for the following:
+使用可配置的策略检测和处理对话中的个人身份信息（PII）。PII 检测适用于以下场景：
 
-- Healthcare and financial applications with compliance requirements.
-- Customer service agents that need to sanitize logs.
-- Any application handling sensitive user data.
+- 有合规要求的医疗和金融应用。
+- 需要清洗日志的客服 Agent。
+- 任何处理用户敏感数据的应用。
 
 :::python
 **API reference:** @[`PIIMiddleware`]
@@ -833,17 +874,17 @@ const agent = createAgent({
 ```
 :::
 
-#### Custom PII types
+#### 自定义 PII 类型
 
-You can create custom PII types by providing a `detector` parameter. This allows you to detect patterns specific to your use case beyond the built-in types.
+你可以通过提供 `detector` 参数创建自定义 PII 类型。这允许你检测超出内置类型的特定场景模式。
 
-**Three ways to create custom detectors:**
+**三种创建自定义检测器的方式：**
 
-1. **Regex pattern string** - Simple pattern matching
+1. **正则表达式字符串** —— 简单的模式匹配
 :::js
-1. **RegExp object** - More control over regex flags
+1. **RegExp 对象** —— 更细粒度的正则控制
 :::
-1. **Custom function** - Complex detection logic with validation
+1. **自定义函数** —— 带验证的复杂检测逻辑
 
 :::python
 ```python
@@ -975,12 +1016,12 @@ const agent3 = createAgent({
 ```
 :::
 
-**Custom detector function signature:**
+**自定义检测器函数签名：**
 
-The detector function must accept a string (content) and return matches:
+检测器函数必须接受一个字符串（内容）并返回匹配结果：
 
 :::python
-Returns a list of dictionaries with `text`, `start`, and `end` keys:
+返回包含 `text`、`start` 和 `end` 键的字典列表：
 ```python
 def detector(content: str) -> list[dict[str, str | int]]:
     return [
@@ -990,7 +1031,7 @@ def detector(content: str) -> list[dict[str, str | int]]:
 ```
 :::
 :::js
-Returns an array of `PIIMatch` objects:
+返回 `PIIMatch` 对象数组：
 ```typescript
 interface PIIMatch {
   text: string;    // The matched text
@@ -1008,15 +1049,15 @@ function detector(content: string): PIIMatch[] {
 :::
 
 <Tip>
-    For custom detectors:
+    对于自定义检测器：
 
-    - Use regex strings for simple patterns
-    - Use RegExp objects when you need flags (e.g., case-insensitive matching)
-    - Use custom functions when you need validation logic beyond pattern matching
-    - Custom functions give you full control over detection logic and can implement complex validation rules
+    - 简单模式使用正则字符串
+    - 需要标志控制时使用 RegExp 对象（如不区分大小写匹配）
+    - 需要超越模式匹配的验证逻辑时使用自定义函数
+    - 自定义函数让你完全控制检测逻辑，可以实现复杂的验证规则
 </Tip>
 
-<Accordion title="Configuration options">
+<Accordion title="配置选项">
 
 :::python
 <ParamField body="pii_type" type="string" required>
@@ -1088,15 +1129,15 @@ function detector(content: string): PIIMatch[] {
 
 </Accordion>
 
-### To-do list
+### 任务列表
 
-Equip agents with task planning and tracking capabilities for complex multi-step tasks. To-do lists are useful for the following:
+为 Agent 提供任务规划和追踪能力，用于复杂的多步骤任务。任务列表适用于以下场景：
 
-- Complex multi-step tasks requiring coordination across multiple tools.
-- Long-running operations where progress visibility is important.
+- 需要跨多个工具协调的复杂多步骤任务。
+- 需要进度可见性的长时间运行操作。
 
 <Note>
-    This middleware automatically provides agents with a `write_todos` tool and system prompts to guide effective task planning.
+    此中间件自动为 Agent 提供 `write_todos` 工具和系统提示词，以指导有效的任务规划。
 </Note>
 
 :::python
@@ -1129,16 +1170,20 @@ const agent = createAgent({
 :::python
 <Callout icon="player-play" iconType="solid">
     Watch this [video guide](https://www.youtube.com/watch?v=yTWocbVKQxw) demonstrating To-do List middleware behavior.
+
+    观看此[视频指南](https://www.youtube.com/watch?v=yTWocbVKQxw)了解任务列表中间件的行为。
 </Callout>
 :::
 
 :::js
 <Callout icon="player-play" iconType="solid">
     Watch this [video guide](https://www.youtube.com/watch?v=dwvhZ1z_Pas) demonstrating To-do List middleware behavior.
+
+    观看此[视频指南](https://www.youtube.com/watch?v=dwvhZ1z_Pas)了解任务列表中间件的行为。
 </Callout>
 :::
 
-<Accordion title="Configuration options">
+<Accordion title="配置选项">
 
 :::python
 <ParamField body="system_prompt" type="string">
@@ -1156,15 +1201,15 @@ No configuration options available (uses defaults).
 
 </Accordion>
 
-### LLM tool selector
+### LLM 工具选择器
 
-Use an LLM to intelligently select relevant tools before calling the main model. LLM tool selectors are useful for the following:
+使用 LLM 在调用主模型前智能选择相关工具。LLM 工具选择器适用于以下场景：
 
-- Agents with many tools (10+) where most aren't relevant per query.
-- Reducing token usage by filtering irrelevant tools.
-- Improving model focus and accuracy.
+- 拥有大量工具（10+）且每次查询大多不相关的 Agent。
+- 通过筛除无关工具减少 token 用量。
+- 提高模型专注度和准确性。
 
-This middleware uses structured output to ask an LLM which tools are most relevant for the current query. The structured output schema defines the available tool names and descriptions. Model providers often add this structured output information to the system prompt behind the scenes.
+此中间件使用结构化输出来询问 LLM 哪些工具与当前查询最相关。结构化输出 Schema 定义了可用工具的名称和描述。模型提供商通常会在后台将此结构化输出信息添加到系统提示词中。
 
 :::python
 **API reference:** @[`LLMToolSelectorMiddleware`]
@@ -1205,7 +1250,7 @@ const agent = createAgent({
 ```
 :::
 
-<Accordion title="Configuration options">
+<Accordion title="配置选项">
 
 :::python
 <ParamField body="model" type="string | BaseChatModel">
@@ -1248,13 +1293,13 @@ const agent = createAgent({
 </Accordion>
 
 
-### Tool retry
+### 工具重试
 
-Automatically retry failed tool calls with configurable exponential backoff. Tool retry is useful for the following:
+自动重试失败的工具调用，支持可配置的指数退避。工具重试适用于以下场景：
 
-- Handling transient failures in external API calls.
-- Improving reliability of network-dependent tools.
-- Building resilient agents that gracefully handle temporary errors.
+- 处理外部 API 调用的瞬时故障。
+- 提高依赖网络的工具的可靠性。
+- 构建能优雅处理临时错误的弹性 Agent。
 
 :::python
 **API reference:** @[`ToolRetryMiddleware`]
@@ -1297,7 +1342,7 @@ const agent = createAgent({
 ```
 :::
 
-<Accordion title="Configuration options">
+<Accordion title="配置选项">
 
 :::python
 <ParamField body="max_retries" type="number" default="2">
@@ -1377,35 +1422,37 @@ const agent = createAgent({
 
 </Accordion>
 
-<Accordion title="Full example">
+<Accordion title="完整示例">
 
 The middleware automatically retries failed tool calls with exponential backoff.
 
-:::python
-**Key configuration:**
-- `max_retries` - Number of retry attempts (default: 2)
-- `backoff_factor` - Multiplier for exponential backoff (default: 2.0)
-- `initial_delay` - Starting delay in seconds (default: 1.0)
-- `max_delay` - Cap on delay growth (default: 60.0)
-- `jitter` - Add random variation (default: True)
+该中间件会自动重试失败的工具调用，支持指数退避。
 
-**Failure handling:**
-- `on_failure='return_message'` - Return error message
-- `on_failure='raise'` - Re-raise exception
-- Custom function - Function returning error message
+:::python
+**关键配置：**
+- `max_retries` —— 重试次数（默认：2）
+- `backoff_factor` —— 指数退避乘数（默认：2.0）
+- `initial_delay` —— 初始延迟秒数（默认：1.0）
+- `max_delay` —— 延迟上限（默认：60.0）
+- `jitter` —— 添加随机抖动（默认：True）
+
+**失败处理：**
+- `on_failure='return_message'` —— 返回错误消息
+- `on_failure='raise'` —— 重新抛出异常
+- 自定义函数 —— 返回错误消息的函数
 :::
 :::js
-**Key configuration:**
-- `maxRetries` - Number of retry attempts (default: 2)
-- `backoffFactor` - Multiplier for exponential backoff (default: 2.0)
-- `initialDelayMs` - Starting delay in milliseconds (default: 1000ms)
-- `maxDelayMs` - Cap on delay growth (default: 60000ms)
-- `jitter` - Add random variation (default: true)
+**关键配置：**
+- `maxRetries` —— 重试次数（默认：2）
+- `backoffFactor` —— 指数退避乘数（默认：2.0）
+- `initialDelayMs` —— 初始延迟毫秒数（默认：1000ms）
+- `maxDelayMs` —— 延迟上限（默认：60000ms）
+- `jitter` —— 添加随机抖动（默认：true）
 
-**Failure handling:**
-- `onFailure: "continue"` (default) - Return error message
-- `onFailure: "error"` - Re-raise exception
-- Custom function - Function returning error message
+**失败处理：**
+- `onFailure: "continue"`（默认）—— 返回错误消息
+- `onFailure: "error"` —— 重新抛出异常
+- 自定义函数 —— 返回错误消息的函数
 :::
 
 :::python
@@ -1513,13 +1560,13 @@ const strictRetry = toolRetryMiddleware({
 
 </Accordion>
 
-### Model retry
+### 模型重试
 
-Automatically retry failed model calls with configurable exponential backoff. Model retry is useful for the following:
+自动重试失败的模型调用，支持可配置的指数退避。模型重试适用于以下场景：
 
-- Handling transient failures in model API calls.
-- Improving reliability of network-dependent model requests.
-- Building resilient agents that gracefully handle temporary model errors.
+- 处理模型 API 调用的瞬时故障。
+- 提高依赖网络的模型请求的可靠性。
+- 构建能优雅处理临时模型错误的弹性 Agent。
 
 :::python
 **API reference:** @[`ModelRetryMiddleware`]
@@ -1562,7 +1609,7 @@ const agent = createAgent({
 ```
 :::
 
-<Accordion title="Configuration options">
+<Accordion title="配置选项">
 
 :::python
 <ParamField body="max_retries" type="number" default="2">
@@ -1632,9 +1679,11 @@ const agent = createAgent({
 
 </Accordion>
 
-<Accordion title="Full example">
+<Accordion title="完整示例">
 
 The middleware automatically retries failed model calls with exponential backoff.
+
+该中间件会自动重试失败的模型调用，支持指数退避。
 
 :::python
 ```python
@@ -1786,13 +1835,13 @@ const strictRetry = modelRetryMiddleware({
 
 </Accordion>
 
-### LLM tool emulator
+### LLM 工具模拟器
 
-Emulate tool execution using an LLM for testing purposes, replacing actual tool calls with AI-generated responses. LLM tool emulators are useful for the following:
+使用 LLM 模拟工具执行以进行测试，用 AI 生成的响应替代实际工具调用。LLM 工具模拟器适用于以下场景：
 
-- Testing agent behavior without executing real tools.
-- Developing agents when external tools are unavailable or expensive.
-- Prototyping agent workflows before implementing actual tools.
+- 在不执行真实工具的情况下测试 Agent 行为。
+- 当外部工具不可用或成本高昂时开发 Agent。
+- 在实现实际工具之前原型验证 Agent 工作流。
 
 :::python
 **API reference:** @[`LLMToolEmulator`]
@@ -1825,7 +1874,7 @@ const agent = createAgent({
 ```
 :::
 
-<Accordion title="Configuration options">
+<Accordion title="配置选项">
 
 :::python
 <ParamField body="tools" type="list[str | BaseTool]">
@@ -1849,9 +1898,11 @@ const agent = createAgent({
 
 </Accordion>
 
-<Accordion title="Full example">
+<Accordion title="完整示例">
 
 The middleware uses an LLM to generate plausible responses for tool calls instead of executing the actual tools.
+
+该中间件使用 LLM 为工具调用生成合理的响应，而不是执行实际工具。
 
 :::python
 ```python
@@ -1965,13 +2016,13 @@ const agent5 = createAgent({
 
 </Accordion>
 
-### Context editing
+### 上下文编辑
 
-Manage conversation context by clearing older tool call outputs when token limits are reached, while preserving recent results. This helps keep context windows manageable in long conversations with many tool calls. Context editing is useful for the following:
+通过在达到 token 限制时清除较旧的工具调用输出来管理对话上下文，同时保留近期结果。这有助于在包含大量工具调用的长对话中维持可管理的上下文窗口。上下文编辑适用于以下场景：
 
-- Long conversations with many tool calls that exceed token limits
-- Reducing token costs by removing older tool outputs that are no longer relevant
-- Maintaining only the most recent N tool results in context
+- 包含大量工具调用且超出 token 限制的长对话
+- 通过移除不再相关的旧工具输出来降低 token 成本
+- 在上下文中仅保留最近 N 次工具结果
 
 :::python
 **API reference:** @[`ContextEditingMiddleware`], @[`ClearToolUsesEdit`]
@@ -2018,7 +2069,7 @@ const agent = createAgent({
 ```
 :::
 
-<Accordion title="Configuration options">
+<Accordion title="配置选项">
 
 :::python
 <ParamField body="edits" type="list[ContextEdit]" default="[ClearToolUsesEdit()]">
@@ -2090,15 +2141,17 @@ const agent = createAgent({
 
 </Accordion>
 
-<Accordion title="Full example">
+<Accordion title="完整示例">
 
 The middleware applies context editing strategies when token limits are reached. The most common strategy is `ClearToolUsesEdit`, which clears older tool results while preserving recent ones.
 
-**How it works:**
-1. Monitor token count in conversation
-2. When threshold is reached, clear older tool outputs
-3. Keep most recent N tool results
-4. Optionally preserve tool call arguments for context
+该中间件在达到 token 限制时应用上下文编辑策略。最常用的策略是 `ClearToolUsesEdit`，它会清除较旧的工具结果，同时保留近期的。
+
+**工作原理：**
+1. 监控对话中的 token 数
+2. 当达到阈值时，清除较旧的工具输出
+3. 保留最近 N 次工具结果
+4. 可选保留工具调用参数以提供上下文
 
 :::python
 ```python
@@ -2153,21 +2206,21 @@ const agent = createAgent({
 </Accordion>
 
 :::python
-### Shell tool
+### Shell 工具
 
-Expose a persistent shell session to agents for command execution. Shell tool middleware is useful for the following:
+为 Agent 提供持久化 Shell 会话以执行命令。Shell 工具中间件适用于以下场景：
 
-- Agents that need to execute system commands
-- Development and deployment automation tasks
-- Testing and validation workflows
-- File system operations and script execution
+- 需要执行系统命令的 Agent
+- 开发和部署自动化任务
+- 测试和验证工作流
+- 文件系统操作和脚本执行
 
 <Warning>
-    **Security consideration**: Use appropriate execution policies (`HostExecutionPolicy`, `DockerExecutionPolicy`, or `CodexSandboxExecutionPolicy`) to match your deployment's security requirements.
+    **安全考虑**：请使用适当的执行策略（`HostExecutionPolicy`、`DockerExecutionPolicy` 或 `CodexSandboxExecutionPolicy`）来匹配你部署环境的安全需求。
 </Warning>
 
 <Note>
-    **Limitation**: Persistent shell sessions do not currently work with interrupts (human-in-the-loop). We anticipate adding support for this in the future.
+    **限制**：持久化 Shell 会话目前不支持与中断（人工审核）配合使用。我们计划在未来添加这一支持。
 </Note>
 
 **API reference:** @[`ShellToolMiddleware`]
@@ -2191,7 +2244,7 @@ agent = create_agent(
 )
 ```
 
-<Accordion title="Configuration options">
+<Accordion title="配置选项">
 
 <ParamField body="workspace_root" type="str | Path | None">
     Base directory for the shell session. If omitted, a temporary directory is created when the agent starts and removed when it ends.
@@ -2234,14 +2287,16 @@ agent = create_agent(
 
 </Accordion>
 
-<Accordion title="Full example">
+<Accordion title="完整示例">
 
 The middleware provides a single persistent shell session that agents can use to execute commands sequentially.
 
-**Execution policies:**
-- `HostExecutionPolicy` (default) - Native execution with full host access
-- `DockerExecutionPolicy` - Isolated Docker container execution
-- `CodexSandboxExecutionPolicy` - Sandboxed execution via Codex CLI
+该中间件提供一个持久化 Shell 会话，Agent 可以用它按顺序执行命令。
+
+**执行策略：**
+- `HostExecutionPolicy`（默认）—— 完全主机访问的原生执行
+- `DockerExecutionPolicy` —— 隔离的 Docker 容器执行
+- `CodexSandboxExecutionPolicy` —— 通过 Codex CLI 的沙箱执行
 
 ```python
 from langchain.agents import create_agent
@@ -2298,14 +2353,14 @@ agent_redacted = create_agent(
 
 </Accordion>
 
-### File search
+### 文件搜索
 
-Provide Glob and Grep search tools over a filesystem. File search middleware is useful for the following:
+提供文件系统上的 Glob 和 Grep 搜索工具。文件搜索中间件适用于以下场景：
 
-- Code exploration and analysis
-- Finding files by name patterns
-- Searching code content with regex
-- Large codebases where file discovery is needed
+- 代码探索和分析
+- 按名称模式查找文件
+- 使用正则搜索代码内容
+- 需要文件发现的大型代码库
 
 **API reference:** @[`FilesystemFileSearchMiddleware`]
 
@@ -2325,7 +2380,7 @@ agent = create_agent(
 )
 ```
 
-<Accordion title="Configuration options">
+<Accordion title="配置选项">
 
 <ParamField body="root_path" type="str" required>
     Root directory to search. All file operations are relative to this path.
@@ -2341,18 +2396,20 @@ agent = create_agent(
 
 </Accordion>
 
-<Accordion title="Full example">
+<Accordion title="完整示例">
 
 The middleware adds two search tools to agents:
 
-**Glob tool** - Fast file pattern matching:
-- Supports patterns like `**/*.py`, `src/**/*.ts`
-- Returns matching file paths sorted by modification time
+该中间件为 Agent 添加两个搜索工具：
 
-**Grep tool** - Content search with regex:
-- Full regex syntax support
-- Filter by file patterns with `include` parameter
-- Three output modes: `files_with_matches`, `content`, `count`
+**Glob 工具** —— 快速文件模式匹配：
+- 支持 `**/*.py`、`src/**/*.ts` 等模式
+- 返回按修改时间排序的匹配文件路径
+
+**Grep 工具** —— 正则内容搜索：
+- 支持完整正则语法
+- 通过 `include` 参数按文件模式筛选
+- 三种输出模式：`files_with_matches`、`content`、`count`
 
 ```python
 from langchain.agents import create_agent
@@ -2385,16 +2442,16 @@ result = agent.invoke({
 
 :::
 
-### Filesystem middleware
+### 文件系统中间件
 
-Context engineering is a main challenge in building effective agents. This is particularly difficult when using tools that return variable-length results (for example, `web_search` and RAG), as long tool results can quickly fill your context window.
+上下文工程是构建有效 Agent 的主要挑战。当使用返回可变长度结果的工具（例如 `web_search` 和 RAG）时尤其困难，因为较长的工具结果会快速填满上下文窗口。
 
-`FilesystemMiddleware` from [deep agents](/oss/deepagents/overview) provides four tools for interacting with both short-term and long-term memory:
+来自 [Deep Agents](/oss/deepagents/overview) 的 `FilesystemMiddleware` 提供四个工具用于与短期和长期记忆交互：
 
-- `ls`: List the files in the filesystem
-- `read_file`: Read an entire file or a certain number of lines from a file
-- `write_file`: Write a new file to the filesystem
-- `edit_file`: Edit an existing file in the filesystem
+- `ls`：列出文件系统中的文件
+- `read_file`：读取整个文件或文件的某几行
+- `write_file`：向文件系统写入新文件
+- `edit_file`：编辑文件系统中的现有文件
 
 :::python
 ```python
@@ -2442,9 +2499,9 @@ const agent = createAgent({
 ```
 :::
 
-#### Short-term vs. long-term filesystem
+#### 短期与长期文件系统
 
-By default, these tools write to a local "filesystem" in your graph state. To enable persistent storage across threads, configure a `CompositeBackend` that routes specific paths (like `/memories/`) to a `StoreBackend`.
+默认情况下，这些工具写入图状态中的本地“文件系统”。要启用跨线程的持久化存储，请配置一个 `CompositeBackend`，将特定路径（如 `/memories/`）路由到 `StoreBackend`。
 
 :::python
 ```python
@@ -2502,13 +2559,13 @@ const agent = createAgent({
 ```
 :::
 
-When you configure a `CompositeBackend` with a `StoreBackend` for `/memories/`, any files prefixed with **/memories/** are saved to persistent storage and survive across different threads. Files without this prefix remain in ephemeral state storage.
+当你配置了带有 `StoreBackend`（路由到 `/memories/`）的 `CompositeBackend` 时，任何以 **/memories/** 为前缀的文件都会保存到持久化存储，并在不同线程之间保留。没有此前缀的文件仍留在临时状态存储中。
 
-### Subagent
+### 子 Agent
 
-Handing off tasks to subagents isolates context, keeping the main (supervisor) agent's context window clean while still going deep on a task.
+将任务移交给子 Agent 可以隔离上下文，保持主（监督）Agent 的上下文窗口清洁，同时仍能深入处理任务。
 
-The subagents middleware from [deep agents](/oss/deepagents/overview) allows you to supply subagents through a `task` tool.
+来自 [Deep Agents](/oss/deepagents/overview) 的子 Agent 中间件允许你通过 `task` 工具提供子 Agent。
 
 :::python
 ```python
@@ -2586,9 +2643,9 @@ const agent = createAgent({
 ```
 :::
 
-A subagent is defined with a **name**, **description**, **system prompt**, and **tools**. You can also provide a subagent with a custom **model**, or with additional **middleware**. This can be particularly useful when you want to give the subagent an additional state key to share with the main agent.
+子 Agent 通过 **名称**、**描述**、**系统提示词** 和 **工具** 来定义。你还可以为子 Agent 提供自定义 **模型** 或额外的 **中间件**。这在你想给子 Agent 一个额外的状态键来与主 Agent 共享时特别有用。
 
-For more complex use cases, you can also provide your own prebuilt LangGraph graph as a subagent.
+对于更复杂的场景，你也可以提供自己预构建的 LangGraph 图作为子 Agent。
 
 :::python
 ```python
@@ -2666,29 +2723,26 @@ const agent = createAgent({
 ```
 :::
 
-In addition to any user-defined subagents, the main agent has access to a `general-purpose` subagent at all times. This subagent has the same instructions as the main agent and all the tools it has access to. The primary purpose of the `general-purpose` subagent is context isolation—the main agent can delegate a complex task to this subagent and get a concise answer back without bloat from intermediate tool calls.
+除了任何用户定义的子 Agent 外，主 Agent 始终可以访问一个 `general-purpose` 子 Agent。此子 Agent 与主 Agent 拥有相同的指令和所有可访问的工具。`general-purpose` 子 Agent 的主要目的是上下文隔离 —— 主 Agent 可以将复杂任务委派给此子 Agent，并获得简洁的答案，而不会被中间工具调用的冗余内容填充。
 
-## Provider-specific middleware
+## 特定提供商中间件
 
-These middleware are optimized for specific LLM providers. See each provider's documentation for full details and examples.
+这些中间件针对特定 LLM 提供商进行了优化。详情和示例请参见各提供商的文档。
 
 <Columns cols={2}>
 
 :::python
     <Card title="Anthropic" href="/oss/integrations/middleware/anthropic" icon="/images/providers/anthropic-icon.svg" arrow>
-        Prompt caching, bash tool, text editor, memory, and file search middleware for Claude models.
-    </Card>
-    <Card title="AWS" href="/oss/integrations/middleware/aws" icon="brand-aws" arrow>
-        Prompt caching middleware for Amazon Bedrock models.
+        Claude 模型的提示词缓存、bash 工具、文本编辑器、记忆和文件搜索中间件。
     </Card>
     <Card title="OpenAI" href="/oss/integrations/middleware/openai" icon="brand-openai" arrow>
-        Content moderation middleware for OpenAI models.
+        OpenAI 模型的内容审核中间件。
     </Card>
 :::
 
 :::js
     <Card title="Anthropic" href="/oss/integrations/middleware/anthropic" icon="/images/providers/anthropic-icon.svg" arrow>
-        Prompt caching, bash tool, text editor, memory, and file search middleware for Claude models.
+        Claude 模型的提示词缓存、bash 工具、文本编辑器、记忆和文件搜索中间件。
     </Card>
 :::
 </Columns>

@@ -1,19 +1,19 @@
 ---
-title: Sandboxes
-sidebarTitle: Sandboxes
-description: Execute code in isolated environments with sandbox backends
+title: 沙箱
+sidebarTitle: 沙箱
+description: 在隔离环境中使用沙箱后端执行代码
 ---
 
 import SandboxBasicPy from '/snippets/deepagents-sandbox-basic-py.mdx';
 import SandboxBasicJs from '/snippets/deepagents-sandbox-basic-js.mdx';
 
-Agents generate code, interact with filesystems, and run shell commands. Because we can't predict what an agent might do, it's important that its environment is isolated so it can't access credentials, files, or the network. Sandboxes provide this isolation by creating a boundary between the agent's execution environment and your host system.
+Agent 会生成代码、与文件系统交互并运行 shell 命令。由于我们无法预测 Agent 可能做什么，因此必须确保其运行环境是隔离的，以防它访问凭证、文件或网络。沙箱通过在 Agent 的执行环境和宿主系统之间创建边界来提供这种隔离。
 
-In deep agents, **sandboxes are [backends](/oss/deepagents/backends)** that define the environment where the agent operates. Unlike other backends (State, Filesystem, Store) which only expose file operations, sandbox backends also give the agent an `execute` tool for running shell commands. When you configure a sandbox backend, the agent gets:
+在 Deep Agent 中，**沙箱是[后端](/oss/deepagents/backends)**，定义了 Agent 运行的环境。与其他后端（State、Filesystem、Store）只暴露文件操作不同，沙箱后端还为 Agent 提供 `execute` 工具来运行 shell 命令。配置沙箱后端后，Agent 将获得：
 
-- All standard filesystem tools (`ls`, `read_file`, `write_file`, `edit_file`, `glob`, `grep`)
-- The `execute` tool for running arbitrary shell commands in the sandbox
-- A secure boundary that protects your host system
+- 所有标准文件系统工具（`ls`、`read_file`、`write_file`、`edit_file`、`glob`、`grep`）
+- 用于在沙箱中运行任意 shell 命令的 `execute` 工具
+- 保护宿主系统的安全边界
 
 ```mermaid
 graph LR
@@ -22,79 +22,73 @@ graph LR
         Tools --> LLM
     end
 
-    Agent <-- backend protocol --> Sandbox
+    Agent <-- 后端协议 --> Sandbox
 
-    subgraph Sandbox
-        Filesystem
-        Bash
-        Dependencies
+    subgraph Sandbox[沙箱]
+        Filesystem[文件系统]
+        Bash[Shell]
+        Dependencies[依赖]
     end
-
-    classDef process fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#1E3A8A
-    classDef output fill:#F3E8FF,stroke:#9333EA,stroke-width:2px,color:#581C87
-
-    class LLM,Tools process
-    class Filesystem,Bash,Dependencies output
 ```
 
-## Why use sandboxes?
+## 为什么使用沙箱？
 
-Sandboxes are used for security.
-They let agents execute arbitrary code, access files, and use the network without compromising your credentials, local files, or host system.
-This isolation is essential when agents run autonomously.
+沙箱用于安全保障。
+它们让 Agent 能够执行任意代码、访问文件和使用网络，而不会危及你的凭证、本地文件或宿主系统。
+当 Agent 自主运行时，这种隔离至关重要。
 
-Sandboxes are especially useful for:
+沙箱特别适用于：
 
-- Coding agents: Agents that run autonomously can use shell, git, clone repositories (many providers offer native git APIs, e.g., [Daytona's git operations](https://www.daytona.io/docs/en/git-operations/)), and run Docker-in-Docker for build and test pipelines
-- Data analysis agents—Load files, install data analysis libraries (pandas, numpy, etc.), run statistical calculations, and create outputs like PowerPoint presentations in a safe, isolated environment
+- 编码 Agent：自主运行的 Agent 可以使用 shell、git、克隆仓库（许多提供商提供原生 git API，如 [Daytona 的 git 操作](https://www.daytona.io/docs/en/git-operations/)），并运行 Docker-in-Docker 来执行构建和测试流水线
+- 数据分析 Agent：在安全、隔离的环境中加载文件、安装数据分析库（pandas、numpy 等）、运行统计计算，以及创建 PowerPoint 演示文稿等输出
 
-## Integration patterns
+## 集成模式
 
-There are two architecture patterns for integrating agents with sandboxes, based on where the agent runs.
+根据 Agent 运行的位置，有两种将 Agent 与沙箱集成的架构模式。
 
-### Agent in sandbox pattern
+### Agent 在沙箱中运行模式
 
-The agent runs inside the sandbox and you communicate with it over the network. You build a Docker or VM image with your agent framework pre-installed, run it inside the sandbox, and connect from outside to send messages.
+Agent 在沙箱内运行，你通过网络与其通信。你构建一个预装了 Agent 框架的 Docker 或 VM 镜像，在沙箱内运行它，然后从外部连接发送消息。
 
-Benefits:
+优势：
 
-- ✅ Mirrors local development closely.
-- ✅ Tight coupling between agent and environment.
+- ✅ 与本地开发高度一致。
+- ✅ Agent 与环境紧密耦合。
 
-Trade-offs:
+权衡：
 
-- 🔴 API keys must live inside the sandbox (security risk).
-- 🔴 Updates require rebuilding images.
-- 🔴 Requires infrastructure for communication (WebSocket or HTTP layer).
+- 🔴 API 密钥必须存在于沙箱内（安全风险）。
+- 🔴 更新需要重新构建镜像。
+- 🔴 需要通信基础设施（WebSocket 或 HTTP 层）。
 
-To run an agent in a sandbox, build an image and install deepagents on it.
+要在沙箱中运行 Agent，需要构建镜像并安装 deepagents。
 
 ```dockerfile
 FROM python:3.11
 RUN pip install deepagents-cli
 ```
 
-Then run the agent inside the sandbox.
-To use the agent inside the sandbox you have to add additional infrastructure to handle communication between your application and the agent inside the sandbox.
+然后在沙箱内运行 Agent。
+要在沙箱内使用 Agent，你需要添加额外的基础设施来处理应用程序与沙箱内 Agent 之间的通信。
 
-### Sandbox as tool pattern
+### 沙箱作为工具模式
 
-The agent runs on your machine or server. When it needs to execute code, it calls sandbox tools (such as `execute`, `read_file`, or `write_file`) which invoke the provider's APIs to run operations in a remote sandbox.
+Agent 在你的机器或服务器上运行。当需要执行代码时，它调用沙箱工具（如 `execute`、`read_file` 或 `write_file`），这些工具通过调用提供商的 API 在远程沙箱中执行操作。
 
-Benefits:
+优势：
 
-- ✅ Update agent code instantly without rebuilding images.
-- ✅ Cleaner separation between agent state and execution.
-    - API keys stay outside the sandbox.
-    - Sandbox failures don't lose agent state.
-    - Option to run tasks in multiple sandboxes in parallel.
-- ✅ Pay only for execution time.
+- ✅ 即时更新 Agent 代码，无需重建镜像。
+- ✅ Agent 状态和执行环境更清晰地分离。
+    - API 密钥保留在沙箱之外。
+    - 沙箱故障不会丢失 Agent 状态。
+    - 可选择在多个沙箱中并行运行任务。
+- ✅ 仅为执行时间付费。
 
-Trade-offs:
+权衡：
 
-- 🔴 Network latency on each execution call.
+- 🔴 每次执行调用都有网络延迟。
 
-Example:
+示例：
 
 :::python
 
@@ -108,7 +102,7 @@ from deepagents import create_deep_agent
 
 load_dotenv()
 
-# Can also do this with E2B, Runloop, Modal
+# 也可以使用 E2B、Runloop、Modal
 sandbox = Daytona().create()
 backend = DaytonaSandbox(sandbox=sandbox)
 
@@ -130,7 +124,7 @@ try:
     )
     print(result["messages"][-1].content)
 except Exception:
-    # Optional: delete the sandbox proactively on an exception
+    # 可选：异常时主动删除沙箱
     sandbox.stop()
     raise
 ```
@@ -144,7 +138,7 @@ import "dotenv/config";
 import { DaytonaSandbox } from "@langchain/daytona";
 import { createDeepAgent } from "deepagents";
 
-// Can also do this with E2B, Runloop, Modal
+// 也可以使用 E2B、Runloop、Modal
 const sandbox = await DaytonaSandbox.create();
 
 const agent = createDeepAgent({
@@ -169,7 +163,7 @@ try {
       : String(lastMessage.content),
   );
 } finally {
-  // Optional: delete the sandbox proactively when the agent finishes
+  // 可选：Agent 完成时主动删除沙箱
   await sandbox.close();
   throw err;
 }
@@ -177,28 +171,28 @@ try {
 
 :::
 
-The examples in this doc use the sandbox as a tool pattern.
-Choose the agent in sandbox pattern when your provider's SDK handles the communication layer and you want production to mirror local development.
-Choose the sandbox as tool pattern when you need to iterate quickly on agent logic, keep API keys outside the sandbox, or prefer cleaner separation of concerns.
+本文档中的示例使用沙箱作为工具模式。
+当提供商的 SDK 处理通信层且你希望生产环境与本地开发一致时，选择 Agent 在沙箱中运行模式。
+当你需要快速迭代 Agent 逻辑、将 API 密钥保留在沙箱外部，或偏好更清晰的关注点分离时，选择沙箱作为工具模式。
 
-## Available providers
+## 可用的提供商
 
-For provider-specific setup, authentication, and lifecycle details, see the provider integration pages:
+关于特定提供商的设置、身份验证和生命周期详情，请参见提供商集成页面：
 
 :::js
 
 <CardGroup cols={2}>
     <Card title="Modal" icon="/images/providers/modal-icon.svg" href="/oss/integrations/providers/modal">
-        ML/AI workloads, GPU access, Python.
+        ML/AI 工作负载，GPU 访问，Python。
     </Card>
     <Card title="Daytona" icon="/images/providers/daytona-icon.svg" href="/oss/integrations/providers/daytona">
-        TypeScript/Python development, fast cold starts.
+        TypeScript/Python 开发，快速冷启动。
     </Card>
     <Card title="Deno" icon="/images/providers/deno-icon.svg" href="/oss/integrations/providers/deno">
-        Deno/JavaScript workloads, microVMs.
+        Deno/JavaScript 工作负载，微虚拟机。
     </Card>
     <Card title="Node VFS" icon="/images/providers/nodejs-icon.svg" href="/oss/integrations/providers/node-vfs">
-        Local development, testing, no cloud required.
+        本地开发，测试，无需云服务。
     </Card>
 </CardGroup>
 :::
@@ -206,78 +200,71 @@ For provider-specific setup, authentication, and lifecycle details, see the prov
 :::python
 <CardGroup cols={2}>
     <Card title="Modal" icon="/images/providers/modal-icon.svg" href="/oss/integrations/providers/modal">
-        ML/AI workloads, GPU access.
+        ML/AI 工作负载，GPU 访问。
     </Card>
     <Card title="Daytona" icon="/images/providers/daytona-icon.svg" href="/oss/integrations/providers/daytona">
-        TypeScript/Python development, fast cold starts.
+        TypeScript/Python 开发，快速冷启动。
     </Card>
     <Card title="Runloop" href="/oss/integrations/providers/runloop">
-        Disposable devboxes for isolated code execution.
+        一次性开发盒，用于隔离的代码执行。
     </Card>
 </CardGroup>
 :::
 
-If you provide a sandbox platform and want to contribute an integration, see [Contributing a sandbox integration](/oss/contributing/integrations-langchain).
+如果你是沙箱平台提供商并希望贡献集成，请参见[贡献沙箱集成](/oss/contributing/integrations-langchain)。
 
 :::js
 
-## Basic usage
+## 基本用法
 
 <SandboxBasicJs />
 
 :::
 
 :::python
-## Basic usage
+## 基本用法
 
-These examples assume you have already created a sandbox/devbox using the provider's SDK and have credentials set up. For signup, authentication, and provider-specific lifecycle details, see [Available providers](#available-providers).
+以下示例假设你已经使用提供商的 SDK 创建了沙箱/开发盒，并已设置好凭证。关于注册、身份验证和特定提供商的生命周期详情，请参见[可用的提供商](#可用的提供商)。
 
 <SandboxBasicPy />
 
 :::
 
-## How sandboxes work
+## 沙箱工作原理
 
-### Isolation boundaries
+### 隔离边界
 
-All sandbox providers protect your host system from the agent's filesystem and shell operations. The agent cannot read your local files, access environment variables on your machine, or interfere with other processes. However, sandboxes alone do **not** protect against:
+所有沙箱提供商都保护你的宿主系统不受 Agent 文件系统和 shell 操作的影响。Agent 无法读取你的本地文件、访问你机器上的环境变量，也无法干扰其他进程。但是，沙箱本身**不能**防御：
 
-- **Context injection**: An attacker who controls part of the agent's input can instruct it to run arbitrary commands inside the sandbox. The sandbox is isolated, but the agent has full control within it.
-- **Network exfiltration**: Unless network access is blocked, a context-injected agent can send data out of the sandbox over HTTP or DNS. Some providers support blocking network access (e.g., `blockNetwork: true` on Modal).
+- **上下文注入** — 控制 Agent 部分输入的攻击者可以指示它在沙箱内运行任意命令。沙箱是隔离的，但 Agent 在其内部拥有完全控制权。
+- **网络数据窃取** — 除非阻止网络访问，否则被注入上下文的 Agent 可以通过 HTTP 或 DNS 将数据发送出沙箱。部分提供商支持阻止网络访问（例如 Modal 的 `blockNetwork: true`）。
 
-See [security considerations](#security-considerations) for how to handle secrets and mitigate these risks.
+关于如何处理密钥和缓解这些风险，请参见[安全注意事项](#安全注意事项)。
 
-### The `execute` method
+### `execute` 方法
 
-Sandbox backends have a simple architecture: the only method a provider must implement is `execute()`, which runs a shell command and returns its output. Every other filesystem operation (`read`, `write`, `edit`, `ls`, `glob`, `grep`) is built on top of `execute()` by the `BaseSandbox` base class, which constructs scripts and runs them inside the sandbox via `execute()`.
+沙箱后端采用简洁的架构：提供商唯一需要实现的方法是 `execute()`，它运行一条 shell 命令并返回其输出。所有其他文件系统操作——`read`、`write`、`edit`、`ls`、`glob`、`grep`——都由 `BaseSandbox` 基类在 `execute()` 之上构建，基类构造脚本并通过 `execute()` 在沙箱内运行它们。
 
 ```mermaid
 graph TB
-    subgraph "Agent tools"
+    subgraph "Agent 工具"
         Tools["ls, read_file, ..."]
         execute
     end
 
-    BaseSandbox["BaseSandbox<br/>(uses execute)"] --> Tools
+    BaseSandbox["BaseSandbox<br/>(使用 execute)"] --> Tools
     execute_method["execute()"] --> BaseSandbox
     execute_method --> execute
-    Provider["Provider SDK"] --> execute_method
-
-    classDef process fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#1E3A8A
-    classDef trigger fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#14532D
-
-    class Tools,execute process
-    class BaseSandbox,execute_method process
-    class Provider trigger
+    Provider["提供商 SDK"] --> execute_method
 ```
 
-This design means:
-- **Adding a new provider is straightforward.** Implement `execute()`—the base class handles everything else.
-- **The `execute` tool is conditionally available.** On every model call, the harness checks whether the backend implements `SandboxBackendProtocol`. If not, the tool is filtered out and the agent never sees it.
+这种设计意味着：
+- **添加新提供商很简单。** 实现 `execute()` —— 基类处理其他一切。
+- **`execute` 工具按条件可用。** 在每次模型调用时，Harness 会检查后端是否实现了 `SandboxBackendProtocol`。如果没有，该工具会被过滤掉，Agent 永远看不到它。
 
-When the agent calls the `execute` tool, it provides a `command` string and gets back the combined stdout/stderr, exit code, and a truncation notice if the output was too large.
+当 Agent 调用 `execute` 工具时，它提供一个 `command` 字符串，并获取合并后的 stdout/stderr、退出码，以及当输出过大时的截断通知。
 
-You can also call the backend `execute()` method directly in your application code.
+你也可以在应用代码中直接调用后端的 `execute()` 方法。
 
 :::python
 <Tabs>
@@ -356,7 +343,7 @@ print(result.output)
 </Tabs>
 :::
 
-For example:
+例如：
 
 ```
 4
@@ -368,23 +355,23 @@ bash: foobar: command not found
 [Command failed with exit code 127]
 ```
 
-If a command produces very large output, the result is automatically saved to a file and the agent is instructed to use `read_file` to access it incrementally. This prevents context window overflow.
+如果命令产生了非常大的输出，结果会自动保存到文件中，并指示 Agent 使用 `read_file` 来分段访问。这可以防止上下文窗口溢出。
 
-### Two planes of file access
+### 两种文件访问方式
 
-There are two distinct ways files move in and out of a sandbox, and it's important to understand when to use each:
+文件在沙箱中有两种不同的进出方式，理解何时使用哪种非常重要：
 
-**Agent filesystem tools**: `read_file`, `write_file`, `edit_file`, `ls`, `glob`, `grep`, and `execute` are the tools the LLM calls during its execution. These go through `execute()` inside the sandbox. The agent uses them to read code, write files, and run commands as part of its task.
+**Agent 文件系统工具** — `read_file`、`write_file`、`edit_file`、`ls`、`glob`、`grep` 和 `execute` 是 LLM 在执行过程中调用的工具。这些工具通过沙箱内的 `execute()` 执行。Agent 使用它们来读取代码、写入文件以及运行命令作为其任务的一部分。
 
-**File transfer APIs**: the `uploadFiles()` and `downloadFiles()` methods that your application code calls. These use the provider's native file transfer APIs (not shell commands) and are designed for moving files between your host environment and the sandbox. Use these to:
-- **Seed the sandbox** with source code, configuration, or data before the agent runs
-- **Retrieve artifacts** (generated code, build outputs, reports) after the agent finishes
-- **Pre-populate dependencies** that the agent will need
+**文件传输 API** — `uploadFiles()` 和 `downloadFiles()` 方法由你的应用代码调用。它们使用提供商的原生文件传输 API（而非 shell 命令），专为在宿主环境和沙箱之间传输文件而设计。用途包括：
+- 在 Agent 运行前用源代码、配置或数据**预填充沙箱**
+- Agent 完成后**获取产物**（生成的代码、构建输出、报告）
+- **预装依赖项**供 Agent 使用
 
 ```mermaid
 graph LR
-    subgraph "Your application"
-        App[Application code]
+    subgraph "你的应用"
+        App[应用代码]
     end
 
     subgraph "Agent"
@@ -392,28 +379,20 @@ graph LR
         Tools --> LLM
     end
 
-    subgraph "Sandbox"
-        FS[Filesystem]
+    subgraph "沙箱"
+        FS[文件系统]
     end
 
-    App -- "Provider API" --> FS
+    App -- "提供商 API" --> FS
     Tools -- "execute()" --> FS
-
-    classDef trigger fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#14532D
-    classDef process fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#1E3A8A
-    classDef output fill:#F3E8FF,stroke:#9333EA,stroke-width:2px,color:#581C87
-
-    class App trigger
-    class LLM,Tools process
-    class FS output
 ```
 
 :::js
-## Working with files
+## 文件操作
 
-### Seeding the sandbox
+### 预填充沙箱
 
-Use `uploadFiles()` to populate the sandbox before the agent runs. File contents are provided as `Uint8Array`:
+使用 `uploadFiles()` 在 Agent 运行前填充沙箱。文件内容以 `Uint8Array` 形式提供：
 
 ```typescript
 const encoder = new TextEncoder();
@@ -422,7 +401,7 @@ const responses = await sandbox.uploadFiles([
   ["package.json", encoder.encode('{"name": "my-app"}')],
 ]);
 
-// Each response indicates success or failure
+// 每个响应表示成功或失败
 for (const res of responses) {
   if (res.error) {
     console.error(`Failed to upload ${res.path}: ${res.error}`);
@@ -430,9 +409,9 @@ for (const res of responses) {
 }
 ```
 
-### Retrieving artifacts
+### 获取产物
 
-Use `downloadFiles()` to retrieve files from the sandbox after the agent finishes:
+使用 `downloadFiles()` 在 Agent 完成后从沙箱获取文件：
 
 ```typescript
 const results = await sandbox.downloadFiles(["src/index.js", "output.txt"]);
@@ -448,18 +427,18 @@ for (const result of results) {
 ```
 
 <Note>
-Inside the sandbox, the agent uses its own filesystem tools (`read_file`, `write_file`): not `uploadFiles` or `downloadFiles`. Those methods are for your application code to move files across the boundary between your host and the sandbox.
+在沙箱内部，Agent 使用自己的文件系统工具（`read_file`、`write_file`）— 而非 `uploadFiles` 或 `downloadFiles`。这些方法是供你的应用代码在宿主和沙箱之间传输文件使用的。
 </Note>
 :::
 
 :::python
-## Working with files
+## 文件操作
 
-The deepagents sandbox backends support file transfer APIs for moving files between your application and the sandbox.
+deepagents 沙箱后端支持文件传输 API，用于在应用和沙箱之间传输文件。
 
-### Seeding the sandbox
+### 预填充沙箱
 
-Use `upload_files()` to populate the sandbox before the agent runs. Paths must be absolute and contents are `bytes`:
+使用 `upload_files()` 在 Agent 运行前填充沙箱。路径必须是绝对路径，内容为 `bytes`：
 
 <Tabs>
   <Tab title="Modal">
@@ -545,9 +524,9 @@ backend.upload_files(
   </Tab>
 </Tabs>
 
-### Retrieving artifacts
+### 获取产物
 
-Use `download_files()` to retrieve files from the sandbox after the agent finishes:
+使用 `download_files()` 在 Agent 完成后从沙箱获取文件：
 
 <Tabs>
   <Tab title="Modal">
@@ -634,31 +613,31 @@ for result in results:
 </Tabs>
 
 <Note>
-Inside the sandbox, the agent uses filesystem tools (`read_file`, `write_file`). The `upload_files` and `download_files` methods are for your application code to move files across the boundary between your host and the sandbox.
+在沙箱内部，Agent 使用文件系统工具（`read_file`、`write_file`）。`upload_files` 和 `download_files` 方法是供你的应用代码在宿主和沙箱之间传输文件使用的。
 </Note>
 :::
 
-## Lifecycle and cleanup
+## 生命周期与清理
 
-Sandboxes consume resources and cost money until they're shut down.
-To avoid paying for resources that are no longer needed, remember to shut down sandboxes as soon as your application no longer needs them.
+沙箱在关闭之前会持续消耗资源和费用。
+为避免为不再需要的资源付费，请在应用不再需要时及时关闭沙箱。
 
 <Tip>
-**TTL for chat applications.** When users can re-engage after idle time, you often don't know if or when they'll return. Configure a time-to-live (TTL) on the sandbox—for example, TTL to archive or TTL to delete—so the provider automatically cleans up idle sandboxes. Many sandbox providers support this.
+**聊天应用的 TTL。** 当用户可能在空闲后重新参与时，你通常不知道他们是否或何时会返回。在沙箱上配置存活时间（TTL）——例如归档 TTL 或删除 TTL——这样提供商会自动清理空闲的沙箱。许多沙箱提供商支持此功能。
 </Tip>
 
-### Basic lifecycle
+### 基本生命周期
 
 :::js
 
 ```typescript
-// Create and initialize
+// 创建并初始化
 const sandbox = await ModalSandbox.create(options);
 
-// Use the sandbox (directly or via an agent)
+// 使用沙箱（直接使用或通过 Agent）
 const result = await sandbox.execute("echo hello");
 
-// Clean up when done
+// 完成后清理
 await sandbox.close();
 ```
 :::
@@ -678,7 +657,7 @@ modal_sandbox = modal.Sandbox.create(app=app)
 backend = ModalSandbox(sandbox=modal_sandbox)
 
 result = backend.execute("echo hello")
-# ... use sandbox
+# ... 使用沙箱
 modal_sandbox.terminate()
 ```
 
@@ -695,7 +674,7 @@ devbox = client.devbox.create()
 backend = RunloopSandbox(devbox=devbox)
 
 result = backend.execute("echo hello")
-# ... use sandbox
+# ... 使用沙箱
 devbox.shutdown()
 ```
 
@@ -711,7 +690,7 @@ sandbox = Daytona().create()
 backend = DaytonaSandbox(sandbox=sandbox)
 
 result = backend.execute("echo hello")
-# ... use sandbox
+# ... 使用沙箱
 sandbox.stop()
 ```
 
@@ -719,17 +698,17 @@ sandbox.stop()
 </Tabs>
 :::
 
-### Per-conversation lifecycle
+### 按对话管理生命周期
 
-In chat applications, a conversation is typically represented by a `thread_id`.
-Generally, each `thread_id` should use its own unique sandbox.
+在聊天应用中，一个对话通常由一个 `thread_id` 表示。
+一般来说，每个 `thread_id` 应该使用其专属的沙箱。
 
-Store the mapping between sandbox ID and `thread_id` in your application or with the sandbox if the sandbox provider allows attaching metadata to the sandbox.
+将沙箱 ID 与 `thread_id` 的映射关系存储在你的应用中，或者如果沙箱提供商允许为沙箱附加元数据，则存储在沙箱中。
 
 :::python
 
-The following example shows a get-or-create pattern using Daytona.
-For other providers, consult the sandbox provider API for the equivalent labels, metadata, and TTL options:
+以下示例展示了使用 Daytona 的获取或创建模式。
+对于其他提供商，请参考沙箱提供商 API 中等效的标签、元数据和 TTL 选项：
 
 ```python
 import uuid
@@ -742,13 +721,13 @@ thread_id = str(uuid.uuid4())
 
 from deepagents import create_deep_agent
 
-# Get or create sandbox by thread_id
+# 按 thread_id 获取或创建沙箱
 try:
     sandbox = client.find_one(labels={"thread_id": thread_id})
 except Exception:
     params = CreateSandboxFromSnapshotParams(
         labels={"thread_id": thread_id},
-        # Add TTL so the sandbox is cleaned up when idle
+        # 添加 TTL 以便在空闲时自动清理沙箱
         auto_delete_interval=3600,
     )
     sandbox = client.create(params)
@@ -777,7 +756,7 @@ try:
     )
     print(result["messages"][-1].content)
 except Exception:
-    # Optional: delete the sandbox proactively on an exception
+    # 可选：异常时主动删除沙箱
     client.delete(sandbox)
     raise
 ```
@@ -797,14 +776,14 @@ import { createDeepAgent } from "deepagents";
 const client = new Daytona();
 const threadId = randomUUID();
 
-// Get or create sandbox by thread_id
+// 按 thread_id 获取或创建沙箱
 let sandbox;
 try {
     sandbox = await client.findOne({ labels: { thread_id: threadId } });
 } catch {
     const params: CreateSandboxFromSnapshotParams = {
         labels: { thread_id: threadId },
-        // Add TTL so the sandbox is cleaned up when idle (minutes)
+        // 添加 TTL 以便在空闲时自动清理沙箱（分钟）
         autoDeleteInterval: 3600,
     };
 sandbox = await client.create(params);
@@ -840,7 +819,7 @@ try {
         : String(lastMessage.content),
     );
 } catch (err) {
-    // Optional: delete the sandbox proactively on an exception
+    // 可选：异常时主动删除沙箱
     await client.delete(sandbox);
     throw err;
 }
@@ -848,36 +827,36 @@ try {
 
 :::
 
-## Security considerations
+## 安全注意事项
 
-Sandboxes isolate code execution from your host system, but they don't protect against **context injection**. An attacker who controls part of the agent's input can instruct it to read files, run commands, or exfiltrate data from within the sandbox. This makes credentials inside the sandbox especially dangerous.
-
-<Warning>
-**Never put secrets inside a sandbox.** API keys, tokens, database credentials, and other secrets injected into a sandbox (via environment variables, mounted files, or the `secrets` option) can be read and exfiltrated by a context-injected agent. This applies even to short-lived or scoped credentials—if an agent can access them, so can an attacker.
-</Warning>
-
-### Handling secrets safely
-
-If your agent needs to call authenticated APIs or access protected resources, you have two options:
-
-1. **Keep secrets in tools outside the sandbox.** Define tools that run in your host environment (not inside the sandbox) and handle authentication there. The agent calls these tools by name, but never sees the credentials. This is the recommended approach.
-
-2. **Use a network proxy that injects credentials.** Some sandbox providers support proxies that intercept outgoing HTTP requests from the sandbox and attach credentials (e.g., `Authorization` headers) before forwarding them. The agent never sees the secret—it just makes plain requests to a URL. This approach is not yet widely available across providers.
+沙箱将代码执行与宿主系统隔离，但它们无法防御**上下文注入**。控制 Agent 部分输入的攻击者可以指示它在沙箱内读取文件、运行命令或窃取数据。这使得沙箱内的凭证尤其危险。
 
 <Warning>
-If you must inject secrets into a sandbox (not recommended), take these precautions:
-
-- Enable [human-in-the-loop](/oss/deepagents/human-in-the-loop) approval for **all** tool calls, not just sensitive ones
-- Block or restrict network access from the sandbox to limit exfiltration paths
-- Use the narrowest possible credential scope and shortest possible lifetime
-- Monitor sandbox network traffic for unexpected outbound requests
-
-Even with these safeguards, this remains an unsafe workaround. A sufficiently creative enough context injection attack can bypass output filtering and HITL review.
+**切勿将密钥放入沙箱。** 通过环境变量、挂载文件或 `secrets` 选项注入沙箱的 API 密钥、令牌、数据库凭证等敏感信息，可以被上下文注入的 Agent 读取和窃取。即使是短期或范围有限的凭证也是如此——如果 Agent 能访问它们，攻击者也能。
 </Warning>
 
-### General best practices
+### 安全处理密钥
 
-- Review sandbox outputs before acting on them in your application
-- Block sandbox network access when not needed
-- Use [middleware](/oss/langchain/middleware) to filter or redact sensitive patterns in tool outputs
-- Treat everything produced inside the sandbox as untrusted input
+如果你的 Agent 需要调用需认证的 API 或访问受保护的资源，你有两个选择：
+
+1. **将密钥保留在沙箱外部的工具中。** 定义在宿主环境（而非沙箱内部）运行的工具，并在那里处理认证。Agent 通过名称调用这些工具，但永远看不到凭证。这是推荐的方式。
+
+2. **使用注入凭证的网络代理。** 某些沙箱提供商支持代理，它们会拦截沙箱发出的 HTTP 请求，并在转发前附加凭证（如 `Authorization` 头）。Agent 永远看不到密钥——它只是向 URL 发送普通请求。这种方式目前尚未在各提供商间广泛可用。
+
+<Warning>
+如果你必须将密钥注入沙箱（不推荐），请采取以下预防措施：
+
+- 为**所有**工具调用（而非仅敏感操作）启用[人工干预](/oss/deepagents/human-in-the-loop)审批
+- 阻止或限制沙箱的网络访问以减少数据窃取途径
+- 使用尽可能窄的凭证范围和尽可能短的有效期
+- 监控沙箱网络流量中的异常出站请求
+
+即使采取了这些防护措施，这仍然是一种不安全的变通方案。足够有创意的上下文注入攻击可以绕过输出过滤和人工干预审查。
+</Warning>
+
+### 通用最佳实践
+
+- 在应用中使用沙箱输出前先进行审查
+- 在不需要时阻止沙箱的网络访问
+- 使用[中间件](/oss/langchain/middleware)过滤或脱敏工具输出中的敏感信息
+- 将沙箱内产生的一切视为不受信任的输入

@@ -1,118 +1,116 @@
 ---
-title: Publish an integration
-sidebarTitle: Publish
+title: 发布集成
+sidebarTitle: 发布
 ---
 
-**Make your integration available to the community.**
+**让你的集成面向社区可用。**
 
 :::python
 <Warning>
-**Do not submit integration PRs to the LangChain or Deep Agents repositories.**
+**请勿向 LangChain 或 Deep Agents 仓库提交集成 PR。**
 
-New integrations should be published as **standalone PyPI packages** under your own GitHub organization or account (e.g., `langchain-yourservice`), not as PRs to the [`langchain-ai/langchain`](https://github.com/langchain-ai/langchain) repository.
+新的集成应作为**独立的 PyPI 包**发布在你自己的 GitHub 组织或个人账户下（例如 `langchain-yourservice`），而不是作为 PR 提交到 [`langchain-ai/langchain`](https://github.com/langchain-ai/langchain) 仓库。
 
-The main repository only contains a small subset of first-party integrations (like OpenAI, Anthropic, and Ollama) maintained by the LangChain team.
+主仓库仅包含由 LangChain 团队维护的少量第一方集成（如 OpenAI、Anthropic 和 Ollama）。
 </Warning>
 
-Now that your package is implemented and tested, you can publish it and add documentation to make it discoverable by the community.
+你的包已经完成实现和测试，现在可以发布并添加文档，让社区能够发现和使用它。
 
-## Publishing your package
+## 发布你的包
 
 <Info>
-    This guide assumes you have already implemented your package and written tests for it. If you haven't, please refer to the [implementation guide](/oss/contributing/implement-langchain) and [testing guide](/oss/contributing/standard-tests-langchain).
+    本指南假设你已完成包的实现和测试。如果尚未完成，请参阅 [实现指南](/oss/contributing/implement-langchain) 和 [测试指南](/oss/contributing/standard-tests-langchain)。
 </Info>
 
-For the purposes of this guide, we'll be using PyPI as the package registry. You may choose to publish to other registries if you prefer; instructions will vary.
+本指南以 PyPI 作为包注册中心。你也可以选择发布到其他注册中心，具体步骤可能会有所不同。
 
-### Setup credentials
+### 设置凭据
 
-First, make sure you have a PyPI account:
+首先，确保你拥有 PyPI 账户：
 
 <AccordionGroup>
-    <Accordion title="How to create a PyPI Token" icon="key">
+    <Accordion title="如何创建 PyPI Token" icon="key">
         <Steps>
-            <Step title="Create account">
-                Go to the [PyPI website](https://pypi.org/) and create an account
+            <Step title="创建账户">
+                前往 [PyPI 网站](https://pypi.org/) 注册账户
             </Step>
 
-            <Step title="Verify email">
-                Verify your email address by clicking the link that PyPI emails to you
+            <Step title="验证邮箱">
+                点击 PyPI 发送的验证链接完成邮箱验证
             </Step>
 
-            <Step title="Enable 2FA">
-                Go to your account settings and click "Generate Recovery Codes" to enable 2FA. To generate an API token, you **must** have 2FA enabled
+            <Step title="启用双因素认证">
+                前往账户设置，点击"Generate Recovery Codes"以启用双因素认证。要生成 API Token，**必须**先启用双因素认证
             </Step>
 
-            <Step title="Generate token">
-                Go to your account settings and [generate a new API token](https://pypi.org/manage/account/token/)
+            <Step title="生成 Token">
+                前往账户设置，[生成新的 API Token](https://pypi.org/manage/account/token/)
             </Step>
         </Steps>
     </Accordion>
 </AccordionGroup>
 
-### Build and publish
+### 构建并发布
 
 <Card
-    title="How to publish a package"
+    title="如何发布包"
     icon="upload"
     href="https://docs.astral.sh/uv/guides/package/"
     arrow
 >
-    Helpful guide from `uv` on how to build and publish a package to PyPI.
+    来自 `uv` 的实用指南，介绍如何构建并发布包到 PyPI。
 </Card>
 
-## Adding documentation
+## 添加文档
 
-To add documentation for your package to this site under the [integrations tab](/oss/integrations/providers/overview), you will need to create the relevant documentation pages and open a PR in the [LangChain docs repository](https://github.com/langchain-ai/docs).
+要将你的包文档添加到本站的 [集成标签页](/oss/integrations/providers/overview) 下，你需要创建相关文档页面并向 [LangChain 文档仓库](https://github.com/langchain-ai/docs) 提交 PR。
 
-### Writing docs
+### 编写文档
 
-Depending on the type of integration you have built, you will need to create different types of documentation pages. LangChain provides templates for different types of integrations to help you get started.
+根据你构建的集成类型，你需要创建不同类型的文档页面。LangChain 为各类集成提供了模板，帮助你快速上手。
 
 <CardGroup>
-    <Card title="Chat models" icon="message" href="https://github.com/langchain-ai/docs/blob/main/src/oss/python/integrations/chat/TEMPLATE.mdx" arrow/>
-    <Card title="Tools/toolkits" icon="tool" href="https://github.com/langchain-ai/docs/blob/main/src/oss/python/integrations/tools/TEMPLATE.mdx" arrow/>
-    <Card title="Vector stores" icon="database" href="https://github.com/langchain-ai/docs/blob/main/src/oss/python/integrations/vectorstores/TEMPLATE.mdx" arrow/>
+    <Card title="聊天模型" icon="message" href="https://github.com/langchain-ai/docs/blob/main/src/oss/python/integrations/chat/TEMPLATE.mdx" arrow/>
+    <Card title="工具 / 工具集" icon="tool" href="https://github.com/langchain-ai/docs/blob/main/src/oss/python/integrations/tools/TEMPLATE.mdx" arrow/>
+    <Card title="检索器" icon="search" href="https://github.com/langchain-ai/docs/blob/main/src/oss/python/integrations/retrievers/TEMPLATE.mdx" arrow/>
+    <Card title="向量存储" icon="database" href="https://github.com/langchain-ai/docs/blob/main/src/oss/python/integrations/vectorstores/TEMPLATE.mdx" arrow/>
+    <Card title="嵌入模型" icon="stack-2" href="https://github.com/langchain-ai/docs/blob/main/src/oss/python/integrations/text_embedding/TEMPLATE.mdx" arrow/>
 </CardGroup>
 
 <Tip>
-    To reference existing documentation, you can look at the [list of integrations](/oss/integrations/providers/overview) and find similar ones to yours.
+    要参考现有文档，可以查看 [集成列表](/oss/integrations/providers/overview) 找到与你类似的集成。
 
-    To view a given documentation page in raw markdown, use the dropdown button next to "Copy page" on the top right of the page and select "View as Markdown".
+    要查看某个文档页面的原始 Markdown 格式，点击页面右上角"Copy page"旁边的下拉按钮，选择"View as Markdown"。
 </Tip>
 
-### Submit a PR to the docs repo
+### 向文档仓库提交 PR
 
-Make a fork of the [LangChain docs repository](https://github.com/langchain-ai/docs) (not the main `langchain` repo) under a personal GitHub account, and clone it locally. Create a new branch for your integration. Copy the template and modify it using your favorite markdown text editor. Make sure to refer to and follow the [documentation guide](/oss/contributing/documentation) when writing your documentation.
+Fork [LangChain 文档仓库](https://github.com/langchain-ai/docs)（不是主 `langchain` 仓库）到你的个人 GitHub 账户下，并克隆到本地。创建一个新分支用于你的集成。复制模板并使用你喜欢的 Markdown 编辑器进行修改。编写文档时请务必参考并遵循 [文档编写指南](/oss/contributing/documentation)。
 
 <Info>
-    This PR is for **documentation only**. Your integration package itself should live in its own repository under your GitHub organization or account, published to PyPI as a standalone package.
+    此 PR 仅用于**文档**。你的集成包本身应位于你自己的 GitHub 组织或个人账户下的独立仓库中，并作为独立包发布到 PyPI。
 </Info>
 
 <Warning>
-    We may reject PRs or ask for modification if:
-    - CI checks fail
-    - Severe grammatical errors or typos are present
-    - [Mintlify components](/oss/contributing/documentation#mintlify-components) are used incorrectly
-    - Pages are missing a [frontmatter](/oss/contributing/documentation#page-structure)
-    - [Localization](/oss/contributing/documentation#localization) is missing (where applicable)
-    - [Code examples](/oss/contributing/documentation#in-code-documentation) do not run or have errors
-    - [Quality standards](/oss/contributing/documentation#quality-standards) are not met
+    以下情况我们可能会拒绝 PR 或要求修改：
+    - CI 检查未通过
+    - 存在严重的语法错误或拼写错误
+    - [Mintlify 组件](/oss/contributing/documentation#mintlify-components) 使用不正确
+    - 页面缺少 [frontmatter](/oss/contributing/documentation#page-structure)
+    - 缺少 [本地化](/oss/contributing/documentation#localization) 内容（如适用）
+    - [代码示例](/oss/contributing/documentation#in-code-documentation) 无法运行或有错误
+    - 不符合 [质量标准](/oss/contributing/documentation#quality-standards)
 </Warning>
 
-Please be patient as we handle a large volume of PRs. We will review your PR as soon as possible and provide feedback or merge it. **Do not repeatedly tag maintainers about your PR.**
-
-<Note>
-    If your PR includes AI-generated content, you must follow our [acceptable uses of LLMs](/oss/contributing/overview#acceptable-uses-of-llms) policy.
-</Note>
+由于我们需要处理大量 PR，请耐心等待。我们会尽快审核你的 PR 并提供反馈或合并。**请勿反复 @ 维护者催促你的 PR。**
 
 ---
 
-## Next steps
-**Congratulations!** Your integration is now published and documented, making it available to the entire LangChain community.
+## 后续步骤
+**恭喜！** 你的集成现已发布并拥有文档，整个 LangChain 社区都可以使用它了。
 
-<Card title="Co-marketing" icon="speakerphone" href="/oss/contributing/comarketing" arrow>
-    Get in touch with the LangChain marketing team to explore co-marketing opportunities.
+<Card title="联合推广" icon="speakerphone" href="/oss/contributing/comarketing" arrow>
+    联系 LangChain 市场团队，探索联合推广机会。
 </Card>
 :::
 

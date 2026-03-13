@@ -1,20 +1,20 @@
 ---
-title: Install LangChain
-sidebarTitle: Install
+title: 安装 LangChain
+sidebarTitle: 安装
 ---
 
-To install the LangChain package:
+安装 LangChain 包：
 
 :::python
 <CodeGroup>
     ```bash pip
     pip install -U langchain
-    # Requires Python 3.10+
+    # 需要 Python 3.10+
     ```
 
     ```bash uv
     uv add langchain
-    # Requires Python 3.10+
+    # 需要 Python 3.10+
     ```
 </CodeGroup>
 :::
@@ -23,42 +23,42 @@ To install the LangChain package:
     <CodeGroup>
     ```bash npm
     npm install langchain @langchain/core
-    # Requires Node.js 20+
+    # 需要 Node.js 20+
     ```
 
     ```bash pnpm
     pnpm add langchain @langchain/core
-    # Requires Node.js 20+
+    # 需要 Node.js 20+
     ```
 
     ```bash yarn
     yarn add langchain @langchain/core
-    # Requires Node.js 20+
+    # 需要 Node.js 20+
     ```
 
     ```bash bun
     bun add langchain @langchain/core
-    # Requires Bun v1.0.0+
+    # 需要 Bun v1.0.0+
     ```
     </CodeGroup>
 :::
 
-LangChain provides integrations to hundreds of LLMs and thousands of other integrations. These live in independent provider packages.
+LangChain 提供了数百个 LLM 集成和数千个其他集成能力，它们以独立的提供商包形式发布。
 
 :::python
 <CodeGroup>
     ```bash pip
-    # Installing the OpenAI integration
+    # 安装 OpenAI 集成
     pip install -U langchain-openai
 
-    # Installing the Anthropic integration
+    # 安装 Anthropic 集成
     pip install -U langchain-anthropic
     ```
     ```bash uv
-    # Installing the OpenAI integration
+    # 安装 OpenAI 集成
     uv add langchain-openai
 
-    # Installing the Anthropic integration
+    # 安装 Anthropic 集成
     uv add langchain-anthropic
     ```
 </CodeGroup>
@@ -68,37 +68,37 @@ LangChain provides integrations to hundreds of LLMs and thousands of other integ
 :::js
 <CodeGroup>
     ```bash npm
-    # Installing the OpenAI integration
+    # 安装 OpenAI 集成
     npm install @langchain/openai
-    # Installing the Anthropic integration
+    # 安装 Anthropic 集成
     npm install @langchain/anthropic
     ```
 
     ```bash pnpm
-    # Installing the OpenAI integration
+    # 安装 OpenAI 集成
     pnpm install @langchain/openai
-    # Installing the Anthropic integration
+    # 安装 Anthropic 集成
     pnpm install @langchain/anthropic
     ```
 
     ```bash yarn
-    # Installing the OpenAI integration
+    # 安装 OpenAI 集成
     yarn add @langchain/openai
-    # Installing the Anthropic integration
+    # 安装 Anthropic 集成
     yarn add @langchain/anthropic
     ```
 
     ```bash bun
-    # Installing the OpenAI integration
+    # 安装 OpenAI 集成
     bun add @langchain/openai
-    # Installing the Anthropic integration
+    # 安装 Anthropic 集成
     bun add @langchain/anthropic
     ```
 </CodeGroup>
 :::
 
 <Tip>
-See the [Integrations tab](/oss/integrations/providers/overview) for a full list of available integrations.
+查看[集成列表](/oss/integrations/providers/overview)获取所有可用集成的完整清单。
 </Tip>
 
-Now that you have LangChain installed, you can get started by following the [Quickstart guide](/oss/langchain/quickstart).
+安装完成后，可以按照[快速入门教程](/oss/langchain/quickstart)开始构建。

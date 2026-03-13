@@ -1,22 +1,22 @@
 ---
-title: "Voyage AI integration"
-description: "Integrate with the Voyage AI embedding model using LangChain JavaScript."
+title: "Voyage AI 集成"
+description: "使用 LangChain JavaScript 集成 Voyage AI 嵌入模型。"
 ---
 
-The `VoyageEmbeddings` class uses the Voyage AI REST API to generate embeddings for a given text.
+`VoyageEmbeddings` 类使用 Voyage AI REST API 为给定文本生成嵌入。
 
-The `inputType` parameter allows you to specify the type of input text for better embedding results. You can set it to `query`, `document`, or leave it undefined (which is equivalent to `None`).
+`inputType` 参数允许你指定输入文本的类型以获得更好的嵌入结果。你可以将其设置为 `query`、`document`，或留空（等同于 `None`）。
 
-- `query`: Use this for search or retrieval queries. Voyage AI will prepend a prompt to optimize the embeddings for query use cases.
-- `document`: Use this for documents or content that you want to be retrievable. Voyage AI will prepend a prompt to optimize the embeddings for document use cases.
-- `None` (default): The input text will be directly encoded without any additional prompt.
+- `query`：用于搜索或检索查询。Voyage AI 会在前面添加提示词以优化查询用例的嵌入。
+- `document`：用于你希望可检索的文档或内容。Voyage AI 会在前面添加提示词以优化文档用例的嵌入。
+- `None`（默认）：输入文本将被直接编码，不添加任何额外提示词。
 
-Additionally, the class supports new parameters for further customization of the embedding process:
+此外，该类支持新参数以进一步自定义嵌入过程：
 
-- **truncation**: Whether to truncate the input texts to the maximum length allowed by the model.
-- **outputDimension**: The desired dimension of the output embeddings.
-- **outputDtype**: The data type of the output embeddings. Can be `"float"` or `"int8"`.
-- **encodingFormat**: The format of the output embeddings. Can be `"float"`, `"base64"`, or `"ubinary"`.
+- **truncation**：是否将输入文本截断为模型允许的最大长度。
+- **outputDimension**：输出嵌入的期望维度。
+- **outputDtype**：输出嵌入的数据类型。可以是 `"float"` 或 `"int8"`。
+- **encodingFormat**：输出嵌入的格式。可以是 `"float"`、`"base64"` 或 `"ubinary"`。
 
 ```typescript
 import { VoyageEmbeddings } from "@langchain/community/embeddings/voyage";
@@ -31,7 +31,7 @@ const embeddings = new VoyageEmbeddings({
 });
 ```
 
-## Related
+## 相关链接
 
-- Embedding model [conceptual guide](/oss/integrations/embeddings)
-- Embedding model [how-to guides](/oss/integrations/embeddings)
+- 嵌入模型[概念指南](/oss/integrations/text_embedding)
+- 嵌入模型[操作指南](/oss/integrations/text_embedding)

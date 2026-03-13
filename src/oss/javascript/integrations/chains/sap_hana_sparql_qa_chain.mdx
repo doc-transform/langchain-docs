@@ -1,20 +1,20 @@
 ---
-title: Question Answering with `HanaSparqlQAChain`
+title: 使用 `HanaSparqlQAChain` 进行问答
 ---
 
-## Setup and Installation
+## 安装和配置
 
-To use this feature, install the `@sap/hana-langchain` package and its peer dependencies:
+要使用此功能，请安装 `@sap/hana-langchain` 包及其依赖：
 
 ```bash
 npm install @sap/hana-langchain @langchain/core@latest @langchain/classic@latest langchain@latest
 ```
 
-Create a connection to your SAP HANA Cloud instance.
+创建与 SAP HANA Cloud 实例的连接。
 
 ```typescript
 import * as dotenv from 'dotenv';
-// Load environment variables if needed
+// 如需加载环境变量
 dotenv.config();
 
 import hanaClient from "@sap/hana-client";
@@ -27,10 +27,10 @@ const connectionParams = {
 };
 const client = hanaClient.createConnection(connectionParams);
 
-// connect to hanaDB
+// 连接到 hanaDB
 await new Promise<void>((resolve, reject) => {
   client.connect((err: Error) => {
-    // Use arrow function here
+    // 此处使用箭头函数
     if (err) {
       reject(err);
     } else {
@@ -41,54 +41,54 @@ await new Promise<void>((resolve, reject) => {
 });
 ```
 
-`HanaSparqlQAChain` ties together:
+`HanaSparqlQAChain` 将以下几个部分结合在一起：
 
-1. **Schema-aware SPARQL generation**
-2. **Query execution** against SAP HANA
-3. **Natural-language answer formatting**
+1. **感知 Schema 的 SPARQL 生成**
+2. **对 SAP HANA 执行查询**
+3. **自然语言答案格式化**
 
-## Initialization
+## 初始化
 
-* An **LLM** to generate and interpret queries
-* A **`HanaRdfGraph`** (with connection, `graph_uri`, and ontology)
+* 一个 **LLM** 用于生成和解释查询
+* 一个 **`HanaRdfGraph`**（包含连接、`graph_uri` 和本体）
 
-Follow the steps here [HanaRdfGraph](/oss/integrations/graphs/sap_hana_rdf_graph) to know more about creating a `HanaRdfGraph` instance.
+按照[此处步骤](/oss/integrations/graphs/sap_hana_rdf_graph)了解如何创建 `HanaRdfGraph` 实例。
 
-Import the `HanaSparqlQAChain`
+导入 `HanaSparqlQAChain`
 
 ```typescript
 import { HanaSparqlQAChain } from "@sap/hana-langchain";
 const qaChain = HanaSparqlQAChain.fromLLM({ llm, graph, allowDangerousRequests: true, verbose: true });
 ```
 
-## Pipeline Overview
+## \u流水线概览
 
-1. SPARQL Generation
-   - Uses a SPARQL-generation prompt
-   - Inputs: `schema` (Turtle from `graph.getSchema()`), `prompt` (user question)
-2. Query Post-processing
-   - Extract SPARQL from model output
-   - Inject `FROM <graph_uri>` if missing
-   - Ensure common prefixes (`rdf:`, `rdfs:`, `owl:`, `xsd:`)
-3. Execution
+1. SPARQL 生成
+   - 使用 SPARQL 生成提示词
+   - 输入：`schema`（来自 `graph.getSchema()` 的 Turtle 格式）、`prompt`（用户问题）
+2. 查询后处理
+   - 从模型输出中提取 SPARQL
+   - 如缺少则注入 `FROM <graph_uri>`
+   - 确保包含常用前缀（`rdf:`、`rdfs:`、`owl:`、`xsd:`）
+3. 执行
    - `graph.query(generatedSparql)`
-4. Answer Formulation
-   - Uses a QA prompt with inputs: `context` (results), `prompt` (original question)
+4. 答案生成
+   - 使用 QA 提示词，输入：`context`（结果）、`prompt`（原始问题）
 
-## Prompt templates
+## 提示词模板
 
-### "SPARQL Generation" prompt
+### “SPARQL 生成”提示词
 
-The `sparqlGenerationPrompt` is used to guide the LLM in generating a SPARQL query from the user question and the provided schema.
+`sparqlGenerationPrompt` 用于引导 LLM 根据用户问题和提供的 schema 生成 SPARQL 查询。
 
-### Answering prompt
+### 回答提示词
 
-The `qaPrompt` instructs the LLM to create a natural language answer based solely on the database results.
-The default prompts can be found here: [`prompts.ts`](https://github.com/SAP/langchainjs-integration-for-sap-hana-cloud/blob/main/src/chains/graph_qa/prompts.ts)
+`qaPrompt` 指示 LLM 仅根据数据库结果创建自然语言答案。
+默认提示词可在此处找到：[`prompts.ts`](https://github.com/SAP/langchainjs-integration-for-sap-hana-cloud/blob/main/src/chains/graph_qa/prompts.ts)
 
-## Customizing prompts
+## 自定义提示词
 
-You can override the defaults at initialization:
+你可以在初始化时覆盖默认值：
 
 ```typescript
 const qaChain = HanaSparqlQAChain.fromLLM({
@@ -104,26 +104,25 @@ const qaChain = HanaSparqlQAChain.fromLLM({
 > - `sparql_generation_prompt` must have the input variables: `["schema", "prompt"]`
 > - `qa_prompt` must have the input variables: `["context", "prompt"]`
 
-## Example: Question answering over a “Movies” knowledge graph
+## 示例：在“电影”知识图谱上进行问答
 
-**Prerequisite**:
-You must have an SAP HANA Cloud instance with the **triple store** feature enabled.
-For detailed instructions, refer to: [Enable Triple Store](https://help.sap.com/docs/hana-cloud-database/sap-hana-cloud-sap-hana-database-knowledge-graph-guide/enable-triple-store/)<br />
-Load the `kgdocu_movies` example data. See [Knowledge Graph Example](https://help.sap.com/docs/hana-cloud-database/sap-hana-cloud-sap-hana-database-knowledge-graph-guide/knowledge-graph-example).
+**前提条件**：
+你必须拥有一个启用了 **triple store** 功能的 SAP HANA Cloud 实例。
+详细说明请参考：[启用 Triple Store](https://help.sap.com/docs/hana-cloud-database/sap-hana-cloud-sap-hana-database-knowledge-graph-guide/enable-triple-store/)<br />
+加载 `kgdocu_movies` 示例数据。参见[知识图谱示例](https://help.sap.com/docs/hana-cloud-database/sap-hana-cloud-sap-hana-database-knowledge-graph-guide/knowledge-graph-example)。
 
-Below we’ll:
+下面我们将：
 
-1. Instantiate the `HanaRdfGraph` pointing at our “movies” data graph
-2. Wrap it in a `HanaSparqlQAChain` powered by an LLM
-3. Ask natural-language questions and print out the chain’s responses
+1. 创建指向“电影”数据图的 `HanaRdfGraph` 实例
+2. 将其封装在由 LLM 驱动的 `HanaSparqlQAChain` 中
+3. 提出自然语言问题并打印链式调用的响应
 
-This demonstrates how the LLM generates SPARQL under the hood, executes it against SAP HANA, and returns a human-readable answer.
+这演示了 LLM 如何在幕后生成 SPARQL、对 SAP HANA 执行查询并返回人类可读的答案。
 
-First, create a connection to your SAP HANA Cloud instance.
-
+首先，创建与 SAP HANA Cloud 实例的连接。
 ```typescript
 import * as dotenv from 'dotenv';
-// Load environment variables if needed
+// 如需加载环境变量
 dotenv.config();
 
 import hanaClient from "@sap/hana-client";
@@ -136,10 +135,10 @@ const connectionParams = {
 };
 const client = hanaClient.createConnection(connectionParams);
 
-// connect to hanaDB
+// 连接到 hanaDB
 await new Promise<void>((resolve, reject) => {
   client.connect((err: Error) => {
-    // Use arrow function here
+    // 此处使用箭头函数
     if (err) {
       reject(err);
     } else {
@@ -150,7 +149,7 @@ await new Promise<void>((resolve, reject) => {
 });
 ```
 
-Then, set up the knowledge graph instance
+然后，配置知识图谱实例
 
 ```typescript
 import { HanaRdfGraph, HanaRdfGraphOptions } from "@sap/hana-langchain";
@@ -169,9 +168,9 @@ await graph.initialize(graphOptions);
 ```
 
 ```typescript
-// Serialise the graph schema (optional)
-// Internally, the schema is stored as an N3 Store instance,
-// We use the N3 Writer to serialise it to Turtle format for display.
+// 序列化图 schema（可选）
+// 在内部，schema 以 N3 Store 实例存储，
+// 我们使用 N3 Writer 将其序列化为 Turtle 格式以便显示。
 const schemaStore = graph.getSchema();
 const writer = new Writer({
   prefixes: {
@@ -240,14 +239,14 @@ rdfs:label a owl:DatatypeProperty;
     rdfs:range <http://kg.demo.sap.com/Genre>.
 ```
 
-After that, initialise the LLM.
+然后，初始化 LLM。
 
 ```typescript
 import { ChatOpenAI } from "@langchain/openai"; // or your chosen LLM
 const llm = new ChatOpenAI({ model: "gpt-4o" });
 ```
 
-Then, we create a SPARQL QA Chain
+接下来，创建 SPARQL QA 链式调用
 
 ```typescript
 import { HanaSparqlQAChain, HanaSparqlQAChainOptions } from "@sap/hana-langchain";
@@ -321,13 +320,13 @@ http://www.wikidata.org/entity/Q211415,Edward James Olmos
 The actors who acted in Blade Runner include Morgan Paull, William Sanderson, James Hong, Brion James, M. Emmet Walsh, Joe Turkel, Daryl Hannah, Joanna Cassidy, Rutger Hauer, Hy Pyke, Sean Young, and Edward James Olmos.
 ```
 
-## What’s happening under the hood?
+## 底层运作原理
 
-1. **SPARQL Generation**
-  The chain invokes the LLM with your Turtle-formatted ontology (`graph.getSchema()`) and the user’s question using the `SPARQL_GENERATION_SELECT_PROMPT`. The LLM then emits a valid `SELECT` query tailored to your schema.
-2. **Pre-processing & Execution**
-  * **Extract & clean**: Pull the raw SPARQL text out of the LLM’s response.
-  * **Inject graph context**: Add `FROM <graph_uri>` if it’s missing and ensure common prefixes (`rdf:`, `rdfs:`, `owl:`, `xsd:`) are declared.
-  * **Run on HANA**: Execute the finalized query via `HanaRdfGraph.query()` over your named graph.
-3. **Answer Formulation**
-  The returned CSV (or Turtle) results feed into the LLM again—this time with the `SPARQL_QA_PROMPT`. The LLM produces a concise, human-readable answer strictly based on the retrieved data, without hallucination.
+1. **SPARQL 生成**
+  链式调用使用你的 Turtle 格式本体（`graph.getSchema()`）和用户问题，通过 `SPARQL_GENERATION_SELECT_PROMPT` 调用 LLM。LLM 然后生成一个针对你的 schema 定制的有效 `SELECT` 查询。
+2. **预处理与执行**
+  * **提取与清理**：从 LLM 响应中提取原始 SPARQL 文本。
+  * **注入图上下文**：如缺少则添加 `FROM <graph_uri>`，并确保声明了常用前缀（`rdf:`、`rdfs:`、`owl:`、`xsd:`）。
+  * **在 HANA 上执行**：通过 `HanaRdfGraph.query()` 在你的命名图上执行最终查询。
+3. **答案生成**
+  返回的 CSV（或 Turtle）结果再次输入 LLM——这次使用 `SPARQL_QA_PROMPT`。LLM 仅根据检索到的数据生成简洁、人类可读的答案，不会产生幻觉。

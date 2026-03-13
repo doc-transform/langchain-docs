@@ -1,8 +1,8 @@
 ---
-title: Subagents
+title: 子 Agent
 ---
 
-In the **subagents** architecture, a central main [agent](/oss/langchain/agents) (often referred to as a **supervisor**) coordinates subagents by calling them as [tools](/oss/langchain/tools). The main agent decides which subagent to invoke, what input to provide, and how to combine results. Subagents are stateless—they don't remember past interactions, with all conversation memory maintained by the main agent. This provides [context](/oss/langchain/context-engineering) isolation: each subagent invocation works in a clean context window, preventing context bloat in the main conversation.
+在**子 Agent** 架构中，一个中央的主 [Agent](/oss/langchain/agents)（通常称为**监督器**）通过将子 Agent 作为[工具](/oss/langchain/tools)调用来协调它们。主 Agent 决定调用哪个子 Agent、提供什么输入以及如何组合结果。子 Agent 是无状态的 —— 它们不会记住过去的交互，所有对话记忆由主 Agent 维护。这提供了[上下文](/oss/langchain/context-engineering)隔离：每次子 Agent 调用都在干净的上下文窗口中工作，防止主对话中的上下文臃肿。
 
 ```mermaid
 graph LR
@@ -14,36 +14,30 @@ graph LR
     D --> B
     E --> B
     B --> F[User response]
-
-    classDef trigger fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#14532D
-    classDef process fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#1E3A8A
-
-    class A,F trigger
-    class B,C,D,E process
 ```
 
-## Key characteristics
+## 核心特征
 
-* Centralized control: All routing passes through the main agent
-* No direct user interaction: Subagents return results to the main agent, not the user (though you can use [interrupts](/oss/langgraph/interrupts#pause-using-interrupt) within a subagent to allow user interaction)
-* Subagents via tools: Subagents are invoked via tools
-* Parallel execution: The main agent can invoke multiple subagents in a single turn
+* 集中控制：所有路由都通过主 Agent
+* 无直接用户交互：子 Agent 将结果返回给主 Agent 而不是用户（但你可以在子 Agent 内使用[中断](/oss/langgraph/interrupts#interrupt)来允许用户交互）
+* 通过工具调用子 Agent：子 Agent 通过工具被调用
+* 并行执行：主 Agent 可以在单轮中调用多个子 Agent
 
 <Note>
-**Supervisor vs. Router**: A supervisor agent (this pattern) is different from a [router](/oss/langchain/multi-agent/router). The supervisor is a full agent that maintains conversation context and dynamically decides which subagents to call across multiple turns. A router is typically a single classification step that dispatches to agents without maintaining ongoing conversation state.
+**监督器 vs. 路由器**：监督器 Agent（此模式）与[路由器](/oss/langchain/multi-agent/router)不同。监督器是一个完整的 Agent，维护对话上下文并跨多轮动态决定调用哪些子 Agent。路由器通常是一个单次分类步骤，将请求分发到 Agent，而不维护持续的对话状态。
 </Note>
 
-## When to use
+## 适用场景
 
-Use the subagents pattern when you have multiple distinct domains (e.g., calendar, email, CRM, database), subagents don't need to converse directly with users, or you want centralized workflow control. For simpler cases with just a few [tools](/oss/langchain/tools), use a [single agent](/oss/langchain/agents).
+当你拥有多个不同领域（如日历、邮件、CRM、数据库）、子 Agent 不需要直接与用户对话、或你想要集中化工作流控制时，使用子 Agent 模式。对于只有少量[工具](/oss/langchain/tools)的简单场景，使用[单个 Agent](/oss/langchain/agents)即可。
 
 <Tip>
-**Need user interaction within a subagent?** While subagents typically return results to the main agent rather than conversing directly with users, you can use [interrupts](/oss/langgraph/interrupts#pause-using-interrupt) within a subagent to pause execution and gather user input. This is useful when a subagent needs clarification or approval before proceeding. The main agent remains the orchestrator, but the subagent can collect information from the user mid-task.
+**需要在子 Agent 内进行用户交互？** 虽然子 Agent 通常将结果返回给主 Agent 而不是直接与用户对话，但你可以在子 Agent 内使用[中断](/oss/langgraph/interrupts#interrupt)来暂停执行并收集用户输入。当子 Agent 在继续执行前需要用户的澄清或审批时，这非常有用。主 Agent 仍然是编排者，但子 Agent 可以在任务中途从用户收集信息。
 </Tip>
 
-## Basic implementation
+## 基本实现
 
-The core mechanism wraps a subagent as a tool that the main agent can call:
+核心机制是将子 Agent 包装为主 Agent 可以调用的工具：
 
 :::python
 ```python
@@ -92,42 +86,41 @@ const mainAgent = createAgent({ model: "anthropic:claude-sonnet-4-20250514", too
 :::
 
 <Card
-    title="Tutorial: Build a personal assistant with subagents"
+    title="教程：使用子 Agent 构建个人助手"
     icon="sitemap"
     href="/oss/langchain/multi-agent/subagents-personal-assistant"
-    arrow cta="Learn more"
+    arrow cta="了解更多"
 >
-    Learn how to build a personal assistant using the subagents pattern, where a central main agent (supervisor) coordinates specialized worker agents.
+    学习如何使用子 Agent 模式构建个人助手，其中中央主 Agent（监督器）协调专门化的工作 Agent。
 </Card>
 
-## Design decisions
+## 设计决策
 
-When implementing the subagents pattern, you'll make several key design choices. This table summarizes the options—each is covered in detail in the sections below.
+实现子 Agent 模式时，你需要做出几个关键设计选择。下表总结了这些选项 —— 每个都在下面的章节中详细介绍。
 
-| Decision | Options |
-|----------|---------|
-| [**Sync vs. async**](#sync-vs-async) | Sync (blocking) vs. async (background) |
-| [**Tool patterns**](#tool-patterns) | Tool per agent vs. single dispatch tool |
-| [**Subagent specs**](#subagent-specs) | System prompt vs. enum constraint vs. tool-based discovery (single dispatch tool only) |
-| [**Subagent inputs**](#subagent-inputs) | Query only vs. full context |
-| [**Subagent outputs**](#subagent-outputs) | Subagent result vs full conversation history |
+| 决策 | 选项 |
+|------|------|
+| [**同步 vs. 异步**](#sync-vs-async) | 同步（阻塞）vs. 异步（后台） |
+| [**工具模式**](#tool-patterns) | 每个 Agent 一个工具 vs. 单一分发工具 |
+| [**子 Agent 规格**](#subagent-specs) | 系统提示词 vs. 枚举约束 vs. 基于工具的发现（仅单一分发工具） |
+| [**子 Agent 输入**](#subagent-inputs) | 仅查询 vs. 完整上下文 |
+| [**子 Agent 输出**](#subagent-outputs) | 子 Agent 结果 vs. 完整对话历史 |
+## 同步 vs. 异步
 
-## Sync vs. async
+子 Agent 执行可以是**同步**（阻塞）或**异步**（后台）的。你的选择取决于主 Agent 是否需要结果才能继续。
 
-Subagent execution can be **synchronous** (blocking) or **asynchronous** (background). Your choice depends on whether the main agent needs the result to continue.
-
-| Mode | Main agent behavior | Best for | Tradeoff |
-|------|---------------------|----------|----------|
-| **Sync** | Waits for subagent to complete | Main agent needs result to continue | Simple, but blocks the conversation |
-| **Async** | Continues while subagent runs in background | Independent tasks, user shouldn't wait | Responsive, but more complex |
+| 模式 | 主 Agent 行为 | 最适合 | 权衡 |
+|------|------------|---------|------|
+| **同步** | 等待子 Agent 完成 | 主 Agent 需要结果才能继续 | 简单，但会阻塞对话 |
+| **异步** | 子 Agent 在后台运行时继续 | 独立任务，用户不应等待 | 响应更快，但更复杂 |
 
 <Tip>
-Not to be confused with Python's `async`/`await`. Here, "async" means the main agent kicks off a background job (typically in a separate process or service) and continues without blocking.
+不要与 Python 的 `async`/`await` 混淆。这里的“异步”是指主 Agent 启动一个后台任务（通常在单独的进程或服务中），然后继续执行而不阻塞。
 </Tip>
 
-### Synchronous (default)
+### 同步（默认）
 
-By default, subagent calls are **synchronous**: the main agent waits for each subagent to complete before continuing. Use sync when the main agent's next action depends on the subagent's result.
+默认情况下，子 Agent 调用是**同步**的 —— 主 Agent 等待每个子 Agent 完成后再继续。当主 Agent 的下一步操作依赖子 Agent 的结果时，使用同步模式。
 
 ```mermaid
 sequenceDiagram
@@ -142,19 +135,19 @@ sequenceDiagram
     Main Agent-->>User: "It's 72°F and sunny in Tokyo"
 ```
 
-**When to use sync:**
-- Main agent needs the subagent's result to formulate its response
-- Tasks have order dependencies (e.g., fetch data → analyze → respond)
-- Subagent failures should block the main agent's response
+**何时使用同步：**
+- 主 Agent 需要子 Agent 的结果来形成其响应
+- 任务具有顺序依赖（如获取数据 → 分析 → 响应）
+- 子 Agent 失败应阻塞主 Agent 的响应
 
-**Tradeoffs:**
-- Simple implementation—just call and wait
-- User sees no response until all subagents complete
-- Long-running tasks freeze the conversation
+**权衡：**
+- 实现简单 —— 只需调用并等待
+- 在所有子 Agent 完成之前用户看不到响应
+- 长时间任务会冻结对话
 
-### Asynchronous
+### 异步
 
-Use **asynchronous execution** when the subagent's work is independent—the main agent doesn't need the result to continue conversing with the user. The main agent kicks off a background job and remains responsive.
+当子 Agent 的工作是独立的 —— 主 Agent 不需要结果就能继续与用户对话时，使用**异步执行**。主 Agent 启动一个后台任务并保持响应能力。
 
 ```mermaid
 sequenceDiagram
@@ -186,28 +179,28 @@ sequenceDiagram
     Main Agent-->>User: "Review complete: [findings]"
 ```
 
-**When to use async:**
-- Subagent work is independent of the main conversation flow
-- Users should be able to continue chatting while work happens
-- You want to run multiple independent tasks in parallel
+**何时使用异步：**
+- 子 Agent 工作独立于主对话流程
+- 用户应该能在工作进行时继续聊天
+- 你想要并行运行多个独立任务
 
-**Three-tool pattern:**
-1. **Start job**: Kicks off the background task, returns a job ID
-2. **Check status**: Returns current state (pending, running, completed, failed)
-3. **Get result**: Retrieves the completed result
+**三工具模式：**
+1. **启动任务**：启动后台任务，返回任务 ID
+2. **检查状态**：返回当前状态（pending、running、completed、failed）
+3. **获取结果**：检索已完成的结果
 
-**Handling job completion:** When a job finishes, your application needs to notify the user. One approach: surface a notification that, when clicked, sends a `HumanMessage` like "Check job_123 and summarize the results."
+**处理任务完成：** 当任务完成时，你的应用需要通知用户。一种方法是弹出通知，用户点击后发送一条 `HumanMessage`，如“检查 job_123 并总结结果”。
 
-## Tool patterns
+## 工具模式
 
-There are two main ways to expose subagents as tools:
+有两种主要方式将子 Agent 暴露为工具：
 
-| Pattern | Best for | Trade-off |
-|---------|----------|-----------|
-| [**Tool per agent**](#tool-per-agent) | Fine-grained control over each subagent's input/output | More setup, but more customization |
-| [**Single dispatch tool**](#single-dispatch-tool) | Many agents, distributed teams, convention over configuration | Simpler composition, less per-agent customization |
+| 模式 | 最适合 | 权衡 |
+|------|---------|------|
+| [**每个 Agent 一个工具**](#tool-per-agent) | 对每个子 Agent 的输入/输出进行细粒度控制 | 更多设置，但更多定制 |
+| [**单一分发工具**](#single-dispatch-tool) | 大量 Agent、分布式团队、约定优先于配置 | 更简单的组合，更少的每 Agent 定制 |
 
-### Tool per agent
+### 每个 Agent 一个工具
 
 ```mermaid
 graph LR
@@ -219,15 +212,9 @@ graph LR
     D --> B
     E --> B
     B --> F[User response]
-
-    classDef trigger fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#14532D
-    classDef process fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#1E3A8A
-
-    class A,F trigger
-    class B,C,D,E process
 ```
 
-The key idea is wrapping subagents as tools that the main agent can call:
+关键思想是将子 Agent 包装为主 Agent 可以调用的工具：
 
 :::python
 ```python
@@ -277,13 +264,13 @@ const mainAgent = createAgent({ model, tools: [callSubagent] });  // [!code high
 ```
 :::
 
-The main agent invokes the subagent tool when it decides the task matches the subagent's description, receives the result, and continues orchestration. See [Context engineering](#context-engineering) for fine-grained control.
+主 Agent 在判断任务匹配子 Agent 的描述时调用子 Agent 工具，接收结果，并继续编排。参见[上下文工程](#context-engineering)了解细粒度控制。
 
-### Single dispatch tool
+### 单一分发工具
 
-An alternative approach uses a single parameterized tool to invoke ephemeral sub-agents for independent tasks. Unlike the [tool per agent](#tool-per-agent) approach where each sub-agent is wrapped as a separate tool, this uses a convention-based approach with a single `task` tool: the task description is passed as a human message to the sub-agent, and the sub-agent's final message is returned as the tool result.
+另一种方法是使用单个参数化工具为独立任务调用临时子 Agent。与[每个 Agent 一个工具](#tool-per-agent)的方法不同，这里使用基于约定的方法，通过单个 `task` 工具：任务描述作为 human 消息传递给子 Agent，子 Agent 的最终消息作为工具结果返回。
 
-Use this approach when you want to distribute agent development across multiple teams, need to isolate complex tasks into separate context windows, need a scalable way to add new agents without modifying the coordinator, or prefer convention over customization. This approach trades flexibility in context engineering for simplicity in agent composition and strong context isolation.
+当你想要跨多个团队分布 Agent 开发、需要将复杂任务隔离到单独的上下文窗口、需要一种可扩展的方式来添加新 Agent 而不修改协调器、或偏好约定优先于定制时，使用此方法。此方法以上下文工程的灵活性换取了 Agent 组合的简单性和强大的上下文隔离。
 
 ```mermaid
 graph LR
@@ -297,28 +284,20 @@ graph LR
     F --> C
     C --> B
     B --> G[User response]
-
-    classDef trigger fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#14532D
-    classDef process fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#1E3A8A
-    classDef decision fill:#FEF3C7,stroke:#F59E0B,stroke-width:2px,color:#78350F
-
-    class A,G trigger
-    class B,D,E,F process
-    class C decision
 ```
 
-**Key characteristics:**
+**关键特征：**
 
-* Single task tool: One parameterized tool that can invoke any registered sub-agent by name
-* Convention-based invocation: Agent selected by name, task passed as human message, final message returned as tool result
-* Team distribution: Different teams can develop and deploy agents independently
-* Agent discovery: Sub-agents can be discovered via system prompt (listing available agents) or through [progressive disclosure](/oss/langchain/multi-agent/skills-sql-assistant) (loading agent information on-demand via tools)
+* 单一 task 工具：一个参数化工具，可以通过名称调用任何已注册的子 Agent
+* 基于约定的调用：按名称选择 Agent，任务作为 human 消息传递，最终消息作为工具结果返回
+* 团队分布：不同团队可以独立开发和部署 Agent
+* Agent 发现：子 Agent 可以通过系统提示词（列出可用 Agent）或通过[渐进式披露](/oss/langchain/multi-agent/skills-sql-assistant)（通过工具按需加载 Agent 信息）被发现
 
 <Tip>
-An interesting aspect of this approach is that sub-agents may have the exact same capabilities as the main agent. In such cases, invoking a sub-agent is **really about context isolation** as the primary reason—allowing complex, multi-step tasks to run in isolated context windows without bloating the main agent's conversation history. The sub-agent completes its work autonomously and returns only a concise summary, keeping the main thread focused and efficient.
+这种方法的一个有趣之处在于，子 Agent 可能与主 Agent 拥有完全相同的能力。在这种情况下，调用子 Agent **真正的目的是上下文隔离** —— 允许复杂的多步骤任务在隔离的上下文窗口中运行，而不会使主 Agent 的对话历史臃肿。子 Agent 自主完成其工作，仅返回简洁的总结，保持主线程的专注和高效。
 </Tip>
 
-<Accordion title="Agent registry with task dispatcher">
+<Accordion title="带任务分发器的 Agent 注册表">
 
 :::python
 ```python
@@ -440,42 +419,41 @@ const mainAgent = createAgent({
 
 </Accordion>
 
-## Context engineering
+## 上下文工程
 
-Control how context flows between the main agent and its subagents:
+控制上下文如何在主 Agent 和其子 Agent 之间流动：
 
-| Category | Purpose | Impacts |
-|----------|---------|---------|
-| [**Subagent specs**](#subagent-specs) | Ensure subagents are invoked when they should be | Main agent routing decisions |
-| [**Subagent inputs**](#subagent-inputs) | Ensure subagents can execute well with optimized context | Subagent performance |
-| [**Subagent outputs**](#subagent-outputs) | Ensure the supervisor can act on subagent results | Main agent performance |
+| 类别 | 目的 | 影响 |
+|------|------|------|
+| [**子 Agent 规格**](#subagent-specs) | 确保子 Agent 在应该被调用时被调用 | 主 Agent 路由决策 |
+| [**子 Agent 输入**](#subagent-inputs) | 确保子 Agent 能以优化的上下文良好执行 | 子 Agent 性能 |
+| [**子 Agent 输出**](#subagent-outputs) | 确保监督器能根据子 Agent 结果采取行动 | 主 Agent 性能 |
 
-See also our comprehensive guide on [context engineering](/oss/langchain/context-engineering) for agents.
+另请参见我们关于 Agent [上下文工程](/oss/langchain/context-engineering)的全面指南。
 
-### Subagent specs
+### 子 Agent 规格
 
-The **names** and **descriptions** associated with subagents are the primary way the main agent knows which subagents to invoke. These are prompting levers—choose them carefully.
+与子 Agent 关联的**名称**和**描述**是主 Agent 了解应调用哪些子 Agent 的主要方式。这些是提示词调控手段 —— 请仔细选择。
 
-* **Name**: How the main agent refers to the sub-agent. Keep it clear and action-oriented (e.g., `research_agent`, `code_reviewer`).
-* **Description**: What the main agent knows about the sub-agent's capabilities. Be specific about what tasks it handles and when to use it.
+* **名称**：主 Agent 引用子 Agent 的方式。保持清晰且面向动作（如 `research_agent`、`code_reviewer`）。
+* **描述**：主 Agent 对子 Agent 能力的了解。明确说明它处理哪些任务以及何时使用。
 
-For the [single dispatch tool](#single-dispatch-tool) design, you must additionally provide the main agent with information about the subagents it can invoke.
-You can provide this information in different ways based on the number of agents and whether your registry is static or dynamic:
+对于[单一分发工具](#single-dispatch-tool)设计，你还必须向主 Agent 提供其可调用的子 Agent 的信息。
+你可以根据 Agent 数量和注册表是静态还是动态的，以不同方式提供这些信息：
 
-| Method | Best for | Tradeoff |
-|--------|----------|----------|
-| **System prompt enumeration** | Small, static agent lists (< 10 agents) | Simple, but requires prompt updates when agents change |
-| **Enum constraint** | Small, static agent lists (< 10 agents) | Type-safe and explicit, but requires code changes when agents change |
-| **Tool-based discovery** | Large or dynamic agent registries | Flexible and scalable, but adds complexity |
+| 方法 | 最适合 | 权衡 |
+|------|---------|------|
+| **系统提示词枚举** | 小型、静态 Agent 列表（< 10 个） | 简单，但 Agent 变更时需要更新提示词 |
+| **枚举约束** | 小型、静态 Agent 列表（< 10 个） | 类型安全且显式，但 Agent 变更时需要修改代码 |
+| **基于工具的发现** | 大型或动态 Agent 注册表 | 灵活且可扩展，但增加复杂性 |
+#### 系统提示词枚举
 
-#### System prompt enumeration
+直接在主 Agent 的系统提示词中列出可用 Agent。主 Agent 将 Agent 列表及其描述作为指令的一部分查看。
 
-List available agents directly in the main agent's system prompt. The main agent sees the list of agents and their descriptions as part of its instructions.
-
-**When to use:**
-- You have a small, fixed set of agents (< 10)
-- Agent registry rarely changes
-- You want the simplest implementation
+**何时使用：**
+- 你有一组小型、固定的 Agent（< 10 个）
+- Agent 注册表很少变化
+- 你想要最简单的实现
 
 **Example:**
 ```python
@@ -493,14 +471,14 @@ main_agent = create_agent(
 )
 ```
 
-#### Enum constraint on dispatch tool
+#### 分发工具的枚举约束
 
-Add an enum constraint to the `agent_name` parameter in your dispatch tool. This provides type safety and makes available agents explicit in the tool schema.
+在分发工具的 `agent_name` 参数上添加枚举约束。这提供了类型安全，并使可用 Agent 在工具 Schema 中显式明确。
 
-**When to use:**
-- You have a small, fixed set of agents (< 10)
-- You want type safety and explicit agent names
-- You prefer schema-based validation over prompt-based guidance
+**何时使用：**
+- 你有一组小型、固定的 Agent（< 10 个）
+- 你想要类型安全和显式的 Agent 名称
+- 你偏好基于 Schema 的验证而非基于提示词的引导
 
 **Example:**
 ```python
@@ -520,15 +498,15 @@ def task(
     # ...
 ```
 
-#### Tool-based discovery
+#### 基于工具的发现
 
-Provide a separate tool (e.g., `list_agents` or `search_agents`) that the main agent can call to discover available agents on-demand. This enables progressive disclosure and supports dynamic registries.
+提供一个单独的工具（如 `list_agents` 或 `search_agents`），主 Agent 可以调用它来按需发现可用 Agent。这实现了渐进式披露并支持动态注册表。
 
-**When to use:**
-- You have many agents (> 10) or a growing registry
-- Agent registry changes frequently or is dynamic
-- You want to reduce prompt size and token usage
-- Different teams manage different agents independently
+**何时使用：**
+- 你有很多 Agent（> 10 个）或注册表不断增长
+- Agent 注册表经常变化或是动态的
+- 你想要减少提示词大小和 token 用量
+- 不同团队独立管理不同的 Agent
 
 **Example:**
 ```python
@@ -550,9 +528,9 @@ main_agent = create_agent(
 )
 ```
 
-### Subagent inputs
+### 子 Agent 输入
 
-Customize what context the subagent receives to execute its task. Add input that isn't practical to capture in a static prompt—full message history, prior results, or task metadata—by pulling from the agent's state.
+自定义子 Agent 接收的上下文以执行其任务。添加无法在静态提示词中捕获的输入 —— 完整的消息历史、先前的结果或任务元数据 —— 通过从 Agent 状态中拉取。
 
 :::python
 ```python Subagent inputs example expandable
@@ -608,12 +586,12 @@ const callSubagent1 = tool(
 ```
 :::
 
-### Subagent outputs
+### 子 Agent 输出
 
-Customize what the main agent receives back so it can make good decisions. Two strategies:
+自定义主 Agent 收到的返回内容，以便它可以做出好的决策。两种策略：
 
-1. **Prompt the sub-agent**: Specify exactly what should be returned. A common failure mode is that the sub-agent performs tool calls or reasoning but doesn't include results in its final message—remind it that the supervisor only sees the final output.
-2. **Format in code**: Adjust or enrich the response before returning it. For example, pass specific state keys back in addition to the final text using a [`Command`](/oss/langgraph/graph-api#command).
+1. **提示子 Agent**：明确指定应返回的内容。一个常见的失败模式是子 Agent 执行了工具调用或推理但没有在最终消息中包含结果 —— 提醒它监督器只能看到最终输出。
+2. **在代码中格式化**：在返回前调整或丰富响应。例如，使用 [`Command`](/oss/langgraph/graph-api#command) 在最终文本之外传递特定的状态键。
 
 :::python
 ```python Subagent outputs example expandable
@@ -683,8 +661,8 @@ const callSubagent1 = tool(
 ```
 :::
 
-## Checkpointing and state inspection
+## 检查点和状态检查
 
-By default, subagents use the **inherited checkpointer** mode—each invocation starts with fresh state, supports [interrupts](/oss/langgraph/interrupts#pause-using-interrupt), and runs safely in parallel. If you need a subagent to maintain its own persistent conversation history across invocations, compile it with `checkpointer=True` (continuations mode). See [subgraph persistence](/oss/langgraph/use-subgraphs#subgraph-persistence) for a full comparison of modes.
+默认情况下，子 Agent 使用**继承 checkpointer** 模式 —— 每次调用都以新状态开始，支持[中断](/oss/langgraph/interrupts#interrupt)，并可安全地并行运行。如果你需要子 Agent 在跨调用间维护其自己的持久化对话历史，请使用 `checkpointer=True`（续续模式）编译。参见[子图持久化](/oss/langgraph/use-subgraphs#subgraph-persistence)了解各模式的完整对比。
 
-Because subagents are called inside tool functions, LangGraph cannot [statically discover](/oss/langgraph/use-subgraphs#view-subgraph-state) them. This means [`get_state` with `subgraphs`](/oss/langgraph/use-subgraphs#view-subgraph-state) will not return subagent state. If you need to read nested graph state (e.g., during an [interrupt](/oss/langgraph/interrupts#pause-using-interrupt)), invoke the subagent from a [node function](/oss/langgraph/use-subgraphs#call-a-subgraph-inside-a-node) in a custom graph instead. See [subgraph persistence](/oss/langgraph/use-subgraphs#subgraph-persistence) for details on how each mode affects state visibility.
+由于子 Agent 是在工具函数内调用的，LangGraph 无法[静态发现](/oss/langgraph/use-subgraphs#view-subgraph-state)它们。这意味着带 `subgraphs` 参数的 [`get_state`](/oss/langgraph/use-subgraphs#view-subgraph-state) 不会返回子 Agent 状态。如果你需要读取嵌套图状态（例如在[中断](/oss/langgraph/interrupts#interrupt)期间），请从自定义图中的[节点函数](/oss/langgraph/use-subgraphs#call-a-subgraph-inside-a-node)调用子 Agent。参见[子图持久化](/oss/langgraph/use-subgraphs#subgraph-persistence)了解每种模式如何影响状态可见性。

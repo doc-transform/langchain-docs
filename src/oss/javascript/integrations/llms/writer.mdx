@@ -1,28 +1,28 @@
 ---
-title: "Writer integration"
-description: "Integrate with the Writer LLM using LangChain JavaScript."
+title: "Writer 集成"
+description: "使用 LangChain JavaScript 集成 Writer LLM 模型。"
 ---
 
-LangChain.js supports calling [WRITER](https://writer.com/) LLMs.
+LangChain.js 支持调用 [WRITER](https://writer.com/) LLM。
 
-## Setup
+## 设置
 
-First, you'll need to sign up for an account at https://writer.com/. Create a service account and note your API key.
+首先，你需要在 https://writer.com/ 注册账户。创建一个服务账户并记下你的 API 密钥。
 
-Next, you'll need to install the official package as a peer dependency:
+接下来，你需要安装官方包作为对等依赖：
 
 ```bash npm
 yarn add @writerai/writer-sdk
 ```
 <Tip>
-See [this section for general instructions on installing LangChain packages](/oss/langchain/install).
+安装 LangChain 包的通用说明请参见[此章节](/oss/langchain/install)。
 </Tip>
 
 ```bash npm
 npm install @langchain/community @langchain/core
 ```
 
-## Usage
+## 用法
 
 ```typescript
 import { Writer } from "@langchain/community/llms/writer";
@@ -38,7 +38,7 @@ const res = await model.invoke(
 console.log({ res });
 ```
 
-## Related
+## 相关链接
 
 
-- [Models guide](/oss/langchain/models)
+- [模型指南](/oss/langchain/models)

@@ -1,21 +1,21 @@
 ---
-title: "ChatDeepInfra integration"
-description: "Integrate with the ChatDeepInfra chat model using LangChain JavaScript."
+title: "ChatDeepInfra 集成"
+description: "使用 LangChain JavaScript 集成 ChatDeepInfra 对话模型。"
 ---
 
-LangChain supports chat models hosted by [Deep Infra](https://deepinfra.com/) through the `ChatDeepInfra` wrapper.
-First, you'll need to install the `@langchain/community` package:
+LangChain 通过 `ChatDeepInfra` 封装器支持 [Deep Infra](https://deepinfra.com/) 托管的对话模型。
+首先，你需要安装 `@langchain/community` 包：
 
 <Tip>
-See [this section for general instructions on installing LangChain packages](/oss/langchain/install).
+安装 LangChain 包的通用说明请参见[此章节](/oss/langchain/install)。
 </Tip>
 
 ```bash npm
 npm install @langchain/community @langchain/core
 ```
 
-You'll need to obtain an API key and set it as an environment variable named `DEEPINFRA_API_TOKEN`
-(or pass it into the constructor), then call the model as shown below:
+你需要获取一个 API 密钥并将其设置为名为 `DEEPINFRA_API_TOKEN` 的环境变量
+（或将其传入构造函数），然后按如下方式调用模型：
 
 ```typescript
 import { ChatDeepInfra } from "@langchain/community/chat_models/deepinfra";
@@ -37,7 +37,7 @@ const res = await chat.invoke(messages);
 console.log(res);
 ```
 
-## Related
+## 相关资源
 
-- Chat model [conceptual guide](/oss/langchain/models)
-- Chat model [how-to guides](/oss/langchain/models)
+- 对话模型[概念指南](/oss/langchain/models)
+- 对话模型[操作指南](/oss/langchain/models)

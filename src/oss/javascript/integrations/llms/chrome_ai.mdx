@@ -1,24 +1,24 @@
 ---
-title: "ChromeAI integration"
-description: "Integrate with the ChromeAI LLM using LangChain JavaScript."
+title: "ChromeAI 集成"
+description: "使用 LangChain JavaScript 集成 ChromeAI LLM 模型。"
 ---
 
 <Info>
-**This feature is **experimental** and is subject to change.**
+**此功能为**实验性**功能，可能会发生变化。**
 </Info>
 
 <Note>
-The `Built-in AI Early Preview Program` by Google is currently in beta. To apply for access or find more information, please visit [this link](https://developer.chrome.com/docs/ai/built-in).
+Google 的 `Built-in AI Early Preview Program` 目前处于 Beta 阶段。要申请访问权或查找更多信息，请访问[此链接](https://developer.chrome.com/docs/ai/built-in)。
 </Note>
 
-ChromeAI leverages Gemini Nano to run LLMs directly in the browser or in a [worker](https://developer.mozilla.org/en-US/docs/Web/API/Worker),
-without the need for an internet connection. This allows for running faster and private models without ever having data leave the consumers device.
+ChromeAI 利用 Gemini Nano 直接在浏览器或 [worker](https://developer.mozilla.org/en-US/docs/Web/API/Worker) 中运行 LLM，
+无需互联网连接。这允许你运行更快、更私密的模型，数据永远不会离开消费者的设备。
 
-## Getting started
+## 开始使用
 
-Once you've been granted access to the program, follow Google's provided instructions to download the model.
+当你获得该计划的访问权后，请按照 Google 提供的说明下载模型。
 
-Once downloaded, you can start using `ChromeAI` in the browser as follows:
+下载完成后，你可以在浏览器中开始使用 `ChromeAI`：
 
 ```typescript
 import { ChromeAI } from "@langchain/community/experimental/llms/chrome_ai";
@@ -48,9 +48,9 @@ const response = await model.invoke("Write me a short poem please");
 */
 ```
 
-### Streaming
+### 流式输出
 
-`ChromeAI` also supports streaming outputs:
+`ChromeAI` 还支持流式输出：
 
 ```typescript
 import { ChromeAI } from "@langchain/community/experimental/llms/chrome_ai";
@@ -111,7 +111,7 @@ for await (const chunk of await model.stream("How are you?")) {
 */
 ```
 
-## Related
+## 相关链接
 
 
-- [Models guide](/oss/langchain/models)
+- [模型指南](/oss/langchain/models)

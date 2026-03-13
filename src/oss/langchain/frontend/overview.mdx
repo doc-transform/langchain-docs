@@ -1,13 +1,13 @@
 ---
-title: Overview
-description: Build generative UIs with real-time streaming from LangChain agents
+title: 概览
+description: 使用 LangChain Agent 构建生成式 UI 并实现实时流式输出
 ---
 
-Build rich, interactive frontends for agents created with `createAgent`. These patterns cover everything from basic message rendering to advanced workflows like human-in-the-loop approval and time travel debugging.
+为使用 `createAgent` 创建的 Agent 构建丰富、交互式的前端。这些模式涵盖从基本消息渲染到高级工作流（如人工干预审批和时间旅行调试）的所有内容。
 
-## Architecture
+## 架构
 
-Every pattern follows the same architecture: a `createAgent` backend streams state to a frontend via the `useStream` hook.
+每个模式都遵循相同的架构：`createAgent` 后端通过 `useStream` 钩子将状态流式传输到前端。
 
 ```mermaid
 %%{
@@ -31,10 +31,7 @@ graph LR
   class BACKEND greenHighlight;
 ```
 
-On the backend, `createAgent` produces a compiled LangGraph graph that exposes
-a streaming API. On the frontend, the `useStream` hook connects to that API
-and provides reactive state, including messages, tool calls, interrupts, and
-history, that you render with any framework.
+在后端，`createAgent` 生成一个编译后的 LangGraph 图，该图暴露流式 API。在前端，`useStream` 钩子连接到该 API 并提供响应式状态——包括消息、工具调用、中断和历史记录——你可以使用任何框架进行渲染。
 
 <CodeGroup>
 
@@ -70,7 +67,7 @@ function Chat() {
 
 </CodeGroup>
 
-`useStream` is available for React, Vue, Svelte, and Angular:
+`useStream` 适用于 React、Vue、Svelte 和 Angular：
 
 ```ts
 import { useStream } from "@langchain/react";   // React
@@ -79,54 +76,54 @@ import { useStream } from "@langchain/svelte";   // Svelte
 import { useStream } from "@langchain/angular";  // Angular
 ```
 
-## Patterns
+## 模式
 
-### Render messages and output
+### 渲染消息和输出
 
 <CardGroup cols={3}>
-  <Card title="Markdown messages" icon="markdown" href="/oss/langchain/frontend/markdown-messages">
-    Parse and render streamed markdown with proper formatting and code highlighting.
+  <Card title="Markdown 消息" icon="markdown" href="/oss/langchain/frontend/markdown-messages">
+    解析和渲染流式 Markdown，支持正确的格式化和代码高亮。
   </Card>
-  <Card title="Structured output" icon="layout-grid" href="/oss/langchain/frontend/structured-output">
-    Render typed agent responses as custom UI components instead of plain text.
+  <Card title="结构化输出" icon="layout-grid" href="/oss/langchain/frontend/structured-output">
+    将类型化的 Agent 响应渲染为自定义 UI 组件，而非纯文本。
   </Card>
-  <Card title="Reasoning tokens" icon="brain" href="/oss/langchain/frontend/reasoning-tokens">
-    Display model thinking processes in collapsible blocks.
+  <Card title="推理 Token" icon="brain" href="/oss/langchain/frontend/reasoning-tokens">
+    在可折叠块中展示模型的思考过程。
   </Card>
-  <Card title="Generative UI" icon="wand" href="/oss/langchain/frontend/generative-ui">
-    Render AI-generated user interfaces from natural language prompts using json-render.
+  <Card title="生成式 UI" icon="wand" href="/oss/langchain/frontend/generative-ui">
+    使用 json-render 将自然语言提示渲染为 AI 生成的用户界面。
   </Card>
 </CardGroup>
 
-### Display agent actions
+### 展示 Agent 操作
 
 <CardGroup cols={3}>
-  <Card title="Tool calling" icon="tool" href="/oss/langchain/frontend/tool-calling">
-    Show tool calls as rich, type-safe UI cards with loading and error states.
+  <Card title="工具调用" icon="tool" href="/oss/langchain/frontend/tool-calling">
+    将工具调用展示为丰富的、类型安全的 UI 卡片，包含加载和错误状态。
   </Card>
-  <Card title="Human-in-the-loop" icon="user-check" href="/oss/langchain/frontend/human-in-the-loop">
-    Pause the agent for human review with approve, reject, and edit workflows.
+  <Card title="人工干预" icon="user-check" href="/oss/langchain/frontend/human-in-the-loop">
+    暂停 Agent 等待人工审核，支持批准、拒绝和编辑工作流。
   </Card>
 </CardGroup>
 
-### Manage conversations
+### 管理对话
 
 <CardGroup cols={3}>
-  <Card title="Branching chat" icon="git-branch" href="/oss/langchain/frontend/branching-chat">
-    Edit messages, regenerate responses, and navigate conversation branches.
+  <Card title="分支对话" icon="git-branch" href="/oss/langchain/frontend/branching-chat">
+    编辑消息、重新生成响应并导航对话分支。
   </Card>
-  <Card title="Message queues" icon="list-check" href="/oss/langchain/frontend/message-queues">
-    Queue multiple messages while the agent processes them sequentially.
+  <Card title="消息队列" icon="list-check" href="/oss/langchain/frontend/message-queues">
+    在 Agent 顺序处理消息时排队发送多条消息。
   </Card>
 </CardGroup>
 
-### Advanced streaming
+### 高级流式传输
 
 <CardGroup cols={3}>
-  <Card title="Join & rejoin streams" icon="plug-connected" href="/oss/langchain/frontend/join-rejoin">
-    Disconnect from and reconnect to running agent streams without losing progress.
+  <Card title="加入和重新连接流" icon="plug-connected" href="/oss/langchain/frontend/join-rejoin">
+    断开并重新连接到正在运行的 Agent 流，不丢失进度。
   </Card>
-  <Card title="Time travel" icon="history" href="/oss/langchain/frontend/time-travel">
-    Inspect, navigate, and resume from any checkpoint in the conversation history.
+  <Card title="时间旅行" icon="history" href="/oss/langchain/frontend/time-travel">
+    检查、导航并从对话历史中的任意检查点恢复。
   </Card>
 </CardGroup>

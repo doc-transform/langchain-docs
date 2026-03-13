@@ -1,39 +1,30 @@
 ---
-title: "Mcp toolbox for databases integration"
-description: "Integrate with the Mcp toolbox for databases tool using LangChain JavaScript."
+title: "MCP 数据库工具箱集成"
+description: "使用 LangChain JavaScript 集成 MCP 数据库工具箱。"
 ---
 
-[MCP Toolbox for Databases](https://github.com/googleapis/genai-toolbox) is an open source MCP server for databases. It was designed with enterprise-grade and production-quality in mind. It enables you to develop tools easier, faster, and more securely by handling the complexities such as connection pooling, authentication, and more.
+[MCP Toolbox for Databases](https://github.com/googleapis/genai-toolbox) 是一个开源的数据库 MCP 服务器。它以企业级和生产质量为设计目标，通过处理连接池、身份验证等复杂性，使你能够更轻松、更快速、更安全地开发工具。
 
-Toolbox Tools can be seamlessly integrated with LangChain applications. For more
-information on [getting
-started](https://googleapis.github.io/genai-toolbox/getting-started/local_quickstart_js/) or
-[configuring](https://googleapis.github.io/genai-toolbox/getting-started/configure/)
-Toolbox, see the
-[documentation](https://googleapis.github.io/genai-toolbox/getting-started/introduction/).
+Toolbox 工具可以无缝集成到 LangChain 应用中。有关[入门](https://googleapis.github.io/genai-toolbox/getting-started/local_quickstart_js/)或[配置](https://googleapis.github.io/genai-toolbox/getting-started/configure/) Toolbox 的更多信息，请参见[文档](https://googleapis.github.io/genai-toolbox/getting-started/introduction/)。
 
-### Configure and deploy
+### 配置和部署
 
-Toolbox is an open source server that you deploy and manage yourself. For more
-instructions on deploying and configuring, see the official Toolbox
-documentation:
+Toolbox 是一个开源服务器，需要你自己部署和管理。有关部署和配置的更多说明，请参见官方 Toolbox 文档：
 
-- [Installing the Server](https://googleapis.github.io/genai-toolbox/getting-started/introduction/#installing-the-server)
-- [Configuring Toolbox](https://googleapis.github.io/genai-toolbox/getting-started/configure/)
+- [安装服务器](https://googleapis.github.io/genai-toolbox/getting-started/introduction/#installing-the-server)
+- [配置 Toolbox](https://googleapis.github.io/genai-toolbox/getting-started/configure/)
 
-### Install client SDK
+### 安装客户端 SDK
 
-LangChain relies on the `@toolbox-sdk/core` node package to use Toolbox. Install the
-package before getting started:
+LangChain 依赖 `@toolbox-sdk/core` node 包来使用 Toolbox。在开始之前安装该包：
 
 ```shell
 npm install @toolbox-sdk/core
 ```
 
-### Loading toolbox tools
+### 加载 Toolbox 工具
 
-Once your Toolbox server is configured and up and running, you can load tools
-from your server using the SDK:
+一旦 Toolbox 服务器配置完成并运行，你可以使用 SDK 从服务器加载工具：
 
 ```javascript
 import { ChatGoogle } from "@langchain/google";
@@ -62,11 +53,11 @@ let response = await agent.invoke(inputs);
 console.log(response);
 ```
 
-### Advanced toolbox features
+### Toolbox 高级功能
 
-Toolbox has a variety of features to make developing Gen AI tools for databases seamless.
-For more information, read more about the following:
+Toolbox 提供了多种功能，使数据库的 Gen AI 工具开发更加无缝。
+有关更多信息，请阅读以下内容：
 
-- [Authenticated Parameters](https://googleapis.github.io/genai-toolbox/resources/tools/#authenticated-parameters): bind tool inputs to values from OIDC tokens automatically, making it easy to run sensitive queries without potentially leaking data
-- [Authorized Invocations](https://googleapis.github.io/genai-toolbox/resources/tools/#authorized-invocations): restrict access to use a tool based on the users Auth token
-- [OpenTelemetry](https://googleapis.github.io/genai-toolbox/how-to/export_telemetry/): get metrics and tracing from Toolbox with [OpenTelemetry](https://opentelemetry.io/docs/)
+- [已认证参数](https://googleapis.github.io/genai-toolbox/resources/tools/#authenticated-parameters)：将工具输入自动绑定到 OIDC 令牌中的值，轻松运行敏感查询而不泄露数据
+- [授权调用](https://googleapis.github.io/genai-toolbox/resources/tools/#authorized-invocations)：根据用户的 Auth 令牌限制工具使用权限
+- [OpenTelemetry](https://googleapis.github.io/genai-toolbox/how-to/export_telemetry/)：使用 [OpenTelemetry](https://opentelemetry.io/docs/) 从 Toolbox 获取指标和追踪

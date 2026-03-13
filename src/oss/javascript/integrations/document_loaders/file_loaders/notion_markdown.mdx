@@ -1,15 +1,15 @@
 ---
-title: "Notion markdown export - integration"
-description: "Integrate with the Notion markdown export - document loader using LangChain JavaScript."
+title: "Notion Markdown 导出集成"
+description: "使用 LangChain JavaScript 集成 Notion Markdown 导出文档加载器。"
 ---
 
-This example goes over how to load data from your Notion pages exported from the notion dashboard.
+本示例介绍如何从 Notion 仪表板导出的 Notion 页面中加载数据。
 
-First, export your notion pages as **Markdown & CSV** as per the [official Notion export instructions](https://www.notion.so/help/export-your-content). Make sure to select `include subpages` and `Create folders for subpages.`
+首先，按照[官方说明](https://www.notion.so/help/export-your-content)将你的 Notion 页面导出为 **Markdown 和 CSV**。确保选择 `包含子页面` 和 `为子页面创建文件夹`。
 
-Then, unzip the downloaded file and move the unzipped folder into your repository. It should contain the markdown files of your pages.
+然后，解压下载的文件并将解压后的文件夹移动到你的仓库中。它应该包含你页面的 Markdown 文件。
 
-Once the folder is in your repository, simply run the example below:
+文件夹放入仓库后，只需运行以下示例：
 
 ```typescript
 import { NotionLoader } from "@langchain/community/document_loaders/fs/notion";

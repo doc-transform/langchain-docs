@@ -1,48 +1,48 @@
 ---
-title: "PuppeteerWebBaseLoader integration"
-description: "Integrate with the PuppeteerWebBaseLoader document loader using LangChain JavaScript."
+title: "PuppeteerWebBaseLoader 集成"
+description: "使用 LangChain JavaScript 集成 PuppeteerWebBaseLoader 文档加载器。"
 ---
 
 <Tip>
-**Compatibility**: Only available on Node.js.
+**兼容性**：仅在 Node.js 上可用。
 </Tip>
 
-This notebook provides a quick overview for getting started with [PuppeteerWebBaseLoader](/oss/integrations/document_loaders/). For detailed documentation of all PuppeteerWebBaseLoader features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_community_document_loaders_web_puppeteer.PuppeteerWebBaseLoader.html).
+本笔记提供了开始使用 [PuppeteerWebBaseLoader](/oss/integrations/document_loaders/) 的快速概览。有关 PuppeteerWebBaseLoader 所有功能和配置的详细文档请参览 [API 参考](https://api.js.langchain.com/classes/langchain_community_document_loaders_web_puppeteer.PuppeteerWebBaseLoader.html)。
 
-Puppeteer is a Node.js library that provides a high-level API for controlling headless Chrome or Chromium. You can use Puppeteer to automate web page interactions, including extracting data from dynamic web pages that require JavaScript to render.
+Puppeteer 是一个 Node.js 库，提供了用于控制无头 Chrome 或 Chromium 的高级 API。你可以使用 Puppeteer 自动化网页交互，包括从需要 JavaScript 渲染的动态网页提取数据。
 
-If you want a lighterweight solution, and the webpages you want to load do not require JavaScript to render, you can use the [CheerioWebBaseLoader](/oss/integrations/document_loaders/web_loaders/web_cheerio) instead.
+如果你想要更轻量的解决方案，且你要加载的网页不需要 JavaScript 渲染，你可以改用 [CheerioWebBaseLoader](/oss/integrations/document_loaders/web_loaders/web_cheerio)。
 
-## Overview
+## 概览
 
-### Integration details
+### 集成详情
 
 | Class | Package | Local | Serializable | PY support |
 | :--- | :--- | :---: | :---: |  :---: |
 | [PuppeteerWebBaseLoader](https://api.js.langchain.com/classes/langchain_community_document_loaders_web_puppeteer.PuppeteerWebBaseLoader.html) | [@langchain/community](https://api.js.langchain.com/modules/langchain_community_document_loaders_web_puppeteer.html) | ✅ | beta | ❌ |
 
-### Loader features
+### 加载器特性
 
 | Source | Web Loader | Node Envs Only
 | :---: | :---: | :---: |
 | PuppeteerWebBaseLoader | ✅ | ✅ |
 
-## Setup
+## 设置
 
-To access `PuppeteerWebBaseLoader` document loader you'll need to install the `@langchain/community` integration package, along with the `puppeteer` peer dependency.
+要访问 `PuppeteerWebBaseLoader` 文档加载器，你需要安装 `@langchain/community` 集成包和 `puppeteer` peer 依赖。
 
-### Credentials
+### 凭据
 
-If you want to get automated tracing of your model calls you can also set your [LangSmith](/langsmith/home) API key by uncommenting below:
+如果你想获得模型调用的自动追踪，你还可以通过取消下方注释来设置你的 [LangSmith](/langsmith/home) API 密钥：
 
 ```bash
 # export LANGSMITH_TRACING="true"
 # export LANGSMITH_API_KEY="your-api-key"
 ```
 
-### Installation
+### 安装
 
-The LangChain PuppeteerWebBaseLoader integration lives in the `@langchain/community` package:
+LangChain PuppeteerWebBaseLoader 集成位于 `@langchain/community` 包中：
 
 <CodeGroup>
 ```bash npm
@@ -56,9 +56,9 @@ pnpm add @langchain/community @langchain/core puppeteer
 ```
 </CodeGroup>
 
-## Instantiation
+## 实例化
 
-Now we can instantiate our model object and load documents:
+现在我们可以实例化模型对象并加载文档：
 
 ```typescript
 import { PuppeteerWebBaseLoader } from "@langchain/community/document_loaders/web/puppeteer"
@@ -69,7 +69,7 @@ const loader = new PuppeteerWebBaseLoader("https://langchain.com", {
 })
 ```
 
-## Load
+## 加载
 
 ```typescript
 const docs = await loader.load()
@@ -391,9 +391,9 @@ console.log(docs[0].metadata)
 { source: 'https://langchain.com' }
 ```
 
-## Options
+## 选项
 
-Here's an explanation of the parameters you can pass to the PuppeteerWebBaseLoader constructor using the PuppeteerWebBaseLoaderOptions interface:
+以下是你可以通过 PuppeteerWebBaseLoaderOptions 接口传递给 PuppeteerWebBaseLoader 构造函数的参数说明：
 
 ```typescript
 type PuppeteerWebBaseLoaderOptions = {
@@ -403,18 +403,18 @@ type PuppeteerWebBaseLoaderOptions = {
 };
 ```
 
-1. `launchOptions`: an optional object that specifies additional options to pass to the puppeteer.launch() method. This can include options such as the headless flag to launch the browser in headless mode, or the slowMo option to slow down Puppeteer's actions to make them easier to follow.
+1. `launchOptions`：一个可选对象，指定传递给 puppeteer.launch() 方法的额外选项。可以包含 headless 标志以在无头模式下启动浏览器，或 slowMo 选项以减慢 Puppeteer 的操作使其更容易跟踪。
 
-2. `gotoOptions`: an optional object that specifies additional options to pass to the page.goto() method. This can include options such as the timeout option to specify the maximum navigation time in milliseconds, or the waitUntil option to specify when to consider the navigation as successful.
+2. `gotoOptions`：一个可选对象，指定传递给 page.goto() 方法的额外选项。可以包含 timeout 选项来指定最大导航时间（毫秒），或 waitUntil 选项来指定何时视为导航成功。
 
-3. `evaluate`: an optional function that can be used to evaluate JavaScript code on the page using the page.evaluate() method. This can be useful for extracting data from the page or interacting with page elements. The function should return a Promise that resolves to a string containing the result of the evaluation.
+3. `evaluate`：一个可选函数，可用于使用 page.evaluate() 方法在页面上执行 JavaScript 代码。这对于从页面提取数据或与页面元素交互非常有用。该函数应返回一个解析为包含评估结果字符串的 Promise。
 
-By passing these options to the `PuppeteerWebBaseLoader` constructor, you can customize the behavior of the loader and use Puppeteer's powerful features to scrape and interact with web pages.
+通过将这些选项传递给 `PuppeteerWebBaseLoader` 构造函数，你可以自定义加载器的行为，并使用 Puppeteer 的强大功能来爮取和交互网页。
 
-## Screenshots
+## 截屏
 
-To take a screenshot of a site, initialize the loader the same as above, and call the `.screenshot()` method.
-This will return an instance of `Document` where the page content is a base64 encoded image, and the metadata contains a `source` field with the URL of the page.
+要对网站进行截屏，像上面一样初始化加载器，然后调用 `.screenshot()` 方法。
+这将返回一个 `Document` 实例，其中页面内容是 base64 编码的图像，metadata 包含一个 `source` 字段，值为页面的 URL。
 
 ```typescript
 import { PuppeteerWebBaseLoader } from "@langchain/community/document_loaders/web/puppeteer";
@@ -440,6 +440,6 @@ iVBORw0KGgoAAAANSUhEUgAACWAAAAdoCAIAAAA/Q2IJAAAAAXNSR0IArs4c6QAAIABJREFUeJzsvUuz
 
 ---
 
-## API reference
+## API 参考
 
-For detailed documentation of all PuppeteerWebBaseLoader features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_community_document_loaders_web_puppeteer.PuppeteerWebBaseLoader.html).
+所有 PuppeteerWebBaseLoader 功能和配置的详细文档请参览 [API 参考](https://api.js.langchain.com/classes/langchain_community_document_loaders_web_puppeteer.PuppeteerWebBaseLoader.html)。

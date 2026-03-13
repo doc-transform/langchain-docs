@@ -1,8 +1,8 @@
 ---
-title: Custom workflow
+title: 自定义工作流
 ---
 
-In the **custom workflow** architecture, you define your own bespoke execution flow using [LangGraph](/oss/langgraph/overview). You have complete control over the graph structure—including sequential steps, conditional branches, loops, and parallel execution.
+在**自定义工作流**架构中，你使用 [LangGraph](/oss/langgraph/overview) 定义自己的定制执行流程。你对图结构拥有完全的控制权 —— 包括顺序步骤、条件分支、循环和并行执行。
 
 ```mermaid
 graph LR
@@ -11,44 +11,36 @@ graph LR
     B -->|path_b| D((Agentic step))
     C --> G([Output])
     D --> G([Output])
-
-    classDef trigger fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#14532D
-    classDef process fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#1E3A8A
-    classDef decision fill:#FEF3C7,stroke:#F59E0B,stroke-width:2px,color:#78350F
-
-    class A,G trigger
-    class C,D process
-    class B decision
 ```
 
-## Key characteristics
+## 核心特征
 
-* Complete control over graph structure
-* Mix deterministic logic with agentic behavior
-* Support for sequential steps, conditional branches, loops, and parallel execution
-* Embed other patterns as nodes in your workflow
+* 对图结构的完全控制
+* 混合确定性逻辑与 Agent 行为
+* 支持顺序步骤、条件分支、循环和并行执行
+* 将其他模式作为节点嵌入工作流
 
-## When to use
+## 适用场景
 
-Use custom workflows when standard patterns (subagents, skills, etc.) don't fit your requirements, you need to mix deterministic logic with agentic behavior, or your use case requires complex routing or multi-stage processing.
+当标准模式（子 Agent、技能等）不符合你的需求、你需要混合确定性逻辑与 Agent 行为、或你的场景需要复杂的路由或多阶段处理时，使用自定义工作流。
 
-Each node in your workflow can be a simple function, an LLM call, or an entire [agent](/oss/langchain/agents) with [tools](/oss/langchain/tools). You can also compose other architectures within a custom workflow—for example, embedding a multi-agent system as a single node.
+工作流中的每个节点可以是简单函数、LLM 调用或带有[工具](/oss/langchain/tools)的完整 [Agent](/oss/langchain/agents)。你还可以在自定义工作流内组合其他架构 —— 例如，将多 Agent 系统作为单个节点嵌入。
 
-For a complete example of a custom workflow, see the tutorial below.
+自定义工作流的完整示例请参见以下教程。
 
 <Card
-    title="Tutorial: Build a multi-source knowledge base with routing"
+    title="教程：构建带路由的多源知识库"
     icon="book"
     href="/oss/langchain/multi-agent/router-knowledge-base"
-    arrow cta="Learn more"
+    arrow cta="了解更多"
 >
-    The [router pattern](/oss/langchain/multi-agent/router) is an example of a custom workflow. This tutorial walks through building a router that queries GitHub, Notion, and Slack in parallel, then synthesizes results.
+    [路由器模式](/oss/langchain/multi-agent/router)是自定义工作流的一个示例。本教程将带你构建一个并行查询 GitHub、Notion 和 Slack 的路由器，然后综合结果。
 >
 </Card>
 
-## Basic implementation
+## 基本实现
 
-The core insight is that you can call a LangChain agent directly inside any LangGraph node, combining the flexibility of custom workflows with the convenience of prebuilt agents:
+核心思想是你可以在任何 LangGraph 节点内直接调用 LangChain Agent，将自定义工作流的灵活性与预构建 Agent 的便利性结合起来：
 
 :::python
 ```python
@@ -104,17 +96,17 @@ const workflow = new StateGraph(State)
 ```
 :::
 
-## Example: RAG pipeline
+## 示例：RAG 管道
 
-A common use case is combining [retrieval](/oss/langchain/retrieval) with an agent. This example builds a WNBA stats assistant that retrieves from a knowledge base and can fetch live news.
+一个常见场景是将[检索](/oss/langchain/retrieval)与 Agent 结合。本示例构建了一个 WNBA 统计助手，从知识库检索并可获取实时新闻。
 
-<Accordion title="Custom RAG workflow">
+<Accordion title="自定义 RAG 工作流">
 
-The workflow demonstrates three types of nodes:
+该工作流展示了三种类型的节点：
 
-- **Model node** (Rewrite): Rewrites the user query for better retrieval using [structured output](/oss/langchain/structured-output).
-- **Deterministic node** (Retrieve): Performs vector similarity search — no LLM involved.
-- **Agent node** (Agent): Reasons over retrieved context and can fetch additional information via tools.
+- **模型节点**（改写）：使用[结构化输出](/oss/langchain/structured-output)改写用户查询以获得更好的检索效果。
+- **确定性节点**（检索）：执行向量相似度搜索 —— 不涉及 LLM。
+- **Agent 节点**（Agent）：对检索到的上下文进行推理，并可通过工具获取额外信息。
 
 ```mermaid
 graph LR
@@ -122,16 +114,10 @@ graph LR
     B --> C[(Retrieve)]
     C --> D((Agent))
     D --> E([Response])
-
-    classDef trigger fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#14532D
-    classDef process fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#1E3A8A
-
-    class A,E trigger
-    class B,C,D process
 ```
 
 <Tip>
-You can use LangGraph state to pass information between workflow steps. This allows each part of your workflow to read and update structured fields, making it easy to share data and context across nodes.
+你可以使用 LangGraph 状态在工作流步骤之间传递信息。这允许工作流的每个部分读取和更新结构化字段，使跨节点共享数据和上下文变得简单。
 </Tip>
 
 :::python

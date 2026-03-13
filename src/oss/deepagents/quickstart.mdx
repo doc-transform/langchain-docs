@@ -1,19 +1,19 @@
 ---
-title: Quickstart
-description: Build your first deep agent in minutes
+title: 快速开始
+description: 几分钟内构建你的第一个 Deep Agent
 ---
 
-This guide walks you through creating your first deep agent with planning, file system tools, and subagent capabilities. You'll build a research agent that can conduct research and write reports.
+本指南将带你创建第一个具备规划、文件系统工具和子 Agent 能力的 Deep Agent。你将构建一个能够进行研究并撰写报告的研究 Agent。
 
-## Prerequisites
+## 前置条件
 
-Before you begin, make sure you have an API key from a model provider (e.g., Anthropic, OpenAI).
+开始之前，请确保你已拥有模型提供商的 API 密钥（例如 Anthropic、OpenAI）。
 
 <Note>
-    Deep agents require a model that supports [tool calling](/oss/langchain/models#tool-calling). See [customization](/oss/deepagents/customization#model) for how to configure your model.
+    Deep Agents 需要支持[工具调用](/oss/langchain/models#tool-calling)的模型。参阅[自定义](/oss/deepagents/customization#model)了解如何配置模型。
 </Note>
 
-### Step 1: Install dependencies
+### 步骤 1：安装依赖
 
 :::python
 <CodeGroup>
@@ -46,17 +46,17 @@ Before you begin, make sure you have an API key from a model provider (e.g., Ant
 :::
 
 <Note>
-    This guide uses [Tavily](https://tavily.com/) as an example search provider, but you can substitute any search API (e.g., DuckDuckGo, SerpAPI, Brave Search).
+    本指南使用 [Tavily](https://tavily.com/) 作为示例搜索提供商，但你可以替换为任何搜索 API（例如 DuckDuckGo、SerpAPI、Brave Search）。
 </Note>
 
-### Step 2: Set up your API keys
+### 步骤 2：设置 API 密钥
 
 ```bash
 export ANTHROPIC_API_KEY="your-api-key"
 export TAVILY_API_KEY="your-tavily-api-key"
 ```
 
-### Step 3: Create a search tool
+### 步骤 3：创建搜索工具
 
 :::python
 ```python
@@ -111,42 +111,42 @@ const internetSearch = tool(
   },
   {
     name: "internet_search",
-    description: "Run a web search",
+    description: "运行网络搜索",
     schema: z.object({
-      query: z.string().describe("The search query"),
+      query: z.string().describe("搜索查询词"),
       maxResults: z
         .number()
         .optional()
         .default(5)
-        .describe("Maximum number of results to return"),
+        .describe("返回的最大结果数"),
       topic: z
         .enum(["general", "news", "finance"])
         .optional()
         .default("general")
-        .describe("Search topic category"),
+        .describe("搜索主题分类"),
       includeRawContent: z
         .boolean()
         .optional()
         .default(false)
-        .describe("Whether to include raw content"),
+        .describe("是否包含原始内容"),
     }),
   },
 );
 ```
 :::
 
-### Step 4: Create a deep agent
+### 步骤 4：创建 Deep Agent
 
 :::python
 ```python
-# System prompt to steer the agent to be an expert researcher
-research_instructions = """You are an expert researcher. Your job is to conduct thorough research and then write a polished report.
+# 系统提示词引导 Agent 成为专业研究员
+research_instructions = """你是一位专业的研究员。你的工作是进行深入研究并撰写一份精彩的报告。
 
-You have access to an internet search tool as your primary means of gathering information.
+你可以使用网络搜索工具作为收集信息的主要手段。
 
 ## `internet_search`
 
-Use this to run an internet search for a given query. You can specify the max number of results to return, the topic, and whether raw content should be included.
+使用此工具对给定查询进行网络搜索。你可以指定返回的最大结果数、主题，以及是否包含原始内容。
 """
 
 agent = create_deep_agent(
@@ -160,14 +160,14 @@ agent = create_deep_agent(
 ```typescript
 import { createDeepAgent } from "deepagents";
 
-// System prompt to steer the agent to be an expert researcher
-const researchInstructions = `You are an expert researcher. Your job is to conduct thorough research and then write a polished report.
+// 系统提示词引导 Agent 成为专业研究员
+const researchInstructions = `你是一位专业的研究员。你的工作是进行深入研究并撰写一份精彩的报告。
 
-You have access to an internet search tool as your primary means of gathering information.
+你可以使用网络搜索工具作为收集信息的主要手段。
 
 ## \`internet_search\`
 
-Use this to run an internet search for a given query. You can specify the max number of results to return, the topic, and whether raw content should be included.
+使用此工具对给定查询进行网络搜索。你可以指定返回的最大结果数、主题，以及是否包含原始内容。
 `;
 
 const agent = createDeepAgent({
@@ -177,13 +177,13 @@ const agent = createDeepAgent({
 ```
 :::
 
-### Step 5: Run the agent
+### 步骤 5：运行 Agent
 
 :::python
 ```python
 result = agent.invoke({"messages": [{"role": "user", "content": "What is langgraph?"}]})
 
-# Print the agent's response
+# 打印 Agent 的响应
 print(result["messages"][-1].content)
 ```
 :::
@@ -194,35 +194,35 @@ const result = await agent.invoke({
   messages: [{ role: "user", content: "What is langgraph?" }],
 });
 
-// Print the agent's response
+// 打印 Agent 的响应
 console.log(result.messages[result.messages.length - 1].content);
 ```
 :::
 
-## How does it work?
+## 它是如何工作的？
 
-Your deep agent automatically:
+你的 Deep Agent 会自动执行以下步骤：
 
-1. **Plans its approach** using the built-in [`write_todos`](/oss/deepagents/harness#planning-capabilities) tool to break down the research task.
-1. **Conducts research** by calling the `internet_search` tool to gather information.
-1. **Manages context** by using file system tools ([`write_file`](/oss/deepagents/harness#virtual-filesystem-access), [`read_file`](/oss/deepagents/harness#virtual-filesystem-access)) to offload large search results.
-1. **Spawns subagents** as needed to delegate complex subtasks to specialized subagents.
-1. **Synthesizes a report** to compile findings into a coherent response.
+1. **规划方案** — 使用内置的 [`write_todos`](/oss/deepagents/harness#to-do-list-tracking) 工具将研究任务分解。
+1. **执行研究** — 调用 `internet_search` 工具收集信息。
+1. **管理上下文** — 使用文件系统工具（[`write_file`](/oss/deepagents/harness#file-system-access)、[`read_file`](/oss/deepagents/harness#file-system-access)）卸载大量搜索结果。
+1. **生成子 Agent** — 根据需要将复杂子任务委派给专业子 Agent。
+1. **综合报告** — 将研究结果整合为连贯的响应。
 
-## Examples
+## 示例
 
-For agents, patterns, and applications you can build with Deep Agents, see [Examples](https://github.com/langchain-ai/deepagents/tree/main/examples).
+关于使用 Deep Agents 构建的 Agent、模式和应用，请参阅[示例](https://github.com/langchain-ai/deepagents/tree/main/examples)。
 
-## Streaming
+## 流式输出
 
-Deep agents have built-in [streaming](/oss/langchain/streaming/overview) for real-time updates from agent execution using LangGraph.
-This allows you to observe output progressively and review and debug agent and subagent work, such as tool calls, tool results, and LLM responses.
+Deep Agents 内置了[流式输出](/oss/langchain/streaming/overview)支持，可以通过 LangGraph 实时获取 Agent 执行的更新。
+这让你能够逐步观察输出，并审查和调试 Agent 及子 Agent 的工作，包括工具调用、工具结果和 LLM 响应。
 
-## Next steps
+## 后续步骤
 
-Now that you've built your first deep agent:
+现在你已经构建了第一个 Deep Agent：
 
-- **Customize your agent**: Learn about [customization options](/oss/deepagents/customization), including custom system prompts, tools, and subagents.
-- **Add long-term memory**: Enable [persistent memory](/oss/deepagents/long-term-memory) across conversations.
-- **Deploy to production**: Learn about [deployment options](/oss/langgraph/deploy) for LangGraph applications.
+- **自定义 Agent**：了解[自定义选项](/oss/deepagents/customization)，包括自定义系统提示词、工具和子 Agent。
+- **添加长期记忆**：启用跨对话的[持久化记忆](/oss/deepagents/long-term-memory)。
+- **部署到生产环境**：了解 LangGraph 应用的[部署选项](/oss/langgraph/deploy)。
 

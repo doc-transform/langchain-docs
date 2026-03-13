@@ -1,33 +1,29 @@
 ---
-title: "Neon Postgres integration"
-description: "Integrate with the Neon Postgres vector store using LangChain JavaScript."
+title: "Neon Postgres 集成"
+description: "使用 LangChain JavaScript 集成 Neon Postgres 向量存储。"
 ---
 
-Neon is a fully managed serverless PostgreSQL database. It separates storage and compute to offer
-features such as instant branching and automatic scaling.
+Neon 是一个完全托管的无服务器 PostgreSQL 数据库。它将存储和计算分离，提供即时分支和自动扩展等功能。
 
-With the `pgvector` extension, Neon provides a vector store that can be used with LangChain.js to store and query embeddings.
+通过 `pgvector` 扩展，Neon 提供了一个可以与 LangChain.js 一起使用的向量存储，用于存储和查询嵌入。
 
-## Setup
+## 设置
 
-### Select a neon project
+### 选择 Neon 项目
 
-If you do not have a Neon account, sign up for one at [Neon](https://neon.tech). After logging into the Neon Console, proceed
-to the [Projects](https://console.neon.tech/app/projects) section and select an existing project or create a new one.
+如果你没有 Neon 账户，请在 [Neon](https://neon.tech) 注册一个。登录 Neon 控制台后，前往 [Projects](https://console.neon.tech/app/projects) 部分，选择现有项目或创建新项目。
 
-Your Neon project comes with a ready-to-use Postgres database named `neondb` that you can use to store embeddings. Navigate to
-the Connection Details section to find your database connection string. It should look similar to this:
+你的 Neon 项目附带一个名为 `neondb` 的即用 Postgres 数据库，你可以用它来存储嵌入。导航到连接详情部分找到你的数据库连接字符串。它应该看起来类似这样：
 
 ```text
 postgres://alex:AbC123dEf@ep-cool-darkness-123456.us-east-2.aws.neon.tech/dbname?sslmode=require
 ```
 
-Keep your connection string handy for later use.
+保存好你的连接字符串，稍后使用。
 
-### Application code
+### 应用代码
 
-To work with Neon Postgres, you need to install the `@neondatabase/serverless` package which provides a JavaScript/TypeScript
-driver to connect to the database.
+要使用 Neon Postgres，你需要安装 `@neondatabase/serverless` 包，它提供了连接数据库的 JavaScript/TypeScript 驱动程序。
 
 ```bash npm
 npm install @neondatabase/serverless
@@ -39,8 +35,7 @@ See [this section for general instructions on installing LangChain packages](/os
 ```bash npm
 npm install @langchain/community @langchain/core
 ```
-To initialize a `NeonPostgres` vectorstore, you need to provide your Neon database connection string. You can use the connection string
-we fetched above directly, or store it as an environment variable and use it in your code.
+要初始化 `NeonPostgres` 向量存储，你需要提供你的 Neon 数据库连接字符串。你可以直接使用上面获取的连接字符串，或将其存储为环境变量并在代码中使用。
 
 ```typescript
 const vectorStore = await NeonPostgres.initialize(embeddings, {
@@ -48,7 +43,7 @@ const vectorStore = await NeonPostgres.initialize(embeddings, {
 });
 ```
 
-## Usage
+## 用法
 
 ```typescript
 import { OpenAIEmbeddings } from "@langchain/openai";
@@ -145,7 +140,7 @@ console.log(resultsFour);
 */
 ```
 
-## Related
+## 相关
 
-- Vector store [conceptual guide](/oss/integrations/vectorstores)
-- Vector store [how-to guides](/oss/integrations/vectorstores)
+- 向量存储[概念指南](/oss/integrations/vectorstores)
+- 向量存储[操作指南](/oss/integrations/vectorstores)

@@ -1,44 +1,31 @@
 ---
-title: Subagent Streaming
-description: Display specialist subagents with streaming content, progress tracking, and collapsible cards
+title: 子 Agent 流式输出
+description: 展示专业子 Agent 的流式内容、进度跟踪和可折叠卡片
 ---
 
-When a coordinator agent spawns specialist subagents (a researcher, an
-analyst, a writer), you need to render the orchestrator's messages separately
-from each subagent's streaming output. Set `filterSubagentMessages: true` in
-`useStream` to cleanly split these two streams, then use
-`getSubagentsByMessage` to attach each subagent's progress card to the
-coordinator message that triggered it.
+当协调者 Agent 生成专业子 Agent（研究员、分析师、撰稿人）时，你需要将协调者的消息与每个子 Agent 的流式输出分开渲染。在 `useStream` 中设置 `filterSubagentMessages: true` 来清晰地分离这两个流，然后使用 `getSubagentsByMessage` 将每个子 Agent 的进度卡片关联到触发它的协调者消息。
 
 import { PatternEmbed } from "/snippets/pattern-embed.jsx"
 
 <PatternEmbed pattern="deep-agent-subagent-cards" />
 
-## Why filter subagent messages
+## 为什么要过滤子 Agent 消息
 
-Without filtering, every token produced by every subagent appears interleaved
-in the coordinator's message stream, making it unreadable. With
-`filterSubagentMessages: true`:
+如果不过滤，每个子 Agent 产生的每个 token 都会交错出现在协调者的消息流中，导致不可读。设置 `filterSubagentMessages: true` 后：
 
-- `stream.messages` contains only the coordinator's messages
-- Each subagent's content is accessible through `stream.subagents` and
-  `stream.getSubagentsByMessage`
-- The UI stays clean: the coordinator's reasoning is separate from the
-  specialists' work
+- `stream.messages` 仅包含协调者的消息
+- 每个子 Agent 的内容可通过 `stream.subagents` 和 `stream.getSubagentsByMessage` 访问
+- UI 保持整洁：协调者的推理与专家的工作分开展示
 
-This separation lets you render the orchestrator's messages in one place and
-attach each subagent's progress card exactly where it belongs: beneath the
-coordinator message that spawned it.
+这种分离让你可以在一处渲染协调者的消息，并在触发子 Agent 的协调者消息下方精确地附加每个子 Agent 的进度卡片。
 
-## Setting up useStream
+## 设置 useStream
 
-Always set `filterSubagentMessages: true`. This removes subagent tokens from
-the main message stream so you can render the coordinator's messages and
-subagent output independently.
+始终设置 `filterSubagentMessages: true`。这会从主消息流中移除子 Agent 的 token，以便你可以独立渲染协调者消息和子 Agent 输出。
 
 :::python
 
-Define a TypeScript interface matching your agent's state schema and pass it as a type parameter to `useStream` for type-safe access to state values. In the examples below, replace `typeof myAgent` with your interface name:
+定义一个与 Agent 状态 schema 匹配的 TypeScript 接口，并将其作为类型参数传递给 `useStream`，以获得类型安全的状态值访问。在下面的示例中，将 `typeof myAgent` 替换为你的接口名称：
 
 ```ts
 import type { BaseMessage } from "@langchain/core/messages";
@@ -52,7 +39,7 @@ interface AgentState {
 
 :::js
 
-Import your agent and pass `typeof myAgent` as a type parameter to `useStream` for type-safe access to state values:
+导入你的 Agent 并将 `typeof myAgent` 作为类型参数传递给 `useStream`，以获得类型安全的状态值访问：
 
 ```ts
 import type { myAgent } from "./agent";
@@ -162,11 +149,9 @@ export class DeepAgentChatComponent {
 ```
 </CodeGroup>
 
-## Submitting with subgraph streaming
+## 提交消息时启用子图流式传输
 
-When submitting a message, enable subgraph streaming and set an appropriate
-recursion limit. Deep agent workflows often involve multiple layers of nested
-subagraphs, so a higher recursion limit prevents premature termination:
+提交消息时，启用子图流式传输并设置适当的递归限制。Deep Agent 工作流通常涉及多层嵌套子图，因此更高的递归限制可以防止过早终止：
 
 ```ts
 stream.submit(
@@ -176,15 +161,12 @@ stream.submit(
 ```
 
 <Note>
-DeepAgents sets a default recursion limit of 10,000, which is sufficient for
-most multi-expert setups. You can override this via `config.recursion_limit` if
-needed.
+DeepAgents 默认设置的递归限制为 10,000，对大多数多专家设置来说足够了。如有需要，你可以通过 `config.recursion_limit` 覆盖此值。
 </Note>
 
-## The SubagentStreamInterface
+## SubagentStreamInterface 接口
 
-Each subagent exposes a `SubagentStreamInterface` with metadata about the
-subagent's task, status, and timing:
+每个子 Agent 暴露一个 `SubagentStreamInterface`，包含子 Agent 任务、状态和时间的元数据：
 
 ```ts
 interface SubagentStreamInterface {
@@ -206,35 +188,31 @@ interface SubagentStreamInterface {
 }
 ```
 
-| Property | Description |
+| 属性 | 描述 |
 | --- | --- |
-| `id` | Unique identifier for this subagent instance |
-| `status` | Lifecycle state: `pending` → `running` → `complete` or `error` |
-| `messages` | The subagent's own message stream, updated in real time |
-| `result` | The final output text, available only when `status` is `"complete"` |
-| `toolCall` | The tool call that spawned this subagent, including task metadata |
-| `toolCall.args.description` | The task description the coordinator assigned to this subagent |
-| `toolCall.args.subagent_type` | The type or name of the specialist (e.g., `"researcher"`, `"analyst"`) |
-| `startedAt` | Timestamp when the subagent began executing |
-| `completedAt` | Timestamp when the subagent finished |
+| `id` | 此子 Agent 实例的唯一标识符 |
+| `status` | 生命周期状态：`pending` → `running` → `complete` 或 `error` |
+| `messages` | 子 Agent 自己的消息流，实时更新 |
+| `result` | 最终输出文本，仅在 `status` 为 `"complete"` 时可用 |
+| `toolCall` | 生成此子 Agent 的工具调用，包含任务元数据 |
+| `toolCall.args.description` | 协调者分配给此子 Agent 的任务描述 |
+| `toolCall.args.subagent_type` | 专家的类型或名称（例如 `"researcher"`、`"analyst"`） |
+| `startedAt` | 子 Agent 开始执行的时间戳 |
+| `completedAt` | 子 Agent 完成的时间戳 |
 
-## Linking subagents to messages
+## 将子 Agent 关联到消息
 
-The `getSubagentsByMessage` method returns the subagents spawned by a specific
-AI message. This lets you render subagent cards directly beneath the
-coordinator message that triggered them:
+`getSubagentsByMessage` 方法返回由特定 AI 消息生成的子 Agent。这让你可以直接在触发它们的协调者消息下方渲染子 Agent 卡片：
 
 ```ts
 const turnSubagents = stream.getSubagentsByMessage(msg.id);
 ```
 
-This returns an array of `SubagentStreamInterface` objects. If the message
-didn't spawn any subagents, it returns an empty array.
+这返回一个 `SubagentStreamInterface` 对象数组。如果该消息没有生成任何子 Agent，则返回空数组。
 
-## Building the SubagentCard
+## 构建 SubagentCard 组件
 
-Each subagent card shows the specialist's name, task description, streaming
-content or final result, and timing information:
+每个子 Agent 卡片展示专家名称、任务描述、流式内容或最终结果以及时间信息：
 
 ```tsx
 import { AIMessage } from "@langchain/core/messages";
@@ -310,9 +288,9 @@ function getElapsedTime(
 }
 ```
 
-## Status icons and badges
+## 状态图标和徽章
 
-Consistent visual indicators help users parse subagent status at a glance:
+一致的视觉指示器帮助用户快速识别子 Agent 状态：
 
 ```tsx
 function StatusIcon({ status }: { status: SubagentStreamInterface["status"] }) {
@@ -344,9 +322,9 @@ function StatusBadge({ status }: { status: SubagentStreamInterface["status"] }) 
 }
 ```
 
-## Progress tracking
+## 进度跟踪
 
-Show a progress bar and counter so users know how many subagents have finished:
+展示进度条和计数器，让用户知道有多少子 Agent 已完成：
 
 ```tsx
 function SubagentProgress({
@@ -377,10 +355,9 @@ function SubagentProgress({
 }
 ```
 
-## Rendering messages with subagent cards
+## 渲染消息与子 Agent 卡片
 
-The key layout pattern is to render each coordinator message, and if that message
-spawned subagents, render their cards immediately below it:
+关键布局模式是渲染每个协调者消息，如果该消息生成了子 Agent，则紧接其下方渲染子 Agent 卡片：
 
 ```tsx
 function MessageWithSubagents({
@@ -415,10 +392,9 @@ function MessageWithSubagents({
 }
 ```
 
-## Synthesis indicator
+## 合成指示器
 
-After all subagents complete, the coordinator takes time to synthesize their
-results into a final response. Show a clear indicator during this phase:
+所有子 Agent 完成后，协调者需要时间将它们的结果合成为最终响应。在此阶段展示一个清晰的指示器：
 
 ```tsx
 function SynthesisIndicator({
@@ -445,36 +421,25 @@ function SynthesisIndicator({
 ```
 
 <Tip>
-The synthesis phase can take several seconds for complex multi-expert
-workflows. A clear "Synthesizing results..." indicator prevents users from
-thinking the agent has stalled.
+对于复杂的多专家工作流，合成阶段可能需要几秒钟。清晰的"正在合成结果..."指示器可以防止用户认为 Agent 卡住了。
 </Tip>
 
-## Debug unfiltered output
+## 调试未过滤的输出
 
-During development, you can temporarily set `filterSubagentMessages: false` to
-see the raw, interleaved output from all subagents in the main message stream.
-This is useful for verifying that subagent tokens are flowing correctly, but
-should not be used in production UIs.
+在开发过程中，你可以临时设置 `filterSubagentMessages: false` 来查看主消息流中所有子 Agent 的原始交错输出。这对验证子 Agent token 是否正确流动很有用，但不应在生产 UI 中使用。
 
-## Use cases
+## 使用场景
 
-Deep agent subagent cards are the right choice when your agent workflow
-involves:
+当 Agent 工作流涉及以下场景时，Deep Agent 子 Agent 卡片是正确的选择：
 
-- **Deep research** where a coordinator dispatches researchers to investigate
-  different facets of a question, then synthesizes their findings
-- **Multi-expert analysis** such as domain specialists (legal, financial, technical)
-  each contribute their perspective
-- **Complex task decomposition** where a planner breaks a large task into subtasks
-  and assigns each to a specialist worker
-- **Code review pipelines** where separate agents handle security review, style
-  checking, performance analysis, and documentation review
+- **深度研究**：协调者派遣研究人员调查问题的不同方面，然后综合他们的发现
+- **多专家分析**：领域专家（法律、金融、技术）各自贡献其视角
+- **复杂任务分解**：规划者将大任务拆分为子任务，并将每个子任务分配给专家工作者
+- **代码审查流水线**：独立的 Agent 分别处理安全审查、代码风格检查、性能分析和文档审查
 
-## Accessing the full subagents map
+## 访问完整的子 Agent 映射
 
-Beyond per-message lookup, you can access all subagents at once through
-`stream.subagents`:
+除了按消息查找，你还可以通过 `stream.subagents` 一次访问所有子 Agent：
 
 ```ts
 const allSubagents = [...stream.subagents.values()];
@@ -483,22 +448,13 @@ const completed = allSubagents.filter((s) => s.status === "complete");
 const errors = allSubagents.filter((s) => s.status === "error");
 ```
 
-This is useful for building global progress indicators or dashboards that
-summarize all subagent activity regardless of which coordinator message spawned
-them.
+这对构建全局进度指示器或仪表板很有用，可以汇总所有子 Agent 活动，不管它们是由哪条协调者消息生成的。
 
-## Best practices
+## 最佳实践
 
-- **Always set `filterSubagentMessages: true`**. Unfiltered streams produce an
-  unreadable interleaving of coordinator and subagent tokens.
-- **Show task descriptions**. The `toolCall.args.description` field tells users
-  exactly what each subagent was asked to do. Always display this prominently.
-- **Use collapsible cards**. In workflows with 5+ subagents, auto-collapse
-  completed cards so users can focus on active work.
-- **Display timing data**. Showing how long each subagent took helps users
-  understand performance characteristics and identify bottlenecks.
-- **Set an appropriate recursion limit**. Deep agent workflows with nested
-  subgraphs need higher limits than the default 25. Start with 100.
-- **Handle errors per subagent**. One subagent failing shouldn't crash the
-  entire UI. Show the error in that subagent's card while others continue
-  running.
+- **始终设置 `filterSubagentMessages: true`**。未过滤的流会产生协调者和子 Agent token 的不可读交错。
+- **展示任务描述**。`toolCall.args.description` 字段告诉用户每个子 Agent 被要求做什么。始终突出展示。
+- **使用可折叠卡片**。在有 5 个以上子 Agent 的工作流中，自动折叠已完成的卡片，让用户专注于活跃的工作。
+- **展示时间数据**。展示每个子 Agent 花费的时间帮助用户了解性能特征并识别瓶颈。
+- **设置适当的递归限制**。具有嵌套子图的 Deep Agent 工作流需要比默认值 25 更高的限制。建议从 100 开始。
+- **按子 Agent 处理错误**。一个子 Agent 失败不应导致整个 UI 崩溃。在该子 Agent 的卡片中展示错误，同时其他子 Agent 继续运行。

@@ -2,12 +2,12 @@
 title: MESSAGE_COERCION_FAILURE
 ---
 
-This error occurs when message objects don't conform to the expected format.
+当消息对象不符合预期格式时，会触发此错误。
 
 :::python
-## Accepted message formats
+## 可接受的消息格式
 
-LangChain modules accept `MessageLikeRepresentation`, which is defined as:
+LangChain 模块接受 `MessageLikeRepresentation` 类型，其定义如下：
 
 ```python
 from typing import Union
@@ -28,9 +28,9 @@ MessageLikeRepresentation = Union[
 ]
 ```
 
-These include OpenAI style message objects (`{ role: "user", content: "Hello world!" }`), tuples, and plain strings (which are converted to @[`HumanMessage`] objects).
+这些格式包括 OpenAI 风格的消息对象（`{ role: "user", content: "Hello world!" }`）、元组以及纯字符串（将被转换为 @[`HumanMessage`] 对象）。
 
-If a module receives a value outside of one of these formats, you will receive an error:
+如果模块接收到不属于以上任何格式的值，你将收到报错：
 
 ```python
 from langchain_anthropic import ChatAnthropic
@@ -50,10 +50,10 @@ ValueError: Message dict must contain 'role' and 'content' keys, got {'role': 'H
 TODO: Add JS example
 :::
 
-## Troubleshooting
+## 排查方法
 
-To resolve this error:
+要解决此错误：
 
-1. **Ensure proper format**: All inputs to chat models must be an array of LangChain message classes or a supported message-like format
-2. Verify no unintended stringification or transformation occurs to your messages
-3. Examine the error's stack trace and add logging statements to inspect message objects before they're passed to the model
+1. **确保格式正确**：传给聊天模型的所有输入必须是 LangChain 消息类的数组或支持的消息类格式
+2. 检查消息是否被意外地字符串化或进行了其他转换
+3. 查看错误的堆栈追踪，并添加日志记录来检查消息对象在传入模型之前的实际内容

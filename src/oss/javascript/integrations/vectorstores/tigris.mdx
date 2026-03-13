@@ -1,36 +1,32 @@
 ---
-title: "Tigris integration"
-description: "Integrate with the Tigris vector store using LangChain JavaScript."
+title: "Tigris 集成"
+description: "使用 LangChain JavaScript 集成 Tigris 向量存储。"
 ---
 
-Tigris makes it easy to build AI applications with vector embeddings.
-It is a fully managed cloud-native database that allows you store and
-index documents and vector embeddings for fast and scalable vector search.
+Tigris 可以轻松构建带有向量嵌入的 AI 应用。
+它是一个完全托管的云原生数据库，允许你存储和索引文档以及向量嵌入，以便进行快速和可扩展的向量搜索。
 
 <Tip>
-**Compatibility**
-
-Only available on Node.js.
+**兼容性**：仅在 Node.js 上可用。
 </Tip>
 
-## Setup
+## 设置
 
-### 1. Install the tigris SDK
+### 1. 安装 Tigris SDK
 
-Install the SDK as follows
+安装 SDK：
 
 ```bash npm
 npm install -S @tigrisdata/vector
 ```
-### 2. Fetch tigris API credentials
+### 2. 获取 Tigris API 凭据
 
-Sign up for a free [Tigris account](https://www.tigrisdata.com/).
+你可以在[此处](https://www.tigrisdata.com/)注册一个免费的 Tigris 账户。
 
-Once you have signed up for the Tigris account, create a new project called `vectordemo`.
-Next, make a note of the `clientId` and `clientSecret`, which you can get from the
-Application Keys section of the project.
+注册 Tigris 账户后，创建一个名为 `vectordemo` 的新项目。
+接下来，记下 `clientId` 和 `clientSecret`，你可以从项目的应用程序密钥部分获取。
 
-## Index docs
+## 索引文档
 
 <Tip>
 See [this section for general instructions on installing LangChain packages](/oss/langchain/install).
@@ -78,7 +74,7 @@ const docs = [
 await TigrisVectorStore.fromDocuments(docs, new OpenAIEmbeddings(), { index });
 ```
 
-## Query docs
+## 查询文档
 
 ```typescript
 import { VectorDocumentStore } from "@tigrisdata/vector";
@@ -116,7 +112,7 @@ console.log(JSON.stringify(results, null, 2));
 */
 ```
 
-## Related
+## 相关
 
-- Vector store [conceptual guide](/oss/integrations/vectorstores)
-- Vector store [how-to guides](/oss/integrations/vectorstores)
+- 向量存储[概念指南](/oss/integrations/vectorstores)
+- 向量存储[操作指南](/oss/integrations/vectorstores)

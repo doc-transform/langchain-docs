@@ -3,10 +3,10 @@ title: INVALID_PROMPT_INPUT
 ---
 
 {/* TODO: fix link when porting page */}
-Occurs when a [prompt template](https://github.com/langchain-ai/langchain/blob/v0.3/docs/docs/concepts/prompt_templates.mdx) received missing or invalid input variables.
+当[提示词模板](https://github.com/langchain-ai/langchain/blob/v0.3/docs/docs/concepts/prompt_templates.mdx)接收到缺失或无效的输入变量时，会触发此错误。
 
 :::js
-One unexpected way this can occur is if you add a JSON object directly into a prompt template:
+一种容易被忽视的触发方式是在提示词模板中直接嵌入 JSON 对象：
 
 ```typescript
 import { PromptTemplate } from "@langchain/core/prompts";
@@ -27,7 +27,7 @@ Now, answer the following question:
 {question}`);
 ```
 
-You might think that the above prompt template should require a single input key named question, but the JSON object will be interpreted as an additional variable because the curly braces (`{`) are not escaped, and should be preceded by a second brace instead, like this:
+你可能认为上面的提示词模板只需要一个名为 question 的输入变量，但 JSON 对象中的花括号（`{`）由于没有转义，会被解释为额外的变量。正确做法是使用双花括号进行转义，如下所示：
 
 ```typescript
 import { PromptTemplate } from "@langchain/core/prompts";
@@ -50,13 +50,13 @@ Now, answer the following question:
 :::
 
 
-## Troubleshooting
+## 排查方法
 
-To resolve this error, you can:
+要解决此错误，你可以：
 
-1. Review your prompt template for correctness. When using f-string formats, ensure proper escaping of curly braces:
-   * Use `{{` for single braces in f-strings
-   * Use `{{{{` for double braces in f-strings
-2. When using `MessagesPlaceholder` components, confirm you're passing message arrays or message-like objects. If using shorthand tuples, wrap variable names in curly braces like `["placeholder", "{messages}"]`
-3. Debug by examining actual inputs to your prompt template by using [LangSmith](/langsmith/home) or logging to verify they match expectations
-4. If sourcing prompts from LangChain [Prompt Hub](https://smith.langchain.com/prompts), isolate and test the prompt with sample inputs to ensure it functions as intended
+1. 检查提示词模板的正确性。使用 f-string 格式时，确保花括号已正确转义：
+   * 在 f-string 中使用 `{{` 来表示单个花括号
+   * 在 f-string 中使用 `{{{{` 来表示双花括号
+2. 使用 `MessagesPlaceholder` 组件时，确认传入的是消息数组或消息类对象。如果使用简写元组形式，需要用花括号包裹变量名，如 `["placeholder", "{messages}"]`
+3. 通过 [LangSmith](/langsmith/home) 或日志记录检查提示词模板实际接收到的输入，验证其是否符合预期
+4. 如果提示词来源于 LangChain [Prompt Hub](https://smith.langchain.com/prompts)，请先用示例输入单独测试该提示词，确保其按预期工作

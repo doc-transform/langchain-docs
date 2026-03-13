@@ -1,32 +1,32 @@
 ---
-title: "Jigsawstack integration"
-description: "Integrate with the Jigsawstack tool using LangChain JavaScript."
+title: "JigsawStack 集成"
+description: "使用 LangChain JavaScript 集成 JigsawStack 工具。"
 ---
 
-The JigsawStack Tool provides your agent with the following capabilities:
+JigsawStack 工具为你的代理提供以下功能：
 
-- JigsawStackAIScrape: Scrape web content using advanced AI.
+- JigsawStackAIScrape：使用高级 AI 爬取网页内容。
 
-- JigsawStackAISearch: Perform AI-powered web searches and retrieve high-quality results.
+- JigsawStackAISearch：执行 AI 驱动的网络搜索并检索高质量结果。
 
-- JigsawStackSpeechToText - Transcribe video and audio files using the Whisper large V3 AI model.
+- JigsawStackSpeechToText：使用 Whisper large V3 AI 模型转录视频和音频文件。
 
-- JigsawStackVOCR - Recognize, describe, and extract data from images using a prompt.
+- JigsawStackVOCR：使用提示词识别、描述和提取图像数据。
 
-- JigsawStackTextToSQL - Generate semantically correct SQL queries from text.
+- JigsawStackTextToSQL：从文本生成语义正确的 SQL 查询。
 
-## Setup
+## 设置
 
-- Set up an [account](https://jigsawstack.com/dashboard) (Get started for free)
-- Create and retrieve your [API key](https://jigsawstack.com/dashboard)
+- 设置一个[账户](https://jigsawstack.com/dashboard)（免费开始）
+- 创建并获取你的 [API 密钥](https://jigsawstack.com/dashboard)
 
-## Credentials
+## 凭据
 
 ```bash
 export JIGSAWSTACK_API_KEY="your-api-key"
 ```
 
-## Usage, standalone
+## 用法，独立使用
 
 <Tip>
 See [this section for general instructions on installing LangChain packages](/oss/langchain/install).
@@ -94,7 +94,7 @@ export const run = async () => {
 };
 ```
 
-## Usage, in an Agent
+## 用法，在代理中使用
 
 ```js
 import { ChatOpenAI } from "@langchain/openai";
@@ -154,7 +154,7 @@ console.log(res.output);
 */
 ```
 
-## Related
+## 相关
 
-- Tool [conceptual guide](/oss/langchain/tools)
-- Tool [how-to guides](/oss/langchain/tools)
+- 工具[概念指南](/oss/langchain/tools)
+- 工具[操作指南](/oss/langchain/tools)

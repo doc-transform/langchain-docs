@@ -1,30 +1,30 @@
 ---
-title: Deep Agents overview
-sidebarTitle: Overview
-description: Build agents that can plan, use subagents, and leverage file systems for complex tasks
+title: Deep Agents 概览
+sidebarTitle: 概览
+description: 构建能够规划、使用子 Agent 并利用文件系统处理复杂任务的 Agent
 ---
 
-Deep agents are the easiest way to start building agents and applications powered by LLMs—with built-in capabilities for task planning, file systems for context management, subagent-spawning, and long-term memory.
-You can use deep agents for any task, including complex, multi-step tasks.
+Deep Agents 是开始构建 LLM 驱动的 Agent 和应用的最简单方式——内置任务规划、用于上下文管理的文件系统、子 Agent 生成和长期记忆等能力。
+你可以将 Deep Agents 用于任何任务，包括复杂的多步骤任务。
 
-We think of `deepagents` as an ["agent harness"](/oss/concepts/products#agent-harnesses-like-the-deep-agents-sdk). It is the same core tool calling loop as other agent frameworks, but with built-in tools and capabilities.
+我们将 `deepagents` 视为 ["Agent 能力框架"](/oss/concepts/products#agent-harnesses-like-the-deep-agents-sdk)。它与其他 Agent 框架拥有相同的核心工具调用循环，但具备内置的工具和能力。
 
 :::python
-[`deepagents`](https://pypi.org/project/deepagents/) is a standalone library built on top of [LangChain](/oss/langchain/)'s core building blocks for agents. It uses the [LangGraph](/oss/langgraph/) runtime for durable execution, streaming, human-in-the-loop, and other features.
+[`deepagents`](https://pypi.org/project/deepagents/) 是一个基于 [LangChain](/oss/langchain/) Agent 核心构建块的独立库。它使用 [LangGraph](/oss/langgraph/) 运行时提供持久化执行、流式输出、人工干预等功能。
 :::
 
 :::js
-[`deepagents`](https://www.npmjs.com/package/deepagents) is a standalone library built on top of [LangChain](/oss/langchain/)'s core building blocks for agents and using [LangGraph](/oss/langgraph/)'s tooling for running agents in production.
+[`deepagents`](https://www.npmjs.com/package/deepagents) 是一个基于 [LangChain](/oss/langchain/) Agent 核心构建块的独立库，使用 [LangGraph](/oss/langgraph/) 的工具在生产环境中运行 Agent。
 :::
 
-The `deepagents` library contains:
-- **Deep Agents SDK**: A package for building agents that can handle any task
-- [**Deep Agents CLI**](/oss/deepagents/cli): A terminal coding agent built on the Deep Agents SDK
+`deepagents` 库包含：
+- **Deep Agents SDK**：一个用于构建能处理任何任务的 Agent 的包
+- **Deep Agents CLI**：一个基于 `deepagents` 包构建的终端编码 Agent
 
-[LangChain](/oss/langchain/) is the framework that provides the core building blocks for your agents.
-To learn more about the differences between LangChain, LangGraph, and Deep Agents, see [Frameworks, runtimes, and harnesses](/oss/concepts/products).
+[LangChain](/oss/langchain/) 是为你的 Agent 提供核心构建块的框架。
+要了解 LangChain、LangGraph 和 Deep Agents 之间的区别，请参阅[框架、运行时和能力框架](/oss/concepts/products)。
 
-## <Icon icon="wand" /> Create a deep agent
+## <Icon icon="wand" /> 创建 Deep Agent
 
 :::python
 ```python
@@ -78,96 +78,94 @@ console.log(
 ```
 :::
 
-See the [Quickstart](/oss/deepagents/quickstart/) and [Customization guide](/oss/deepagents/customization/) to get started building your own agents and applications with deep agents.
+参阅[快速开始](/oss/deepagents/quickstart/)和[自定义指南](/oss/deepagents/customization/)，开始使用 Deep Agents 构建你自己的 Agent 和应用。
 
 <Tip>
-    Use [LangSmith](/langsmith/home) to trace requests, debug agent behavior, and evaluate outputs. Set `LANGSMITH_TRACING=true` and your API key to get started.
+使用 [LangSmith](/langsmith/home) 追踪请求、调试 Agent 行为并评估输出。设置 `LANGSMITH_TRACING=true` 和 API 密钥即可开始。
 </Tip>
 
-## When to use the Deep Agents
+## 何时使用 Deep Agents
 
-Use the **Deep Agents SDK** when you want to build agents that can:
-
-- **Handle complex, multi-step tasks** that require planning and decomposition
-- **Manage large amounts of context** through file system tools
-- **Swap filesystem backends** to use in-memory state, local disk, durable stores, [sandboxes](/oss/deepagents/sandboxes), or [your own custom backend](/oss/deepagents/backends)
-- **Delegate work** to specialized subagents for context isolation
-- **Persist memory** across conversations and threads
+当你想构建以下能力的 Agent 时，使用 **Deep Agents SDK**：
+- **处理复杂的多步骤任务** — 需要规划和分解的任务
+- **管理大量上下文** — 通过文件系统工具
+- **切换文件系统后端** — 使用内存状态、本地磁盘、持久化存储、[沙箱](/oss/deepagents/sandboxes)或[自定义后端](/oss/deepagents/backends)
+- **委派工作** — 给专业子 Agent 以实现上下文隔离
+- **持久化记忆** — 跨对话和线程保存记忆
 
 :::python
-For building simpler agents, consider using LangChain's [`create_agent`](/oss/langchain/agents) or building a custom [LangGraph](/oss/langgraph/overview) workflow.
+如果要构建更简单的 Agent，可以考虑使用 LangChain 的 [`create_agent`](/oss/langchain/agents) 或构建自定义的 [LangGraph](/oss/langgraph/overview) 工作流。
 :::
 
 :::js
-For building simpler agents, consider using LangChain's [`createAgent`](/oss/langchain/agents) or building a custom [LangGraph](/oss/langgraph/overview) workflow.
+如果要构建更简单的 Agent，可以考虑使用 LangChain 的 [`createAgent`](/oss/langchain/agents) 或构建自定义的 [LangGraph](/oss/langgraph/overview) 工作流。
 :::
 
-Use the **Deep Agents CLI** when you want a coding agent on the command line, built on the Deep Agents SDK:
+当你想在命令行中使用交互式 Deep Agent 进行编码或其他任务时，使用 **Deep Agents CLI**：
 
-- **Run interactively or non-interactively** — use the CLI as a chat-style coding agent, or pipe tasks with `-n` for scriptable, headless execution.
-- **Customize** agents with skills and memory.
-- **Teach** agents as you use them about your preferences, common patterns, and custom project knowledge.
-- **Execute code** on your machine or in sandboxes.
+- **自定义** Agent 的技能和记忆。
+- **教导** Agent 学习你的偏好、常用模式和自定义项目知识。
+- **执行代码** — 在本地机器或沙箱中。
 
-## Core capabilities
+## 核心能力
 
-<Card title="Planning and task decomposition" icon="timeline">
-    Deep agents include a built-in [`write_todos`](/oss/langchain/middleware/built-in#to-do-list) tool that enables agents to break down complex tasks into discrete steps, track progress, and adapt plans as new information emerges.
+<Card title="规划与任务分解" icon="timeline">
+    Deep Agents 内置了 [`write_todos`](/oss/langchain/middleware/built-in#to-do-list) 工具，使 Agent 能够将复杂任务分解为离散步骤、跟踪进度并在出现新信息时调整计划。
 </Card>
-<Card title="Context management" icon="scissors">
-    File system tools ([`ls`](/oss/deepagents/harness#virtual-filesystem-access), [`read_file`](/oss/deepagents/harness#virtual-filesystem-access), [`write_file`](/oss/deepagents/harness#virtual-filesystem-access), [`edit_file`](/oss/deepagents/harness#virtual-filesystem-access)) allow agents to offload large context to in-memory or filesystem storage, preventing context window overflow and enabling work with variable-length tool results.
+<Card title="上下文管理" icon="scissors">
+    文件系统工具（[`ls`](/oss/deepagents/harness#file-system-access)、[`read_file`](/oss/deepagents/harness#file-system-access)、[`write_file`](/oss/deepagents/harness#file-system-access)、[`edit_file`](/oss/deepagents/harness#file-system-access)）允许 Agent 将大量上下文卸载到内存或文件系统存储，避免上下文窗口溢出，并支持处理可变长度的工具结果。
 </Card>
-<Card title="Pluggable filesystem backends" icon="plug">
-    The virtual filesystem is powered by [pluggable backends](/oss/deepagents/backends) that you can swap to fit your use case. Choose from in-memory state, local disk, LangGraph store for cross-thread persistence, [sandboxes](/oss/deepagents/sandboxes) for isolated code execution (Modal, Daytona, Deno), or combine multiple backends with composite routing. You can also implement your own custom backend.
+<Card title="可插拔文件系统后端" icon="plug">
+    虚拟文件系统由[可插拔后端](/oss/deepagents/backends)驱动，你可以根据使用场景进行切换。可选择内存状态、本地磁盘、LangGraph 存储以实现跨线程持久化、[沙箱](/oss/deepagents/sandboxes)以实现隔离代码执行（Modal、Daytona、Deno），或通过组合路由混合使用多个后端。你还可以实现自定义后端。
 </Card>
-<Card title="Subagent spawning" icon="users-group">
-    A built-in `task` tool enables agents to spawn specialized subagents for context isolation. This keeps the main agent's context clean while still going deep on specific subtasks.
+<Card title="子 Agent 生成" icon="users-group">
+    内置的 `task` 工具使 Agent 能够生成专业子 Agent 以实现上下文隔离。这能保持主 Agent 的上下文简洁，同时仍能深入处理特定子任务。
 </Card>
-<Card title="Long-term memory" icon="database">
-    Extend agents with persistent memory across threads using LangGraph's [Memory Store](/oss/langgraph/persistence#memory-store). Agents can save and retrieve information from previous conversations.
+<Card title="长期记忆" icon="database">
+    使用 LangGraph 的[记忆存储](/oss/langgraph/persistence#memory-store)扩展 Agent 的跨线程持久化记忆。Agent 可以保存和检索先前对话中的信息。
 </Card>
 
-## Get started
+## 开始使用
 
 :::python
 <CardGroup cols={2}>
-    <Card title="SDK Quickstart" icon="rocket" href="/oss/deepagents/quickstart">
-        Build your first deep agent
+    <Card title="SDK 快速开始" icon="rocket" href="/oss/deepagents/quickstart">
+        构建你的第一个 Deep Agent
     </Card>
-    <Card title="Customization" icon="adjustments" href="/oss/deepagents/customization">
-        Learn about customization options for the SDK
+    <Card title="自定义" icon="adjustments" href="/oss/deepagents/customization">
+        了解 SDK 的自定义选项
     </Card>
-    <Card title="Backends" icon="plug" href="/oss/deepagents/backends">
-        Choose and configure pluggable filesystem backends
+    <Card title="后端" icon="plug" href="/oss/deepagents/backends">
+        选择和配置可插拔文件系统后端
     </Card>
-    <Card title="Sandboxes" icon="cube" href="/oss/deepagents/sandboxes">
-        Execute code in isolated environments
+    <Card title="沙箱" icon="cube" href="/oss/deepagents/sandboxes">
+        在隔离环境中执行代码
     </Card>
     <Card title="CLI" icon="terminal" href="/oss/deepagents/cli/overview">
-        Use the Deep Agents CLI
+        使用 Deep Agents CLI
     </Card>
-    <Card title="Reference" icon="external-link" href="https://reference.langchain.com/python/deepagents/">
-        See the `deepagents` API reference
+    <Card title="API 参考" icon="external-link" href="https://reference.langchain.com/python/deepagents/">
+        查看 `deepagents` API 参考文档
     </Card>
 </CardGroup>
 :::
 
 :::js
 <CardGroup cols={2}>
-    <Card title="SDK Quickstart" icon="rocket" href="/oss/deepagents/quickstart">
-        Build your first deep agent
+    <Card title="SDK 快速开始" icon="rocket" href="/oss/deepagents/quickstart">
+        构建你的第一个 Deep Agent
     </Card>
-    <Card title="Customization" icon="adjustments" href="/oss/deepagents/customization">
-        Learn about customization options for the SDK
+    <Card title="自定义" icon="adjustments" href="/oss/deepagents/customization">
+        了解 SDK 的自定义选项
     </Card>
-    <Card title="Backends" icon="plug" href="/oss/deepagents/backends">
-        Choose and configure pluggable filesystem backends
+    <Card title="后端" icon="plug" href="/oss/deepagents/backends">
+        选择和配置可插拔文件系统后端
     </Card>
     <Card title="CLI" icon="terminal" href="/oss/deepagents/cli/overview">
-        Use the Deep Agents CLI
+        使用 Deep Agents CLI
     </Card>
-    <Card title="Reference" icon="external-link" href="https://reference.langchain.com/javascript/modules/deepagents.html">
-        See the `deepagents` API reference
+    <Card title="API 参考" icon="external-link" href="https://reference.langchain.com/javascript/modules/deepagents.html">
+        查看 `deepagents` API 参考文档
     </Card>
 </CardGroup>
 :::

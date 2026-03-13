@@ -1,21 +1,21 @@
 ---
-title: "ChatPrem integration"
-description: "Integrate with the ChatPrem chat model using LangChain JavaScript."
+title: "ChatPrem 集成"
+description: "使用 LangChain JavaScript 集成 ChatPrem 对话模型。"
 ---
 
-## Setup
+## 安装
 
-1. [Create a Prem AI account and get your API key](https://studio.premai.io/sign-up).
-2. Export or set your API key inline. The ChatPrem class defaults to `process.env.PREM_API_KEY`.
+1. 创建一个 Prem AI 账户并在[此处](https://studio.premai.io/sign-up)获取你的 API 密钥。
+2. 导出或内联设置你的 API 密钥。ChatPrem 类默认使用 `process.env.PREM_API_KEY`。
 
 ```bash
 export PREM_API_KEY=your-api-key
 ```
 
-You can use models provided by Prem AI as follows:
+你可以按如下方式使用 Prem AI 提供的模型：
 
 <Tip>
-See [this section for general instructions on installing LangChain packages](/oss/langchain/install).
+安装 LangChain 包的通用说明请参见[此章节](/oss/langchain/install)。
 </Tip>
 
 ```bash npm
@@ -36,7 +36,7 @@ const model = new ChatPrem({
 console.log(await model.invoke([new HumanMessage("Hello there!")]));
 ```
 
-## Related
+## 相关资源
 
-- Chat model [conceptual guide](/oss/langchain/models)
-- Chat model [how-to guides](/oss/langchain/models)
+- 对话模型[概念指南](/oss/langchain/models)
+- 对话模型[操作指南](/oss/langchain/models)

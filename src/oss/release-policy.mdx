@@ -1,279 +1,279 @@
 ---
-title: Release policy
+title: 发布策略
 ---
 
-This page explains the LangChain and LangGraph release policies. Click on the tabs below to view the release policies for each:
+本页说明 LangChain 和 LangGraph 的发布策略。点击以下标签页查看各自的发布策略：
 
 <Tabs>
     <Tab title="LangChain">
 
     :::python
-    The LangChain ecosystem is composed of different component packages (e.g., `langchain-core`, `langchain`, `langchain-community`, partner packages, etc.)
+    LangChain 生态系统由多个组件包组成（例如 `langchain-core`、`langchain`、`langchain-community`、合作伙伴包等）
     :::
     :::js
-    The LangChain ecosystem is composed of different component packages (e.g., `@langchain/core`, `langchain`, `@langchain/community`, partner packages, etc.)
+    LangChain 生态系统由多个组件包组成（例如 `@langchain/core`、`langchain`、`@langchain/community`、合作伙伴包等）
     :::
 
-    ## Release cadence
+    ## 发布节奏
 
     :::python
-    With the release of LangChain 1.0, **minor** releases (e.g., from `1.0.x` to `1.1.0`) of `langchain` and `langchain-core` follow semantic versioning and may be released frequently. Minor releases contain new features and improvements but do not include breaking changes.
+    随着 LangChain 1.0 的发布，`langchain` 和 `langchain-core` 的**次版本**发布（例如，从 `1.0.x` 到 `1.1.0`）遵循语义化版本控制，可能会频繁发布。次版本包含新功能和改进，但不包含破坏性变更。
     :::
     :::js
-    With the release of LangChain 1.0, **minor** releases (e.g., from `1.0.x` to `1.1.0`) of `langchain` and `@langchain/core` follow semantic versioning and may be released frequently. Minor releases contain new features and improvements but do not include breaking changes.
+    随着 LangChain 1.0 的发布，`langchain` 和 `@langchain/core` 的**次版本**发布（例如，从 `1.0.x` 到 `1.1.0`）遵循语义化版本控制，可能会频繁发布。次版本包含新功能和改进，但不包含破坏性变更。
     :::
 
-    Patch versions are released frequently, up to a few times per week, as they contain bug fixes and minor improvements.
+    修订版发布较为频繁，每周可能发布多次，包含错误修复和小幅改进。
 
-    ## API stability
+    ## API 稳定性
 
     :::python
-    The development of LLM applications is a rapidly evolving field, and we are constantly learning from our users and the community. As such, we expect that the APIs in `langchain` and `langchain-core` will continue to evolve to better serve the needs of our users.
+    LLM 应用开发是一个快速发展的领域，我们不断从用户和社区中学习。因此，我们预计 `langchain` 和 `langchain-core` 中的 API 将持续演进，以更好地满足用户需求。
     :::
     :::js
-    The development of LLM applications is a rapidly evolving field, and we are constantly learning from our users and the community. As such, we expect that the APIs in `langchain` and `@langchain/core` will continue to evolve to better serve the needs of our users.
+    LLM 应用开发是一个快速发展的领域，我们不断从用户和社区中学习。因此，我们预计 `langchain` 和 `@langchain/core` 中的 API 将持续演进，以更好地满足用户需求。
     :::
 
-    With LangChain 1.0's adoption of semantic versioning:
+    随着 LangChain 1.0 采用语义化版本控制：
 
-    - Breaking changes to the public API will only occur in major version releases (e.g., `2.0.0`)
-    - Minor version bumps (e.g., `1.0.0` to `1.1.0`) add new features without breaking changes
-    - Patch version bumps (e.g., `1.0.0` to `1.0.1`) contain bug fixes and minor improvements
+    - 公共 API 的破坏性变更仅会在主版本发布时发生（例如，`2.0.0`）
+    - 次版本升级（例如，`1.0.0` 到 `1.1.0`）添加新功能且不包含破坏性变更
+    - 修订版升级（例如，`1.0.0` 到 `1.0.1`）包含错误修复和小幅改进
 
-    We will generally try to avoid making unnecessary changes, and will provide a deprecation policy for features that are being removed.
+    我们通常会避免进行不必要的变更，并为即将移除的功能提供废弃策略。
 
-    ### Stability of other packages
+    ### 其他包的稳定性
 
-    The stability of other packages in the LangChain ecosystem may vary:
+    LangChain 生态系统中其他包的稳定性可能有所不同：
 
-    - **Partner packages maintained by LangChain** (such as `langchain-openai` and `langchain-anthropic`) follow semantic versioning and are expected to be stable post 1.0. Other partner packages may follow different stability and versioning policies, and users should refer to the documentation of those packages for more information.
+    - **LangChain 团队维护的合作伙伴包**（如 `langchain-openai` 和 `langchain-anthropic`）遵循语义化版本控制，在 1.0 发布后预期是稳定的。其他合作伙伴包可能遵循不同的稳定性和版本控制策略，用户应参考对应包的文档了解更多信息。
 
     :::python
-    - **`langchain-community`** is a community maintained package that contains 3rd party integrations. Due to the number of integrations there, `langchain-community` does not follow the same strict semantic versioning policy as `langchain` and `langchain-core`. See the "Special considerations" section under Long-term support for more details.
+    - **`langchain-community`** 是一个由社区维护的包，包含第三方集成。由于集成数量较多，`langchain-community` 不遵循与 `langchain` 和 `langchain-core` 相同的严格语义化版本控制策略。详见长期支持下的“特别说明”部分。
     :::
     :::js
-    - **`@langchain/community`** is a community maintained package that contains 3rd party integrations. Due to the nature of community contributions and third-party dependencies, `@langchain/community` does not follow the same strict semantic versioning policy as `langchain` and `@langchain/core`. See the "Special considerations" section under Long-term support for more details.
+    - **`@langchain/community`** 是一个由社区维护的包，包含第三方集成。由于社区贡献和第三方依赖的特性，`@langchain/community` 不遵循与 `langchain` 和 `@langchain/core` 相同的严格语义化版本控制策略。详见长期支持下的“特别说明”部分。
     :::
 
-    ## Deprecation policy
+    ## 废弃策略
 
-    We will generally avoid deprecating features until a better alternative is available.
+    我们通常会在更好的替代方案可用之前避免废弃功能。
 
     :::python
-    With LangChain 1.0's semantic versioning approach, deprecated features will continue to work throughout the entire 1.x release series. Breaking changes, including the removal of deprecated features, will only occur in major version releases (e.g., 2.0).
+    随着 LangChain 1.0 采用语义化版本控制，已废弃的功能将在整个 1.x 版本系列中继续正常工作。破坏性变更（包括移除已废弃功能）仅会在主版本发布时发生（例如，2.0）。
 
-    When a feature is deprecated in `langchain` or `langchain-core`, we will:
-    - Clearly mark it as deprecated in the code and documentation
-    - Provide migration guidance to the recommended alternative
-    - Provide security updates for the deprecated feature through all 1.x minor releases
+    当 `langchain` 或 `langchain-core` 中的功能被废弃时，我们会：
+    - 在代码和文档中明确标记为废弃
+    - 提供向推荐替代方案的迁移指南
+    - 在所有 1.x 次版本中为已废弃功能提供安全更新
     :::
     :::js
-    With LangChain 1.0's semantic versioning approach, deprecated features will continue to work throughout the entire 1.x release series. Breaking changes, including the removal of deprecated features, will only occur in major version releases (e.g., 2.0).
+    随着 LangChain 1.0 采用语义化版本控制，已废弃的功能将在整个 1.x 版本系列中继续正常工作。破坏性变更（包括移除已废弃功能）仅会在主版本发布时发生（例如，2.0）。
 
-    When a feature is deprecated in `langchain` or `@langchain/core`, we will:
-    - Clearly mark it as deprecated in the code and documentation
-    - Provide migration guidance to the recommended alternative
-    - Provide security updates for the deprecated feature through all 1.x minor releases
+    当 `langchain` 或 `@langchain/core` 中的功能被废弃时，我们会：
+    - 在代码和文档中明确标记为废弃
+    - 提供向推荐替代方案的迁移指南
+    - 在所有 1.x 次版本中为已废弃功能提供安全更新
     :::
 
-    In some situations, we may allow deprecated features to remain in the code base even longer if they are not causing maintenance issues, to further reduce the burden on users.
+    在某些情况下，如果已废弃的功能不会引起维护问题，我们可能会允许它们在代码库中保留更长时间，以进一步减轻用户的迁移负担。
 
-    ## Long-term support (LTS)
+    ## 长期支持（LTS）
 
-    LangChain follows a long-term support (LTS) policy to provide stability for production applications:
+    LangChain 遵循长期支持（LTS）策略，为生产应用提供稳定性保障：
 
-    ### Release status definitions
+    ### 发布状态定义
 
-    Packages are marked with one of the following statuses:
-    - **ACTIVE**: Current active development, includes bug fixes, security patches, and new features
-    - **MAINTENANCE**: Receives all security patches and critical bug fixes, but no new features
+    包会被标记为以下状态之一：
+    - **ACTIVE**：当前活跃开发中，包含错误修复、安全补丁和新功能
+    - **MAINTENANCE**：接收所有安全补丁和关键错误修复，但不再添加新功能
 
-    ### Current LTS releases
+    ### 当前 LTS 版本
 
-    **LangChain 1.0** is designated as an LTS release:
-    - **Status**: ACTIVE until the release of 2.0
-    - **Support period**: After 2.0 is released, 1.0 will enter MAINTENANCE mode for at least 1 year
-    - **Semver compliance**: Users can upgrade between minor versions (e.g., 1.0 to 1.1) without breaking changes
+    **LangChain 1.0** 被指定为 LTS 版本：
+    - **状态**：ACTIVE，直到 2.0 发布
+    - **支持期限**：2.0 发布后，1.0 将进入 MAINTENANCE 模式，至少维持 1 年
+    - **语义化版本控制匹配**：用户可以在次版本之间安全升级（例如，从 1.0 到 1.1）而不会遇到破坏性变更
 
-    ### Legacy version support
+    ### 旧版本支持
 
-    **LangChain 0.3**:
+    **LangChain 0.3**：
 
-    - **Status**: MAINTENANCE mode
-    - **Support period**: Until December 2026
-    - **Support includes**: Security patches and critical bug fixes
+    - **状态**：MAINTENANCE 模式
+    - **支持期限**：至 2026 年 12 月
+    - **支持范围**：安全补丁和关键错误修复
 
-    ### Special considerations
+    ### 特别说明
 
     :::python
-    **langchain-community 0.4**: Due to the nature of community contributions and third-party integrations, `langchain-community` may have breaking changes on minor releases. It has been released as version 0.4 to reflect this different stability policy.
+    **langchain-community 0.4**：由于社区贡献和第三方集成的特性，`langchain-community` 可能在次版本发布时包含破坏性变更。它以 0.4 版本发布以反映其不同的稳定性策略。
     :::
     :::js
-    **@langchain/community 1.0**: Due to the nature of community contributions and third-party integrations, `@langchain/community` may have breaking changes on minor releases.
+    **@langchain/community 1.0**：由于社区贡献和第三方集成的特性，`@langchain/community` 可能在次版本发布时包含破坏性变更。
     :::
 
     </Tab>
     <Tab title="LangGraph">
-    LangGraph follows a structured release policy to ensure stability and predictability for users building production applications.
+    LangGraph 遵循结构化的发布策略，为构建生产应用的用户提供稳定性和可预测性。
 
-    ## Release cadence
+    ## 发布节奏
 
-    We expect to space out **major** releases by at least 6-12 months to provide stability for production applications.
+    我们预计**主版本**发布间隔至少 6-12 个月，以确保生产应用的稳定性。
 
-    **Minor** releases are typically released every 1-2 months with new features and improvements.
+    **次版本**通常每 1-2 个月发布一次，包含新功能和改进。
 
-    **Patch** releases are released as needed, often weekly, to address bugs and security issues.
+    **修订版**根据需要发布，通常每周一次，用于解决错误和安全问题。
 
-    ## API stability
+    ## API 稳定性
 
-    ### Stable APIs
+    ### 稳定 API
 
-    All APIs without special prefixes are considered stable and ready for production use. We maintain backward compatibility for stable features within a major version.
+    所有没有特殊前缀的 API 均被视为稳定的，可在生产环境中使用。我们在主版本内保持稳定功能的向后兼容性。
 
-    ### Beta features
+    ### Beta 功能
 
-    Features marked as `beta` in the documentation are:
+    文档中标记为 `beta` 的功能：
 
-    - Feature-complete and tested
-    - Safe for production use with the understanding they may change
-    - Subject to minor API adjustments based on user feedback
+    - 功能已完整并已测试
+    - 可以在生产环境中使用，但可能会发生变化
+    - 可能根据用户反馈进行 API 微调
 
-    ### Experimental features
+    ### 实验性功能
 
-    Features marked as `experimental` or `alpha`:
+    标记为 `experimental` 或 `alpha` 的功能：
 
-    - Are under active development
-    - May change significantly or be removed
-    - Should be used with caution in production
+    - 正在积极开发中
+    - 可能会发生重大变化或被移除
+    - 在生产环境中使用时请谨慎
 
-    ### Internal APIs
+    ### 内部 API
 
-    APIs prefixed with underscore (`_`) or explicitly marked as internal:
+    以下划线（`_`）开头或明确标记为内部的 API：
 
-    - Are not part of the public API
-    - May change without notice
-    - Should not be used directly
+    - 不属于公共 API
+    - 可能会在无通知的情况下变更
+    - 不应直接使用
 
-    ## Deprecation policy
+    ## 废弃策略
 
-    When deprecating features:
+    当废弃功能时：
 
-    1. **Deprecation Notice**: Features are marked as deprecated with clear migration guidance
-    2. **Grace Period**: Deprecated features remain functional for at least one minor version
-    3. **Removal**: Features are removed only in major version releases
-    4. **Migration Support**: We provide migration guides and, when possible, automated tools
+    1. **废弃通知**：功能会被标记为废弃，并提供清晰的迁移指南
+    2. **过渡期**：已废弃功能至少保留一个次版本的正常使用期
+    3. **移除**：功能仅在主版本发布时移除
+    4. **迁移支持**：我们提供迁移指南，并在可能时提供自动化工具
 
-    ## Platform compatibility
+    ## 平台兼容性
 
     :::python
-    ### Python support
+    ### Python 支持
 
-    - We support Python versions that are actively maintained by the Python Software Foundation
-    - Python version requirements may change only in major releases
-    - Currently requires Python 3.10 or later
+    - 我们支持 Python 软件基金会积极维护的 Python 版本
+    - Python 版本要求只会在主版本发布时变更
+    - 当前要求 Python 3.10 及以上
     :::
 
     :::js
-    ### JavaScript/TypeScript support
+    ### JavaScript/TypeScript 支持
 
-    - We support Node.js LTS versions
-    - TypeScript definitions are provided for all public APIs
-    - Browser compatibility is documented for client-side components
+    - 我们支持 Node.js LTS 版本
+    - 所有公共 API 均提供 TypeScript 类型定义
+    - 客户端组件的浏览器兼容性已在文档中说明
     :::
 
-    ## Breaking changes
+    ## 破坏性变更
 
-    Breaking changes are only introduced in major versions and include:
+    破坏性变更仅在主版本中引入，包括：
 
-    - Removal of deprecated APIs
-    - Changes to required parameters
-    - Changes to default behavior that affect existing applications
-    - Minimum Python/Node.js version updates
+    - 移除已废弃的 API
+    - 更改必需参数
+    - 更改影响现有应用的默认行为
+    - 更新最低 Python/Node.js 版本要求
 
-    ## Migration support
+    ## 迁移支持
 
-    For major version upgrades, we provide:
+    对于主版本升级，我们提供：
 
-    - Comprehensive migration guides
-    - Automated migration scripts when feasible
-    - Extended support period for the previous major version
-    - Clear documentation of all breaking changes
+    - 全面的迁移指南
+    - 可行时提供自动化迁移脚本
+    - 对前一个主版本的延长支持期
+    - 所有破坏性变更的清晰文档说明
 
-    ## Long-term support (LTS)
+    ## 长期支持（LTS）
 
-    LangGraph follows a long-term support (LTS) policy to provide stability for production applications:
+    LangGraph 遵循长期支持（LTS）策略，为生产应用提供稳定性保障：
 
-    ### Release status definitions
+    ### 发布状态定义
 
-    Packages are marked with one of the following statuses:
+    包会被标记为以下状态之一：
 
-    - **ACTIVE**: Current active development, includes bug fixes, security patches, and new features
-    - **MAINTENANCE**: Receives all security patches and critical bug fixes, but no new features
+    - **ACTIVE**：当前活跃开发中，包含错误修复、安全补丁和新功能
+    - **MAINTENANCE**：接收所有安全补丁和关键错误修复，但不再添加新功能
 
-    ### Current LTS releases
+    ### 当前 LTS 版本
 
-    **LangGraph 1.0** is designated as an LTS release:
+    **LangGraph 1.0** 被指定为 LTS 版本：
 
-    - **Status**: ACTIVE until the release of 2.0
-    - **Support period**: After 2.0 is released, 1.0 will enter MAINTENANCE mode for at least 1 year
-    - **Semver compliance**: Users can upgrade between minor versions (e.g., 1.0 to 1.1) without breaking changes
+    - **状态**：ACTIVE，直到 2.0 发布
+    - **支持期限**：2.0 发布后，1.0 将进入 MAINTENANCE 模式，至少维持 1 年
+    - **语义化版本控制匹配**：用户可以在次版本之间安全升级（例如，从 1.0 到 1.1）而不会遇到破坏性变更
 
-    ### Legacy version support
+    ### 旧版本支持
 
-    **LangGraph 0.4**:
+    **LangGraph 0.4**：
 
-    - **Status**: MAINTENANCE mode
-    - **Support period**: Until December 2026
-    - **Support includes**: All security patches and critical bug fixes
+    - **状态**：MAINTENANCE 模式
+    - **支持期限**：至 2026 年 12 月
+    - **支持范围**：所有安全补丁和关键错误修复
 
-    ## See also
+    ## 另见
 
-    - [Versioning](/oss/versioning) - Version numbering and support details
-    - [Releases](/oss/releases) - Version-specific release notes and migration guides
+    - [版本管理](/oss/versioning) - 版本号和支持详情
+    - [发布说明](/oss/releases) - 各版本的发布说明和迁移指南
     </Tab>
     <Tab title="Deep Agents">
     :::python
-    Deep Agents (`deepagents`) is a rapidly evolving package for building advanced agent architectures.
+    Deep Agents（`deepagents`）是一个用于构建高级 Agent 架构的快速迭代包。
 
-    ## Pre-1.0 status
+    ## 预发布（Pre-1.0）状态
 
-    Deep Agents is currently in pre-1.0 development. While we minimize breaking changes when possible, the API may evolve as we incorporate learnings from the community and adapt to the rapidly changing landscape of agentic applications.
+    Deep Agents 目前处于预发布开发阶段。虽然我们尽量减少破坏性变更，但随着我们从社区中吸取经验并适应快速变化的 Agent 应用领域，API 可能会发生演进。
 
-    ## Release cadence
+    ## 发布节奏
 
-    **Minor** releases (e.g., `0.1.0` to `0.2.0`) may contain new features and potentially breaking changes as the package matures.
+    **次版本**发布（例如，`0.1.0` 到 `0.2.0`）可能包含新功能以及潜在的破坏性变更。
 
-    **Patch** releases (e.g., `0.1.0` to `0.1.1`) contain bug fixes and minor improvements without breaking changes.
+    **修订版**发布（例如，`0.1.0` 到 `0.1.1`）包含错误修复和小幅改进，不包含破坏性变更。
 
-    ## API stability
+    ## API 稳定性
 
-    As a pre-1.0 package:
+    作为预发布包：
 
-    - APIs may change between minor versions
-    - We aim to minimize disruption by providing clear migration guidance when changes occur
-    - Features marked as `experimental` or `alpha` are subject to more significant changes
+    - API 可能在次版本之间发生变化
+    - 当发生变更时，我们会尽量减少干扰并提供清晰的迁移指南
+    - 标记为 `experimental` 或 `alpha` 的功能可能会有更大的变化
 
-    ## Deprecation policy
+    ## 废弃策略
 
-    When deprecating features in Deep Agents:
+    当废弃 Deep Agents 中的功能时：
 
-    - We provide deprecation warnings in advance when possible
-    - Migration guidance is included in release notes
-    - Deprecated features are removed in subsequent minor releases
+    - 我们会尽可能提前发出废弃警告
+    - 迁移指南会包含在发布说明中
+    - 已废弃的功能会在后续的次版本发布中移除
 
-    ## Path to 1.0
+    ## 迈向 1.0 之路
 
-    Deep Agents will reach 1.0 when:
+    Deep Agents 将在以下条件满足时达到 1.0：
 
-    - Core APIs have stabilized based on community feedback
-    - The package has been battle-tested in production environments
-    - Breaking changes are no longer expected for core functionality
+    - 核心 API 已根据社区反馈趋于稳定
+    - 该包已在生产环境中经受充分验证
+    - 核心功能不再预期会有破坏性变更
 
-    After 1.0, Deep Agents will follow the same semantic versioning and LTS policies as LangChain and LangGraph.
+    1.0 发布后，Deep Agents 将采用与 LangChain 和 LangGraph 相同的语义化版本控制和 LTS 策略。
 
-    ## See also
+    ## 另见
 
-    - [Versioning](/oss/versioning) - Version numbering and support details
+    - [版本管理](/oss/versioning) - 版本号和支持详情
     :::
     </Tab>
 </Tabs>

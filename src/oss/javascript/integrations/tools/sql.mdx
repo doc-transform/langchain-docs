@@ -1,11 +1,11 @@
 ---
-title: "SQLToolkit integration"
-description: "Integrate with the SQLToolkit tool using LangChain JavaScript."
+title: "SQLToolkit 集成"
+description: "使用 LangChain JavaScript 集成 SQLToolkit 工具。"
 ---
 
-This will help you getting started with the [SqlToolkit](/oss/langchain/tools#toolkits). For detailed documentation of all SqlToolkit features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain.agents_toolkits_sql.SqlToolkit.html). For more information, you can also review the [Python SQL toolkit documentation](https://python.langchain.com/docs/integrations/toolkits/sql_database/).
+本文将帮助你开始使用 [SqlToolkit](/oss/langchain/tools#toolkits)。所有 SqlToolkit 功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain.agents_toolkits_sql.SqlToolkit.html)。你还可以在[此处](https://python.langchain.com/docs/integrations/toolkits/sql_database/)找到 Python 等效版本的文档。
 
-This toolkit contains a the following tools:
+该工具包包含以下工具：
 
 | Name              | Description                                                                                                                                                                                                                               |
 |-------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -14,22 +14,22 @@ This toolkit contains a the following tools:
 | `list-tables-sql` | Input is an empty string, output is a comma-separated list of tables in the database.                                                                                                                                                     |
 | `query-checker`   | Use this tool to double check if your query is correct before executing it. Always use this tool before executing a query with query-sql!                                                                                                 |
 
-This toolkit is useful for asking questions, performing queries, validating queries and more on a SQL database.
+该工具包适用于对 SQL 数据库提问、执行查询、验证查询等操作。
 
-## Setup
+## 设置
 
-This example uses Chinook database, which is a sample database available for SQL Server, Oracle, MySQL, etc. To set it up, follow [these instructions](https://database.guide/2-sample-databases-sqlite/), placing the `.db` file in the directory where your code lives.
+本示例使用 Chinook 数据库，这是一个适用于 SQL Server、Oracle、MySQL 等的示例数据库。要设置它，请按照[这些说明](https://database.guide/2-sample-databases-sqlite/)操作，将 `.db` 文件放在你的代码目录中。
 
-If you want to get automated tracing from runs of individual tools, you can also set your [LangSmith](/langsmith/home) API key by uncommenting below:
+如果你想获取单个工具运行的自动追踪，你还可以通过取消下方注释来设置你的 [LangSmith](/langsmith/home) API 密钥：
 
 ```typescript
 process.env.LANGSMITH_TRACING="true"
 process.env.LANGSMITH_API_KEY="your-api-key"
 ```
 
-### Installation
+### 安装
 
-This toolkit lives in the `langchain` package. You'll also need to install the `typeorm` peer dependency.
+该工具包位于 `langchain` 包中。你还需要安装 `typeorm` 对等依赖。
 
 <CodeGroup>
 ```bash npm
@@ -43,9 +43,9 @@ pnpm add langchain @langchain/core typeorm
 ```
 </CodeGroup>
 
-## Instantiation
+## 实例化
 
-First, we need to define our LLM to be used in the toolkit.
+首先，我们需要定义工具包中使用的 LLM。
 
 ```typescript
 // @lc-docs-hide-cell
@@ -74,9 +74,9 @@ const db = await SqlDatabase.fromDataSourceParams({
 const toolkit = new SqlToolkit(db, llm);
 ```
 
-## Tools
+## 工具
 
-View available tools:
+查看可用工具：
 
 ```typescript
 const tools = toolkit.getTools();
@@ -114,9 +114,9 @@ console.log(tools.map((tool) => ({
 ]
 ```
 
-## Use within an agent
+## 在代理中使用
 
-First, ensure you have LangGraph installed:
+首先，确保你已安装 LangGraph：
 
 
 <CodeGroup>
@@ -212,6 +212,6 @@ Here are 10 artists from your database:
 
 ---
 
-## API reference
+## API 参考
 
-For detailed documentation of all SqlToolkit features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain.agents_toolkits_sql.SqlToolkit.html).
+所有 SqlToolkit 功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain.agents_toolkits_sql.SqlToolkit.html)。

@@ -1,11 +1,11 @@
 ---
-title: Contributing to code
-sidebarTitle: Code
+title: 贡献代码
+sidebarTitle: 代码
 ---
 
-Code contributions are welcome! Whether you're fixing bugs, adding features, or improving performance, your contributions help deliver a better developer experience for thousands of developers.
+代码贡献始终受欢迎！无论是修复 Bug、添加功能还是提升性能，你的贡献都能帮助为数以千计的开发者提供更好的开发体验。
 
-## Getting started
+## 入门
 
 If you are looking for something to work on, check out the issue labeled "help wanted" in our repos:
 
@@ -25,102 +25,102 @@ If you are looking for something to work on, check out the issue labeled "help w
 :::
 
 <Note>
-    Before submitting large **new features or refactors**, please first open an issue or post to [the forum](https://forum.langchain.com/) for discussion. This ensures alignment with project goals and prevents duplicate work.
+    在提交大型**新功能或重构**之前，请先创建 Issue 或在 [论坛](https://forum.langchain.com/) 中发起讨论。这有助于确保与项目目标一致并避免重复工作。
 </Note>
 
-### Quick fix: submit a bugfix
+### 快速修复：提交 Bug 修复
 
-For simple bugfixes, you can get started immediately:
+对于简单的 Bug 修复，你可以立即开始：
 
 <Steps>
-    <Step title="Reproduce the issue">
-        Before even cloning the repository, ensure you can reliably reproduce the bug. This helps confirm the issue and provides a starting point for your fix. Maintainers and other contributors should be able to reproduce the issue based on your description without additional setup or modifications.
+    <Step title="复现问题">
+        在克隆仓库之前，请确保你能可靠地复现该 Bug。这有助于确认问题并为你的修复提供起点。维护者和其他贡献者应该能够根据你的描述复现问题，无需额外的设置或修改。
     </Step>
 
-    <Step title="Fork the repository">
+    <Step title="Fork 仓库">
         :::python
-        Fork either the [LangChain](https://github.com/langchain-ai/langchain), [LangGraph](https://github.com/langchain-ai/langgraph), or [Deep Agents](https://github.com/langchain-ai/deepagents) repo to your <Tooltip tip="If you fork to an organization account, maintainers will be unable to make edits, which may significantly delay acceptance.">personal GitHub account</Tooltip>
+        将 [LangChain](https://github.com/langchain-ai/langchain)、[LangGraph](https://github.com/langchain-ai/langgraph) 或 [Deep Agents](https://github.com/langchain-ai/deepagents) 仓库 Fork 到你的<Tooltip tip="如果 Fork 到组织账户，维护者将无法进行编辑，这可能会显著延迟接受时间。">个人 GitHub 账户</Tooltip>
         :::
         :::js
-        Fork either the [LangChain](https://github.com/langchain-ai/langchainjs), [LangGraph](https://github.com/langchain-ai/langgraphjs), or [Deep Agents](https://github.com/langchain-ai/deepagentsjs) repo to your <Tooltip tip="If you fork to an organization account, maintainers will be unable to make edits, which may significantly delay acceptance">personal GitHub account</Tooltip>
+        将 [LangChain](https://github.com/langchain-ai/langchainjs)、[LangGraph](https://github.com/langchain-ai/langgraphjs) 或 [Deep Agents](https://github.com/langchain-ai/deepagentsjs) 仓库 Fork 到你的<Tooltip tip="如果 Fork 到组织账户，维护者将无法进行编辑，这可能会显著延迟接受时间">个人 GitHub 账户</Tooltip>
         :::
     </Step>
 
-    <Step title="Clone and setup">
+    <Step title="克隆并设置环境">
         :::python
 
         ```bash
         git clone https://github.com/your-username/name-of-forked-repo.git
 
-        # For instance, for LangChain:
+        # 例如，对于 LangChain：
         git clone https://github.com/parrot123/langchain.git
         ```
 
         ```bash
-        # Inside your repo, initialize environment and install dependencies
+        # 在仓库目录中，初始化环境并安装依赖
         uv venv && source .venv/bin/activate
         uv sync --all-groups
 
-        # or, to install a specific group only:
+        # 或者，只安装特定的依赖组：
         uv sync --group test
         ```
 
-        You will need to install [`uv`](https://docs.astral.sh/uv/) if you haven't previously
+        如果你之前尚未安装 [`uv`](https://docs.astral.sh/uv/)，需要先安装它
         :::
         :::js
 
         ```bash
         git clone https://github.com/your-username/name-of-forked-repo.git
 
-        # For instance, for LangChain:
+        # 例如，对于 LangChain：
         git clone https://github.com/parrot123/langchainjs.git
 
-        # For LangGraph:
+        # 对于 LangGraph：
         git clone https://github.com/parrot123/langgraphjs.git
         ```
 
         ```bash
-        # Inside your repo, install dependencies
+        # 在仓库目录中，安装依赖
         pnpm install
-        # Create a build for all packages to resolve workspace dependencies
+        # 为所有包创建构建以解析工作区依赖
         pnpm build
         ```
         :::
     </Step>
 
-    <Step title="Create a branch">
-        Create a new branch for your fix. This helps keep your changes organized and makes it easier to submit a pull request later.
+    <Step title="创建分支">
+        为你的修复创建一个新分支。这有助于保持代码组织有序，并方便后续提交 Pull Request。
 
         ```bash
         git checkout -b your-username/short-bugfix-name
         ```
     </Step>
 
-    <Step title="Write failing tests">
-        Add [unit tests](#test-writing-guidelines) that will fail without your fix. This allows us to verify the bug is resolved and prevents regressions
+    <Step title="编写失败测试">
+        添加在没有你的修复时会失败的 [单元测试](#测试编写指南)。这使我们能够验证 Bug 已修复并防止回归
     </Step>
 
-    <Step title="Make your changes">
-        Fix the bug while following our [code quality standards](#code-quality-standards). Make the **minimal change necessary** to resolve the issue. We strongly encourage contributors to comment on the issue before they start coding. For example:
+    <Step title="进行修改">
+        在遵循我们的 [代码质量标准](#代码质量标准) 的前提下修复 Bug。进行**必要的最小改动**来解决问题。我们强烈建议贡献者在开始编码之前先在 Issue 上留言。例如：
 
-        > *"I'd like to work on this. My intended approach would be to [...brief description...]. Does this align with maintainer expectations?"*
+        > *"我想处理这个问题。我计划的方法是 [……简要描述……]。这是否符合维护者的预期？"*
 
-        A 30-second comment often prevents wasted effort if your initial approach is wrong.
+        30 秒的留言往往能避免因初始方向错误而浪费大量精力。
     </Step>
 
     :::js
-    <Step title="Run build">
-        Run the build command to ensure the package still builds properly
+    <Step title="运行构建">
+        运行构建命令以确保包仍能正常构建
         ```bash
         pnpm build
-        # or build a specific workspace package
+        # 或构建特定的工作区包
         pnpm --filter @langchain/core build
         ```
     </Step>
     :::
 
-    <Step title="Verify the fix">
-        Ensure that tests pass and no regressions are introduced. Ensure all tests pass locally before submitting your PR
+    <Step title="验证修复">
+        确保测试通过且未引入回归问题。提交 PR 前确保所有测试在本地通过
 
         :::python
 
@@ -129,9 +129,9 @@ For simple bugfixes, you can get started immediately:
         make lint
         make test
 
-        # For bugfixes involving integrations, also run:
+        # 对于涉及集成的 Bug 修复，还需运行：
         make integration_tests
-        # (You may need to set up API testing credentials)
+        # （可能需要设置 API 测试凭据）
         ```
         :::
         :::js
@@ -140,278 +140,273 @@ For simple bugfixes, you can get started immediately:
         pnpm lint
         pnpm test
 
-        # For bugfixes involving integrations, also run:
+        # 对于涉及集成的 Bug 修复，还需运行：
         pnpm test:int
 
-        # Or run tests in a specific workspace package
+        # 或在特定工作区包中运行测试
         cd libs/langchain-core
         pnpm test
         pnpm lint
 
-        # Or run tests for a specific package from the root of the repo
+        # 或从仓库根目录运行特定包的测试
         pnpm --filter @langchain/core test
         pnpm --filter @langchain/core lint
         ```
         :::
     </Step>
 
-    <Step title="Document the change">
-        Update docstrings and/or inline comments if behavior changes
+    <Step title="记录变更">
+        如果行为发生变化，请更新文档字符串和/或行内注释
     </Step>
 
-    <Step title="Submit a pull request">
-        Follow the PR template provided. If applicable, reference the issue you're fixing using a [closing keyword](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword) (e.g. `Fixes #ISSUE_NUMBER`) so that the issue is automatically closed when your PR is merged.
+    <Step title="提交 Pull Request">
+        按照提供的 PR 模板进行操作。如适用，使用 [关闭关键字](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword) 引用你正在修复的 Issue（例如 `Fixes #ISSUE_NUMBER`），这样当 PR 合并时 Issue 会自动关闭。
     </Step>
 </Steps>
 
-### Full development setup
+### 完整的开发环境设置
 
-For ongoing development or larger contributions:
+对于持续开发或较大规模的贡献：
 
-1. Review our [contribution guidelines](#contribution-guidelines) for features, bugfixes, and integrations
-2. Set up your environment following our [setup guide](#development-environment) below
-3. Understand the [repository structure](#repository-structure) and package organization
-4. Learn our [development workflow](#development-workflow) including testing and linting
+1. 查看我们的 [贡献准则](#贡献准则)，了解功能、Bug 修复和集成的相关要求
+2. 按照下方的 [环境设置指南](#开发环境) 搭建你的环境
+3. 了解 [仓库结构](#仓库结构) 和包的组织方式
+4. 学习我们的 [开发工作流](#开发工作流)，包括测试和 lint
 
 ---
 
-## Contribution guidelines
+## 贡献准则
 
-Before you start contributing to LangChain projects, take a moment to think about why you want to. If your only goal is to add a "first contribution" to your resume (or if you're just looking for a quick win) you might be better off doing a boot-camp or an online tutorial.
+在开始为 LangChain 项目做贡献之前，请先思考一下你的动机。如果你的唯一目标是在简历上添加"首次贡献"（或者只是寻找一个快速的成就），那么参加训练营或在线教程可能更合适。
 
-Contributing to open source projects takes time and effort, but it can also help you become a better developer and learn new skills. However, it's important to know that it might be harder and slower than following a training course. That said, contributing to open source is worth it if you're willing to take the time to do things well!
+为开源项目做贡献需要时间和精力，但它也能帮助你成为更好的开发者并学习新技能。不过要注意，这可能比跟着培训课程学习更难、更慢。话虽如此，如果你愿意花时间把事情做好，为开源做贡献是非常值得的！
 
-### Backwards compatibility
+### 向后兼容性
 
 <Warning>
-    Breaking changes to public APIs are not allowed except for critical security fixes.
+    除了关键的安全修复外，不允许对公共 API 进行破坏性变更。
 
-    See our [versioning policy](/oss/versioning) for details on major version releases.
+    有关主版本发布的详细信息，请参阅我们的 [版本策略](/oss/versioning)。
 </Warning>
 
-Maintain compatibility via:
+通过以下方式保持兼容性：
 
 <AccordionGroup>
-    <Accordion title="Stable interfaces">
-        **Always preserve**:
+    <Accordion title="稳定接口">
+        **始终保留**：
 
-        - Function signatures and parameter names
-        - Class interfaces and method names
-        - Return value structure and types
-        - Import paths for public APIs
+        - 函数签名和参数名称
+        - 类接口和方法名称
+        - 返回值的结构和类型
+        - 公共 API 的导入路径
     </Accordion>
 
-    <Accordion title="Safe changes">
-        **Acceptable modifications**:
+    <Accordion title="安全变更">
+        **可接受的修改**：
 
         :::python
-        - Adding new optional parameters
+        - 添加新的可选参数
         :::
         :::js
-        - Adding new optional parameters/type parameters
+        - 添加新的可选参数/类型参数
         :::
-        - Adding new methods to classes
-        - Improving performance without changing behavior
-        - Adding new modules or functions
+        - 为类添加新方法
+        - 在不改变行为的前提下提升性能
+        - 添加新的模块或函数
     </Accordion>
 
-    <Accordion title="Before making changes">
-        - **Would this break existing user code?**
-        - Check if your target is public
+    <Accordion title="修改前的检查">
+        - **这会破坏现有的用户代码吗？**
+        - 检查你的修改目标是否是公共 API
         :::python
-        - If needed, is it exported in `__init__.py`?
+        - 如果需要，它是否在 `__init__.py` 中导出了？
         :::
-        - Are there existing usage patterns in tests?
+        - 测试中是否存在现有的使用模式？
     </Accordion>
 </AccordionGroup>
 
-### New features
+### 新功能
 
-We aim to keep the bar high for new features. We generally don't accept new core abstractions from outside contributors without an existing issue that demonstrates an acute need for them. This also applies to changes to infrastructure and dependencies.
+我们对新功能的标准要求较高。一般来说，我们不接受外部贡献者提交的新核心抽象，除非有相关 Issue 证明存在迫切需求。这同样适用于基础设施和依赖项的变更。
 
-In general, feature contribution requirements include:
+通常，功能贡献的要求包括：
 
 <Steps>
-    <Step title="Design discussion">
-        Open an issue describing:
+    <Step title="设计讨论">
+        创建 Issue 描述：
 
-        - The problem you're solving
-        - Proposed API design
-        - Expected usage patterns
+        - 你要解决的问题
+        - 提议的 API 设计
+        - 预期的使用模式
     </Step>
 
-    <Step title="Implementation">
-        - Follow existing code patterns
-        - Include comprehensive tests and documentation
-        - Consider security implications
+    <Step title="实现">
+        - 遵循现有的代码模式
+        - 包含全面的测试和文档
+        - 考虑安全影响
     </Step>
 
-    <Step title="Integration considerations">
-        - How does this interact with existing features?
-        - Are there performance implications?
-        - Does this introduce new dependencies?
+    <Step title="集成考量">
+        - 这与现有功能如何交互？
+        - 是否存在性能影响？
+        - 是否引入了新的依赖？
 
-        We will reject features that are likely to lead to security vulnerabilities or reports.
+        我们将拒绝可能导致安全漏洞或安全报告的功能。
     </Step>
 </Steps>
 
-### Security guidelines
+### 安全准则
 
 <Warning>
-    Security is paramount. Never introduce vulnerabilities or unsafe patterns.
+    安全至关重要。切勿引入漏洞或不安全的模式。
 </Warning>
 
-Security checklist:
+安全检查清单：
 
 <AccordionGroup>
-    <Accordion title="Input validation">
-        - Validate and sanitize all user inputs
-        - Properly escape data in templates and queries
+    <Accordion title="输入验证">
+        - 验证和清理所有用户输入
+        - 正确转义模板和查询中的数据
         :::python
-        - Never use `eval()`, `exec()`, or `pickle` on user data, as this can lead to arbitrary code execution vulnerabilities
+        - 切勿对用户数据使用 `eval()`、`exec()` 或 `pickle`，因为这可能导致任意代码执行漏洞
         :::
         :::js
-        - Never use `eval()`, as this can lead to arbitrary code execution vulnerabilities
+        - 切勿使用 `eval()`，因为这可能导致任意代码执行漏洞
         :::
     </Accordion>
 
-    <Accordion title="Error handling">
-        - Use specific exception types
-        - Don't expose sensitive information in error messages
-        - Implement proper resource cleanup
+    <Accordion title="错误处理">
+        - 使用具体的异常类型
+        - 不要在错误信息中暴露敏感信息
+        - 实施适当的资源清理
     </Accordion>
 
-    <Accordion title="Dependencies">
-        - Avoid adding hard dependencies
-        - Keep optional dependencies minimal
-        - Review third-party packages for security issues
+    <Accordion title="依赖管理">
+        - 避免添加硬依赖
+        - 保持可选依赖最少化
+        - 审查第三方包的安全问题
     </Accordion>
 </AccordionGroup>
 
 ---
 
-## Development environment
-
-<Tip>
-    **Using an AI coding agent?** Install [LangChain Skills](https://github.com/langchain-ai/langchain-skills) to improve your agent's performance on LangChain ecosystem tasks, then click the "Copy page" button on the top right of this page and paste the raw content into your agent to have it set up your environment automatically.
-</Tip>
+## 开发环境
 
 :::python
-Our Python projects use [`uv`](https://docs.astral.sh/uv/getting-started/installation/) for dependency management. Make sure you have the latest version installed.
+我们的 Python 项目使用 [`uv`](https://docs.astral.sh/uv/getting-started/installation/) 进行依赖管理。请确保安装了最新版本。
 
 <Info>
-    We strive to keep setup consistent across all Python packages. From the package directory, run:
+    我们力求在所有 Python 包中保持一致的设置流程。在包目录下运行：
 
     ```bash
     uv sync --all-groups
-    make test  # Verify unit tests pass before starting development
+    make test  # 在开始开发前验证单元测试通过
     ```
 </Info>
-
 :::
 :::js
 <Warning>
-    Our JS/TS projects uses [`pnpm`](https://pnpm.io/) for dependency management. Make sure you have the latest version installed, or run `corepack enable` (on Node 24+) to setup the required pnpm version.
+    我们的 JS/TS 项目使用 [`pnpm`](https://pnpm.io/) 进行依赖管理。请确保安装了最新版本，或运行 `corepack enable`（Node 24+）来设置所需的 pnpm 版本。
 </Warning>
 
 <Info>
-    We strive to keep setup consistent across all JS/TS packages. From the repo root, run:
+    我们力求在所有 JS/TS 包中保持一致的设置流程。在仓库根目录下运行：
 
     ```bash
     pnpm install
-    pnpm --filter {package-name} test  # Verify tests pass before starting development
+    pnpm --filter {package-name} test  # 在开始开发前验证测试通过
     ```
 </Info>
 :::
 
-Once you've reviewed the [contribution guidelines](#contribution-guidelines), find the package directory for the component you're working on in the [repository structure](#repository-structure) section below.
+查看完 [贡献准则](#贡献准则) 后，在下方的 [仓库结构](#仓库结构) 部分找到你要开发的组件所在的包目录。
 
 ---
 
-## Repository structure
+## 仓库结构
 
 <Tabs>
     <Tab title="LangChain" icon="link">
-        LangChain is organized as a monorepo with multiple packages:
+        LangChain 以 monorepo 形式组织，包含多个包：
 
         <AccordionGroup>
-            <Accordion title="Core packages" defaultOpen>
+            <Accordion title="核心包" defaultOpen>
                 :::python
-                - **[`langchain`](https://github.com/langchain-ai/langchain/tree/master/libs/langchain#readme)** (located in `libs/langchain/`): Main package with chains, agents, and retrieval logic
-                - **[`langchain-core`](https://github.com/langchain-ai/langchain/tree/master/libs/core#readme)** (located in `libs/core/`): Base interfaces and core abstractions
+                - **[`langchain`](https://github.com/langchain-ai/langchain/tree/master/libs/langchain#readme)**（位于 `libs/langchain/`）：主包，包含链、Agent 和检索逻辑
+                - **[`langchain-core`](https://github.com/langchain-ai/langchain/tree/master/libs/core#readme)**（位于 `libs/core/`）：基础接口和核心抽象
                 :::
                 :::js
-                - **[`langchain`](https://github.com/langchain-ai/langchainjs/tree/main/langchain#readme)** (located in `libs/langchain/`): Main package with chains, agents, and retrieval logic
-                - **[`@langchain/core`](https://github.com/langchain-ai/langchainjs/tree/main/langchain-core#readme)** (located in `libs/langchain-core/`): Base interfaces and core abstractions
+                - **[`langchain`](https://github.com/langchain-ai/langchainjs/tree/main/langchain#readme)**（位于 `libs/langchain/`）：主包，包含链、Agent 和检索逻辑
+                - **[`@langchain/core`](https://github.com/langchain-ai/langchainjs/tree/main/langchain-core#readme)**（位于 `libs/langchain-core/`）：基础接口和核心抽象
                 :::
             </Accordion>
 
-            <Accordion title="Partner packages">
+            <Accordion title="合作伙伴包">
                 :::python
-                Located in `libs/partners/`, these are independently versioned packages for specific integrations. For example:
-                - **[`langchain-openai`](https://github.com/langchain-ai/langchain/tree/master/libs/partners/openai#readme)**: [OpenAI](/oss/integrations/providers/openai) integrations
-                - **[`langchain-anthropic`](https://github.com/langchain-ai/langchain/tree/master/libs/partners/anthropic#readme)**: [Anthropic](/oss/integrations/providers/anthropic) integrations
-                - **[`langchain-google-genai`](https://github.com/langchain-ai/langchain-google/)**: [Google Generative AI](/oss/integrations/chat/google_generative_ai) integrations
+                位于 `libs/partners/`，这些是针对特定集成的独立版本包。例如：
+                - **[`langchain-openai`](https://github.com/langchain-ai/langchain/tree/master/libs/partners/openai#readme)**：[OpenAI](/oss/integrations/providers/openai) 集成
+                - **[`langchain-anthropic`](https://github.com/langchain-ai/langchain/tree/master/libs/partners/anthropic#readme)**：[Anthropic](/oss/integrations/providers/anthropic) 集成
+                - **[`langchain-google-genai`](https://github.com/langchain-ai/langchain-google/)**：[Google Generative AI](/oss/integrations/chat/google_generative_ai) 集成
 
-                Many partner packages are in external repositories. Please check the [list of integrations](/oss/integrations/providers/overview) for details.
+                许多合作伙伴包位于外部仓库中。请查看 [集成列表](/oss/integrations/providers/overview) 了解详情。
                 :::
                 :::js
-                Located in `libs/providers/`, these are independently versioned packages for specific integrations. For example:
-                - **[`@langchain/openai`](https://github.com/langchain-ai/langchainjs/tree/main/libs/langchain-openai#readme)**: [OpenAI](/oss/integrations/providers/openai) integrations
-                - **[`@langchain/anthropic`](https://github.com/langchain-ai/langchainjs/tree/main/libs/langchain-anthropic#readme)**: [Anthropic](/oss/integrations/providers/anthropic) integrations
-                - **[`@langchain/google`](https://github.com/langchain-ai/langchainjs/tree/main/libs/providers/langchain-google#readme)**: [Google](/oss/integrations/providers/google) integrations
+                位于 `libs/providers/`，这些是针对特定集成的独立版本包。例如：
+                - **[`@langchain/openai`](https://github.com/langchain-ai/langchainjs/tree/main/libs/langchain-openai#readme)**：[OpenAI](/oss/integrations/providers/openai) 集成
+                - **[`@langchain/anthropic`](https://github.com/langchain-ai/langchainjs/tree/main/libs/langchain-anthropic#readme)**：[Anthropic](/oss/integrations/providers/anthropic) 集成
+                - **[`@langchain/google`](https://github.com/langchain-ai/langchainjs/tree/main/libs/providers/langchain-google#readme)**：[Google](/oss/integrations/providers/google) 集成
                 :::
 
             </Accordion>
 
-            <Accordion title="Supporting packages">
+            <Accordion title="辅助包">
                 :::python
-                - **[`langchain-text-splitters`](https://github.com/langchain-ai/langchain/tree/master/libs/text-splitters#readme)**: Text splitting utilities
-                - **[`langchain-standard-tests`](https://github.com/langchain-ai/langchain/tree/master/libs/standard-tests#readme)**: Standard test suites for integrations
-                - **[`langchain-community`](https://github.com/langchain-ai/langchain-community)**: Community maintained integrations (located in a separate repo)
+                - **[`langchain-text-splitters`](https://github.com/langchain-ai/langchain/tree/master/libs/text-splitters#readme)**：文本分割工具
+                - **[`langchain-standard-tests`](https://github.com/langchain-ai/langchain/tree/master/libs/standard-tests#readme)**：集成的标准测试套件
+                - **[`langchain-community`](https://github.com/langchain-ai/langchain-community)**：社区维护的集成（位于独立仓库中）
                 :::
                 :::js
-                - **[`@langchain/textsplitters`](https://github.com/langchain-ai/langchainjs/tree/main/libs/langchain-textsplitters#readme)**: Text splitting utilities
-                - **[`@langchain/standard-tests`](https://github.com/langchain-ai/langchainjs/tree/main/libs/langchain-standard-tests#readme)**: Standard test suites for integrations
-                - **[`langchain-community`](https://github.com/langchain-ai/langchainjs/tree/main/libs/langchain-community)**: Community maintained integrations
+                - **[`@langchain/textsplitters`](https://github.com/langchain-ai/langchainjs/tree/main/libs/langchain-textsplitters#readme)**：文本分割工具
+                - **[`@langchain/standard-tests`](https://github.com/langchain-ai/langchainjs/tree/main/libs/langchain-standard-tests#readme)**：集成的标准测试套件
+                - **[`langchain-community`](https://github.com/langchain-ai/langchainjs/tree/main/libs/langchain-community)**：社区维护的集成
                 :::
 
             </Accordion>
         </AccordionGroup>
     </Tab>
     <Tab title="LangGraph" icon="topology-ring">
-        LangGraph is organized as a monorepo with multiple Python packages:
+        LangGraph 以 monorepo 形式组织，包含多个 Python 包：
 
         <AccordionGroup>
-            <Accordion title="Core packages" defaultOpen>
-                - **[`langgraph`](https://github.com/langchain-ai/langgraph/tree/main/libs/langgraph#readme)** (located in `libs/langgraph/`): Core framework for building stateful, multi-actor agents
-                - **[`langgraph-prebuilt`](https://github.com/langchain-ai/langgraph/tree/main/libs/prebuilt#readme)** (located in `libs/prebuilt/`): High-level APIs for creating and running agents and tools
+            <Accordion title="核心包" defaultOpen>
+                - **[`langgraph`](https://github.com/langchain-ai/langgraph/tree/main/libs/langgraph#readme)**（位于 `libs/langgraph/`）：构建有状态、多参与者 Agent 的核心框架
+                - **[`langgraph-prebuilt`](https://github.com/langchain-ai/langgraph/tree/main/libs/prebuilt#readme)**（位于 `libs/prebuilt/`）：用于创建和运行 Agent 及工具的高层 API
             </Accordion>
 
-            <Accordion title="Checkpoint packages">
-                - **[`langgraph-checkpoint`](https://github.com/langchain-ai/langgraph/tree/main/libs/checkpoint#readme)** (located in `libs/checkpoint/`): Base interfaces for checkpoint savers
-                - **[`langgraph-checkpoint-postgres`](https://github.com/langchain-ai/langgraph/tree/main/libs/checkpoint-postgres#readme)** (located in `libs/checkpoint-postgres/`): Postgres implementation
-                - **[`langgraph-checkpoint-sqlite`](https://github.com/langchain-ai/langgraph/tree/main/libs/checkpoint-sqlite#readme)** (located in `libs/checkpoint-sqlite/`): SQLite implementation
+            <Accordion title="检查点包">
+                - **[`langgraph-checkpoint`](https://github.com/langchain-ai/langgraph/tree/main/libs/checkpoint#readme)**（位于 `libs/checkpoint/`）：检查点保存器的基础接口
+                - **[`langgraph-checkpoint-postgres`](https://github.com/langchain-ai/langgraph/tree/main/libs/checkpoint-postgres#readme)**（位于 `libs/checkpoint-postgres/`）：Postgres 实现
+                - **[`langgraph-checkpoint-sqlite`](https://github.com/langchain-ai/langgraph/tree/main/libs/checkpoint-sqlite#readme)**（位于 `libs/checkpoint-sqlite/`）：SQLite 实现
             </Accordion>
 
-            <Accordion title="SDK and CLI">
-                - **[`langgraph-sdk`](https://github.com/langchain-ai/langgraph/tree/main/libs/sdk-py#readme)** (located in `libs/sdk-py/`): Python SDK for the Agent Server API
-                - **[`langgraph-cli`](https://github.com/langchain-ai/langgraph/tree/main/libs/cli#readme)** (located in `libs/cli/`): Official command-line interface
+            <Accordion title="SDK 和 CLI">
+                - **[`langgraph-sdk`](https://github.com/langchain-ai/langgraph/tree/main/libs/sdk-py#readme)**（位于 `libs/sdk-py/`）：Agent Server API 的 Python SDK
+                - **[`langgraph-cli`](https://github.com/langchain-ai/langgraph/tree/main/libs/cli#readme)**（位于 `libs/cli/`）：官方命令行工具
             </Accordion>
         </AccordionGroup>
     </Tab>
     <Tab title="Deep Agents" icon="robot">
-        Deep Agents is organized as a monorepo with multiple Python packages:
+        Deep Agents 以 monorepo 形式组织，包含多个 Python 包：
 
         <AccordionGroup>
-            <Accordion title="Core packages" defaultOpen>
-                - **[`deepagents`](https://github.com/langchain-ai/deepagents/tree/main/libs/deepagents#readme)** (located in `libs/deepagents/`): Core framework for building deep agents with planning, filesystem, and subagent capabilities
-                - **[`deepagents-cli`](https://github.com/langchain-ai/deepagents/tree/main/libs/cli#readme)** (located in `libs/cli/`): Interactive terminal interface with conversation resume, web search, and sandboxes
+            <Accordion title="核心包" defaultOpen>
+                - **[`deepagents`](https://github.com/langchain-ai/deepagents/tree/main/libs/deepagents#readme)**（位于 `libs/deepagents/`）：核心框架，支持构建具有规划、文件系统和子 Agent 能力的深度 Agent
+                - **[`deepagents-cli`](https://github.com/langchain-ai/deepagents/tree/main/libs/deepagents-cli#readme)**（位于 `libs/deepagents-cli/`）：交互式终端界面，支持对话恢复、Web 搜索和沙箱
             </Accordion>
 
-            <Accordion title="Integration packages">
-                - **[`deepagents-harbor`](https://github.com/langchain-ai/deepagents/tree/main/libs/harbor#readme)** (located in `libs/harbor/`): Harbor integration with LangSmith tracing
-                - **[`deepagents-acp`](https://github.com/langchain-ai/deepagents/tree/main/libs/acp#readme)** (located in `libs/acp/`): Agent Client Protocol integration
+            <Accordion title="集成包">
+                - **[`deepagents-harbor`](https://github.com/langchain-ai/deepagents/tree/main/libs/harbor#readme)**（位于 `libs/harbor/`）：Harbor 集成，支持 LangSmith 追踪
+                - **[`deepagents-acp`](https://github.com/langchain-ai/deepagents/tree/main/libs/acp#readme)**（位于 `libs/acp/`）：Agent Client Protocol 集成
             </Accordion>
         </AccordionGroup>
     </Tab>
@@ -419,105 +414,87 @@ Once you've reviewed the [contribution guidelines](#contribution-guidelines), fi
 
 ---
 
-## Development workflow
+## 开发工作流
 
-### Pre-commit hooks
-
-:::python
-The [LangChain](https://github.com/langchain-ai/langchain) and [Deep Agents](https://github.com/langchain-ai/deepagents) repositories include [pre-commit](https://pre-commit.com/) hooks that automatically run formatting, linting, and validation checks before each commit. Install them from the repository root:
-
-```bash
-pip install pre-commit  # or: uv tool install pre-commit
-pre-commit install
-```
-
-The hooks enforce:
-- No direct commits to protected branches
-- YAML and TOML syntax validation
-- Trailing whitespace and end-of-file fixes
-- Smart quote and non-standard space normalization
-- Per-package `make format` and `make lint`
-:::
-
-### Running tests
+### 运行测试
 
 <Info>
-    Directories are relative to the package you're working in.
+    以下目录路径相对于你正在开发的包。
 </Info>
 
-We favor unit tests over integration tests when possible. Unit tests run on every pull request, so they should be fast and reliable. Integration tests run on a schedule and require more setup, so they should be reserved for confirming interface points with external services.
+在可能的情况下，我们倾向于使用单元测试而非集成测试。单元测试在每个 Pull Request 上都会运行，因此应该快速且可靠。集成测试按计划运行，需要更多设置，因此应仅用于确认与外部服务的接口是否正常。
 
-#### Unit tests
+#### 单元测试
 
 :::python
-**Location**: `tests/unit_tests/`
+**位置**：`tests/unit_tests/`
 :::
 :::js
-**Location**: `src/tests/FILENAME_BEING_TESTED.test.ts`
+**位置**：`src/tests/FILENAME_BEING_TESTED.test.ts`
 :::
 
-Unit tests cover modular logic that does not require calls to outside APIs. If you add new logic, you should add a unit test. In unit tests, check pre/post processing and mock external dependencies.
+单元测试覆盖不需要调用外部 API 的模块化逻辑。如果你添加了新的逻辑，应该添加相应的单元测试。在单元测试中，检查预处理/后处理并 mock 外部依赖。
 
-**Requirements**:
-- No network calls allowed
-- Test all code paths including edge cases
-- Use mocks for external dependencies
+**要求**：
+- 不允许网络调用
+- 测试所有代码路径，包括边缘情况
+- 使用 mock 替代外部依赖
 
-To run unit tests:
+运行单元测试：
 
 :::python
 ```bash
 make test
 
-# Or directly:
+# 或直接运行：
 uv run --group test pytest tests/unit_tests
 
-# To run a specific test:
+# 运行特定测试文件：
 TEST_FILE=tests/unit_tests/test_imports.py make test
 ```
 :::
 :::js
 ```bash
-# Run the entire test suite
+# 运行完整测试套件
 pnpm test
 
-# Or run a specific test file
+# 或运行特定测试文件
 pnpm test src/tests/FILENAME_BEING_TESTED.test.ts
 
-# Or run a specific test function
+# 或运行特定测试函数
 pnpm test -t "the test that should be run"
 ```
 :::
 
-#### Integration tests
+#### 集成测试
 
 :::python
-**Location**: `tests/integration_tests/`
+**位置**：`tests/integration_tests/`
 :::
 :::js
-**Location**: `src/tests/FILENAME_BEING_TESTED.int.test.ts`
+**位置**：`src/tests/FILENAME_BEING_TESTED.int.test.ts`
 :::
 
-Integration tests cover logic that requires making calls to outside APIs (often integration with other services).
+集成测试覆盖需要调用外部 API（通常是与其他服务的集成）的逻辑。
 
-Integration tests require access to external services/provider APIs (which can cost money) and therefore are not run by default.
+集成测试需要访问外部服务/Provider API（可能产生费用），因此默认不运行。
 
-Not every code change will require an integration test, but keep in mind that we'll require/run integration tests separately as part of our review process.
+并非每次代码修改都需要集成测试，但请注意，作为审核流程的一部分，我们会单独要求/运行集成测试。
 
-**Requirements**:
-- Test real integrations with external services
-- Use environment variables for API keys
-- Skip gracefully if credentials unavailable
+**要求**：
+- 测试与外部服务的真实集成
+- 使用环境变量存储 API 密钥
+- 在凭据不可用时优雅跳过
 
-To run integration tests:
+运行集成测试：
 :::python
 ```bash
 make integration_tests
 
-# Or directly:
+# 或直接运行：
 uv run --group test --group test_integration pytest --retries 3 --retry-delay 1 tests/integration_tests
 
-# To run a specific test:
+# 运行特定测试文件：
 TEST_FILE=tests/integration_tests/test_openai.py make integration_tests
 ```
 :::
@@ -527,14 +504,14 @@ pnpm test:int
 ```
 :::
 
-### Code quality standards
+### 代码质量标准
 
-Contributions must adhere to the following quality requirements:
+贡献必须遵守以下质量要求：
 
 <Tabs>
-    <Tab title="Type hints">
+    <Tab title="类型标注">
         :::python
-        **Required**: Complete type annotations for all functions
+        **必需**：所有函数都需要完整的类型标注
 
         ```python
         def process_documents(
@@ -556,7 +533,7 @@ Contributions must adhere to the following quality requirements:
         ```
         :::
         :::js
-        **Required**: Complete types for all functions
+        **必需**：所有函数都需要完整的类型定义
 
         ```typescript
         function processDocuments(
@@ -570,33 +547,33 @@ Contributions must adhere to the following quality requirements:
         :::
     </Tab>
 
-    <Tab title="Documentation">
+    <Tab title="文档化">
         :::python
-        **Required**: [Google-style docstrings](https://google.github.io/styleguide/pyguide.html) for all public functions.
+        **必需**：所有公共函数使用 [Google 风格文档字符串](https://google.github.io/styleguide/pyguide.html)。
 
-        **Guiding principle**: Docstrings describe "what"; docs on this site explain the "how" and "why."
+        **指导原则**：文档字符串描述"是什么"；本站文档解释"怎么做"和"为什么"。
 
-        | Content type | Location | Purpose |
-        |--------------|----------|---------|
-        | Parameter types | Signature | Auto-generates into API reference |
-        | Parameter descriptions | Docstrings | Auto-generates into API reference |
-        | Return types and exceptions | Docstrings | API reference |
-        | Minimal usage example | Docstrings | Show basic instantiation pattern |
-        | Feature tutorials | This site | In-depth walkthroughs |
-        | End-to-end examples | This site | Real-world usage patterns |
-        | Conceptual explanations | This site | Understanding and context |
+        | 内容类型 | 位置 | 用途 |
+        |---------|------|------|
+        | 参数类型 | 函数签名 | 自动生成到 API 参考 |
+        | 参数描述 | 文档字符串 | 自动生成到 API 参考 |
+        | 返回类型和异常 | 文档字符串 | API 参考 |
+        | 最小用法示例 | 文档字符串 | 展示基本实例化模式 |
+        | 功能教程 | 本站 | 深度操作指南 |
+        | 端到端示例 | 本站 | 真实使用场景 |
+        | 概念解释 | 本站 | 理解和上下文 |
 
-        **Docstrings should contain:**
+        **文档字符串应包含：**
 
-        1. One-line summary of what the class/function does
-        2. Link to this site for tutorials, guides, and usage patterns
-        3. Parameter documentation with types and descriptions
-        4. Return value description
-        5. Exceptions that may be raised
-        6. Single minimal example showing basic instantiation/usage as necessary
+        1. 类/函数功能的一行摘要
+        2. 链接到本站的教程、指南和使用模式
+        3. 包含类型和描述的参数文档
+        4. 返回值描述
+        5. 可能抛出的异常
+        6. 展示基本实例化/用法的单个最小示例
 
         <AccordionGroup>
-            <Accordion title="Good docstring example">
+            <Accordion title="好的文档字符串示例">
                 ````python
                 class ChatAnthropic(BaseChatModel):
                     """Interface to Claude chat models.
@@ -632,11 +609,11 @@ Contributions must adhere to the following quality requirements:
                     """
                 ````
             </Accordion>
-            <Accordion title="What does NOT belong in docstrings">
-                Avoid duplicating content that belongs in docstrings:
+            <Accordion title="不应出现在文档字符串中的内容">
+                避免在文档字符串中重复以下内容：
 
-                - **Parameter types**: These are in the function signature and auto-generated into the API reference.
-                - **Feature tutorials**: Don't include extended walkthroughs. Instead, link to this site:
+                - **参数类型**：这些已在函数签名中，会自动生成到 API 参考。
+                - **功能教程**：不要包含扩展的操作指南。改为链接到本站：
 
                     ```python
                     """
@@ -647,7 +624,7 @@ Contributions must adhere to the following quality requirements:
                     """
                     ```
 
-                - **Multiple example variations**: Include one minimal example, then link to comprehensive guides:
+                - **多个示例变体**：包含一个最小示例，然后链接到完整指南：
 
                     ```python
                     """
@@ -663,14 +640,14 @@ Contributions must adhere to the following quality requirements:
                     """
                     ```
 
-                - **Conceptual explanations**: Keep to factual parameter descriptions. Link to docs for deeper context.
+                - **概念解释**：保持参数描述的事实性。深入的上下文请链接到文档。
 
-                - **MkDocs-specific syntax**: Avoid `???+`, accordions, or tabs in docstrings. They don't render in IDEs.
+                - **MkDocs 特有语法**：避免在文档字符串中使用 `???+`、折叠面板或标签页。它们在 IDE 中不会渲染。
             </Accordion>
         </AccordionGroup>
         :::
         :::js
-        **Required**: [JSDocs](https://jsdoc.app/about-getting-started) for all exported functions and interfaces
+        **必需**：所有导出函数和接口使用 [JSDocs](https://jsdoc.app/about-getting-started)
 
         ```typescript
         /**
@@ -705,99 +682,99 @@ Contributions must adhere to the following quality requirements:
         :::
     </Tab>
 
-    <Tab title="Code style">
+    <Tab title="代码风格">
         :::python
-        **Automated**: Formatting and linting via [`ruff`](https://docs.astral.sh/ruff/)
+        **自动化**：通过 [`ruff`](https://docs.astral.sh/ruff/) 进行格式化和 lint
 
         ```bash
-        make format  # Apply formatting
-        make lint    # Check style and types
+        make format  # 应用格式化
+        make lint    # 检查代码风格和类型
         ```
         :::
         :::js
-        **Automated**: Formatting and linting:
+        **自动化**：格式化和 lint：
 
         ```bash
-        pnpm lint    # Check style and types
-        pnpm format  # Apply formatting
+        pnpm lint    # 检查代码风格和类型
+        pnpm format  # 应用格式化
         ```
         :::
 
-        **Standards**:
-        - Descriptive variable names
-        - Break up complex functions (aim for fewer than 20 lines)
-        - Follow existing patterns in the codebase
+        **规范**：
+        - 使用描述性变量名
+        - 拆分复杂函数（目标控制在 20 行以内）
+        - 遵循代码库中的现有模式
     </Tab>
 </Tabs>
 
 :::python
-### Dependencies
+### 依赖管理
 
-LangChain packages distinguish between **hard dependencies** and **optional dependencies** to keep packages lightweight and minimize installation overhead for users.
+LangChain 包区分**硬依赖**和**可选依赖**，以保持包的轻量并减少用户的安装开销。
 
 <Tabs>
-    <Tab title="Optional dependencies">
-        Almost all new dependencies should be optional. Use optional dependencies when:
+    <Tab title="可选依赖">
+        几乎所有新依赖都应该是可选的。在以下情况使用可选依赖：
 
-        - The dependency is only needed for specific integrations or features
-        - Users can meaningfully use the package without this dependency
-        - The dependency is large or has many transitive dependencies
+        - 该依赖仅用于特定集成或功能
+        - 用户在不使用该依赖的情况下仍可以正常使用包
+        - 该依赖体积较大或有大量传递依赖
 
-        **Requirements:**
+        **要求：**
 
-        - Users without the dependency installed must be able to **import** your code without any side effects (no warnings, no errors, no exceptions)
-        - `pyproject.toml` and `uv.lock` are **not** modified
+        - 未安装该依赖的用户必须能够**导入**你的代码而不产生任何副作用（无警告、无错误、无异常）
+        - `pyproject.toml` 和 `uv.lock` **不应**被修改
 
-        **To add an optional dependency:**
+        **添加可选依赖的步骤：**
 
-        1. Add the dependency to the appropriate testing dependencies file (e.g., `extended_testing_deps.txt`)
-        2. Add a unit test that at minimum attempts to import the new code. Ideally, the unit test uses lightweight fixtures to test the logic of the code.
-        3. Use the `@pytest.mark.requires("package_name")` decorator for any unit tests that require the dependency.
+        1. 将依赖添加到相应的测试依赖文件中（例如 `extended_testing_deps.txt`）
+        2. 添加至少尝试导入新代码的单元测试。理想情况下，单元测试使用轻量级 fixture 来测试代码逻辑
+        3. 对需要该依赖的单元测试使用 `@pytest.mark.requires("package_name")` 装饰器
     </Tab>
 
-    <Tab title="Hard dependencies">
-        Hard dependencies are installed automatically when users install the package. Use hard dependencies only when:
+    <Tab title="硬依赖">
+        硬依赖在用户安装包时自动安装。仅在以下情况使用硬依赖：
 
-        - The package fundamentally cannot function without the dependency
-        - The dependency is small and has minimal transitive dependencies
-        - There is no reasonable way to make the functionality optional
+        - 包的核心功能完全离不开该依赖
+        - 该依赖体积小且传递依赖少
+        - 没有合理的方式将该功能设为可选
 
         <Warning>
-            Adding hard dependencies increases install time and potential version conflicts for all users.
+            添加硬依赖会增加所有用户的安装时间并可能引发版本冲突。
 
-            Maintainers will scrutinize hard dependency additions carefully!
+            维护者将仔细审查硬依赖的添加！
         </Warning>
 
-        **To add a hard dependency:**
+        **添加硬依赖的步骤：**
 
-        1. Open an issue or discussion explaining why the dependency must be hard rather than optional
-        2. Add the dependency to `pyproject.toml` under the appropriate section
-        3. Run `uv lock` to update the lockfile
-        4. Include comprehensive tests covering the new functionality
+        1. 创建 Issue 或发起讨论，说明为什么该依赖必须是硬依赖而非可选依赖
+        2. 将依赖添加到 `pyproject.toml` 的相应部分
+        3. 运行 `uv lock` 更新 lock 文件
+        4. 包含覆盖新功能的全面测试
     </Tab>
 </Tabs>
 :::
 
 ---
 
-### Test writing guidelines
+### 测试编写指南
 
-In order to write effective tests, there's a few good practices to follow:
+为了编写有效的测试，需要遵循一些良好实践：
 
 :::python
-- Use natural language to describe the test in docstrings
-- Use descriptive variable names
-- Be exhaustive with assertions
+- 在文档字符串中使用自然语言描述测试
+- 使用描述性变量名
+- 穷尽所有断言
 :::
 :::js
-- Encapsulate the test in a `describe` block that describes the component being tested
-- Use natural language to describe the test name
-- Be exhaustive with assertions
-- Only use snapshots for reasonably sized data objects
+- 将测试封装在描述被测组件的 `describe` 块中
+- 使用自然语言描述测试名称
+- 穷尽所有断言
+- 仅对合理大小的数据对象使用快照
 :::
 
 <Tabs>
-    <Tab title="Unit tests">
+    <Tab title="单元测试">
         :::python
         ```python
         def test_document_processor_handles_empty_input():
@@ -827,7 +804,7 @@ In order to write effective tests, there's a few good practices to follow:
         :::
     </Tab>
 
-    <Tab title="Integration tests">
+    <Tab title="集成测试">
         :::python
         ```python
         @pytest.mark.requires("openai")
@@ -853,7 +830,7 @@ In order to write effective tests, there's a few good practices to follow:
         :::
     </Tab>
 
-    <Tab title="Mock usage">
+    <Tab title="Mock 使用">
         :::python
         ```python
         def test_retry_mechanism(mocker):
@@ -885,27 +862,23 @@ In order to write effective tests, there's a few good practices to follow:
     </Tab>
 </Tabs>
 
-### Submitting your PR
+### 提交你的 PR
 
-Once your tests pass and code meets quality standards:
+当测试通过且代码满足质量标准后：
 
-1. Push your branch and open a pull request
-2. Follow the provided PR template
-3. Reference related issues using a [closing keyword](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword) (e.g., `Fixes #123`)
-4. Wait for CI checks to complete
-
-<Note>
-    If your PR includes AI-generated content, you must follow our [acceptable uses of LLMs](/oss/contributing/overview#acceptable-uses-of-llms) policy. PRs that appear to be low-effort, AI-generated spam will be closed without comment.
-</Note>
+1. 推送你的分支并创建 Pull Request
+2. 按照提供的 PR 模板填写
+3. 使用 [关闭关键字](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword) 关联相关 Issue（例如 `Fixes #123`）
+4. 等待 CI 检查完成
 
 <Warning>
-    Address CI failures promptly. Maintainers may close PRs that do not pass CI within a reasonable timeframe.
+    请及时处理 CI 失败。维护者可能会关闭在合理时间内未通过 CI 的 PR。
 </Warning>
 
-## Getting help
+## 获取帮助
 
-Our goal is to have the most accessible developer setup possible. Should you experience any difficulty getting setup, please ask in the [community slack](https://www.langchain.com/join-community) or open a [forum post](https://forum.langchain.com/).
+我们的目标是提供最便捷的开发环境搭建体验。如果在搭建过程中遇到任何困难，请在 [社区 Slack](https://www.langchain.com/join-community) 中提问或发布 [论坛帖子](https://forum.langchain.com/)。
 
 <Check>
-    You're now ready to contribute high-quality code to LangChain!
+    你现在已经准备好为 LangChain 贡献高质量的代码了！
 </Check>

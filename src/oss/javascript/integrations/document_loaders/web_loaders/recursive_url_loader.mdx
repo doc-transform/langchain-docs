@@ -1,64 +1,64 @@
 ---
-title: "RecursiveURLLoader integration"
-description: "Integrate with the RecursiveURLLoader document loader using LangChain JavaScript."
+title: "RecursiveURLLoader 集成"
+description: "使用 LangChain JavaScript 集成 RecursiveURLLoader 文档加载器。"
 ---
 
 <Tip>
-**Compatibility**: Only available on Node.js.
+**兼容性**：仅在 Node.js 上可用。
 </Tip>
 
-This notebook provides a quick overview for getting started with [RecursiveUrlLoader](/oss/integrations/document_loaders/). For detailed documentation of all RecursiveUrlLoader features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_community_document_loaders_web_recursive_url.RecursiveUrlLoader.html).
+本笔记提供了开始使用 [RecursiveUrlLoader](/oss/integrations/document_loaders/) 的快速概览。有关 RecursiveUrlLoader 所有功能和配置的详细文档请参览 [API 参考](https://api.js.langchain.com/classes/langchain_community_document_loaders_web_recursive_url.RecursiveUrlLoader.html)。
 
-## Overview
+## 概览
 
-### Integration details
+### 集成详情
 
 | Class | Package | Local | Serializable | PY support |
 | :--- | :--- | :---: | :---: |  :---: |
 | [RecursiveUrlLoader](https://api.js.langchain.com/classes/langchain_community_document_loaders_web_recursive_url.RecursiveUrlLoader.html) | [@langchain/community](https://api.js.langchain.com/modules/langchain_community_document_loaders_web_recursive_url.html) | ✅ | beta | ❌ |
 
-### Loader features
+### 加载器特性
 
 | Source | Web Loader | Node Envs Only
 | :---: | :---: | :---: |
 | RecursiveUrlLoader | ✅ | ✅ |
 
-When loading content from a website, we may want to process load all URLs on a page.
+从网站加载内容时，我们可能想处理加载页面上的所有 URL。
 
-For example, let's look at the LangChain.js introduction docs.
+例如，让我们看看 LangChain.js 介绍文档。
 
-This has many interesting child pages that we may want to load, split, and later retrieve in bulk.
+它有许多有趣的子页面，我们可能想要批量加载、拆分和检索。
 
-The challenge is traversing the tree of child pages and assembling a list!
+挑战在于遍历子页面树并组装列表！
 
-We do this using the `RecursiveUrlLoader`.
+我们使用 `RecursiveUrlLoader` 来完成此操作。
 
-This also gives us the flexibility to exclude some children, customize the extractor, and more.
+这也给了我们排除某些子页面、自定义提取器等的灵活性。
 
-## Setup
+## 设置
 
-To access `RecursiveUrlLoader` document loader you'll need to install the `@langchain/community` integration, and the [`jsdom`](https://www.npmjs.com/package/jsdom) package.
+要访问 `RecursiveUrlLoader` 文档加载器，你需要安装 `@langchain/community` 集成和 [`jsdom`](https://www.npmjs.com/package/jsdom) 包。
 
-### Credentials
+### 凭据
 
-If you want to get automated tracing of your model calls you can also set your [LangSmith](/langsmith/home) API key by uncommenting below:
+如果你想获得模型调用的自动追踪，你还可以通过取消下方注释来设置你的 [LangSmith](/langsmith/home) API 密钥：
 
 ```bash
 # export LANGSMITH_TRACING="true"
 # export LANGSMITH_API_KEY="your-api-key"
 ```
 
-### Installation
+### 安装
 
-The LangChain RecursiveUrlLoader integration lives in the `@langchain/community` package:
+LangChain RecursiveUrlLoader 集成位于 `@langchain/community` 包中：
 
 <CodeGroup>
 ```bash npm
 npm install @langchain/community @langchain/core jsdom
 </CodeGroup>
 
-We also suggest adding a package like [`html-to-text`](https://www.npmjs.com/package/html-to-text) or
-[`@mozilla/readability`](https://www.npmjs.com/package/@mozilla/readability) for extracting the raw text from the page.
+我们还建议添加 [`html-to-text`](https://www.npmjs.com/package/html-to-text) 或
+[`@mozilla/readability`](https://www.npmjs.com/package/@mozilla/readability) 等包用于从页面提取原始文本。
 
 <CodeGroup>
 ```bash npm
@@ -81,8 +81,8 @@ yarn add @langchain/community @langchain/core jsdom
 ```
 </CodeGroup>
 
-We also suggest adding a package like [`html-to-text`](https://www.npmjs.com/package/html-to-text) or
-[`@mozilla/readability`](https://www.npmjs.com/package/@mozilla/readability) for extracting the raw text from the page.
+我们还建议添加 [`html-to-text`](https://www.npmjs.com/package/html-to-text) 或
+[`@mozilla/readability`](https://www.npmjs.com/package/@mozilla/readability) 等包用于从页面提取原始文本。
 
 <CodeGroup>
 ```bash npm
@@ -105,13 +105,13 @@ pnpm add @langchain/community @langchain/core jsdom
 ```
 </CodeGroup>
 
-We also suggest adding a package like [`html-to-text`](https://www.npmjs.com/package/html-to-text) or
-[`@mozilla/readability`](https://www.npmjs.com/package/@mozilla/readability) for extracting the raw text from the page.
+我们还建议添加 [`html-to-text`](https://www.npmjs.com/package/html-to-text) 或
+[`@mozilla/readability`](https://www.npmjs.com/package/@mozilla/readability) 等包用于从页面提取原始文本。
 
 
-## Instantiation
+## 实例化
 
-Now we can instantiate our model object and load documents:
+现在我们可以实例化模型对象并加载文档：
 
 ```typescript
 import { RecursiveUrlLoader } from "@langchain/community/document_loaders/web/recursive_url"
@@ -126,7 +126,7 @@ const loader = new RecursiveUrlLoader("https://langchain.com/",  {
 })
 ```
 
-## Load
+## 加载
 
 ```typescript
 const docs = await loader.load()
@@ -379,7 +379,7 @@ console.log(docs[0].metadata)
 }
 ```
 
-## Options
+## 选项
 
 ```typescript
 interface Options {
@@ -392,10 +392,10 @@ interface Options {
 }
 ```
 
-However, since it's hard to perform a perfect filter, you may still see some irrelevant results in the results. You can perform a filter on the returned documents by yourself, if it's needed. Most of the time, the returned results are good enough.
+然而，由于很难执行完美的过滤，你可能仍然会在结果中看到一些不相关的结果。如果需要，你可以自己对返回的文档执行过滤。大多数时候，返回的结果已经足够好。
 
 ---
 
-## API reference
+## API 参考
 
-For detailed documentation of all RecursiveUrlLoader features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_community_document_loaders_web_recursive_url.RecursiveUrlLoader.html).
+所有 RecursiveUrlLoader 功能和配置的详细文档请参览 [API 参考](https://api.js.langchain.com/classes/langchain_community_document_loaders_web_recursive_url.RecursiveUrlLoader.html)。

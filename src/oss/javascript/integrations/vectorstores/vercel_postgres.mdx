@@ -1,16 +1,15 @@
 ---
-title: "Vercel Postgres integration"
-description: "Integrate with the Vercel Postgres vector store using LangChain JavaScript."
+title: "Vercel Postgres 集成"
+description: "使用 LangChain JavaScript 集成 Vercel Postgres 向量存储。"
 ---
 
-LangChain.js supports using the [`@vercel/postgres`](https://www.npmjs.com/package/@vercel/postgres) package to use generic Postgres databases
-as vector stores, provided they support the [`pgvector`](https://github.com/pgvector/pgvector) Postgres extension.
+LangChain.js 支持使用 [`@vercel/postgres`](https://www.npmjs.com/package/@vercel/postgres) 包来将通用 Postgres 数据库作为向量存储，前提是它们支持 [`pgvector`](https://github.com/pgvector/pgvector) Postgres 扩展。
 
-This integration is particularly useful from web environments like Edge functions.
+此集成在 Web 环境（如 Edge 函数）中特别有用。
 
-## Setup
+## 设置
 
-To work with Vercel Postgres, you need to install the `@vercel/postgres` package:
+要使用 Vercel Postgres，你需要安装 `@vercel/postgres` 包：
 
 ```bash npm
 npm install @vercel/postgres
@@ -22,8 +21,8 @@ See [this section for general instructions on installing LangChain packages](/os
 ```bash npm
 npm install @langchain/community @langchain/core
 ```
-This integration automatically connects using the connection string set under `process.env.POSTGRES_URL`.
-You can also pass a connection string manually like this:
+此集成会自动使用 `process.env.POSTGRES_URL` 中设置的连接字符串进行连接。
+你也可以手动传递连接字符串，如下所示：
 
 ```typescript
 const vectorstore = await VercelPostgres.initialize(new OpenAIEmbeddings(), {
@@ -34,18 +33,16 @@ const vectorstore = await VercelPostgres.initialize(new OpenAIEmbeddings(), {
 });
 ```
 
-### Connecting to Vercel Postgres
+### 连接到 Vercel Postgres
 
-A simple way to get started is to create a serverless [Vercel Postgres instance](https://vercel.com/docs/storage/vercel-postgres/quickstart).
-If you're deploying to a Vercel project with an associated Vercel Postgres instance, the required `POSTGRES_URL` environment variable
-will already be populated in hosted environments.
+一个简单的开始方法是创建一个无服务器的 [Vercel Postgres 实例](https://vercel.com/docs/storage/vercel-postgres/quickstart)。
+如果你部署到关联了 Vercel Postgres 实例的 Vercel 项目，所需的 `POSTGRES_URL` 环境变量会在托管环境中自动填充。
 
-### Connecting to other databases
+### 连接到其他数据库
 
-If you prefer to host your own Postgres instance, you can use a similar flow to LangChain's [PGVector](/oss/integrations/vectorstores/pgvector)
-vectorstore integration and set the connection string either as an environment variable or as shown above.
+如果你更希望托管自己的 Postgres 实例，你可以使用与 LangChain 的 [PGVector](/oss/integrations/vectorstores/pgvector) 向量存储集成类似的流程，并将连接字符串设置为环境变量或如上所示。
 
-## Usage
+## 用法
 
 ```typescript
 import { CohereEmbeddings } from "@langchain/cohere";
@@ -182,7 +179,7 @@ console.log(results5);
 await vercelPostgresStore.end();
 ```
 
-## Related
+## 相关
 
-- Vector store [conceptual guide](/oss/integrations/vectorstores)
-- Vector store [how-to guides](/oss/integrations/vectorstores)
+- 向量存储[概念指南](/oss/integrations/vectorstores)
+- 向量存储[操作指南](/oss/integrations/vectorstores)

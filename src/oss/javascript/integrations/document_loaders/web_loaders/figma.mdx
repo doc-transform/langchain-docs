@@ -1,10 +1,10 @@
 ---
-title: "Figma integration"
-description: "Integrate with the Figma document loader using LangChain JavaScript."
+title: "Figma 集成"
+description: "使用 LangChain JavaScript 集成 Figma 文档加载器。"
 ---
 
-This example goes over how to load data from a Figma file.
-You will need a Figma access token in order to get started.
+本示例介绍如何从 Figma 文件加载数据。
+你需要一个 Figma 访问令牌才能开始使用。
 
 ```typescript
 import { FigmaFileLoader } from "@langchain/community/document_loaders/web/figma";
@@ -19,7 +19,7 @@ const docs = await loader.load();
 console.log({ docs });
 ```
 
-You can find your Figma file's key and node ids by opening the file in your browser and extracting them from the URL:
+你可以通过在浏览器中打开文件并从 URL 中提取来找到 Figma 文件的 key 和节点 ID：
 
 ```
 https://www.figma.com/file/<YOUR FILE KEY HERE>/LangChainJS-Test?type=whiteboard&node-id=<YOUR NODE ID HERE>&t=e6lqWkKecuYQRyRg-0

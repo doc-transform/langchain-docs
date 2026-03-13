@@ -1,19 +1,17 @@
 ---
-title: "USearch integration"
-description: "Integrate with the USearch vector store using LangChain JavaScript."
+title: "USearch 集成"
+description: "使用 LangChain JavaScript 集成 USearch 向量存储。"
 ---
 
 <Tip>
-**Compatibility**
-
-Only available on Node.js.
+**兼容性**：仅在 Node.js 上可用。
 </Tip>
 
-[USearch](https://github.com/unum-cloud/usearch) is a library for efficient similarity search and clustering of dense vectors.
+[USearch](https://github.com/unum-cloud/usearch) 是一个用于高效相似性搜索和密集向量聚类的库。
 
-## Setup
+## 设置
 
-Install the [usearch](https://github.com/unum-cloud/usearch/tree/main/javascript) package, which is a Node.js binding for [USearch](https://github.com/unum-cloud/usearch).
+安装 [usearch](https://github.com/unum-cloud/usearch/tree/main/javascript) 包，它是 [USearch](https://github.com/unum-cloud/usearch) 的 Node.js 绑定。
 
 ```bash npm
 npm install -S usearch
@@ -26,9 +24,9 @@ See [this section for general instructions on installing LangChain packages](/os
 npm install @langchain/openai @langchain/community @langchain/core
 ```
 
-## Usage
+## 用法
 
-### Create a new index from texts
+### 从文本创建新索引
 
 ```typescript
 import { USearch } from "@langchain/community/vectorstores/usearch";
@@ -44,7 +42,7 @@ const resultOne = await vectorStore.similaritySearch("hello world", 1);
 console.log(resultOne);
 ```
 
-### Create a new index from a loader
+### 从加载器创建新索引
 
 ```typescript
 import { USearch } from "@langchain/community/vectorstores/usearch";
@@ -63,7 +61,7 @@ const resultOne = await vectorStore.similaritySearch("hello world", 1);
 console.log(resultOne);
 ```
 
-## Related
+## 相关
 
-- Vector store [conceptual guide](/oss/integrations/vectorstores)
-- Vector store [how-to guides](/oss/integrations/vectorstores)
+- 向量存储[概念指南](/oss/integrations/vectorstores)
+- 向量存储[操作指南](/oss/integrations/vectorstores)

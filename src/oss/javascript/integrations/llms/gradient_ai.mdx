@@ -1,24 +1,24 @@
 ---
-title: "Gradient AI integration"
-description: "Integrate with the Gradient AI LLM using LangChain JavaScript."
+title: "Gradient AI 集成"
+description: "使用 LangChain JavaScript 集成 Gradient AI LLM 模型。"
 ---
 
-LangChain.js supports integration with Gradient AI. Check out [Gradient AI](https://docs.gradient.ai/docs) for a list of available models.
+LangChain.js 支持与 Gradient AI 集成。可用模型列表请参见 [Gradient AI 文档](https://docs.gradient.ai/docs)。
 
-## Setup
+## 设置
 
-You'll need to install the official Gradient Node SDK as a peer dependency:
+你需要安装官方 Gradient Node SDK 作为对等依赖：
 
 ```bash npm
 npm i @gradientai/nodejs-sdk
 ```
-You will need to set the following environment variables for using the Gradient AI API.
+你需要设置以下环境变量来使用 Gradient AI API：
 
 1. `GRADIENT_ACCESS_TOKEN`
 2. `GRADIENT_WORKSPACE_ID`
 
-Alternatively, these can be set during the GradientAI Class instantiation as `gradientAccessKey` and `workspaceId` respectively.
-For example:
+或者，可以在 GradientAI 类实例化时分别作为 `gradientAccessKey` 和 `workspaceId` 设置。
+例如：
 
 ```typescript
 const model = new GradientLLM({
@@ -26,10 +26,10 @@ const model = new GradientLLM({
   workspaceId: "My secret workspace id"
 });
 ```
-## Usage
+## 用法
 
 <Tip>
-See [this section for general instructions on installing LangChain packages](/oss/langchain/install).
+安装 LangChain 包的通用说明请参见[此章节](/oss/langchain/install)。
 </Tip>
 
 ```bash npm
@@ -54,13 +54,13 @@ const res = await model.invoke(
 console.log({ res });
 ```
 
-### Using your own fine-tuned adapters
+### 使用自己的微调适配器
 
-The use your own custom adapter simply set `adapterId` during setup.
+要使用你自己的自定义适配器，只需在设置时设置 `adapterId` 即可。
 
 <GradientAiAdapter />
 
-## Related
+## 相关链接
 
 
-- [Models guide](/oss/langchain/models)
+- [模型指南](/oss/langchain/models)

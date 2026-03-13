@@ -1,53 +1,53 @@
 
-### 2. Deploy to LangSmith
+### 2. 部署到 LangSmith
 
 <Steps>
-<Step title="Navigate to LangSmith Deployment">
-    Log in to [LangSmith](https://smith.langchain.com/). In the left sidebar, select **Deployments**.
+<Step title="进入 LangSmith 部署页面">
+    登录 [LangSmith](https://smith.langchain.com/)。在左侧边栏中选择 **Deployments**。
 </Step>
-<Step title="Create new deployment">
-    Click the **+ New Deployment** button. A pane will open where you can fill in the required fields.
+<Step title="创建新部署">
+    点击 **+ New Deployment** 按钮。将弹出一个窗格，你可以在其中填写所需字段。
 </Step>
-<Step title="Link repository">
-    If you are a first time user or adding a private repository that has not been previously connected, click the **Add new account** button and follow the instructions to connect your GitHub account.
+<Step title="关联仓库">
+    如果你是首次使用或需要添加之前未关联的私有仓库，请点击 **Add new account** 按钮并按指引连接你的 GitHub 账号。
 </Step>
-<Step title="Deploy repository">
-    Select your application's repository. Click **Submit** to deploy. This may take about 15 minutes to complete. You can check the status in the **Deployment details** view.
+<Step title="部署仓库">
+    选择你应用的仓库。点击 **Submit** 进行部署。部署可能需要约 15 分钟完成。你可以在 **Deployment details** 视图中查看部署状态。
 </Step>
 </Steps>
 
-### 3. Test your application in Studio
+### 3. 在 Studio 中测试你的应用
 
-Once your application is deployed:
+应用部署完成后：
 
-1. Select the deployment you just created to view more details.
-2. Click the **Studio** button in the top right corner. Studio will open to display your graph.
+1. 选择你刚创建的部署以查看更多详情。
+2. 点击右上角的 **Studio** 按钮。Studio 将打开并显示你的图。
 
-### 4. Get the API URL for your deployment
+### 4. 获取部署的 API URL
 
-1. In the **Deployment details** view in LangGraph, click the **API URL** to copy it to your clipboard.
-2. Click the `URL` to copy it to the clipboard.
+1. 在 LangGraph 的 **Deployment details** 视图中，点击 **API URL** 将其复制到剪贴板。
+2. 点击 `URL` 复制到剪贴板。
 
-### 5. Test the API
+### 5. 测试 API
 
-You can now test the API:
+现在你可以测试 API 了：
 
 <Tabs>
 :::python
 <Tab title="Python">
-1. Install LangGraph Python:
+1. 安装 LangGraph Python：
 ```shell
 pip install langgraph-sdk
 ```
-2. Send a message to the agent:
+2. 向 Agent 发送一条消息：
 ```python
 from langgraph_sdk import get_sync_client # or get_client for async
 
 client = get_sync_client(url="your-deployment-url", api_key="your-langsmith-api-key")
 
 for chunk in client.runs.stream(
-    None,    # Threadless run
-    "agent", # Name of agent. Defined in langgraph.json.
+    None,    # 无线程运行
+    "agent", # Agent 名称。在 langgraph.json 中定义。
     input={
         "messages": [{
             "role": "human",
@@ -64,19 +64,19 @@ for chunk in client.runs.stream(
 :::
 :::js
 <Tab title="JavaScript">
-1. Install LangGraph JS:
+1. 安装 LangGraph JS：
 ```shell
 npm install @langchain/langgraph-sdk
 ```
-2. Send a message to the agent:
+2. 向 Agent 发送一条消息：
 ```ts
 const { Client } = await import("@langchain/langgraph-sdk");
 
 const client = new Client({ apiUrl: "your-deployment-url", apiKey: "your-langsmith-api-key" });
 
 const streamResponse = client.runs.stream(
-    null,    // Threadless run
-    "agent", // Name of agent. Defined in langgraph.json.
+    null,    // 无线程运行
+    "agent", // Agent 名称。在 langgraph.json 中定义。
     {
         input: {
             "messages": [
@@ -118,5 +118,5 @@ curl -s --request POST \
 </Tabs>
 
 <Tip>
-LangSmith offers additional hosting options, including self-hosted and hybrid. For more information, please see the [Platform setup overview](/langsmith/platform-setup).
+LangSmith 提供额外的托管选项，包括自托管和混合部署。更多信息请参见[平台设置概述](/langsmith/platform-setup)。
 </Tip>

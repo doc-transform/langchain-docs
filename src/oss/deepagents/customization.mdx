@@ -1,7 +1,7 @@
 ---
-title: Customize Deep Agents
-sidebarTitle: Customization
-description: Learn how to customize deep agents with system prompts, tools, subagents, and more
+title: 自定义 Deep Agent
+sidebarTitle: 自定义
+description: 了解如何通过系统提示词、工具、子 Agent 等来自定义 Deep Agent
 ---
 
 import ChatModelTabsDaPy from '/snippets/chat-model-tabs-da.mdx';
@@ -19,22 +19,22 @@ import SandboxBasicPy from '/snippets/deepagents-sandbox-basic-py.mdx';
 import SandboxBasicJs from '/snippets/deepagents-sandbox-basic-js.mdx';
 
 :::python
-`create_deep_agent` has the following core configuration options:
+`create_deep_agent` 具有以下核心配置选项：
 :::
 
 :::js
-`createDeepAgent` has the following configuration options:
+`createDeepAgent` 具有以下配置选项：
 :::
 
-- [Model](#model)
-- [Tools](#tools)
-- [System Prompt](#system-prompt)
-- [Middleware](#middleware)
-- [Subagents](#subagents)
-- [Backends (virtual filesystems)](#backends)
-- [Human-in-the-loop](#human-in-the-loop)
-- [Skills](#skills)
-- [Memory](#memory)
+- [模型](#模型)
+- [工具](#工具)
+- [系统提示词](#系统提示词)
+- [中间件](#中间件)
+- [子 Agent](#子-agent)
+- [后端（虚拟文件系统）](#后端)
+- [人工干预](#人工干预)
+- [技能](#技能)
+- [记忆](#记忆)
 
 :::python
 ```python
@@ -47,7 +47,7 @@ create_deep_agent(
 ) -> CompiledStateGraph
 ```
 
-For more information, see [`create_deep_agent`](https://reference.langchain.com/python/deepagents/graph/).
+更多信息请参见 [`create_deep_agent`](https://reference.langchain.com/python/deepagents/graph/)。
 :::
 
 :::js
@@ -60,18 +60,18 @@ const agent = createDeepAgent({
 });
 ```
 
-For more information, see [Customizing Deep Agents](https://reference.langchain.com/javascript/modules/deepagents.html#customizing-deep-agents).
+更多信息请参见 [Customizing Deep Agents](https://reference.langchain.com/javascript/modules/deepagents.html#customizing-deep-agents)。
 :::
 
-### Connection resilience
+### 连接弹性
 
-LangChain chat models automatically retry failed API requests with exponential backoff. By default, models retry up to **6 times** for network errors, rate limits (429), and server errors (5xx). Client errors like 401 (unauthorized) or 404 are not retried.
+LangChain 聊天模型会自动以指数退避策略重试失败的 API 请求。默认情况下，模型会对网络错误、速率限制（429）和服务端错误（5xx）最多重试 **6 次**。客户端错误如 401（未授权）或 404 不会重试。
 
 :::python
-You can adjust the `max_retries` parameter when creating a model to tune this behavior for your environment:
+你可以在创建模型时调整 `max_retries` 参数来适配你的环境：
 :::
 :::js
-You can adjust the `maxRetries` parameter when creating a model to tune this behavior for your environment:
+你可以在创建模型时调整 `maxRetries` 参数来适配你的环境：
 :::
 
 :::python
@@ -108,14 +108,14 @@ const agent = createDeepAgent({
 
 :::
 
-<Tip>For long-running agent tasks on unreliable networks, consider increasing `max_retries` to 10–15 and pairing it with a [checkpointer](/oss/langgraph/persistence) so that progress is preserved across failures.</Tip>
+<Tip>对于在不稳定网络上运行的长时间 Agent 任务，建议将 `max_retries` 增加到 10–15，并搭配 [checkpointer](/oss/langgraph/concepts/checkpointers) 使用，以便在失败时保留进度。</Tip>
 
-## Model
+## 模型
 
-By default, `deepagents` uses [`claude-sonnet-4-6`](https://platform.claude.com/docs/en/about-claude/models/overview). You can customize the model by passing any supported <Tooltip tip="A string that follows the format `provider:model` (e.g. openai:gpt-5)" cta="See mappings" href="https://reference.langchain.com/python/langchain/models/#langchain.chat_models.init_chat_model(model)">model identifier string</Tooltip> or [LangChain model object](/oss/integrations/chat).
+默认情况下，`deepagents` 使用 [`claude-sonnet-4-6`](https://platform.claude.com/docs/en/about-claude/models/overview)。你可以通过传入任何支持的 <Tooltip tip="遵循 `provider:model` 格式的字符串（如 openai:gpt-5）" cta="查看映射" href="https://reference.langchain.com/python/langchain/models/#langchain.chat_models.init_chat_model(model)">模型标识符字符串</Tooltip> 或 [LangChain 模型对象](/oss/integrations/chat) 来自定义模型。
 
 <Tip>
-    Use the `provider:model` format (for example `openai:gpt-5`) to quickly switch between models.
+    使用 `provider:model` 格式（例如 `openai:gpt-5`）可以快速切换模型。
 </Tip>
 
 :::python
@@ -126,9 +126,9 @@ By default, `deepagents` uses [`claude-sonnet-4-6`](https://platform.claude.com/
 <ChatModelTabsDaJs />
 :::
 
-## Tools
+## 工具
 
-In addition to [built-in tools](/oss/deepagents/overview#core-capabilities) for planning, file management, and subagent spawning, you can provide custom tools:
+除了用于规划、文件管理和子 Agent 派生的[内置工具](/oss/deepagents/overview#core-capabilities)之外，你还可以提供自定义工具：
 
 :::python
 ```python
@@ -207,12 +207,12 @@ const agent = createDeepAgent({
 ```
 :::
 
-## System prompt
+## 系统提示词
 
-Deep agents come with a built-in system prompt. The default system prompt contains detailed instructions for using the built-in planning tool, file system tools, and subagents.
-When middleware add special tools, like the filesystem tools, it appends them to the system prompt.
+Deep Agent 自带内置系统提示词。默认系统提示词包含使用内置规划工具、文件系统工具和子 Agent 的详细指令。
+当中间件添加特殊工具（如文件系统工具）时，会将其追加到系统提示词中。
 
-Each deep agent should also include a custom system prompt specific to its specific use case:
+每个 Deep Agent 还应包含针对其特定用例的自定义系统提示词：
 
 :::python
 ```python
@@ -243,36 +243,24 @@ const agent = createDeepAgent({
 ```
 :::
 
-## Middleware
+## 中间件
 
-By default, deep agents have access to the following [middleware](/oss/langchain/middleware/overview):
+默认情况下，Deep Agent 具有以下[中间件](/oss/langchain/middleware/overview)：
 
-- `TodoListMiddleware`: Tracks and manages todo lists for organizing agent tasks and work
-- `FilesystemMiddleware`: Handles file system operations such as reading, writing, and navigating directories
-- `SubAgentMiddleware`: Spawns and coordinates subagents for delegating tasks to specialized agents
-- `SummarizationMiddleware`: Condenses message history to stay within context limits when conversations grow long
-- `AnthropicPromptCachingMiddleware`: Automatic reduction of redundant token processing when using Anthropic models
-- `PatchToolCallsMiddleware`: Automatic message history fixes when tool calls are interrupted or cancelled before receiving results
+- `TodoListMiddleware`：跟踪和管理待办列表，用于组织 Agent 的任务和工作
+- `FilesystemMiddleware`：处理文件系统操作，如读取、写入和目录导航
+- `SubAgentMiddleware`：派生和协调子 Agent，将任务委派给专门的 Agent
+- `SummarizationMiddleware`：当对话变长时，压缩消息历史以保持在上下文限制内
+- `AnthropicPromptCachingMiddleware`：使用 Anthropic 模型时自动减少冗余 token 处理
+- `PatchToolCallsMiddleware`：当工具调用在接收结果前被中断或取消时，自动修复消息历史
 
-If you are using memory, skills, or human-in-the-loop, the following middleware is also included:
+如果你使用了记忆、技能或人工干预，还会包含以下中间件：
 
-- `MemoryMiddleware`: Persists and retrieves conversation context across sessions when the `memory` argument is provided
-- `SkillsMiddleware`: Enables custom skills when the `skills` argument is provided
-- `HumanInTheLoopMiddleware`: Pauses for human approval or input at specified points when the `interrupt_on` argument is provided
+- `MemoryMiddleware`：当提供 `memory` 参数时，跨会话持久化和检索对话上下文
+- `SkillsMiddleware`：当提供 `skills` 参数时，启用自定义技能
+- `HumanInTheLoopMiddleware`：当提供 `interrupt_on` 参数时，在指定节点暂停等待人工审批或输入
 
-### Pre-built middleware
-
-LangChain exposes additional pre-built middleware that let you add-on various features, such as retries, fallbacks, or PII detection. See [Prebuilt middleware](/oss/langchain/middleware/built-in) for more.
-
-:::python
-
-The `deepagents` library also exposes [summarization tool middleware](/oss/deepagents/harness#summarization), enabling agents to trigger summarization at opportune times—such as between tasks—instead of at fixed token intervals.
-
-:::
-
-### Custom middleware
-
-You can provide additional middleware to extend functionality, add tools, or implement custom hooks:
+你可以提供额外的中间件来扩展功能、添加工具或实现自定义钩子：
 
 :::python
 ```python
@@ -366,12 +354,12 @@ const agent = await createDeepAgent({
 :::
 
 <Warning>
-**Do not mutate attributes after initialization**
+**不要在初始化后修改属性**
 
-If you need to track values across hook invocations (for example, counters or accumulated data), use graph state.
-Graph state is scoped to a thread by design, so updates are safe under concurrency.
+如果你需要在钩子调用之间跟踪值（例如计数器或累积数据），请使用图状态（graph state）。
+图状态按设计以线程为作用域，因此在并发场景下更新是安全的。
 
-**Do this:**
+**正确做法：**
 
 ```python
 class CustomMiddleware(AgentMiddleware):
@@ -382,7 +370,7 @@ class CustomMiddleware(AgentMiddleware):
         return {"x": state.get("x", 0) + 1}  # Update graph state instead
 ```
 
-Do **not** do this:
+**不要**这样做：
 
 ```python
 class CustomMiddleware(AgentMiddleware):
@@ -393,80 +381,80 @@ class CustomMiddleware(AgentMiddleware):
         self.x += 1  # Mutation causes race conditions
 ```
 
-Mutation in place—such as modifying `self.x` in `before_agent` or other hooks—can lead to subtle bugs and race conditions, because many operations run concurrently (subagents, parallel tools, and parallel invocations on different threads).
+就地修改——例如在 `before_agent` 或其他钩子中修改 `self.x`——可能导致隐蔽的错误和竞态条件，因为许多操作是并发运行的（子 Agent、并行工具和不同线程上的并行调用）。
 
-For full details on extending state with custom properties, see [Custom middleware - Custom state schema](/oss/langchain/middleware/custom#custom-state-schema).
-If you must use mutation in custom middleware, consider what happens when subagents, parallel tools, or concurrent agent invocations run at the same time.
+关于使用自定义属性扩展状态的完整细节，请参见[自定义中间件 - 自定义状态 Schema](/oss/langchain/middleware/custom#custom-state-schema)。
+如果你必须在自定义中间件中使用修改，请考虑当子 Agent、并行工具或并发 Agent 调用同时运行时会发生什么。
 </Warning>
 
-## Subagents
+## 子 Agent
 
-To isolate detailed work and avoid context bloat, use subagents:
+为了隔离细节工作并避免上下文膨胀，可以使用子 Agent：
 
 <SubagentBasic />
 
-For more information, see [Subagents](/oss/deepagents/subagents).
+更多信息请参见[子 Agent](/oss/deepagents/subagents)。
 
 {/* TODO(https://github.com/langchain-ai/docs/pull/2368/) ## Structured response format */}
 
 {/* ## Context - You can persist agent state between runs to store information like user IDs. */}
 
-## Backends
+## 后端
 
-Deep agent tools can make use of virtual file systems to store, access, and edit files. By default, deep agents use a `StateBackend`.
+Deep Agent 工具可以利用虚拟文件系统来存储、访问和编辑文件。默认情况下，Deep Agent 使用 `StateBackend`。
 
-If you are using [skills](#skills) or [memory](#memory), you must add the expected skill or memory files to the backend before creating the agent.
+如果你使用了[技能](#技能)或[记忆](#记忆)，必须在创建 Agent 之前将预期的技能或记忆文件添加到后端中。
 
 <Tabs>
     <Tab title="StateBackend">
-        An ephemeral filesystem backend stored in `langgraph` state.
+        临时文件系统后端，存储在 `langgraph` 状态中。
 
-        This filesystem only persists _for a single thread_.
+        该文件系统仅在_单个线程_内持久化。
 
         <BackendState />
     </Tab>
     <Tab title="FilesystemBackend">
-        The local machine's filesystem.
+        本地机器的文件系统。
 
         <Warning>
-            This backend grants agents direct filesystem read/write access.
-            Use with caution and only in appropriate environments.
-            For more information, see [`FilesystemBackend`](/oss/deepagents/backends#filesystembackend-local-disk).
+            此后端赋予 Agent 直接的文件系统读写权限。
+            请谨慎使用，仅在适当的环境中使用。
+            更多信息请参见 [`FilesystemBackend`](/oss/deepagents/backends#filesystembackend-local-disk)。
         </Warning>
 
         <BackendFilesystem />
     </Tab>
     <Tab title="LocalShellBackend">
-        A filesystem with shell execution directly on the host. Provides filesystem tools plus the `execute` tool for running commands.
+        直接在宿主机上进行文件系统操作和 shell 执行的后端。提供文件系统工具以及用于运行命令的 `execute` 工具。
 
         <Warning>
-            This backend grants agents direct filesystem read/write access **and** unrestricted shell execution on your host.
-            Use with extreme caution and only in appropriate environments.
-            For more information, see [`LocalShellBackend`](/oss/deepagents/backends#localshellbackend-local-shell).
+            此后端赋予 Agent 直接的文件系统读写权限**以及**在宿主机上不受限制的 shell 执行能力。
+            请极其谨慎地使用，仅在适当的环境中使用。
+            更多信息请参见 [`LocalShellBackend`](/oss/deepagents/backends#localshellbackend-local-shell)。
         </Warning>
 
         <BackendLocalShell />
     </Tab>
     <Tab title="StoreBackend">
-        A filesystem that provides long-term storage that is _persisted across threads_.
+        提供_跨线程持久化_的长期存储文件系统。
 
         <BackendStore />
     </Tab>
     <Tab title="CompositeBackend">
-        A flexible backend where you can specify different routes in the filesystem to point towards different backends.
+        灵活的后端，你可以指定文件系统中的不同路由指向不同的后端。
 
         <BackendComposite />
     </Tab>
 </Tabs>
 
-For more information, see [Backends](/oss/deepagents/backends).
+更多信息请参见[后端](/oss/deepagents/backends)。
 
-### Sandboxes
+### 沙箱
 
-Sandboxes are specialized [backends](/oss/deepagents/backends) that run agent code in an isolated environment with their own filesystem and an `execute` tool for shell commands.
-Use a sandbox backend when you want your deep agent to write files, install dependencies, and run commands without changing anything on your local machine.
+沙箱是专门的[后端](/oss/deepagents/backends)，在隔离环境中运行 Agent 代码，拥有独立的文件系统和用于 shell 命令的 `execute` 工具。
+当你希望 Deep Agent 写入文件、安装依赖并运行命令，而不影响本地机器时，请使用沙箱后端。
 
-You configure sandboxes by passing a sandbox backend to `backend` when creating your deep agent:
+你可以在创建 Deep Agent 时通过 `backend` 参数传入沙箱后端来配置沙箱：
 
 :::python
 <SandboxBasicPy />
@@ -476,28 +464,28 @@ You configure sandboxes by passing a sandbox backend to `backend` when creating 
 <SandboxBasicJs />
 :::
 
-For more information, see [Sandboxes](/oss/deepagents/sandboxes).
+更多信息请参见[沙箱](/oss/deepagents/sandboxes)。
 
-## Human-in-the-loop
+## 人工干预
 
-Some tool operations may be sensitive and require human approval before execution.
-You can configure the approval for each tool:
+某些工具操作可能比较敏感，需要在执行前获得人工审批。
+你可以为每个工具配置审批策略：
 
 <HitlBasicConfig />
 
-You can configure interrupt for agents and subagents on tool call as well as from within tool calls.
-For more information, see [Human-in-the-loop](/oss/deepagents/human-in-the-loop).
+你可以在工具调用上以及工具调用内部为 Agent 和子 Agent 配置中断。
+更多信息请参见[人工干预](/oss/deepagents/human-in-the-loop)。
 
-## Skills
+## 技能
 
-You can use [skills](/oss/deepagents/overview) to provide your deep agent with new capabilities and expertise.
-While [tools](/oss/deepagents/customization#tools) tend to cover lower level functionality like native file system actions or planning, skills can contain detailed instructions on how to complete tasks, reference info, and other assets, such as templates.
-These files are only loaded by the agent when the agent has determined that the skill is useful for the current prompt.
-This progressive disclosure reduces the amount of tokens and context the agent has to consider upon startup.
+你可以使用[技能](/oss/deepagents/overview)为 Deep Agent 提供新的能力和专业知识。
+[工具](/oss/deepagents/customization#tools)倾向于覆盖底层功能（如原生文件系统操作或规划），而技能则可以包含完成任务的详细指令、参考信息和其他资源（如模板）。
+这些文件仅在 Agent 确定该技能对当前提示有用时才会加载。
+这种渐进式披露减少了 Agent 在启动时需要处理的 token 和上下文量。
 
-For example skills, see [Deep Agent example skills](https://github.com/langchain-ai/deepagentsjs/tree/main/examples/skills).
+示例技能请参见 [Deep Agent 示例技能](https://github.com/langchain-ai/deepagentsjs/tree/main/examples/skills)。
 
-To add skills to your deep agent, pass them as an argument to `create_deep_agent`:
+要为 Deep Agent 添加技能，将其作为参数传给 `create_deep_agent`：
 
 :::python
 <SkillsUsageTabsPy />
@@ -507,11 +495,11 @@ To add skills to your deep agent, pass them as an argument to `create_deep_agent
 <SkillsUsageTabsJs />
 :::
 
-## Memory
+## 记忆
 
-Use [`AGENTS.md` files](https://agents.md/) to provide extra context to your deep agent.
+使用 [`AGENTS.md` 文件](https://agents.md/) 为 Deep Agent 提供额外上下文。
 
-You can pass one or more file paths to the `memory` parameter when creating your deep agent:
+你可以在创建 Deep Agent 时向 `memory` 参数传入一个或多个文件路径：
 
 :::python
 
@@ -760,13 +748,12 @@ You can pass one or more file paths to the `memory` parameter when creating your
 
 :::
 
-## Structured output
+## 结构化输出
 
-Deep agents support [structured output](/oss/langchain/structured-output).
+Deep Agent 支持[结构化输出](/oss/langchain/structured-output)。
 :::python
-You can set a desired structured output schema by passing it as the `response_format` argument to the call to `create_deep_agent()`.
-When the model generates the structured data, it’s captured, validated, and returned in the 'structured_response' key of the deep agent’s state.
-
+你可以通过将期望的结构化输出 Schema 作为 `response_format` 参数传给 `create_deep_agent()` 来设置。
+当模型生成结构化数据时，它会被捕获、验证，并在 Deep Agent 状态的 'structured_response' 键中返回。
 ```python
 import os
 from typing import Literal
@@ -818,8 +805,8 @@ print(result["structured_response"])
 
 :::
 :::js
-You can set a desired structured output schema by passing it as the `responseFormat` argument to the call to `createDeepAgent()`.
-When the model generates the structured data, it's captured, validated, and returned in the 'structuredResponse' key of the agent's state.
+你可以通过将期望的结构化输出 Schema 作为 `responseFormat` 参数传给 `createDeepAgent()` 来设置。
+当模型生成结构化数据时，它会被捕获、验证，并在 Agent 状态的 'structuredResponse' 键中返回。
 
 ```typescript
 import { tool } from "langchain";
@@ -900,4 +887,4 @@ console.log(result.structuredResponse);
 
 :::
 
-For more information and examples, see [response format](/oss/langchain/structured-output#response-format).
+更多信息和示例请参见 [response format](/oss/langchain/structured-output#response-format)。

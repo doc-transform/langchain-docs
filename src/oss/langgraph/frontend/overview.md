@@ -1,13 +1,13 @@
 ---
-title: Overview
-description: Render LangGraph agents to the frontend
+title: 概览
+description: 将 LangGraph Agent 渲染到前端
 ---
 
-Build frontends that visualize LangGraph pipelines in real time. These patterns show how to render multi-step graph execution with per-node status and streaming content from custom `StateGraph` workflows.
+构建能够实时可视化 LangGraph 流水线的前端。这些模式展示了如何渲染多步骤图执行过程，包括每个节点的状态和来自自定义 `StateGraph` 工作流的流式内容。
 
-## Architecture
+## 架构
 
-LangGraph graphs are composed of named nodes connected by edges. Each node executes a step (classify, research, analyze, synthesize) and writes output to a specific state key. On the frontend, `useStream` provides reactive access to node outputs, streaming tokens, and graph metadata so you can map each node to a UI card.
+LangGraph 图由命名节点通过边连接组成。每个节点执行一个步骤（分类、研究、分析、综合），并将输出写入特定的状态键。在前端，`useStream` 提供对节点输出、流式 token 和图元数据的响应式访问，让你可以将每个节点映射到 UI 卡片。
 
 ```mermaid
 %%{
@@ -89,7 +89,7 @@ const graph = new StateGraph(State)
 
 :::
 
-On the frontend, `useStream` exposes `stream.values` for completed node outputs and `getMessagesMetadata` for identifying which node produced each streaming token.
+在前端，`useStream` 通过 `stream.values` 暴露已完成的节点输出，通过 `getMessagesMetadata` 标识每个流式 token 由哪个节点产生。
 
 ```ts
 import { useStream } from "@langchain/react";
@@ -106,14 +106,14 @@ function Pipeline() {
 }
 ```
 
-## Patterns
+## 模式
 
 <CardGroup cols={2}>
-  <Card title="Graph execution" icon="chart-dots" href="/oss/langgraph/frontend/graph-execution">
-    Visualize multi-step graph pipelines with per-node status and streaming content.
+  <Card title="图执行" icon="chart-dots" href="/oss/langgraph/frontend/graph-execution">
+    可视化多步骤图流水线，展示每个节点的状态和流式内容。
   </Card>
 </CardGroup>
 
-## Related patterns
+## 相关模式
 
-The [LangChain frontend patterns](/oss/langchain/frontend/overview)—markdown messages, tool calling, optimistic updates, and more—work with any LangGraph graph. The `useStream` hook provides the same core API whether you use `createAgent`, `createDeepAgent`, or a custom `StateGraph`.
+[LangChain 前端模式](/oss/langchain/frontend/overview)——Markdown 消息、工具调用、乐观更新等——适用于任何 LangGraph 图。`useStream` 钩子提供相同的核心 API，无论你使用 `createAgent`、`createDeepAgent` 还是自定义的 `StateGraph`。

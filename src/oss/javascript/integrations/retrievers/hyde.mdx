@@ -1,15 +1,15 @@
 ---
-title: "Hyde integration"
-description: "Integrate with the Hyde retriever using LangChain JavaScript."
+title: "HyDE 集成"
+description: "使用 LangChain JavaScript 集成 HyDE 检索器。"
 ---
 
-This example shows how to use the HyDE Retriever, which implements Hypothetical Document Embeddings (HyDE) as described in [this paper](https://arxiv.org/abs/2212.10496).
+本示例展示了如何使用 HyDE Retriever，它实现了[这篇论文](https://arxiv.org/abs/2212.10496)中描述的假设文档嵌入（HyDE）方法。
 
-At a high level, HyDE is an embedding technique that takes queries, generates a hypothetical answer, and then embeds that generated document and uses that as the final example.
+简单来说，HyDE 是一种嵌入技术，它接受查询，生成一个假设答案，然后嵌入该生成的文档并将其作为最终示例。
 
-In order to use HyDE, we therefore need to provide a base embedding model, as well as an LLM that can be used to generate those documents. By default, the HyDE class comes with some default prompts to use (see the paper for more details on them), but we can also create our own, which should have a single input variable `{question}`.
+因此，要使用 HyDE，我们需要提供一个基础嵌入模型以及一个可用于生成文档的 LLM。默认情况下，HyDE 类附带了一些默认提示词（更多详情请参见论文），但我们也可以创建自己的提示词，其中应包含一个输入变量 `{question}`。
 
-## Usage
+## 用法
 
 ```typescript
 import { OpenAI, OpenAIEmbeddings } from "@langchain/openai";
@@ -45,6 +45,6 @@ console.log(results);
 */
 ```
 
-## Related
+## 相关
 
-- [Retrieval guide](/oss/langchain/retrieval)
+- [检索指南](/oss/langchain/retrieval)

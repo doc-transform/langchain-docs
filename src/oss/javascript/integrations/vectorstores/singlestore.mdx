@@ -1,41 +1,39 @@
 ---
-title: "SingleStore integration"
-description: "Integrate with the SingleStore using LangChain JavaScript."
+title: "SingleStore 集成"
+description: "使用 LangChain JavaScript 集成 SingleStore。"
 ---
 
-[SingleStoreDB](https://singlestore.com/) is a robust, high-performance distributed SQL database solution designed to excel in both [cloud](https://www.singlestore.com/cloud/) and on-premises environments. Boasting a versatile feature set, it offers seamless deployment options while delivering unparalleled performance.
+[SingleStoreDB](https://singlestore.com/) 是一个强大的高性能分布式 SQL 数据库解决方案，旨在在[云](https://www.singlestore.com/cloud/)和本地环境中都能出色表现。它拥有多功能特性集，提供无缝的部署选项，同时提供无与伦比的性能。
 
-A standout feature of SingleStoreDB is its advanced support for vector storage and operations, making it an ideal choice for applications requiring intricate AI capabilities such as text similarity matching. With built-in vector functions like [dot_product](https://docs.singlestore.com/managed-service/en/reference/sql-reference/vector-functions/dot_product.html) and [euclidean_distance](https://docs.singlestore.com/managed-service/en/reference/sql-reference/vector-functions/euclidean_distance.html), SingleStoreDB empowers developers to implement sophisticated algorithms efficiently.
+SingleStoreDB 的一个突出特性是其对向量存储和操作的高级支持，使其成为需要复杂 AI 能力（如文本相似性匹配）的应用的理想选择。通过内置的向量函数如 [dot_product](https://docs.singlestore.com/managed-service/en/reference/sql-reference/vector-functions/dot_product.html) 和 [euclidean_distance](https://docs.singlestore.com/managed-service/en/reference/sql-reference/vector-functions/euclidean_distance.html)，SingleStoreDB 使开发者能够高效地实现复杂的算法。
 
-For developers keen on leveraging vector data within SingleStoreDB, a comprehensive tutorial is available, guiding them through the intricacies of [working with vector data](https://docs.singlestore.com/managed-service/en/developer-resources/functional-extensions/working-with-vector-data.html). This tutorial delves into the Vector Store within SingleStoreDB, showcasing its ability to facilitate searches based on vector similarity. Leveraging vector indexes, queries can be executed with remarkable speed, enabling swift retrieval of relevant data.
+对于希望在 SingleStoreDB 中利用向量数据的开发者，有一个综合教程可用，指导他们完成[使用向量数据](https://docs.singlestore.com/managed-service/en/developer-resources/functional-extensions/working-with-vector-data.html)的复杂过程。本教程深入介绍了 SingleStoreDB 中的向量存储，展示了其基于向量相似性促进搜索的能力。利用向量索引，可以以惊人的速度执行查询，实现快速检索相关数据。
 
-Moreover, SingleStoreDB's Vector Store seamlessly integrates with [full-text indexing based on Lucene](https://docs.singlestore.com/cloud/developer-resources/functional-extensions/working-with-full-text-search/), enabling powerful text similarity searches. Users can filter search results based on selected fields of document metadata objects, enhancing query precision.
+此外，SingleStoreDB 的向量存储与[基于 Lucene 的全文索引](https://docs.singlestore.com/cloud/developer-resources/functional-extensions/working-with-full-text-search/)无缝集成，启用强大的文本相似性搜索。用户可以根据文档元数据对象的选定字段过滤搜索结果，提高查询精度。
 
-What sets SingleStoreDB apart is its ability to combine vector and full-text searches in various ways, offering flexibility and versatility. Whether prefiltering by text or vector similarity and selecting the most relevant data, or employing a weighted sum approach to compute a final similarity score, developers have multiple options at their disposal.
+SingleStoreDB 的独特之处在于它能够以各种方式组合向量和全文搜索，提供灵活性和多功能性。无论是通过文本或向量相似性预过滤并选择最相关的数据，还是采用加权求和方法计算最终相似性分数，开发者都有多种选择。
 
-In essence, SingleStoreDB provides a comprehensive solution for managing and querying vector data, offering unparalleled performance and flexibility for AI-driven applications.
+总之，SingleStoreDB 提供了一个全面的向量数据管理和查询解决方案，为 AI 驱动的应用提供无与伦比的性能和灵活性。
 
 <Tip>
-**Compatibility**
-
-Only available on Node.js.
+**兼容性**：仅在 Node.js 上可用。
 </Tip>
 
-LangChain.js requires the `mysql2` library to create a connection to a SingleStoreDB instance.
+LangChain.js 需要 `mysql2` 库来创建与 SingleStoreDB 实例的连接。
 
-## Setup
+## 设置
 
-1. Establish a SingleStoreDB environment. You have the flexibility to choose between [Cloud-based](https://docs.singlestore.com/managed-service/en/getting-started-with-singlestoredb-cloud.html) or [On-Premise](https://docs.singlestore.com/db/v8.1/en/developer-resources/get-started-using-singlestoredb-for-free.html) editions.
-2. Install the mysql2 JS client
+1. 建立 SingleStoreDB 环境。你可以灵活选择[基于云的](https://docs.singlestore.com/managed-service/en/getting-started-with-singlestoredb-cloud.html)或[本地](https://docs.singlestore.com/db/v8.1/en/developer-resources/get-started-using-singlestoredb-for-free.html)版本。
+2. 安装 mysql2 JS 客户端
 
 ```bash npm
 npm install -S mysql2
 ```
-## Usage
+## 用法
 
-`SingleStoreVectorStore` manages a connection pool. It is recommended to call `await store.end();` before terminating your application to assure all connections are appropriately closed and prevent any possible resource leaks.
+`SingleStoreVectorStore` 管理连接池。建议在终止应用程序之前调用 `await store.end();` 以确保所有连接都已正确关闭并防止任何可能的资源泄漏。
 
-### Standard usage
+### 标准用法
 
 <Tip>
 See [this section for general instructions on installing LangChain packages](/oss/langchain/install).
@@ -71,7 +69,7 @@ export const run = async () => {
 };
 ```
 
-### Metadata filtering
+### 元数据过滤
 
 ```typescript
 import { SingleStoreVectorStore } from "@langchain/community/vectorstores/singlestore";
@@ -107,13 +105,13 @@ export const run = async () => {
 };
 ```
 
-### Vector indexes
+### 向量索引
 
-Enhance your search efficiency with SingleStore DB version 8.5 or above by leveraging [ANN vector indexes](https://docs.singlestore.com/cloud/reference/sql-reference/vector-functions/vector-indexing/).
-By setting `useVectorIndex: true` during vector store object creation, you can activate this feature.
-Additionally, if your vectors differ in dimensionality from the default OpenAI embedding size of 1536, ensure to specify the `vectorSize` parameter accordingly.
+通过使用 SingleStore DB 8.5 或更高版本，利用 [ANN 向量索引](https://docs.singlestore.com/cloud/reference/sql-reference/vector-functions/vector-indexing/)提升搜索效率。
+通过在创建向量存储对象时设置 `useVectorIndex: true`，你可以激活此功能。
+此外，如果你的向量维度与默认的 OpenAI 嵌入大小 1536 不同，请确保相应地指定 `vectorSize` 参数。
 
-### Hybrid search
+### 混合搜索
 
 ```typescript
 import { SingleStoreVectorStore } from "@langchain/community/vectorstores/singlestore";
@@ -204,7 +202,7 @@ export const run = async () => {
 };
 ```
 
-## Related
+## 相关
 
-- Vector store [conceptual guide](/oss/integrations/vectorstores)
-- Vector store [how-to guides](/oss/integrations/vectorstores)
+- 向量存储[概念指南](/oss/integrations/vectorstores)
+- 向量存储[操作指南](/oss/integrations/vectorstores)

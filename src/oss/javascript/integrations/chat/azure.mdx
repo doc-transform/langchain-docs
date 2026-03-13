@@ -1,44 +1,44 @@
 ---
-title: "AzureChatOpenAI integration"
+title: "AzureChatOpenAI 集成"
 sidebarTitle: "Chat"
-description: "Integrate with the AzureChatOpenAI chat model using LangChain JavaScript."
+description: "使用 LangChain JavaScript 集成 AzureChatOpenAI 对话模型。"
 ---
 
-Azure OpenAI is a Microsoft Azure service that provides powerful language models from OpenAI.
+Azure OpenAI 是 Microsoft Azure 提供的服务，提供来自 OpenAI 的强大语言模型。
 
-This will help you getting started with AzureChatOpenAI [chat models](/oss/langchain/models). For detailed documentation of all AzureChatOpenAI features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_openai.AzureChatOpenAI.html).
+本文将帮助你开始使用 AzureChatOpenAI [对话模型](/oss/langchain/models)。所有 AzureChatOpenAI 功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain_openai.AzureChatOpenAI.html)。
 
-## Overview
+## 概览
 
-### Integration details
+### 集成详情
 
 | Class | Package | Serializable | [PY support](https://python.langchain.com/docs/integrations/chat/azure_chat_openai) | Downloads | Version |
 | :--- | :--- | :---: |  :---: | :---: | :---: |
 | [AzureChatOpenAI](https://api.js.langchain.com/classes/langchain_openai.AzureChatOpenAI.html) | [`@langchain/openai`](https://www.npmjs.com/package/@langchain/openai) | ✅ | ✅ | ![NPM - Downloads](https://img.shields.io/npm/dm/@langchain/openai?style=flat-square&label=%20&) | ![NPM - Version](https://img.shields.io/npm/v/@langchain/openai?style=flat-square&label=%20&) |
 
-### Model features
+### 模型特性
 
-See the links in the table headers below for guides on how to use specific features.
+有关如何使用特定功能的指南，请参见下表标题中的链接。
 
 | [Tool calling](/oss/langchain/tools) | [Structured output](/oss/langchain/structured-output) | [Image input](/oss/langchain/messages#multimodal) | Audio input | Video input | [Token-level streaming](/oss/langchain/streaming/) | [Token usage](/oss/langchain/models#token-usage) | [Logprobs](/oss/langchain/models#log-probabilities) |
 | :---: | :---: | :---: |  :---: | :---: | :---: | :---: | :---: |
 | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ |
 
-## Setup
+## 安装
 
-[Azure OpenAI](https://azure.microsoft.com/products/ai-services/openai-service/) is a cloud service to help you quickly develop generative AI experiences with a diverse set of prebuilt and curated models from OpenAI, Meta and beyond.
+[Azure OpenAI](https://azure.microsoft.com/products/ai-services/openai-service/) 是一项云服务，帮助你使用 OpenAI、Meta 等提供的多种预构建和精选模型快速开发生成式 AI 体验。
 
-LangChain.js supports integration with [Azure OpenAI](https://azure.microsoft.com/products/ai-services/openai-service/) using the new Azure integration in the [OpenAI SDK](https://github.com/openai/openai-node).
+LangChain.js 支持通过 [OpenAI SDK](https://github.com/openai/openai-node) 中的新 Azure 集成与 [Azure OpenAI](https://azure.microsoft.com/products/ai-services/openai-service/) 进行集成。
 
-You can learn more about Azure OpenAI and its difference with the OpenAI API on [this page](https://learn.microsoft.com/azure/ai-services/openai/overview).
+你可以在[此页面](https://learn.microsoft.com/azure/ai-services/openai/overview)了解更多关于 Azure OpenAI 及其与 OpenAI API 的区别。
 
-### Credentials
+### 凭据
 
-If you don't have an Azure account, you can [create a free account](https://azure.microsoft.com/free/) to get started.
+如果你没有 Azure 账户，可以[创建一个免费账户](https://azure.microsoft.com/free/)来开始使用。
 
-You'll also need to have an Azure OpenAI instance deployed. You can deploy a version on Azure Portal following [this guide](https://learn.microsoft.com/azure/ai-services/openai/how-to/create-resource?pivots=web-portal).
+你还需要部署一个 Azure OpenAI 实例。你可以按照[本指南](https://learn.microsoft.com/azure/ai-services/openai/how-to/create-resource?pivots=web-portal)在 Azure 门户上部署。
 
-Once you have your instance running, make sure you have the name of your instance and key. You can find the key in the Azure Portal, under the "Keys and Endpoint" section of your instance. Then, if using Node.js, you can set your credentials as environment variables:
+实例运行后，确保你有实例名称和密钥。你可以在 Azure 门户的实例“密钥和端点”部分找到密钥。然后，如果使用 Node.js，你可以将凭据设置为环境变量：
 
 ```bash
 AZURE_OPENAI_API_INSTANCE_NAME=<YOUR_INSTANCE_NAME>
@@ -47,16 +47,16 @@ AZURE_OPENAI_API_KEY=<YOUR_KEY>
 AZURE_OPENAI_API_VERSION="2024-02-01"
 ```
 
-If you want to get automated tracing of your model calls you can also set your [LangSmith](/langsmith/home) API key by uncommenting below:
+如果你想获取模型调用的自动追踪，你还可以通过取消下方注释来设置你的 [LangSmith](/langsmith/home) API 密钥：
 
 ```bash
 # export LANGSMITH_TRACING="true"
 # export LANGSMITH_API_KEY="your-api-key"
 ```
 
-### Installation
+### 安装
 
-The LangChain AzureChatOpenAI integration lives in the `@langchain/openai` package:
+LangChain AzureChatOpenAI 集成位于 `@langchain/openai` 包中：
 
 <CodeGroup>
 ```bash npm
@@ -70,9 +70,9 @@ pnpm add @langchain/openai @langchain/core
 ```
 </CodeGroup>
 
-## Instantiation
+## 实例化
 
-Now we can instantiate our model object and generate chat completions:
+现在我们可以实例化模型对象并生成对话补全：
 
 ```typescript
 import { AzureChatOpenAI } from "@langchain/openai"
@@ -89,7 +89,7 @@ const llm = new AzureChatOpenAI({
 })
 ```
 
-## Invocation
+## 调用
 
 ```typescript
 const aiMsg = await llm.invoke([
@@ -133,9 +133,9 @@ console.log(aiMsg.content)
 J'adore la programmation.
 ```
 
-## Using Azure Managed identity
+## 使用 Azure 托管标识
 
-If you're using Azure Managed Identity, you can configure the credentials like this:
+如果你使用 Azure 托管标识，可以按如下方式配置凭据：
 
 ```typescript
 import {
@@ -158,10 +158,10 @@ const llmWithManagedIdentity = new AzureChatOpenAI({
 });
 ```
 
-## Using a different domain
+## 使用不同的域名
 
-If your instance is hosted under a domain other than the default `openai.azure.com`, you'll need to use the alternate `AZURE_OPENAI_BASE_PATH` environment variable.
-For example, here's how you would connect to the domain `https://westeurope.api.microsoft.com/openai/deployments/{DEPLOYMENT_NAME}`:
+如果你的实例托管在非默认的 `openai.azure.com` 域名下，你需要使用备选的 `AZURE_OPENAI_BASE_PATH` 环境变量。
+例如，以下是如何连接到 `https://westeurope.api.microsoft.com/openai/deployments/{DEPLOYMENT_NAME}` 域名：
 
 ```typescript
 import { AzureChatOpenAI } from "@langchain/openai";
@@ -177,9 +177,9 @@ const llmWithDifferentDomain = new AzureChatOpenAI({
 
 ```
 
-## Custom headers
+## 自定义请求头
 
-You can specify custom headers by passing in a `configuration` field:
+你可以通过传入 `configuration` 字段来指定自定义请求头：
 
 ```typescript
 import { AzureChatOpenAI } from "@langchain/openai";
@@ -199,15 +199,15 @@ const llmWithCustomHeaders = new AzureChatOpenAI({
 await llmWithCustomHeaders.invoke("Hi there!");
 ```
 
-The `configuration` field also accepts other `ClientOptions` parameters accepted by the official SDK.
+`configuration` 字段还接受官方 SDK 支持的其他 `ClientOptions` 参数。
 
-**Note:** The specific header `api-key` currently cannot be overridden in this manner and will pass through the value from `azureOpenAIApiKey`.
+**注意：** 特定的 `api-key` 请求头目前无法通过这种方式覆盖，它会传递 `azureOpenAIApiKey` 的值。
 
-## Migration from Azure OpenAI SDK
+## 从 Azure OpenAI SDK 迁移
 
-If you are using the deprecated Azure OpenAI SDK with the `@langchain/azure-openai` package, you can update your code to use the new Azure integration following these steps:
+如果你正在使用已废弃的 Azure OpenAI SDK 和 `@langchain/azure-openai` 包，你可以按照以下步骤更新代码以使用新的 Azure 集成：
 
-1. Install the new `@langchain/openai` package and remove the previous `@langchain/azure-openai` package:
+1. 安装新的 `@langchain/openai` 包并卸载之前的 `@langchain/azure-openai` 包：
 
 <CodeGroup>
 ```bash npm
@@ -225,13 +225,13 @@ pnpm add @langchain/openai
 npm uninstall @langchain/azure-openai
 ```
 
-2. Update your imports to use the new @[`AzureChatOpenAI`] class from the `@langchain/openai` package:
+2. 更新导入语句以使用 `@langchain/openai` 包中的新 @[`AzureChatOpenAI`] 类：
 
    ```typescript
    import { AzureChatOpenAI } from "@langchain/openai";
    ```
 
-3. Update your code to use the new @[`AzureChatOpenAI`] class and pass the required parameters:
+3. 更新代码以使用新的 @[`AzureChatOpenAI`] 类并传入所需参数：
 
    ```typescript
    const model = new AzureChatOpenAI({
@@ -242,14 +242,14 @@ npm uninstall @langchain/azure-openai
    });
    ```
 
-   Notice that the constructor now requires the `azureOpenAIApiInstanceName` parameter instead of the `azureOpenAIEndpoint` parameter, and adds the `azureOpenAIApiVersion` parameter to specify the API version.
+   注意，构造函数现在需要 `azureOpenAIApiInstanceName` 参数而不是 `azureOpenAIEndpoint` 参数，并添加了 `azureOpenAIApiVersion` 参数来指定 API 版本。
 
-   - If you were using Azure Managed Identity, you now need to use the `azureADTokenProvider` parameter to the constructor instead of `credentials`, see the [Azure Managed Identity](#using-azure-managed-identity) section for more details.
+   - 如果你之前使用 Azure 托管标识，现在需要使用构造函数的 `azureADTokenProvider` 参数而不是 `credentials`，详情请参见 [Azure 托管标识](#using-azure-managed-identity) 部分。
 
-   - If you were using environment variables, you now have to set the `AZURE_OPENAI_API_INSTANCE_NAME` environment variable instead of `AZURE_OPENAI_API_ENDPOINT`, and add the `AZURE_OPENAI_API_VERSION` environment variable to specify the API version.
+   - 如果你之前使用环境变量，现在需要设置 `AZURE_OPENAI_API_INSTANCE_NAME` 环境变量而不是 `AZURE_OPENAI_API_ENDPOINT`，并添加 `AZURE_OPENAI_API_VERSION` 环境变量来指定 API 版本。
 
 ---
 
-## API reference
+## API 参考
 
-For detailed documentation of all AzureChatOpenAI features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_openai.AzureChatOpenAI.html).
+所有 AzureChatOpenAI 功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain_openai.AzureChatOpenAI.html)。

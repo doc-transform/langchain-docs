@@ -1,65 +1,60 @@
 ---
-title: Implement a LangChain integration
-sidebarTitle: Implement
+title: 实现 LangChain 集成
+sidebarTitle: 实现
 ---
 
-Integration packages are Python packages that users can install for use in their projects. They implement one or more components that adhere to the LangChain interface standards.
+集成包是用户可以安装并在项目中使用的 Python 包。它们需要实现一个或多个符合 LangChain 接口标准的组件。
 
-LangChain components are subclasses of base classes in [`langchain-core`](https://github.com/langchain-ai/langchain/tree/master/libs/core). Examples include [chat models](/oss/integrations/chat), [tools](/oss/integrations/tools), [retrievers](/oss/integrations/retrievers), and more.
+LangChain 组件是 [`langchain-core`](https://github.com/langchain-ai/langchain/tree/master/libs/core) 中基类的子类。示例包括 [聊天模型](/oss/integrations/chat)、[工具](/oss/integrations/tools)、[检索器](/oss/integrations/retrievers) 等。
 
-Your integration package will typically implement a subclass of at least one of these components. Expand the tabs below to see details on each.
+你的集成包通常需要实现至少一个组件的子类。展开下方的标签页查看各组件的详细信息。
 
 <Tabs>
-    <Tab title="Chat Models">
-        Chat models are subclasses of the @[`BaseChatModel`] class. They implement methods for generating chat completions, handling message formatting, and managing model parameters.
+    <Tab title="聊天模型">
+        聊天模型是 @[`BaseChatModel`] 类的子类。它们需要实现生成聊天补全、处理消息格式化以及管理模型参数的方法。
 
         <Warning>
-            :::python
-            The chat model integration guide is currently WIP. In the meantime, read the [chat model conceptual guide](/oss/langchain/models) for details on how LangChain chat models function. You may also refer to existing integrations in the [LangChain repo](https://github.com/langchain-ai/langchain/tree/master/libs/partners)
-            :::
-            :::js
-            The chat model integration guide is currently WIP. In the meantime, read the [chat model conceptual guide](/oss/langchain/models) for details on how LangChain chat models function. You may also refer to existing integrations in the [LangChain repo](https://github.com/langchain-ai/langchainjs/tree/main/libs/providers)
-            :::
+            聊天模型集成指南目前正在编写中。在此期间，请阅读 [聊天模型概念指南](/oss/langchain/models) 了解 LangChain 聊天模型的工作原理。
         </Warning>
     </Tab>
-    <Tab title="Tools">
-        Tools are used in 2 main ways:
+    <Tab title="工具">
+        工具主要有两种用途：
 
-        1. To define an "input schema" or "args schema" to pass to a chat model's tool calling feature along with a text request, such that the chat model can generate a "tool call", or parameters to call the tool with.
-        2. To take a "tool call" as generated above, and take some action and return a response that can be passed back to the chat model as a ToolMessage.
+        1. 定义"输入模式"或"参数模式"，连同文本请求一起传递给聊天模型的工具调用功能，使聊天模型能够生成"工具调用"（即调用工具所需的参数）。
+        2. 接收上述生成的"工具调用"，执行相应操作并返回响应，该响应可作为 ToolMessage 回传给聊天模型。
 
-        The Tools class must inherit from the @[`BaseTool`] base class. This interface has 3 properties and 2 methods that should be implemented in a subclass.
+        工具类必须继承 @[`BaseTool`] 基类。该接口有 3 个属性和 2 个方法需要在子类中实现。
 
         <Warning>
-            The tools integration guide is currently WIP. In the meantime, read the [tools conceptual guide](/oss/langchain/tools) for details on how LangChain tools function.
+            工具集成指南目前正在编写中。在此期间，请阅读 [工具概念指南](/oss/langchain/tools) 了解 LangChain 工具的工作原理。
         </Warning>
     </Tab>
-    <Tab title="Retrievers">
-        Retrievers are used to retrieve documents from APIs, databases, or other sources based on a query. The Retriever class must inherit from the BaseRetriever base class.
+    <Tab title="检索器">
+        检索器用于根据查询从 API、数据库或其他数据源中检索文档。检索器类必须继承 BaseRetriever 基类。
 
         <Warning>
-            The retriever integration guide is currently WIP. In the meantime, read the [retriever conceptual guide](/oss/integrations/retrievers) for details on how LangChain retrievers function.
+            检索器集成指南目前正在编写中。在此期间，请阅读 [检索器概念指南](/oss/integrations/retrievers) 了解 LangChain 检索器的工作原理。
         </Warning>
     </Tab>
-    <Tab title="Vector Stores">
-        All vector stores must inherit from the @[`VectorStore`] base class. This interface consists of methods for writing, deleting and searching for documents in the vector store.
+    <Tab title="向量存储">
+        所有向量存储必须继承 @[`VectorStore`] 基类。该接口包含用于写入、删除和搜索向量存储中文档的方法。
 
-        See the [vector store integration guide](/oss/integrations/vectorstores) for details on implementing a vector store integration.
+        有关实现向量存储集成的详细信息，请参阅 [向量存储集成指南](/oss/integrations/vectorstores)。
 
         <Warning>
-            The vector store integration guide is currently WIP. In the meantime, read the [vector store conceptual guide](/oss/integrations/vectorstores) for details on how LangChain vector stores function.
+            向量存储集成指南目前正在编写中。在此期间，请阅读 [向量存储概念指南](/oss/integrations/vectorstores) 了解 LangChain 向量存储的工作原理。
         </Warning>
     </Tab>
-    <Tab title="Embeddings">
-        Embedding models are subclasses of the @[`Embeddings`] class.
+    <Tab title="嵌入模型">
+        嵌入模型是 @[`Embeddings`] 类的子类。
 
         <Warning>
-            The embedding model integration guide is currently WIP. In the meantime, read the [embedding model conceptual guide](/oss/integrations/embeddings) for details on how LangChain embedding models function.
+            嵌入模型集成指南目前正在编写中。在此期间，请阅读 [嵌入模型概念指南](/oss/integrations/text_embedding) 了解 LangChain 嵌入模型的工作原理。
         </Warning>
     </Tab>
-    <Tab title="Sandboxes">
-        Sandbox integrations enable [Deep Agents](/oss/deepagents/overview) to run code in isolated environments.
+    <Tab title="沙箱">
+        沙箱集成使 [Deep Agents](/oss/deepagents/overview) 能够在隔离环境中运行代码。
 
-        **Reference implementation:** See the [Daytona partner integration](https://github.com/langchain-ai/deepagents/tree/main/libs/partners/daytona) for structure and patterns.
+        **参考实现：** 请参阅 [Daytona 合作伙伴集成](https://github.com/langchain-ai/deepagents/tree/main/libs/partners/daytona) 了解结构和设计模式。
     </Tab>
 </Tabs>

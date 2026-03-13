@@ -1,38 +1,38 @@
 ---
-title: Structured Output
-description: Render structured agent responses with custom UI components instead of plain text
+title: 结构化输出
+description: 使用自定义 UI 组件渲染结构化的 Agent 响应，而非纯文本
 ---
 
-Structured output lets the agent return typed, machine-readable data instead of plain text. Instead of rendering a single string, you get a structured object you can map to any UI: cards, tables, charts, step-by-step breakdowns, or domain-specific renderers.
+结构化输出让 Agent 返回类型化的、机器可读的数据，而非纯文本。你得到的不是单个字符串，而是一个结构化对象，可以映射到任何 UI：卡片、表格、图表、分步说明或特定领域的渲染器。
 
 import { PatternEmbed } from "/snippets/pattern-embed.jsx"
 
 <PatternEmbed pattern="structured-output-latex" />
 
-## What is structured output?
+## 什么是结构化输出？
 
-Instead of returning a free-form text response, the agent uses a tool call to return a structured object conforming to a predefined schema. This gives you:
+Agent 不返回自由格式的文本响应，而是使用工具调用返回一个符合预定义 schema 的结构化对象。这带来了：
 
-- **Type-safe data**: parse the response into a known TypeScript type
-- **Precise rendering control**: render each field with its own UI treatment
-- **Consistent formatting**: every response follows the same structure regardless of the underlying model
+- **类型安全的数据**：将响应解析为已知的 TypeScript 类型
+- **精确的渲染控制**：为每个字段使用独立的 UI 处理
+- **一致的格式**：无论底层模型如何，每个响应都遵循相同的结构
 
-The agent accomplishes this by calling a "structured output" tool whose arguments contain the response data. The tool itself doesn't execute any logic and is purely a vehicle for returning typed data.
+Agent 通过调用一个"结构化输出"工具来实现这一点，该工具的参数包含响应数据。工具本身不执行任何逻辑——它纯粹是返回类型化数据的载体。
 
-## Use cases
+## 使用场景
 
-- **Product comparisons**: feature tables, pros/cons lists, ratings
-- **Data analysis**: summaries with metrics, breakdowns, and highlights
-- **Step-by-step guides**: ordered instructions with descriptions and code snippets
-- **Recipes**: ingredients, steps, timings, and nutritional info
-- **Math and science**: formulas rendered with LaTeX, step-by-step derivations
-- **Travel planning**: itineraries with dates, locations, and cost estimates
+- **产品比较**：特性表格、优缺点列表、评分
+- **数据分析**：带有指标、细分和亮点的摘要
+- **分步指南**：带有描述和代码片段的有序指令
+- **食谱**：食材、步骤、时间和营养信息
+- **数学和科学**：使用 LaTeX 渲染的公式、逐步推导
+- **旅行规划**：带有日期、地点和费用估算的行程
 
-## Define a schema
+## 定义 schema
 
-Define a TypeScript type for the structured data the agent returns. The shape of this schema determines how you render the UI.
+为 Agent 返回的结构化数据定义 TypeScript 类型。schema 的形状决定了你如何渲染 UI。
 
-Here's an example for a recipe assistant:
+以下是食谱助手的示例：
 
 ```ts
 interface Ingredient {
@@ -56,20 +56,20 @@ interface Recipe {
 }
 ```
 
-| Field | Type | Description |
+| 字段 | 类型 | 描述 |
 |---|---|---|
-| `title` | `string` | Name of the recipe |
-| `description` | `string` | Short summary of the dish |
-| `servings` | `number` | Number of servings |
-| `ingredients` | `Ingredient[]` | List of ingredients with amounts and units |
-| `steps` | `RecipeStep[]` | Ordered preparation steps |
-| `totalTime` | `string` | Estimated total preparation and cooking time |
+| `title` | `string` | 食谱名称 |
+| `description` | `string` | 菜品简短描述 |
+| `servings` | `number` | 份量 |
+| `ingredients` | `Ingredient[]` | 包含用量和单位的食材列表 |
+| `steps` | `RecipeStep[]` | 有序的制作步骤 |
+| `totalTime` | `string` | 预计总准备和烹饪时间 |
 
-Your schema can be anything. The pattern works the same way regardless of shape.
+你的 schema 可以是任何形状。无论 schema 结构如何，模式的工作方式相同。
 
-## Extract structured output from messages
+## 从消息中提取结构化输出
 
-The structured output lives in the `tool_calls` array of the last `AIMessage`. Extract it by finding the AI message and accessing the first tool call's arguments:
+结构化输出位于最后一条 `AIMessage` 的 `tool_calls` 数组中。通过找到 AI 消息并访问第一个工具调用的参数来提取：
 
 ```ts
 import { AIMessage } from "@langchain/core/messages";
@@ -87,14 +87,14 @@ function extractStructuredOutput<T>(messages: any[]): T | null {
 ```
 
 <Note>
-The structured output tool call may not have `args` populated until the agent finishes streaming. During streaming, `args` may be partially populated or undefined. Always check for completeness before rendering.
+结构化输出的工具调用在 Agent 完成流式输出前可能没有填充 `args`。流式传输期间，`args` 可能部分填充或未定义。渲染前始终检查完整性。
 </Note>
 
-## Set up `useStream`
+## 设置 `useStream`
 
 :::python
 
-Define a TypeScript interface matching your agent's state schema and pass it as a type parameter to `useStream` for type-safe access to state values. In the examples below, replace `typeof myAgent` with your interface name:
+定义一个与 Agent 状态 schema 匹配的 TypeScript 接口，并将其作为类型参数传递给 `useStream`，以获得类型安全的状态值访问。在下面的示例中，将 `typeof myAgent` 替换为你的接口名称：
 
 ```ts
 import type { BaseMessage } from "@langchain/core/messages";
@@ -108,7 +108,7 @@ interface AgentState {
 
 :::js
 
-Import your agent and pass `typeof myAgent` as a type parameter to `useStream` for type-safe access to state values:
+导入你的 Agent 并将 `typeof myAgent` 作为类型参数传递给 `useStream`，以获得类型安全的状态值访问：
 
 ```ts
 import type { myAgent } from "./agent";
@@ -241,11 +241,9 @@ export class RecipeChatComponent {
 
 </CodeGroup>
 
-## Render the structured data
+## 渲染结构化数据
 
-Once you have a typed object, build a component that maps each field to the
-appropriate UI element. This is the core of the pattern: turning structured
-data into a purpose-built interface.
+获得类型化对象后，构建一个将每个字段映射到适当 UI 元素的组件。这是模式的核心：将结构化数据转化为专门构建的界面。
 
 ```tsx
 function RecipeCard({ recipe }: { recipe: Recipe }) {
@@ -288,22 +286,22 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
 }
 ```
 
-The same approach works for any domain. Map each field to the UI element that best represents it:
+相同的方法适用于任何领域。将每个字段映射到最能表示它的 UI 元素：
 
-| Data type | Rendering strategy |
+| 数据类型 | 渲染策略 |
 |---|---|
-| Plain text | Paragraphs, headings, list items |
-| Numbers/metrics | Stat cards, progress bars, badges |
-| Arrays | Lists, tables, grids |
-| Nested objects | Nested cards, accordion sections |
-| Markdown | Markdown renderer (e.g. `react-markdown`) |
-| LaTeX/math | KaTeX or MathJax |
-| Dates/times | Formatted timestamps, relative time |
-| URLs | Links, embedded previews |
+| 纯文本 | 段落、标题、列表项 |
+| 数字/指标 | 统计卡片、进度条、徽章 |
+| 数组 | 列表、表格、网格 |
+| 嵌套对象 | 嵌套卡片、手风琴折叠 |
+| Markdown | Markdown 渲染器（如 `react-markdown`） |
+| LaTeX/数学公式 | KaTeX 或 MathJax |
+| 日期/时间 | 格式化时间戳、相对时间 |
+| URL | 链接、嵌入预览 |
 
-## Handle partial streaming data
+## 处理部分流式数据
 
-During streaming, the tool call arguments may be incomplete JSON. Guard against this in your extraction logic:
+流式传输期间，工具调用参数可能是不完整的 JSON。在提取逻辑中进行防护：
 
 ```ts
 function extractStructuredOutput<T>(
@@ -327,7 +325,7 @@ function extractStructuredOutput<T>(
 }
 ```
 
-Use the `requiredFields` parameter to wait until critical fields are populated before rendering:
+使用 `requiredFields` 参数等待关键字段填充后再渲染：
 
 ```ts
 const recipe = extractStructuredOutput<Recipe>(stream.messages, [
@@ -337,9 +335,9 @@ const recipe = extractStructuredOutput<Recipe>(stream.messages, [
 ]);
 ```
 
-## Render progressively during streaming
+## 流式传输期间渐进式渲染
 
-Rather than waiting for the complete structured output, render fields as they arrive. This gives users immediate feedback while the agent is still generating:
+与其等待完整的结构化输出，不如在字段到达时就渲染。这在 Agent 仍在生成时给用户即时反馈：
 
 ```tsx
 function ProgressiveRecipeCard({ messages }: { messages: any[] }) {
@@ -381,14 +379,12 @@ function ProgressiveRecipeCard({ messages }: { messages: any[] }) {
 ```
 
 <Tip>
-Progressive rendering works well when the schema has a natural top-to-bottom
-order: title, then description, then details. The agent typically generates
-fields in schema order, so the UI fills in naturally.
+当 schema 有自然的从上到下顺序时，渐进式渲染效果最好：先是标题，然后是描述，再是详细信息。Agent 通常按 schema 顺序生成字段，因此 UI 会自然填充。
 </Tip>
 
-## Reset and re-submit
+## 重置和重新提交
 
-To let the user submit a new query after viewing a result, add a button that starts a new thread:
+让用户在查看结果后提交新查询，添加一个开始新线程的按钮：
 
 ```tsx
 {recipe && (
@@ -398,13 +394,13 @@ To let the user submit a new query after viewing a result, add a button that sta
 )}
 ```
 
-This clears the current conversation and lets the user begin a fresh interaction.
+这会清除当前对话，让用户开始新的交互。
 
-## Best practices
+## 最佳实践
 
-- **Validate before rendering**: always check that required fields exist before rendering, since streaming may deliver partial data
-- **Use a generic extraction function**: parameterize your extraction logic with a type and required fields so it works across different schemas
-- **Render progressively**: show fields as they arrive rather than waiting for the complete object, so users see immediate feedback
-- **Provide fallback representations**: if a field supports rich rendering (LaTeX, Markdown, charts), also include a plain-text equivalent in your schema as a fallback
-- **Keep schemas flat when possible**: deeply nested schemas are harder to render progressively and more likely to break during partial streaming
-- **Match UI to data**: choose the rendering strategy that best represents each field type (tables for arrays, cards for nested objects, badges for status fields)
+- **渲染前验证**：始终在渲染前检查必需字段是否存在，因为流式传输可能传递部分数据
+- **使用通用提取函数**：用类型和必需字段参数化你的提取逻辑，使其适用于不同的 schema
+- **渐进式渲染**：在字段到达时就展示，而不是等待完整对象，让用户看到即时反馈
+- **提供回退表示**：如果字段支持富渲染（LaTeX、Markdown、图表），也在 schema 中包含纯文本等效项作为回退
+- **尽可能保持 schema 扁平**：深度嵌套的 schema 更难渐进式渲染，在部分流式传输期间更容易出错
+- **将 UI 与数据匹配**：选择最能表示每种字段类型的渲染策略（数组用表格、嵌套对象用卡片、状态字段用徽章）

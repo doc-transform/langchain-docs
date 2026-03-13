@@ -1,18 +1,18 @@
 ---
-title: "RaycastAI integration"
-description: "Integrate with the RaycastAI LLM using LangChain JavaScript."
+title: "RaycastAI 集成"
+description: "使用 LangChain JavaScript 集成 RaycastAI LLM 模型。"
 ---
 
-> **Note:** This is a community-built integration and is not officially supported by Raycast.
+> **注意：** 这是社区构建的集成，不是 Raycast 官方支持的。
 
-You can utilize the LangChain's RaycastAI class within the [Raycast Environment](https://developers.raycast.com/api-reference/ai) to enhance your Raycast extension with LangChain's capabilities.
+你可以在 [Raycast 环境](https://developers.raycast.com/api-reference/ai)中使用 LangChain 的 RaycastAI 类来增强你的 Raycast 扩展的 LangChain 能力。
 
-- The RaycastAI class is only available in the Raycast environment and only to [Raycast Pro](https://www.raycast.com/pro) users as of August 2023. For more information, see [how to create a Raycast extension](https://developers.raycast.com/).
+- RaycastAI 类仅在 Raycast 环境中可用，且仅限 [Raycast Pro](https://www.raycast.com/pro) 用户使用（截至 2023 年 8 月）。你可以在[此处](https://developers.raycast.com/)了解如何创建 Raycast 扩展。
 
-- There is a rate limit of approx 10 requests per minute for each Raycast Pro user. If you exceed this limit, you will receive an error. You can set your desired rpm limit by passing `rateLimitPerMinute` to the `RaycastAI` constructor as shown in the example, as this rate limit may change in the future.
+- 每个 Raycast Pro 用户大约每分钟有 10 次请求的速率限制。如果超过该限制，你将收到错误。你可以通过将 `rateLimitPerMinute` 传递给 `RaycastAI` 构造函数来设置所需的每分钟请求数限制（如示例所示），因为该限制可能会在未来发生变化。
 
 <Tip>
-See [this section for general instructions on installing LangChain packages](/oss/langchain/install).
+安装 LangChain 包的通用说明请参见[此章节](/oss/langchain/install)。
 </Tip>
 
 ```bash npm
@@ -30,7 +30,7 @@ const model = new RaycastAI({
 });
 ```
 
-## Related
+## 相关链接
 
 
-- [Models guide](/oss/langchain/models)
+- [模型指南](/oss/langchain/models)

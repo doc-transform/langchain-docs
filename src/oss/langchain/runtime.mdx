@@ -1,45 +1,45 @@
 ---
-title: Runtime
+title: 运行时
 ---
 
-## Overview
+## 概述
 
 :::python
-LangChain's @[`create_agent`] runs on LangGraph's runtime under the hood.
+LangChain 的 @[`create_agent`] 底层运行在 LangGraph 的运行时之上。
 :::
 :::js
-LangChain's `createAgent` runs on LangGraph's runtime under the hood.
+LangChain 的 `createAgent` 底层运行在 LangGraph 的运行时之上。
 :::
-LangGraph exposes a @[`Runtime`] object with the following information:
+LangGraph 暴露了一个 @[`Runtime`] 对象，包含以下信息：
 
-1. **Context**: static information like user id, db connections, or other dependencies for an agent invocation
-2. **Store**: a @[BaseStore] instance used for [long-term memory](/oss/langchain/long-term-memory)
-3. **Stream writer**: an object used for streaming information via the `"custom"` stream mode
+1. **Context**：静态信息，如用户 ID、数据库连接或 Agent 调用的其他依赖
+2. **Store**：一个 @[BaseStore] 实例，用于[长期记忆](/oss/langchain/long-term-memory)
+3. **Stream writer**：一个用于通过 `"custom"` 流式模式传输信息的对象
 
 :::python
 <Tip>
-Runtime context provides **dependency injection** for your tools and middleware. Instead of hardcoding values or using global state, you can inject runtime dependencies (like database connections, user IDs, or configuration) when invoking your agent. This makes your tools more testable, reusable, and flexible.
+运行时 context 为你的工具和中间件提供了**依赖注入**。无需硬编码值或使用全局状态，你可以在调用 Agent 时注入运行时依赖项（如数据库连接、用户 ID 或配置）。这使得你的工具更易测试、更可复用、更灵活。
 </Tip>
 :::
 
 :::js
 <Tip>
-The runtime context is how you thread data through your agent. Rather than storing things in global state, you can attach values—like a database connection, user session, or configuration—to the context and access them inside tools and middleware. This keeps things stateless, testable, and reusable.
+运行时 context 是你在 Agent 中传递数据的方式。你可以将值（如数据库连接、用户会话或配置）附加到 context 中，并在工具和中间件内部访问它们，而无需存储在全局状态中。这使得一切保持无状态、可测试且可复用。
 </Tip>
 :::
 
-You can access the runtime information within [tools](#inside-tools) and [middleware](#inside-middleware).
+你可以在[工具](#inside-tools)和[中间件](#inside-middleware)中访问运行时信息。
 
-## Access
+## 访问
 
 :::python
-When creating an agent with @[`create_agent`], you can specify a `context_schema` to define the structure of the `context` stored in the agent @[`Runtime`].
+使用 @[`create_agent`] 创建 Agent 时，你可以指定 `context_schema` 来定义存储在 Agent @[`Runtime`] 中的 `context` 结构。
 :::
 :::js
-When creating an agent with `createAgent`, you can specify a `contextSchema` to define the structure of the `context` stored in the agent @[`Runtime`].
+使用 `createAgent` 创建 Agent 时，你可以指定 `contextSchema` 来定义存储在 Agent @[`Runtime`] 中的 `context` 结构。
 :::
 
-When invoking the agent, pass the `context` argument with the relevant configuration for the run:
+调用 Agent 时，传入 `context` 参数以及本次运行的相关配置：
 
 :::python
 ```python
@@ -88,16 +88,16 @@ const result = await agent.invoke(
 ```
 :::
 
-### Inside tools
+### 在工具内部
 
-You can access the runtime information inside tools to:
+你可以在工具内部访问运行时信息来：
 
-* Access the context
-* Read or write long-term memory
-* Write to the [custom stream](/oss/langchain/streaming#custom-updates) (ex, tool progress / updates)
+* 访问 context
+* 读写长期记忆
+* 写入[自定义流](/oss/langchain/streaming#custom-updates)（例如工具进度/更新）
 
 :::python
-Use the `ToolRuntime` parameter to access the @[`Runtime`] object inside a tool.
+使用 `ToolRuntime` 参数在工具内部访问 @[`Runtime`] 对象。
 
 ```python
 from dataclasses import dataclass
@@ -121,7 +121,7 @@ def fetch_user_email_preferences(runtime: ToolRuntime[Context]) -> str:  # [!cod
 ```
 :::
 :::js
-Use the `runtime` parameter to access the @[`Runtime`] object inside a tool.
+使用 `runtime` 参数在工具内部访问 @[`Runtime`] 对象。
 
 ```ts
 import * as z from "zod";
@@ -157,12 +157,12 @@ const fetchUserEmailPreferences = tool(
 ```
 :::
 
-### Inside middleware
+### 在中间件内部
 
-You can access runtime information in middleware to create dynamic prompts, modify messages, or control agent behavior based on user context.
+你可以在中间件中访问运行时信息，以创建动态提示词、修改消息或根据用户上下文控制 Agent 行为。
 
 :::python
-Use the `Runtime` parameter to access the @[`Runtime`] object inside [node-style hooks](/oss/langchain/middleware/custom#node-style-hooks).  For [wrap-style hooks](/oss/langchain/middleware/custom#wrap-style-hooks), the `Runtime` object is available inside the @[`ModelRequest`] parameter.
+使用 `Runtime` 参数在[节点式钩子](/oss/langchain/middleware/custom#node-style-hooks)内部访问 @[`Runtime`] 对象。对于[包装式钩子](/oss/langchain/middleware/custom#wrap-style-hooks)，@[`Runtime`] 对象可通过 @[`ModelRequest`] 参数获取。
 
 ```python
 from dataclasses import dataclass
@@ -177,20 +177,20 @@ from langgraph.runtime import Runtime
 class Context:
     user_name: str
 
-# Dynamic prompts
+# 动态提示词
 @dynamic_prompt
 def dynamic_system_prompt(request: ModelRequest) -> str:
     user_name = request.runtime.context.user_name  # [!code highlight]
     system_prompt = f"You are a helpful assistant. Address the user as {user_name}."
     return system_prompt
 
-# Before model hook
+# 模型调用前钩子
 @before_model
 def log_before_model(state: AgentState, runtime: Runtime[Context]) -> dict | None:  # [!code highlight]
     print(f"Processing request for user: {runtime.context.user_name}")  # [!code highlight]
     return None
 
-# After model hook
+# 模型调用后钩子
 @after_model
 def log_after_model(state: AgentState, runtime: Runtime[Context]) -> dict | None:  # [!code highlight]
     print(f"Completed request for user: {runtime.context.user_name}")  # [!code highlight]
@@ -210,7 +210,7 @@ agent.invoke(
 ```
 :::
 :::js
-Use the `runtime` parameter to access the @[`Runtime`] object inside middleware.
+使用 `runtime` 参数在中间件内部访问 @[`Runtime`] 对象。
 
 ```ts
 import * as z from "zod";
@@ -220,7 +220,7 @@ const contextSchema = z.object({
   userName: z.string(),
 });
 
-// Dynamic prompt middleware
+// 动态提示词中间件
 const dynamicPromptMiddleware = createMiddleware({
   name: "DynamicPrompt",
   contextSchema,
@@ -237,7 +237,7 @@ const dynamicPromptMiddleware = createMiddleware({
   },
 });
 
-// Logging middleware
+// 日志中间件
 const loggingMiddleware = createMiddleware({
   name: "Logging",
   contextSchema,

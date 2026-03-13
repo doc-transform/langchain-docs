@@ -1,17 +1,17 @@
 ---
-title: "OpenAI functions metadata tagger - integration"
-description: "Integrate with the OpenAI functions metadata tagger - document transformer using LangChain JavaScript."
+title: "OpenAI Functions 元数据标注器 - 集成"
+description: "使用 LangChain JavaScript 集成 OpenAI Functions 元数据标注器文档转换器。"
 ---
 
-It can often be useful to tag ingested documents with structured metadata, such as the title, tone, or length of a document, to allow for more targeted similarity search later. However, for large numbers of documents, performing this labelling process manually can be tedious.
+在接入的文档上标注结构化元数据（如标题、语气或文档长度）通常很有用，这样可以在后续进行更有针对性的相似性搜索。然而，对于大量文档，手动执行此标注过程可能非常繁琐。
 
-The `MetadataTagger` document transformer automates this process by extracting metadata from each provided document according to a provided schema. It uses a configurable OpenAI Functions-powered chain under the hood, so if you pass a custom LLM instance, it must be an OpenAI model with functions support.
+`MetadataTagger` 文档转换器通过根据提供的 schema 从每个文档中自动提取元数据来实现这一过程的自动化。它在底层使用可配置的 OpenAI Functions 驱动链，因此如果你传入自定义的 LLM 实例，它必须是支持 Functions 的 OpenAI 模型。
 
-**Note:** This document transformer works best with complete documents, so it's best to run it first with whole documents before doing any other splitting or processing!
+**注意：** 此文档转换器在完整文档上效果最佳，因此最好在进行任何其他分割或处理之前先用完整文档运行它！
 
-### Usage
+### 用法
 
-For example, let's say you wanted to index a set of movie reviews. You could initialize the document transformer as follows:
+例如，假设你想要索引一组电影评论。你可以按如下方式初始化文档转换器：
 
 ```typescript
 import * as z from "zod";
@@ -77,12 +77,12 @@ console.log(taggedDocuments);
 */
 ```
 
-There is an additional `createMetadataTagger` method that accepts a valid JSON Schema object as well.
+还有一个额外的 `createMetadataTagger` 方法，也接受有效的 JSON Schema 对象。
 
-### Customization
+### 自定义
 
-You can pass the underlying tagging chain the standard LLMChain arguments in the second options parameter.
-For example, if you wanted to ask the LLM to focus specific details in the input documents, or extract metadata in a certain style, you could pass in a custom prompt:
+你可以在第二个选项参数中向底层标注链传递标准的 LLMChain 参数。
+例如，如果你想要求 LLM 关注输入文档中的特定细节，或以某种特定风格提取元数据，你可以传入自定义提示词：
 
 ```typescript
 import * as z from "zod";

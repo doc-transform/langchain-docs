@@ -1,39 +1,39 @@
 ---
-title: "AWSKendraRetriever integration"
-description: "Integrate with the AWSKendraRetriever retriever using LangChain JavaScript."
+title: "AWSKendraRetriever 集成"
+description: "使用 LangChain JavaScript 集成 AWSKendraRetriever 检索器。"
 ---
 
-## Overview
+## 概览
 
-[Amazon Kendra](https://aws.amazon.com/kendra/) is an intelligent search service provided by Amazon Web Services (AWS).
-It utilizes advanced natural language processing (NLP) and machine learning algorithms to enable powerful search capabilities across various data sources within an organization.
-Kendra is designed to help users find the information they need quickly and accurately, improving productivity and decision-making.
+[Amazon Kendra](https://aws.amazon.com/kendra/) 是由 Amazon Web Services (AWS) 提供的智能搜索服务。
+它利用先进的自然语言处理（NLP）和机器学习算法，为组织内的各种数据源提供强大的搜索功能。
+Kendra 旨在帮助用户快速准确地找到所需信息，提高生产力和决策效率。
 
-With Kendra, users can search across a wide range of content types, including documents, FAQs, knowledge bases, manuals, and websites.
-It supports multiple languages and can understand complex queries, synonyms, and contextual meanings to provide highly relevant search results.
+使用 Kendra，用户可以搜索各种内容类型，包括文档、FAQ、知识库、手册和网站。
+它支持多种语言，能够理解复杂查询、同义词和上下文含义，以提供高度相关的搜索结果。
 
-This will help you getting started with the Amazon Kendra [`retriever`](/oss/langchain/retrieval). For detailed documentation of all `AWSKendraRetriever` features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_aws.AmazonKendraRetriever.html).
+本文将帮助你开始使用 Amazon Kendra [检索器](/oss/langchain/retrieval)。所有 `AWSKendraRetriever` 功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain_aws.AmazonKendraRetriever.html)。
 
-### Integration details
+### 集成详情
 
 | Retriever | Source | Package |
 | :--- | :--- | :---: |
 [AWSKendraRetriever](https://api.js.langchain.com/classes/langchain_aws.AmazonKendraRetriever.html) | Various AWS resources | [`@langchain/aws`](https://www.npmjs.com/package/@langchain/aws) |
 
-## Setup
+## 设置
 
-You'll need an AWS account and an Amazon Kendra instance to get started. See this [tutorial](https://docs.aws.amazon.com/kendra/latest/dg/getting-started.html) from AWS for more information.
+你需要一个 AWS 账户和一个 Amazon Kendra 实例才能开始使用。参见 AWS 的[本教程](https://docs.aws.amazon.com/kendra/latest/dg/getting-started.html)获取更多信息。
 
-If you want to get automated tracing from individual queries, you can also set your [LangSmith](/langsmith/home) API key by uncommenting below:
+如果你想获取单个查询的自动追踪，你还可以通过取消下方注释来设置你的 [LangSmith](/langsmith/home) API 密钥：
 
 ```typescript
 // process.env.LANGSMITH_API_KEY = "<YOUR API KEY HERE>";
 // process.env.LANGSMITH_TRACING = "true";
 ```
 
-### Installation
+### 安装
 
-This retriever lives in the `@langchain/aws` package:
+该检索器位于 `@langchain/aws` 包中：
 
 <CodeGroup>
 ```bash npm
@@ -47,9 +47,9 @@ pnpm add @langchain/aws @langchain/core
 ```
 </CodeGroup>
 
-## Instantiation
+## 实例化
 
-Now we can instantiate our retriever:
+现在我们可以实例化检索器：
 
 ```typescript
 import { AmazonKendraRetriever } from "@langchain/aws";
@@ -67,7 +67,7 @@ const retriever = new AmazonKendraRetriever({
 });
 ```
 
-## Usage
+## 用法
 
 ```typescript
 const query = "..."
@@ -77,6 +77,6 @@ await retriever.invoke(query);
 
 ---
 
-## API reference
+## API 参考
 
-For detailed documentation of all `AmazonKendraRetriever` features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_aws.AmazonKendraRetriever.html).
+所有 `AWSKendraRetriever` 功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain_aws.AmazonKendraRetriever.html)。

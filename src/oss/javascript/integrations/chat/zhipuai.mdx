@@ -1,31 +1,31 @@
 ---
-title: "ChatZhipuAI integration"
-description: "Integrate with the ChatZhipuAI chat model using LangChain JavaScript."
+title: "ChatZhipuAI 集成"
+description: "使用 LangChain JavaScript 集成 ChatZhipuAI 对话模型。"
 ---
 
-LangChain.js supports the Zhipu AI family of models.
+LangChain.js 支持智谱 AI 系列模型。
 
 https://open.bigmodel.cn/dev/howuse/model
 
-## Setup
+## 安装
 
-You'll need to sign up for an Zhipu API key and set it as an environment variable named `ZHIPUAI_API_KEY`
+你需要注册一个智谱 API 密钥并将其设置为名为 `ZHIPUAI_API_KEY` 的环境变量。
 
 https://open.bigmodel.cn
 
-You'll also need to install the following dependencies:
+你还需要安装以下依赖：
 
 <Tip>
-See [this section for general instructions on installing LangChain packages](/oss/langchain/install).
+安装 LangChain 包的通用说明请参见[此章节](/oss/langchain/install)。
 </Tip>
 
 ```bash npm
 npm install @langchain/community @langchain/core jsonwebtoken
 ```
 
-## Usage
+## 用法
 
-Here's an example:
+以下是一个示例：
 
 ```typescript
 import { ChatZhipuAI } from "@langchain/community/chat_models/zhipuai";
@@ -60,7 +60,7 @@ AIMessage {
 */
 ```
 
-## Related
+## 相关资源
 
-- Chat model [conceptual guide](/oss/langchain/models)
-- Chat model [how-to guides](/oss/langchain/models)
+- 对话模型[概念指南](/oss/langchain/models)
+- 对话模型[操作指南](/oss/langchain/models)

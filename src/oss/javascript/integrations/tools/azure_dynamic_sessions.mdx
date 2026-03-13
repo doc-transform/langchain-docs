@@ -1,15 +1,15 @@
 ---
-title: "Azure container apps dynamic sessions integration"
-description: "Integrate with the Azure container apps dynamic sessions tool using LangChain JavaScript."
+title: "Azure 容器应用动态会话集成"
+description: "使用 LangChain JavaScript 集成 Azure 容器应用动态会话工具。"
 ---
 
-> [Azure Container Apps dynamic sessions](https://learn.microsoft.com/azure/container-apps/sessions) provide fast access to secure sandboxed environments that are ideal for running code or applications that require strong isolation from other workloads.
+> [Azure Container Apps 动态会话](https://learn.microsoft.com/azure/container-apps/sessions)提供对安全沙箱环境的快速访问，非常适合运行需要与其他工作负载强隔离的代码或应用程序。
 
-You can learn more about Azure Container Apps dynamic sessions and its code interpretation capabilities on [this page](https://learn.microsoft.com/azure/container-apps/sessions). If you don't have an Azure account, you can [create a free account](https://azure.microsoft.com/free/) to get started.
+你可以在[此页面](https://learn.microsoft.com/azure/container-apps/sessions)了解更多关于 Azure Container Apps 动态会话及其代码解释能力的信息。如果你没有 Azure 账户，可以[创建一个免费账户](https://azure.microsoft.com/free/)来开始使用。
 
-## Setup
+## 设置
 
-You'll first need to install the [`@langchain/azure-dynamic-sessions`](https://www.npmjs.com/package/@langchain/azure-dynamic-sessions) package:
+你首先需要安装 [`@langchain/azure-dynamic-sessions`](https://www.npmjs.com/package/@langchain/azure-dynamic-sessions) 包：
 
 <Tip>
 See [this section for general instructions on installing LangChain packages](/oss/langchain/install).
@@ -19,19 +19,19 @@ See [this section for general instructions on installing LangChain packages](/os
 npm install @langchain/azure-dynamic-sessions @langchain/core
 ```
 
-You'll also need to have a code interpreter session pool instance running. You can deploy a version using [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) following [this guide](https://learn.microsoft.com/azure/container-apps/sessions-code-interpreter).
+你还需要一个正在运行的代码解释器会话池实例。你可以按照[此指南](https://learn.microsoft.com/azure/container-apps/sessions-code-interpreter)使用 [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) 部署一个版本。
 
-Once you have your instance running, you need to make sure you have properly [set up the Azure Entra authentication for it](https://learn.microsoft.com/azure/container-apps/sessions?tabs=azure-cli#authentication).
+实例运行后，你需要确保已正确设置 Azure Entra 身份验证。你可以在[此处](https://learn.microsoft.com/azure/container-apps/sessions?tabs=azure-cli#authentication)找到操作说明。
 
-After you've added the role for your identity, you need to retrieve the **session pool management endpoint**. You can find it in the Azure Portal, under the "Overview" section of your instance. Then you need to set the following environment variable:
+添加身份角色后，你需要获取**会话池管理端点**。你可以在 Azure 门户中你的实例“概览”部分找到它。然后你需要设置以下环境变量：
 
 ```bash .env example
 AZURE_CONTAINER_APP_SESSION_POOL_MANAGEMENT_ENDPOINT=<your_endpoint>
 ```
 
-## Usage example
+## 用法示例
 
-Below is a simple example that creates a new Python code interpreter session, invoke the tool and prints the result.
+以下是一个简单示例，创建一个新的 Python 代码解释器会话，调用工具并打印结果。
 
 ```typescript
 import { SessionsPythonREPLTool } from "@langchain/azure-dynamic-sessions";
@@ -52,7 +52,7 @@ console.log(result);
 // }
 ```
 
-Here is a complete example where we use an Azure OpenAI chat model to call the Python code interpreter session tool to execute the code and get the result:
+以下是一个完整示例，使用 Azure OpenAI 聊天模型调用 Python 代码解释器会话工具来执行代码并获取结果：
 
 ```typescript
 import type { ChatPromptTemplate } from "@langchain/core/prompts";
@@ -98,7 +98,7 @@ const result = await agentExecutor.invoke({
 console.log(result);
 ```
 
-## Related
+## 相关
 
-- Tool [conceptual guide](/oss/langchain/tools)
-- Tool [how-to guides](/oss/langchain/tools)
+- 工具[概念指南](/oss/langchain/tools)
+- 工具[操作指南](/oss/langchain/tools)

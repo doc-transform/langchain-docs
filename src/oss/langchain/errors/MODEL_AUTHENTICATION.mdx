@@ -3,22 +3,22 @@ title: MODEL_AUTHENTICATION
 ---
 
 <Note>
-    Currently only used in `langchainjs` (JavaScript/TypeScript).
+    目前仅在 `langchainjs`（JavaScript/TypeScript）中使用。
 </Note>
 
-Your model provider is denying you access to their service.
+你的模型提供商拒绝了你的服务访问请求。
 
-This error typically occurs when there's an issue with your authentication credentials or API keys.
+此错误通常发生在身份验证凭据或 API 密钥存在问题时。
 
-## Troubleshooting
+## 排查方法
 
-* Confirm that your API key or authentication credentials are accurate and valid.
-* If using environment-based authentication, verify:
-    - The variable name is spelled correctly
-    - The variable contains an assigned value
-    - Third-party packages like `dotenv` haven't interfered with loading
-* If using a proxy or non-standard endpoint, make sure that your custom provider does not expect an alternative authentication scheme.
-* Bypass environment variable issues by passing credentials explicitly:
+* 确认你的 API 密钥或身份验证凭据正确且有效。
+* 如果使用基于环境变量的身份验证，请检查：
+    - 变量名拼写是否正确
+    - 变量是否已赋值
+    - 第三方包（如 `dotenv`）是否干扰了加载过程
+* 如果使用代理或非标准端点，请确保你的自定义提供商没有要求替代的身份验证方式。
+* 跳过环境变量问题，直接显式传入凭据：
 
 :::python
 ```python

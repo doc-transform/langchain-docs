@@ -1,11 +1,11 @@
 ---
-title: Handoffs
+title: 交接
 ---
 
-In the **handoffs** architecture, behavior changes dynamically based on state. The core mechanism: [tools](/oss/langchain/tools) update a state variable (e.g., `current_step` or `active_agent`) that persists across turns, and the system reads this variable to adjust behavior—either applying different configuration (system prompt, tools) or routing to a different [agent](/oss/langchain/agents). This pattern supports both handoffs between distinct agents and dynamic configuration changes within a single agent.
+在**交接**架构中，行为会根据状态动态变化。核心机制是：[工具](/oss/langchain/tools)更新一个状态变量（如 `current_step` 或 `active_agent`），该变量在轮次间持久化，系统读取该变量来调整行为 —— 要么应用不同的配置（系统提示词、工具），要么路由到不同的 [Agent](/oss/langchain/agents)。此模式同时支持不同 Agent 之间的交接和单个 Agent 内的动态配置变更。
 
 <Tip>
-The term **handoffs** was coined by [OpenAI](https://openai.github.io/openai-agents-python/handoffs/) for using tool calls (e.g., `transfer_to_sales_agent`) to transfer control between agents or states.
+**交接**（handoffs）这个术语由 [OpenAI](https://openai.github.io/openai-agents-python/handoffs/) 创造，指使用工具调用（如 `transfer_to_sales_agent`）在 Agent 或状态之间转移控制权。
 </Tip>
 
 ```mermaid
@@ -29,20 +29,20 @@ sequenceDiagram
     Agent-->>User: "Here's the warranty repair process..."
 ```
 
-## Key characteristics
+## 核心特征
 
-* State-driven behavior: Behavior changes based on a state variable (e.g., `current_step` or `active_agent`)
-* Tool-based transitions: Tools update the state variable to move between states
-* Direct user interaction: Each state's configuration handles user messages directly
-* Persistent state: State survives across conversation turns
+* 状态驱动的行为：行为根据状态变量（如 `current_step` 或 `active_agent`）变化
+* 基于工具的转换：工具更新状态变量以在状态之间移动
+* 直接用户交互：每个状态的配置直接处理用户消息
+* 持久化状态：状态在对话轮次间保持
 
-## When to use
+## 适用场景
 
-Use the handoffs pattern when you need to enforce sequential constraints (unlock capabilities only after preconditions are met), the agent needs to converse directly with the user across different states, or you're building multi-stage conversational flows. This pattern is particularly valuable for customer support scenarios where you need to collect information in a specific sequence—for example, collecting a warranty ID before processing a refund.
+当你需要强制顺序约束（仅在满足前置条件后才解锁能力）、Agent 需要在不同状态下直接与用户对话、或你正在构建多阶段对话流时，使用交接模式。此模式对客户支持场景特别有价值，例如你需要按特定顺序收集信息 —— 比如在处理退款之前先收集保修编号。
 
-## Basic implementation
+## 基本实现
 
-The core mechanism is a [tool](/oss/langchain/tools) that returns a [`Command`](/oss/langgraph/graph-api#command) to update state, triggering a transition to a new step or agent:
+核心机制是一个返回 [`Command`](/oss/langgraph/graph-api#command) 来更新状态的[工具](/oss/langchain/tools)，触发向新步骤或 Agent 的转换：
 
 :::python
 ```python
@@ -96,27 +96,27 @@ const transferToSpecialist = tool(
 :::
 
 <Note>
-**Why include a `ToolMessage`?** When an LLM calls a tool, it expects a response. The `ToolMessage` with matching `tool_call_id` completes this request-response cycle—without it, the conversation history becomes malformed. This is required whenever your handoff tool updates messages.
+**为什么要包含 `ToolMessage`？** 当 LLM 调用工具时，它期望收到响应。带有匹配 `tool_call_id` 的 `ToolMessage` 完成了这个请求-响应循环 —— 没有它，对话历史就会变得格式错误。当你的交接工具更新消息时，这是必须的。
 </Note>
 
-For a complete implementation, see the tutorial below.
+完整实现请参见以下教程。
 
 <Card
-    title="Tutorial: Build customer support with handoffs"
+    title="教程：使用交接构建客户支持"
     icon="users"
     href="/oss/langchain/multi-agent/handoffs-customer-support"
-    arrow cta="Learn more"
+    arrow cta="了解更多"
 >
-    Learn how to build a customer support agent using the handoffs pattern, where a single agent transitions between different configurations.
+    学习如何使用交接模式构建客户支持 Agent，其中单个 Agent 在不同配置之间转换。
 </Card>
 
-## Implementation approaches
+## 实现方式
 
-There are two ways to implement handoffs: **[single agent with middleware](#single-agent-with-middleware)** (one agent with dynamic configuration) or **[multiple agent subgraphs](#multiple-agent-subgraphs)** (distinct agents as graph nodes).
+实现交接有两种方式：**[带中间件的单 Agent](#single-agent-with-middleware)**（一个具有动态配置的 Agent）或**[多 Agent 子图](#multiple-agent-subgraphs)**（作为图节点的不同 Agent）。
 
-### Single agent with middleware
+### 带中间件的单 Agent
 
-A single agent changes its behavior based on state. Middleware intercepts each model call and dynamically adjusts the system prompt and available tools. Tools update the state variable to trigger transitions:
+单个 Agent 根据状态改变其行为。中间件拦截每次模型调用，并动态调整系统提示词和可用工具。工具更新状态变量以触发转换：
 
 :::python
 ```python
@@ -176,7 +176,7 @@ const recordWarrantyStatus = tool(
 ```
 :::
 
-<Accordion title="Complete example: Customer support with middleware">
+<Accordion title="完整示例：使用中间件的客户支持">
 
 :::python
 ```python
@@ -332,12 +332,12 @@ const agent = createAgent({
 
 </Accordion>
 
-### Multiple agent subgraphs
+### 多 Agent 子图
 
-Multiple distinct agents exist as separate nodes in a graph. Handoff tools navigate between agent nodes using `Command.PARENT` to specify which node to execute next.
+多个不同的 Agent 作为图中的独立节点存在。交接工具使用 `Command.PARENT` 在 Agent 节点之间导航，指定下一个要执行的节点。
 
 <Warning>
-Subgraph handoffs require careful **[context engineering](/oss/langchain/context-engineering)**. Unlike single-agent middleware (where message history flows naturally), you must explicitly decide what messages pass between agents. Get this wrong and agents receive malformed conversation history or bloated context. See [Context engineering](#context-engineering) below.
+子图交接需要仔细的**[上下文工程](/oss/langchain/context-engineering)**。与单 Agent 中间件（消息历史自然流转）不同，你必须显式地决定哪些消息在 Agent 之间传递。如果处理不当，Agent 会收到格式错误的对话历史或臃肿的上下文。参见下方[上下文工程](#context-engineering)。
 </Warning>
 
 :::python
@@ -410,9 +410,9 @@ const transferToSales = tool(
 ```
 :::
 
-<Accordion title="Complete example: Sales and support with handoffs">
+<Accordion title="完整示例：使用交接的销售与支持">
 
-This example shows a multi-agent system with separate sales and support agents. Each agent is a separate graph node, and handoff tools allow agents to transfer conversations to each other.
+本示例展示了一个具有独立销售和支持 Agent 的多 Agent 系统。每个 Agent 是图中的独立节点，交接工具允许 Agent 互相转移对话。
 
 :::python
 ```python
@@ -730,23 +730,23 @@ for (const msg of result.messages) {
 </Accordion>
 
 <Tip>
-Use **single agent with middleware** for most handoffs use cases—it's simpler. Only use **multiple agent subgraphs** when you need bespoke agent implementations (e.g., a node that's itself a complex graph with reflection or retrieval steps).
+大多数交接场景使用**带中间件的单 Agent** —— 更简单。仅当你需要定制化的 Agent 实现（例如一个节点本身就是带有反思或检索步骤的复杂图）时，才使用**多 Agent 子图**。
 </Tip>
 
-#### Context engineering
+#### 上下文工程
 
-With subgraph handoffs, you control exactly what messages flow between agents. This precision is essential for maintaining valid conversation history and avoiding context bloat that could confuse downstream agents. For more on this topic, see [context engineering](/oss/langchain/context-engineering).
+使用子图交接时，你可以精确控制哪些消息在 Agent 之间流动。这种精确性对于维护有效的对话历史和避免可能混淆下游 Agent 的上下文臃肿至关重要。更多相关内容请参见[上下文工程](/oss/langchain/context-engineering)。
 
-**Handling context during handoffs**
+**交接时的上下文处理**
 
-When handing off between agents, you need to ensure the conversation history remains valid. LLMs expect tool calls to be paired with their responses, so when using `Command.PARENT` to hand off to another agent, you must include both:
+在 Agent 之间交接时，你需要确保对话历史保持有效。LLM 期望工具调用与其响应配对，因此当使用 `Command.PARENT` 交接到另一个 Agent 时，你必须同时包含：
 
-1. **The `AIMessage` containing the tool call** (the message that triggered the handoff)
-2. **A `ToolMessage` acknowledging the handoff** (the artificial response to that tool call)
+1. **包含工具调用的 `AIMessage`**（触发交接的消息）
+2. **确认交接的 `ToolMessage`**（对该工具调用的人工响应）
 
-Without this pairing, the receiving agent will see an incomplete conversation and may produce errors or unexpected behavior.
+没有这种配对，接收 Agent 会看到不完整的对话，可能产生错误或意外行为。
 
-The example below assumes only the handoff tool was called (no parallel tool calls):
+以下示例假设只调用了交接工具（没有并行工具调用）：
 
 :::python
 ```python
@@ -806,17 +806,17 @@ const transferToSales = tool(
 :::
 
 <Note>
-**Why not pass all subagent messages?** While you could include the full subagent conversation in the handoff, this often creates problems. The receiving agent may become confused by irrelevant internal reasoning, and token costs increase unnecessarily. By passing only the handoff pair, you keep the parent graph's context focused on high-level coordination. If the receiving agent needs additional context, consider summarizing the subagent's work in the ToolMessage content instead of passing raw message history.
+**为什么不传递所有子 Agent 消息？** 虽然你可以在交接中包含完整的子 Agent 对话，但这通常会带来问题。接收 Agent 可能被不相关的内部推理混淆，而且 token 成本也会不必要地增加。通过只传递交接消息对，你可以保持父图的上下文专注于高层协调。如果接收 Agent 需要额外上下文，考虑在 ToolMessage 内容中总结子 Agent 的工作，而不是传递原始消息历史。
 </Note>
 
-**Returning control to the user**
+**将控制权返回给用户**
 
-When returning control to the user (ending the agent's turn), ensure the final message is an `AIMessage`. This maintains valid conversation history and signals to the user interface that the agent has finished its work.
+当将控制权返回给用户（结束 Agent 的轮次）时，确保最后一条消息是 `AIMessage`。这保持了有效的对话历史，并向用户界面发出 Agent 已完成工作的信号。
 
-## Implementation considerations
+## 实现考虑事项
 
-As you design your multi-agent system, consider:
+在设计多 Agent 系统时，需要考虑：
 
-* **Context filtering strategy**: Will each agent receive full conversation history, filtered portions, or summaries? Different agents may need different context depending on their role.
-* **Tool semantics**: Clarify whether handoff tools only update routing state or also perform side effects. For example, should `transfer_to_sales()` also create a support ticket, or should that be a separate action?
-* **Token efficiency**: Balance context completeness against token costs. Summarization and selective context passing become more important as conversations grow longer.
+* **上下文过滤策略**：每个 Agent 是接收完整的对话历史、过滤后的部分还是摘要？不同的 Agent 可能根据其角色需要不同的上下文。
+* **工具语义**：明确交接工具是仅更新路由状态还是还会执行副作用。例如，`transfer_to_sales()` 是否应该同时创建工单，还是应该将其作为单独的操作？
+* **Token 效率**：在上下文完整性和 token 成本之间取得平衡。随着对话变长，摘要和选择性上下文传递变得更加重要。

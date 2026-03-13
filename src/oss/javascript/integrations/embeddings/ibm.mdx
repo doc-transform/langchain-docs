@@ -1,41 +1,41 @@
 ---
-title: "IBM watsonx.ai integration"
-description: "Integrate with the IBM watsonx.ai embedding model using LangChain JavaScript."
+title: "IBM watsonx.ai 集成"
+description: "使用 LangChain JavaScript 集成 IBM watsonx.ai 嵌入模型。"
 ---
 
-This will help you get started with IBM watsonx.ai [embedding models](/oss/integrations/embeddings) using LangChain. For detailed documentation on `IBM watsonx.ai` features and configuration options, please refer to the [API reference](https://api.js.langchain.com/modules/_langchain_community.embeddings_ibm.html).
+本文将帮助你开始使用 IBM watsonx.ai [嵌入模型](/oss/integrations/text_embedding)。`IBM watsonx.ai` 所有功能和配置选项的详细文档请参见 [API 参考](https://api.js.langchain.com/modules/_langchain_community.embeddings_ibm.html)。
 
-## Overview
+## 概览
 
-### Integration details
+### 集成详情
 
-| Class | Package | Local | [Py support](https://python.langchain.com/docs/integrations/embeddings/ibm_watsonx/) | Downloads | Version |
+| Class | Package | Local | [Py support](https://python.langchain.com/docs/integrations/text_embedding/ibm_watsonx/) | Downloads | Version |
 | :--- | :--- | :---: | :---: |  :---: | :---: |
 | [`WatsonxEmbeddings`](https://api.js.langchain.com/classes/_langchain_community.embeddings_ibm.WatsonxEmbeddings.html) | [@langchain/community](https://www.npmjs.com/package/@langchain/community)| ❌ | ✅  | ![NPM - Downloads](https://img.shields.io/npm/dm/@langchain/community?style=flat-square&label=%20&) | ![NPM - Version](https://img.shields.io/npm/v/@langchain/community?style=flat-square&label=%20&) |
 
-## Setup
+## 设置
 
-To access IBM WatsonxAI embeddings you'll need to create an IBM watsonx.ai account, get an API key or any other type of credentials, and install the `@langchain/community` integration package.
+要访问 IBM WatsonxAI 嵌入，你需要创建 IBM watsonx.ai 账户、获取 API 密钥或其他类型的凭据，并安装 `@langchain/community` 集成包。
 
-### Credentials
+### 凭据
 
-Head to [IBM Cloud](https://cloud.ibm.com/login) to sign up to IBM watsonx.ai and generate an API key or provide any other authentication form as presented below.
+前往 [IBM Cloud](https://cloud.ibm.com/login) 注册 IBM watsonx.ai 并生成 API 密钥或提供以下展示的其他身份验证方式。
 
-#### IAM authentication
+#### IAM 身份验证
 
 ```bash
 export WATSONX_AI_AUTH_TYPE=iam
 export WATSONX_AI_APIKEY=<YOUR-APIKEY>
 ```
 
-#### Bearer token authentication
+#### Bearer 令牌身份验证
 
 ```bash
 export WATSONX_AI_AUTH_TYPE=bearertoken
 export WATSONX_AI_BEARER_TOKEN=<YOUR-BEARER-TOKEN>
 ```
 
-#### IBM watsonx.ai software authentication
+#### IBM watsonx.ai 软件身份验证
 
 ```bash
 export WATSONX_AI_AUTH_TYPE=cp4d
@@ -44,11 +44,11 @@ export WATSONX_AI_PASSWORD=<YOUR_PASSWORD>
 export WATSONX_AI_URL=<URL>
 ```
 
-Once these are placed in your environment variables and object is initialized authentication will proceed automatically.
+设置这些环境变量并初始化对象后，身份验证将自动进行。
 
-Authentication can also be accomplished by passing these values as parameters to a new instance.
+身份验证也可以通过将这些值作为参数传递给新实例来完成。
 
-## IAM authentication
+## IAM 身份验证
 
 ```typescript
 import { WatsonxEmbeddings } from "@langchain/community/embeddings/ibm";
@@ -63,7 +63,7 @@ const props = {
 const instance = new WatsonxEmbeddings(props);
 ```
 
-## Bearer token authentication
+## Bearer 令牌身份验证
 
 ```typescript
 import { WatsonxEmbeddings } from "@langchain/community/embeddings/ibm";
@@ -78,7 +78,7 @@ const props = {
 const instance = new WatsonxEmbeddings(props);
 ```
 
-### IBM watsonx.ai software authentication
+### IBM watsonx.ai 软件身份验证
 
 ```typescript
 import { WatsonxEmbeddings } from "@langchain/community/embeddings/ibm";
@@ -95,16 +95,16 @@ const props = {
 const instance = new WatsonxEmbeddings(props);
 ```
 
-If you want to get automated tracing of your model calls you can also set your [LangSmith](/langsmith/home) API key by uncommenting below:
+如果你想获取模型调用的自动追踪，你还可以通过取消下方注释来设置你的 [LangSmith](/langsmith/home) API 密钥：
 
 ```bash
 # export LANGSMITH_TRACING="true"
 # export LANGSMITH_API_KEY="your-api-key"
 ```
 
-### Installation
+### 安装
 
-The LangChain IBM watsonx.ai integration lives in the `@langchain/community` package:
+LangChain IBM watsonx.ai 集成位于 `@langchain/community` 包中：
 
 <CodeGroup>
 ```bash npm
@@ -118,9 +118,9 @@ pnpm add @langchain/community @langchain/core
 ```
 </CodeGroup>
 
-## Instantiation
+## 实例化
 
-Now we can instantiate our model object and embed text:
+现在我们可以实例化模型对象并嵌入文本：
 
 ```javascript
 import { WatsonxEmbeddings } from "@langchain/community/embeddings/ibm";
@@ -134,12 +134,12 @@ const embeddings = new WatsonxEmbeddings({
 });
 ```
 
-Note:
+注意：
 
-- You must provide `spaceId` or `projectId` in order to proceed.
-- Depending on the region of your provisioned service instance, use correct serviceUrl.
+- 你必须提供 `spaceId` 或 `projectId` 才能继续。
+- 根据你配置的服务实例的区域，使用正确的 serviceUrl。
 
-### Model Gateway
+### 模型网关
 ```typescript
 import { WatsonxEmbeddings } from "@langchain/community/embeddings/ibm";
 
@@ -151,11 +151,11 @@ const instance = new WatsonxEmbeddings({
 });
 ```
 
-## Indexing and retrieval
+## 索引和检索
 
-Embedding models are often used in retrieval-augmented generation (RAG) flows, both as part of indexing data as well as later retrieving it. For more detailed instructions, please see our RAG tutorials under the [**Learn** tab](/oss/learn/).
+嵌入模型通常用于检索增强生成（RAG）流程中，既用于数据索引，也用于后续检索。更详细的说明请参见[学习](/oss/learn/)页面下的 RAG 教程。
 
-Below, see how to index and retrieve data using the `embeddings` object we initialized above. In this example, we will index and retrieve a sample document using the demo [`MemoryVectorStore`](/oss/integrations/vectorstores/memory).
+以下展示了如何使用上面初始化的 `embeddings` 对象来索引和检索数据。在此示例中，我们将使用演示版 [`MemoryVectorStore`](/oss/integrations/vectorstores/memory) 来索引和检索示例文档。
 
 ```javascript
 // Create a vector store with a sample text
@@ -181,15 +181,15 @@ retrievedDocuments[0].pageContent;
 LangChain is the framework for building context-aware reasoning applications
 ```
 
-## Direct usage
+## 直接使用
 
-Under the hood, the vectorstore and retriever implementations are calling `embeddings.embedDocument(...)` and `embeddings.embedQuery(...)` to create embeddings for the text(s) used in `fromDocuments` and the retriever's `invoke` operations, respectively.
+在底层，向量存储和检索器实现分别调用 `embeddings.embedDocument(...)` 和 `embeddings.embedQuery(...)` 来为 `fromDocuments` 中使用的文本和检索器的 `invoke` 操作创建嵌入。
 
-You can directly call these methods to get embeddings for your own use cases.
+你可以直接调用这些方法来获取你自己用例的嵌入。
 
-### Embed single texts
+### 嵌入单个文本
 
-You can embed queries for search with `embedQuery`. This generates a vector representation specific to the query:
+你可以使用 `embedQuery` 嵌入搜索查询。这会生成特定于查询的向量表示：
 
 ```javascript
     const singleVector = await embeddings.embedQuery(text);
@@ -206,9 +206,9 @@ You can embed queries for search with `embedQuery`. This generates a vector repr
 ]
 ```
 
-### Embed multiple texts
+### 嵌入多个文本
 
-You can embed multiple texts for indexing with `embedDocuments`. The internals used for this method may (but do not have to) differ from embedding queries:
+你可以使用 `embedDocuments` 嵌入多个文本用于索引。此方法的内部实现可能（但不一定）与嵌入查询不同：
 
 ```javascript
     const text2 = "LangGraph is a library for building stateful, multi-actor applications with LLMs";
@@ -239,6 +239,6 @@ You can embed multiple texts for indexing with `embedDocuments`. The internals u
 
 ---
 
-## API reference
+## API 参考
 
-For detailed documentation of all __module_name__ features and configurations head to the API reference: __api_ref_module__
+所有 __module_name__ 功能和配置的详细文档请参见 API 参考：__api_ref_module__

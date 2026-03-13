@@ -1,27 +1,27 @@
 ---
-title: "Dria integration"
-description: "Integrate with the Dria retriever using LangChain JavaScript."
+title: "Dria 集成"
+description: "使用 LangChain JavaScript 集成 Dria 检索器。"
 ---
 
-The [Dria](https://dria.co/) retriever allows an agent to perform a text-based search across a comprehensive knowledge hub.
+[Dria](https://dria.co/) 检索器允许代理在综合知识库中执行基于文本的搜索。
 
-## Setup
+## 设置
 
-To use Dria retriever, first install Dria JS client:
+要使用 Dria 检索器，首先安装 Dria JS 客户端：
 
 ```bash npm
 npm install dria
 ```
-You need to provide two things to the retriever:
+你需要提供两个信息：
 
-- **API Key**: you can get yours at your [profile page](https://dria.co/) when you create an account.
-- **Contract ID**: accessible at the top of the page when viewing a knowledge or in its URL.
-  For example, the Bitcoin whitepaper is uploaded on Dria at https://dria.co/knowledge/2KxNbEb040GKQ1DSDNDsA-Fsj_BlQIEAlzBNuiapBR0, so its contract ID is `2KxNbEb040GKQ1DSDNDsA-Fsj_BlQIEAlzBNuiapBR0`.
-    Contract ID can be omitted during instantiation, and later be set via `dria.contractId = "your-contract"`
+- **API 密钥**：创建账户后，你可以在你的[个人资料页](https://dria.co/)获取。
+- **合约 ID**：查看某个知识库时，可在页面顶部或其 URL 中找到。
+  例如，比特币白皮书上传在 Dria 上的地址为 https://dria.co/knowledge/2KxNbEb040GKQ1DSDNDsA-Fsj_BlQIEAlzBNuiapBR0，因此其合约 ID 为 `2KxNbEb040GKQ1DSDNDsA-Fsj_BlQIEAlzBNuiapBR0`。
+    合约 ID 可以在实例化时省略，之后通过 `dria.contractId = "your-contract"` 设置
 
-Dria retriever exposes the underlying [Dria client](https://npmjs.com/package/dria) as well, refer to the [Dria documentation](https://github.com/firstbatchxyz/dria-js-client?tab=readme-ov-file#usage) to learn more about the client.
+Dria 检索器还暴露了底层的 [Dria 客户端](https://npmjs.com/package/dria)，有关客户端的更多信息请参见 [Dria 文档](https://github.com/firstbatchxyz/dria-js-client?tab=readme-ov-file#usage)。
 
-## Usage
+## 用法
 
 <Tip>
 See [this section for general instructions on installing LangChain packages](/oss/langchain/install).
@@ -48,6 +48,6 @@ const docs = await retriever.invoke("What is a union type?");
 console.log(docs);
 ```
 
-## Related
+## 相关
 
-- [Retrieval guide](/oss/langchain/retrieval)
+- [检索指南](/oss/langchain/retrieval)

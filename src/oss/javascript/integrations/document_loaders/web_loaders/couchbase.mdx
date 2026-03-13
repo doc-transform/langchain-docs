@@ -1,24 +1,24 @@
 ---
-title: "Couchbase integration"
-description: "Integrate with the Couchbase document loader using LangChain JavaScript."
+title: "Couchbase 集成"
+description: "使用 LangChain JavaScript 集成 Couchbase 文档加载器。"
 ---
 
-[Couchbase](http://couchbase.com/) is an award-winning distributed NoSQL cloud database that delivers unmatched versatility, performance, scalability, and financial value for all of your cloud, mobile, AI, and edge computing applications.
+[Couchbase](http://couchbase.com/) 是一个屡获殊荣的分布式 NoSQL 云数据库，为所有云、移动、AI 和边缘计算应用提供无与伦比的多功能性、性能、可扩展性和经济价值。
 
-This guide shows how to use load documents from couchbase database.
+本指南展示如何从 Couchbase 数据库加载文档。
 
-# Installation
+# 安装
 
 ```bash npm
 npm install @langchain/community @langchain/core couchbase
 ```
-## Usage
+## 用法
 
-### Querying for documents from couchbase
+### 从 Couchbase 查询文档
 
-For more details on connecting to a Couchbase cluster, please check the [Node.js SDK documentation](https://docs.couchbase.com/nodejs-sdk/current/howtos/managing-connections.html#connection-strings).
+有关连接 Couchbase 集群的更多详情，请查看 [Node.js SDK 文档](https://docs.couchbase.com/nodejs-sdk/current/howtos/managing-connections.html#connection-strings)。
 
-For help with querying for documents using SQL++ (SQL for JSON), please check the [documentation](https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/index.html).
+有关使用 SQL++（SQL for JSON）查询文档的帮助，请查看[文档](https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/index.html)。
 
 ```typescript
 import { CouchbaseDocumentLoader } from "@langchain/community/document_loaders/web/couchbase";
@@ -35,7 +35,7 @@ const query = `
     LIMIT 1
 `;
 ```
-### Connect to couchbase cluster
+### 连接到 Couchbase 集群
 
 ```typescript
 const couchbaseClient = await Cluster.connect(connectionString, {
@@ -44,7 +44,7 @@ const couchbaseClient = await Cluster.connect(connectionString, {
   configProfile: "wanDevelopment",
 });
 ```
-### Create the loader
+### 创建加载器
 
 ```typescript
 const loader = new CouchbaseDocumentLoader(
@@ -52,9 +52,9 @@ const loader = new CouchbaseDocumentLoader(
   query // A valid SQL++ query which will return the required data
 );
 ```
-### Load documents
+### 加载文档
 
-You can fetch the documents by calling the `load` method of the loader. It will return a list with all the documents. If you want to avoid this blocking call, you can call `lazy_load` method that returns an Iterator.
+你可以通过调用加载器的 `load` 方法获取文档。它将返回包含所有文档的列表。如果你想避免此阻塞调用，可以调用返回迭代器的 `lazy_load` 方法。
 
 ```typescript
 // using load method
@@ -69,10 +69,10 @@ for await (const doc of this.lazyLoad()) {
 }
 ```
 
-### Specifying fields with content and metadata
+### 指定内容和元数据字段
 
-The fields that are part of the Document content can be specified using the `pageContentFields` parameter.
-The metadata fields for the Document can be specified using the `metadataFields` parameter.
+可以使用 `pageContentFields` 参数指定作为文档内容一部分的字段。
+可以使用 `metadataFields` 参数指定文档的元数据字段。
 
 ```typescript
 const loaderWithSelectedFields = new CouchbaseDocumentLoader(

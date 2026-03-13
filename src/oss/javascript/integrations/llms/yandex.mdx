@@ -1,25 +1,25 @@
 ---
-title: "Yandexgpt integration"
-description: "Integrate with the Yandexgpt LLM using LangChain JavaScript."
+title: "YandexGPT 集成"
+description: "使用 LangChain JavaScript 集成 YandexGPT LLM 模型。"
 ---
 
-LangChain.js supports calling [YandexGPT](https://cloud.yandex.com/en/services/yandexgpt) LLMs.
+LangChain.js 支持调用 [YandexGPT](https://cloud.yandex.com/en/services/yandexgpt) LLM。
 
-## Setup
+## 设置
 
-First, you should [create service account](https://cloud.yandex.com/en/docs/iam/operations/sa/create) with the `ai.languageModels.user` role.
+首先，你需要[创建服务账户](https://cloud.yandex.com/en/docs/iam/operations/sa/create)，并赋予 `ai.languageModels.user` 角色。
 
-Next, you have two authentication options:
+接下来，你有两种身份验证方式：
 
-- [IAM token](https://cloud.yandex.com/en/docs/iam/operations/iam-token/create-for-sa).
-  You can specify the token in a constructor parameter `iam_token` or in an environment variable `YC_IAM_TOKEN`.
-- [API key](https://cloud.yandex.com/en/docs/iam/operations/api-key/create)
-  You can specify the key in a constructor parameter `api_key` or in an environment variable `YC_API_KEY`.
+- [IAM 令牌](https://cloud.yandex.com/en/docs/iam/operations/iam-token/create-for-sa)。
+  你可以在构造函数参数 `iam_token` 中指定令牌，或设置环境变量 `YC_IAM_TOKEN`。
+- [API 密钥](https://cloud.yandex.com/en/docs/iam/operations/api-key/create)
+  你可以在构造函数参数 `api_key` 中指定密钥，或设置环境变量 `YC_API_KEY`。
 
-## Usage
+## 用法
 
 <Tip>
-See [this section for general instructions on installing LangChain packages](/oss/langchain/install).
+安装 LangChain 包的通用说明请参见[此章节](/oss/langchain/install)。
 </Tip>
 
 ```bash npm
@@ -34,7 +34,7 @@ const res = await model.invoke(['Translate "I love programming" into French.']);
 console.log({ res });
 ```
 
-## Related
+## 相关链接
 
 
-- [Models guide](/oss/langchain/models)
+- [模型指南](/oss/langchain/models)

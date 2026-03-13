@@ -3,16 +3,16 @@ title: Model Context Protocol (MCP)
 ---
 
 :::python
-[Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) is an open protocol that standardizes how applications provide tools and context to LLMs. LangChain agents can use tools defined on MCP servers using the [`langchain-mcp-adapters`](https://github.com/langchain-ai/langchain-mcp-adapters) library.
+[Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) 是一个开放协议，它标准化了应用程序向 LLM 提供工具和上下文的方式。LangChain Agent 可以通过 [`langchain-mcp-adapters`](https://github.com/langchain-ai/langchain-mcp-adapters) 库使用 MCP 服务器上定义的工具。
 :::
 :::js
-[Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) is an open protocol that standardizes how applications provide tools and context to LLMs. LangChain agents can use tools defined on MCP servers using the [`@langchain/mcp-adapters`](https://github.com/langchain-ai/langchainjs/tree/main/libs/langchain-mcp-adapters) library.
+[Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) 是一个开放协议，它标准化了应用程序向 LLM 提供工具和上下文的方式。LangChain Agent 可以通过 [`@langchain/mcp-adapters`](https://github.com/langchain-ai/langchainjs/tree/main/libs/langchain-mcp-adapters) 库使用 MCP 服务器上定义的工具。
 :::
 
-## Quickstart
+## 快速开始
 
 :::python
-Install the `langchain-mcp-adapters` library:
+安装 `langchain-mcp-adapters` 库：
 
 <CodeGroup>
 ```bash pip
@@ -24,10 +24,10 @@ uv add langchain-mcp-adapters
 ```
 </CodeGroup>
 
-`langchain-mcp-adapters` enables agents to use tools defined across one or more MCP servers.
+`langchain-mcp-adapters` 使 Agent 能够使用一个或多个 MCP 服务器上定义的工具。
 
 <Note>
-    `MultiServerMCPClient` is **stateless by default**. Each tool invocation creates a fresh MCP `ClientSession`, executes the tool, and then cleans up. See the [stateful sessions](#stateful-sessions) section for more details.
+    `MultiServerMCPClient` **默认是无状态的**。每次工具调用会创建一个新的 MCP `ClientSession`，执行工具，然后清理。详见[有状态会话](#stateful-sessions)部分。
 </Note>
 
 ```python Accessing multiple MCP servers icon="server"
@@ -72,7 +72,7 @@ if __name__ == "__main__":
 :::
 
 :::js
-Install the `@langchain/mcp-adapters` library:
+安装 `@langchain/mcp-adapters` 库：
 
 <CodeGroup>
 ```bash npm
@@ -92,10 +92,10 @@ bun add @langchain/mcp-adapters
 ```
 </CodeGroup>
 
-`@langchain/mcp-adapters` enables agents to use tools defined across one or more MCP servers.
+`@langchain/mcp-adapters` 使 Agent 能够使用一个或多个 MCP 服务器上定义的工具。
 
 <Note>
-    `MultiServerMCPClient` is **stateless by default**. Each tool invocation creates a fresh MCP `ClientSession`, executes the tool, and then cleans up. See the [stateful sessions](#stateful-sessions) section for more details.
+    `MultiServerMCPClient` **默认是无状态的**。每次工具调用会创建一个新的 MCP `ClientSession`，执行工具，然后清理。详见[有状态会话](#stateful-sessions)部分。
 </Note>
 
 ```ts Accessing multiple MCP servers icon="server"
@@ -133,11 +133,11 @@ const weatherResponse = await agent.invoke({
 ```
 :::
 
-## Custom servers
+## 自定义服务器
 
 :::python
 
-To create a custom MCP server, use the [FastMCP](https://gofastmcp.com/getting-started/welcome) library:
+要创建自定义 MCP 服务器，可以使用 [FastMCP](https://gofastmcp.com/getting-started/welcome) 库：
 
 
 <CodeGroup>
@@ -152,7 +152,7 @@ uv add fastmcp
 :::
 
 :::js
-To create your own MCP servers, you can use the `@modelcontextprotocol/sdk` library. This library provides a simple way to define [tools](https://modelcontextprotocol.io/docs/learn/server-concepts#tools-ai-actions) and run them as servers.
+要创建自己的 MCP 服务器，可以使用 `@modelcontextprotocol/sdk` 库。该库提供了一种简单的方式来定义[工具](https://modelcontextprotocol.io/docs/learn/server-concepts#tools-ai-actions)并将其作为服务器运行。
 
 <CodeGroup>
 ```bash npm
@@ -173,7 +173,7 @@ bun add @modelcontextprotocol/sdk
 </CodeGroup>
 :::
 
-To test your agent with MCP tool servers, use the following examples:
+要使用 MCP 工具服务器测试你的 Agent，可以使用以下示例：
 
 
 :::python
@@ -390,13 +390,13 @@ app.listen(PORT, () => {
 ```
 :::
 
-## Transports
+## 传输协议
 
-MCP supports different transport mechanisms for client-server communication.
+MCP 支持不同的客户端-服务器通信传输机制。
 
 ### HTTP
 
-The `http` transport (also referred to as `streamable-http`) uses HTTP requests for client-server communication. See the [MCP HTTP transport specification](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports#streamable-http) for more details.
+`http` 传输（也称为 `streamable-http`）使用 HTTP 请求进行客户端-服务器通信。详见 [MCP HTTP 传输规范](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports#streamable-http)。
 
 :::python
 ```python
@@ -422,10 +422,10 @@ const client = new MultiServerMCPClient({
 ```
 :::
 
-#### Passing headers
+#### 传递请求头
 
 :::python
-When connecting to MCP servers over HTTP, you can include custom headers (e.g., for authentication or tracing) using the `headers` field in the connection configuration. This is supported for `sse` (deprecated by MCP spec) and `streamable_http` transports.
+通过 HTTP 连接 MCP 服务器时，你可以使用连接配置中的 `headers` 字段包含自定义请求头（例如用于身份验证或链路追踪）。`sse`（已被 MCP 规范弃用）和 `streamable_http` 传输都支持此功能。
 
 ```python Passing headers with MultiServerMCPClient
 from langchain_mcp_adapters.client import MultiServerMCPClient
@@ -449,10 +449,10 @@ response = await agent.ainvoke({"messages": "what is the weather in nyc?"})
 ```
 :::
 
-#### Authentication
+#### 身份验证
 
 :::python
-The `langchain-mcp-adapters` library uses the official [MCP SDK](https://github.com/modelcontextprotocol/python-sdk) under the hood, which allows you to provide a custom authentication mechanism by implementing the `httpx.Auth` interface.
+`langchain-mcp-adapters` 库底层使用官方 [MCP SDK](https://github.com/modelcontextprotocol/python-sdk)，允许你通过实现 `httpx.Auth` 接口来提供自定义身份验证机制。
 
 ```python
 from langchain_mcp_adapters.client import MultiServerMCPClient
@@ -469,16 +469,16 @@ client = MultiServerMCPClient(
 ```
 
 
-* [Example custom auth implementation](https://github.com/modelcontextprotocol/python-sdk/blob/main/examples/clients/simple-auth-client/mcp_simple_auth_client/main.py)
-* [Built-in OAuth flow](https://github.com/modelcontextprotocol/python-sdk/blob/main/src/mcp/client/auth/oauth2.py#L216)
+* [自定义身份验证实现示例](https://github.com/modelcontextprotocol/python-sdk/blob/main/examples/clients/simple-auth-client/mcp_simple_auth_client/main.py)
+* [内置 OAuth 流程](https://github.com/modelcontextprotocol/python-sdk/blob/main/src/mcp/client/auth/oauth2.py#L216)
 :::
 
 ### stdio
 
-Client launches server as a subprocess and communicates via standard input/output. Best for local tools and simple setups.
+客户端将服务器作为子进程启动，通过标准输入/输出进行通信。适合本地工具和简单场景。
 
 <Note>
-    Unlike HTTP transports, `stdio` connections are inherently **stateful**: the subprocess persists for the lifetime of the client connection. However, when using `MultiServerMCPClient` without explicit session management, each tool call still creates a new session. See [stateful sessions](#stateful-sessions) for managing persistent connections.
+    与 HTTP 传输不同，`stdio` 连接天然是**有状态的** —— 子进程在客户端连接的整个生命周期内持续存在。但在使用 `MultiServerMCPClient` 时如果没有显式管理会话，每次工具调用仍会创建新会话。详见[有状态会话](#stateful-sessions)。
 </Note>
 
 :::python
@@ -509,11 +509,11 @@ const client = new MultiServerMCPClient({
 
 :::python
 
-## Stateful sessions
+## 有状态会话
 
-By default, `MultiServerMCPClient` is **stateless**: each tool invocation creates a fresh MCP session, executes the tool, and then cleans up.
+默认情况下，`MultiServerMCPClient` 是**无状态的** —— 每次工具调用会创建一个新的 MCP 会话，执行工具，然后清理。
 
-If you need to control the [lifecycle](https://modelcontextprotocol.io/specification/2025-03-26/basic/lifecycle) of an MCP session (for example, when working with a stateful server that maintains context across tool calls), you can create a persistent `ClientSession` using `client.session()`.
+如果你需要控制 MCP 会话的[生命周期](https://modelcontextprotocol.io/specification/2025-03-26/basic/lifecycle)（例如，当使用的有状态服务器需要在工具调用间保持上下文时），你可以使用 `client.session()` 创建一个持久化的 `ClientSession`。
 
 ```python Using MCP ClientSession for stateful tool usage
 from langchain_mcp_adapters.client import MultiServerMCPClient
@@ -533,15 +533,15 @@ async with client.session("server_name") as session:  # [!code highlight]
 ```
 :::
 
-## Core features
+## 核心功能
 
-### Tools
+### 工具
 
-[Tools](https://modelcontextprotocol.io/docs/concepts/tools) allow MCP servers to expose executable functions that LLMs can invoke to perform actions—such as querying databases, calling APIs, or interacting with external systems. LangChain converts MCP tools into LangChain [tools](/oss/langchain/tools), making them directly usable in any LangChain agent or workflow.
+[工具](https://modelcontextprotocol.io/docs/concepts/tools)允许 MCP 服务器暴露可执行的函数，LLM 可以调用这些函数来执行操作 —— 如查询数据库、调用 API 或与外部系统交互。LangChain 将 MCP 工具转换为 LangChain [工具](/oss/langchain/tools)，使它们可以直接在任何 LangChain Agent 或工作流中使用。
 
-#### Loading tools
+#### 加载工具
 
-Use `client.get_tools()` to retrieve tools from MCP servers and pass them to your agent:
+使用 `client.get_tools()` 从 MCP 服务器检索工具并传递给你的 Agent：
 
 :::python
 ```python
@@ -567,15 +567,15 @@ const agent = createAgent({ model: "claude-sonnet-4-6", tools });
 
 :::python
 
-#### Structured content
+#### 结构化内容
 
-MCP tools can return [structured content](https://modelcontextprotocol.io/specification/2025-03-26/server/tools#structured-content) alongside the human-readable text response. This is useful when a tool needs to return machine-parseable data (like JSON) in addition to text that gets shown to the model.
+MCP 工具可以在返回可读文本响应的同时返回[结构化内容](https://modelcontextprotocol.io/specification/2025-03-26/server/tools#structured-content)。当工具需要在显示给模型的文本之外返回可机器解析的数据（如 JSON）时很有用。
 
-When an MCP tool returns `structuredContent`, the adapter wraps it in an [`MCPToolArtifact`](https://reference.langchain.com/python/langchain_mcp_adapters/#langchain_mcp_adapters.tools.MCPToolArtifact) and returns it as the tool's artifact. You can access this using the `artifact` field on the `ToolMessage`. You can also use [interceptors](#tool-interceptors) to process or transform structured content automatically.
+当 MCP 工具返回 `structuredContent` 时，适配器会将其包装在 [`MCPToolArtifact`](https://reference.langchain.com/python/langchain_mcp_adapters/#langchain_mcp_adapters.tools.MCPToolArtifact) 中，作为工具的 artifact 返回。你可以通过 `ToolMessage` 的 `artifact` 字段访问它。你也可以使用[拦截器](#tool-interceptors)来自动处理或转换结构化内容。
 
-**Extracting structured content from artifact**
+**从 artifact 中提取结构化内容**
 
-After invoking your agent, you can access the structured content from tool messages in the response:
+调用 Agent 后，你可以从响应中的工具消息提取结构化内容：
 
 ```python
 from langchain_mcp_adapters.client import MultiServerMCPClient
@@ -596,9 +596,9 @@ for message in result["messages"]:
         structured_content = message.artifact["structured_content"]
 ```
 
-**Appending structured content via interceptor**
+**通过拦截器追加结构化内容**
 
-If you want structured content to be visible in the conversation history (visible to the model), you can use an [interceptor](#tool-interceptors) to automatically append structured content to the tool result:
+如果你希望结构化内容在对话历史中可见（对模型可见），你可以使用[拦截器](#tool-interceptors)自动将结构化内容追加到工具结果中：
 
 ```python
 import json
@@ -619,9 +619,9 @@ async def append_structured_content(request: MCPToolCallRequest, handler):
 client = MultiServerMCPClient({...}, tool_interceptors=[append_structured_content])
 ```
 
-#### Multimodal tool content
+#### 多模态工具内容
 
-MCP tools can return [multimodal content](https://modelcontextprotocol.io/specification/2025-03-26/server/tools#tool-result) (images, text, etc.) in their responses. When an MCP server returns content with multiple parts (e.g., text and images), the adapter converts them to LangChain's [standard content blocks](/oss/langchain/messages#standard-content-blocks). You can access the standardized representation via the `content_blocks` property on the `ToolMessage`:
+MCP 工具可以在响应中返回[多模态内容](https://modelcontextprotocol.io/specification/2025-03-26/server/tools#tool-result)（图像、文本等）。当 MCP 服务器返回包含多个部分（如文本和图像）的内容时，适配器会将它们转换为 LangChain 的[标准内容块](/oss/langchain/messages#standard-content-blocks)。你可以通过 `ToolMessage` 的 `content_blocks` 属性访问标准化表示：
 
 ```python
 from langchain_mcp_adapters.client import MultiServerMCPClient
@@ -650,15 +650,15 @@ for message in result["messages"]:
                 print(f"Image base64: {block.get('base64', '')[:50]}...")  # [!code highlight]
 ```
 
-This allows you to handle multimodal tool responses in a provider-agnostic way, regardless of how the underlying MCP server formats its content.
+这使你可以以提供商无关的方式处理多模态工具响应，无论底层 MCP 服务器如何格式化其内容。
 
-### Resources
+### 资源
 
-[Resources](https://modelcontextprotocol.io/docs/concepts/resources) allow MCP servers to expose data—such as files, database records, or API responses—that can be read by clients. LangChain converts MCP resources into [Blob](https://reference.langchain.com/python/langchain_core/documents/#langchain_core.documents.base.Blob) objects, which provide a unified interface for handling both text and binary content.
+[资源](https://modelcontextprotocol.io/docs/concepts/resources)允许 MCP 服务器暴露数据 —— 如文件、数据库记录或 API 响应 —— 供客户端读取。LangChain 将 MCP 资源转换为 [Blob](https://reference.langchain.com/python/langchain_core/documents/#langchain_core.documents.base.Blob) 对象，为处理文本和二进制内容提供统一接口。
 
-#### Loading resources
+#### 加载资源
 
-Use `client.get_resources()` to load resources from an MCP server:
+使用 `client.get_resources()` 从 MCP 服务器加载资源：
 
 ```python
 from langchain_mcp_adapters.client import MultiServerMCPClient
@@ -676,7 +676,7 @@ for blob in blobs:
     print(blob.as_string())  # For text content
 ```
 
-You can also use [`load_mcp_resources`](https://reference.langchain.com/python/langchain_mcp_adapters/#langchain_mcp_adapters.resources.load_mcp_resources) directly with a session for more control:
+你也可以直接使用 [`load_mcp_resources`](https://reference.langchain.com/python/langchain_mcp_adapters/#langchain_mcp_adapters.resources.load_mcp_resources) 配合会话使用以获得更细粒度的控制：
 
 ```python
 from langchain_mcp_adapters.client import MultiServerMCPClient
@@ -692,13 +692,13 @@ async with client.session("server_name") as session:
     blobs = await load_mcp_resources(session, uris=["file:///path/to/file.txt"])
 ```
 
-### Prompts
+### 提示词模板
 
-[Prompts](https://modelcontextprotocol.io/docs/concepts/prompts) allow MCP servers to expose reusable prompt templates that can be retrieved and used by clients. LangChain converts MCP prompts into [messages](/oss/langchain/messages), making them easy to integrate into chat-based workflows.
+[提示词](https://modelcontextprotocol.io/docs/concepts/prompts)允许 MCP 服务器暴露可复用的提示词模板，供客户端检索和使用。LangChain 将 MCP 提示词转换为[消息](/oss/langchain/messages)，便于集成到基于聊天的工作流中。
 
-#### Loading prompts
+#### 加载提示词
 
-Use `client.get_prompt()` to load a prompt from an MCP server:
+使用 `client.get_prompt()` 从 MCP 服务器加载提示词：
 
 ```python
 from langchain_mcp_adapters.client import MultiServerMCPClient
@@ -720,7 +720,7 @@ for message in messages:
     print(f"{message.type}: {message.content}")
 ```
 
-You can also use [`load_mcp_prompt`](https://reference.langchain.com/python/langchain_mcp_adapters/#langchain_mcp_adapters.prompts.load_mcp_prompt) directly with a session for more control:
+你也可以直接使用 [`load_mcp_prompt`](https://reference.langchain.com/python/langchain_mcp_adapters/#langchain_mcp_adapters.prompts.load_mcp_prompt) 配合会话使用以获得更细粒度的控制：
 
 ```python
 from langchain_mcp_adapters.client import MultiServerMCPClient
@@ -740,27 +740,27 @@ async with client.session("server_name") as session:
     )
 ```
 
-## Advanced features
+## 高级功能
 
-### Tool interceptors
+### 工具拦截器
 
-MCP servers run as separate processes—they can't access LangGraph runtime information like the [store](/oss/langgraph/persistence#memory-store), [context](/oss/langchain/context-engineering), or agent state. **Interceptors bridge this gap** by giving you access to this runtime context during MCP tool execution.
+MCP 服务器作为独立进程运行 —— 它们无法访问 LangGraph 运行时信息，如 [store](/oss/langgraph/persistence#memory-store)、[上下文](/oss/langchain/context-engineering)或 Agent 状态。**拦截器弥合了这一差距**，让你在 MCP 工具执行期间能够访问运行时上下文。
 
-Interceptors also provide middleware-like control over tool calls: you can modify requests, implement retries, add headers dynamically, or short-circuit execution entirely.
+拦截器还提供了类似中间件的工具调用控制：你可以修改请求、实现重试、动态添加请求头，或完全短路执行。
 
-| Section | Description |
-|---------|-------------|
-| [Accessing runtime context](#accessing-runtime-context) | Read user IDs, API keys, store data, and agent state |
-| [State updates and commands](#state-updates-and-commands) | Update agent state or control graph flow with `Command` |
-| [Writing interceptors](#custom-interceptors) | Patterns for modifying requests, composing interceptors, and error handling |
+| 章节 | 说明 |
+|---------|----------|
+| [访问运行时上下文](#accessing-runtime-context) | 读取用户 ID、API 密钥、Store 数据和 Agent 状态 |
+| [状态更新与命令](#state-updates-and-commands) | 更新 Agent 状态或使用 `Command` 控制图执行流程 |
+| [编写拦截器](#writing-interceptors) | 修改请求、组合拦截器和错误处理的模式 |
 
-#### Accessing runtime context
+#### 访问运行时上下文
 
-When MCP tools are used within a LangChain agent (via `create_agent`), interceptors receive access to the `ToolRuntime` context. This provides access to the tool call ID, state, config, and store—enabling powerful patterns for accessing user data, persisting information, and controlling agent behavior.
+当 MCP 工具在 LangChain Agent 中使用时（通过 `create_agent`），拦截器可以访问 `ToolRuntime` 上下文。这提供了对工具调用 ID、状态、配置和 Store 的访问，支持访问用户数据、持久化信息和控制 Agent 行为等强大模式。
 
 <Tabs>
-  <Tab title="Runtime context">
-    Access user-specific configuration like user IDs, API keys, or permissions that are passed at invocation time:
+  <Tab title="运行时上下文">
+    访问用户特定配置，如用户 ID、API 密钥或在调用时传递的权限：
 
     ```python Inject user context into MCP tool calls
     from dataclasses import dataclass
@@ -804,7 +804,7 @@ When MCP tools are used within a LangChain agent (via `create_agent`), intercept
   </Tab>
 
   <Tab title="Store">
-    Access long-term memory to retrieve user preferences or persist data across conversations:
+    访问长期记忆，检索用户偏好或跨对话持久化数据：
 
     ```python Access user preferences from store
     from dataclasses import dataclass
@@ -855,7 +855,7 @@ When MCP tools are used within a LangChain agent (via `create_agent`), intercept
   </Tab>
 
   <Tab title="State">
-    Access conversation state to make decisions based on the current session:
+    访问对话状态，根据当前会话做决策：
 
     ```python Filter tools based on authentication state
     from langchain_mcp_adapters.client import MultiServerMCPClient
@@ -889,8 +889,8 @@ When MCP tools are used within a LangChain agent (via `create_agent`), intercept
     ```
   </Tab>
 
-  <Tab title="Tool call ID">
-    Access the tool call ID to return properly formatted responses or track tool executions:
+  <Tab title="工具调用 ID">
+    访问工具调用 ID，以返回正确格式的响应或跟踪工具执行：
 
     ```python Return custom responses with tool call ID
     from langchain_mcp_adapters.client import MultiServerMCPClient
@@ -927,11 +927,11 @@ When MCP tools are used within a LangChain agent (via `create_agent`), intercept
   </Tab>
 </Tabs>
 
-For more context engineering patterns, see [Context engineering](/oss/langchain/context-engineering) and [Tools](/oss/langchain/tools).
+更多上下文工程模式，请参见[上下文工程](/oss/langchain/context-engineering)和[工具](/oss/langchain/tools)。
 
-#### State updates and commands
+#### 状态更新与命令
 
-Interceptors can return `Command` objects to update agent state or control graph execution flow. This is useful for tracking task progress, switching between agents, or ending execution early.
+拦截器可以返回 `Command` 对象来更新 Agent 状态或控制图执行流程。这对于跟踪任务进度、在 Agent 之间切换或提前结束执行很有用。
 
 ```python Mark task complete and switch agents
 from langchain.agents import AgentState, create_agent
@@ -958,7 +958,7 @@ async def handle_task_completion(
     return result
 ```
 
-Use `Command` with `goto="__end__"` to end execution early:
+使用 `Command` 配合 `goto="__end__"` 来提前结束执行：
 
 ```python End agent run on completion
 async def end_on_success(
@@ -977,13 +977,13 @@ async def end_on_success(
     return result
 ```
 
-#### Custom interceptors
+#### 自定义拦截器
 
-Interceptors are async functions that wrap tool execution, enabling request/response modification, retry logic, and other cross-cutting concerns. They follow an "onion" pattern where the first interceptor in the list is the outermost layer.
+拦截器是包装工具执行的异步函数，支持请求/响应修改、重试逻辑和其他横切关注点。它们遵循「洋葱」模式，列表中的第一个拦截器是最外层。
 
-**Basic pattern**
+**基本模式**
 
-An interceptor is an async function that receives a request and a handler. You can modify the request before calling the handler, modify the response after, or skip the handler entirely.
+拦截器是一个接收请求和处理函数的异步函数。你可以在调用处理函数之前修改请求、之后修改响应，或完全跳过处理函数。
 
 ```python Basic interceptor pattern
 from langchain_mcp_adapters.client import MultiServerMCPClient
@@ -1005,9 +1005,9 @@ client = MultiServerMCPClient(
 )
 ```
 
-**Modifying requests**
+**修改请求**
 
-Use `request.override()` to create a modified request. This follows an immutable pattern, leaving the original request unchanged.
+使用 `request.override()` 创建修改后的请求。这遵循不可变模式，原始请求保持不变。
 
 ```python Modifying tool arguments
 async def double_args_interceptor(
@@ -1022,9 +1022,9 @@ async def double_args_interceptor(
 # Original call: add(a=2, b=3) becomes add(a=4, b=6)
 ```
 
-**Modifying headers at runtime**
+**运行时动态修改请求头**
 
-Interceptors can modify HTTP headers dynamically based on the request context:
+拦截器可以根据请求上下文动态修改 HTTP 请求头：
 
 ```python Dynamic header modification
 async def auth_header_interceptor(
@@ -1039,9 +1039,9 @@ async def auth_header_interceptor(
     return await handler(modified_request)
 ```
 
-**Composing interceptors**
+**组合拦截器**
 
-Multiple interceptors compose in "onion" order—the first interceptor in the list is the outermost layer:
+多个拦截器按「洋葱」顺序组合 —— 列表中的第一个拦截器是最外层：
 
 ```python Composing multiple interceptors
 async def outer_interceptor(request, handler):
@@ -1065,9 +1065,9 @@ client = MultiServerMCPClient(
 # outer: before -> inner: before -> tool execution -> inner: after -> outer: after
 ```
 
-**Error handling**
+**错误处理**
 
-Use interceptors to catch tool execution errors and implement retry logic:
+使用拦截器捕获工具执行错误并实现重试逻辑：
 
 ```python Retry on error
 import asyncio
@@ -1097,7 +1097,7 @@ client = MultiServerMCPClient(
 )
 ```
 
-You can also catch specific error types and return fallback values:
+你也可以捕获特定错误类型并返回回退值：
 
 ```python Error handling with fallback
 async def fallback_interceptor(
@@ -1113,9 +1113,9 @@ async def fallback_interceptor(
         return f"Could not connect to {request.name} service. Using cached data."
 ```
 
-### Progress notifications
+### 进度通知
 
-Subscribe to progress updates for long-running tool executions:
+订阅长时间运行的工具执行的进度更新：
 
 ```python Progress callback
 from langchain_mcp_adapters.client import MultiServerMCPClient
@@ -1138,13 +1138,13 @@ client = MultiServerMCPClient(
 )
 ```
 
-The `CallbackContext` provides:
-- `server_name`: Name of the MCP server
-- `tool_name`: Name of the tool being executed (available during tool calls)
+`CallbackContext` 提供以下信息：
+- `server_name`：MCP 服务器名称
+- `tool_name`：正在执行的工具名称（在工具调用期间可用）
 
-### Logging
+### 日志
 
-The MCP protocol supports [logging](https://modelcontextprotocol.io/specification/2025-03-26/server/utilities/logging#log-levels) notifications from servers. Use the `Callbacks` class to subscribe to these events.
+MCP 协议支持服务器发送[日志](https://modelcontextprotocol.io/specification/2025-03-26/server/utilities/logging#log-levels)通知。使用 `Callbacks` 类来订阅这些事件。
 
 ```python Logging callback
 from langchain_mcp_adapters.client import MultiServerMCPClient
@@ -1164,13 +1164,13 @@ client = MultiServerMCPClient(
 )
 ```
 
-### Elicitation
+### 引出（Elicitation）
 
-[Elicitation](https://modelcontextprotocol.io/specification/2025-11-25/client/elicitation#elicitation) allows MCP servers to request additional input from users during tool execution. Instead of requiring all inputs upfront, servers can interactively ask for information as needed.
+[引出](https://modelcontextprotocol.io/specification/2025-11-25/client/elicitation#elicitation)允许 MCP 服务器在工具执行期间向用户请求额外输入。服务器不需要预先要求所有输入，而是可以根据需要交互式地请求信息。
 
-#### Server setup
+#### 服务器端配置
 
-Define a tool that uses `ctx.elicit()` to request user input with a schema:
+定义一个使用 `ctx.elicit()` 来请求用户输入（带 Schema）的工具：
 
 ```python MCP server with elicitation
 from pydantic import BaseModel
@@ -1199,9 +1199,9 @@ if __name__ == "__main__":
     server.run(transport="http")
 ```
 
-#### Client setup
+#### 客户端配置
 
-Handle elicitation requests by providing a callback to `MultiServerMCPClient`:
+通过向 `MultiServerMCPClient` 提供回调来处理引出请求：
 
 ```python Handling elicitation requests
 from langchain_mcp_adapters.client import MultiServerMCPClient
@@ -1233,15 +1233,15 @@ client = MultiServerMCPClient(
 )
 ```
 
-#### Response actions
+#### 响应操作
 
-The elicitation callback can return one of three actions:
+引出回调可以返回以下三种操作之一：
 
-| Action | Description |
-|--------|-------------|
-| `accept` | User provided valid input. Include the data in the `content` field. |
-| `decline` | User chose not to provide the requested information. |
-| `cancel` | User cancelled the operation entirely. |
+| 操作 | 说明 |
+|--------|----------|
+| `accept` | 用户提供了有效输入。在 `content` 字段中包含数据。 |
+| `decline` | 用户选择不提供请求的信息。 |
+| `cancel` | 用户取消了整个操作。 |
 
 ```python Response action examples
 # Accept with data
@@ -1256,10 +1256,10 @@ ElicitResult(action="cancel")
 
 :::
 
-## Additional resources
+## 补充资源
 
-* [MCP documentation](https://modelcontextprotocol.io/introduction)
-* [MCP Transport documentation](https://modelcontextprotocol.io/docs/concepts/transports)
+* [MCP 文档](https://modelcontextprotocol.io/introduction)
+* [MCP 传输协议文档](https://modelcontextprotocol.io/docs/concepts/transports)
 :::python
 * [`langchain-mcp-adapters`](https://github.com/langchain-ai/langchain-mcp-adapters)
 :::

@@ -1,25 +1,25 @@
 ---
-title: "Gradient AI integration"
-description: "Integrate with the Gradient AI embedding model using LangChain JavaScript."
+title: "Gradient AI 集成"
+description: "使用 LangChain JavaScript 集成 Gradient AI 嵌入模型。"
 ---
 
-The `GradientEmbeddings` class uses the Gradient AI API to generate embeddings for a given text.
+`GradientEmbeddings` 类使用 Gradient AI API 为给定文本生成嵌入。
 
-## Setup
+## 设置
 
-You'll need to install the official Gradient Node SDK as a peer dependency:
+你需要安装官方的 Gradient Node SDK 作为对等依赖：
 
 ```bash npm
 npm i @langchain/community @langchain/core @gradientai/nodejs-sdk
 ```
-You will need to set the following environment variables for using the Gradient AI API.
+你需要设置以下环境变量来使用 Gradient AI API。
 
 ```
 export GRADIENT_ACCESS_TOKEN=<YOUR_ACCESS_TOKEN>
 export GRADIENT_WORKSPACE_ID=<YOUR_WORKSPACE_ID>
 ```
-Alternatively, these can be set during the GradientAI Class instantiation as `gradientAccessKey` and `workspaceId` respectively.
-For example:
+或者，你也可以在 GradientAI 类实例化时分别通过 `gradientAccessKey` 和 `workspaceId` 参数设置。
+例如：
 
 ```typescript
 const model = new GradientEmbeddings({

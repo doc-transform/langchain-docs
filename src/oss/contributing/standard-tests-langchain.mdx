@@ -1,42 +1,42 @@
 ---
-title: Using standard tests
-sidebarTitle: Standard tests
+title: 使用标准测试
+sidebarTitle: 标准测试
 ---
 
-**Standard tests ensure your integration works as expected.**
+**标准测试确保你的集成按预期工作。**
 
-When creating either a custom class for yourself or to publish in a LangChain integration, it is necessary to add tests to ensure it works as expected. LangChain provides a comprehensive [set of tests](https://pypi.org/project/langchain-tests/) for each integration type for you. This guide will show you how to add LangChain's standard test suite to each integration type.
+在创建自用的自定义类或准备发布为 LangChain 集成时，必须添加测试以确保其按预期工作。LangChain 为每种集成类型提供了全面的 [测试套件](https://pypi.org/project/langchain-tests/)。本指南将展示如何为各种集成类型添加 LangChain 的标准测试。
 
-## Setup
+## 安装
 
-First, install the required dependencies:
+首先，安装所需的依赖：
 
 :::python
 <CardGroup cols={2}>
     <Card title="langchain-core" icon="cube" href="https://github.com/langchain-ai/langchain/tree/master/libs/core#readme" arrow>
-        Defines the interfaces we want to import to define our custom components
+        定义了我们需要导入的接口，用于定义自定义组件
     </Card>
 
     <Card title="langchain-tests" icon="flask" href="https://github.com/langchain-ai/langchain/tree/master/libs/standard-tests#readme" arrow>
-        Provides the standard tests and `pytest` plugins necessary to run them
+        提供标准测试及运行所需的 `pytest` 插件
     </Card>
 </CardGroup>
 :::
 :::js
 <CardGroup cols={2}>
     <Card title="langchain-core" icon="cube" href="https://github.com/langchain-ai/langchainjs/tree/main/langchain-core#readme" arrow>
-        Defines the interfaces we want to import to define our custom components
+        定义了我们需要导入的接口，用于定义自定义组件
     </Card>
 
     <Card title="langchain-tests" icon="flask" href="https://github.com/langchain-ai/langchainjs/tree/main/libs/langchain-standard-tests#readme" arrow>
-        Provides the standard tests and plugins necessary to run them
+        提供标准测试及运行所需的插件
     </Card>
 </CardGroup>
 :::
 
 :::python
 <Warning>
-    Because added tests in new versions of `langchain-tests` can break your CI/CD pipelines, we recommend pinning to the latest version of [`langchain-tests`](https://pypi.org/project/langchain-tests/#history) to avoid unexpected changes.
+    由于 `langchain-tests` 新版本中新增的测试可能会导致你的 CI/CD 流水线中断，我们建议将 [`langchain-tests`](https://pypi.org/project/langchain-tests/#history) 固定到最新版本，以避免意外变更。
 </Warning>
 :::
 
@@ -77,47 +77,47 @@ First, install the required dependencies:
 </CodeGroup>
 :::
 
-There are 2 namespaces in the `langchain-tests` package:
+`langchain-tests` 包中有两个命名空间：
 
 <AccordionGroup>
-    <Accordion title="Unit tests" icon="settings">
+    <Accordion title="单元测试" icon="settings">
         :::python
-        **Location**: `langchain_tests.unit_tests`
+        **位置**：`langchain_tests.unit_tests`
         :::
         :::js
-        **Location**: `src.unit_tests`
+        **位置**：`src.unit_tests`
         :::
 
-        Designed to test the component in isolation and without access to external services
+        用于在隔离环境中测试组件，无需访问外部服务
 
-        [View API reference](https://reference.langchain.com/python/langchain_tests/unit_tests)
+        [查看 API 参考](https://reference.langchain.com/python/langchain_tests/unit_tests)
     </Accordion>
 
-    <Accordion title="Integration tests" icon="network">
+    <Accordion title="集成测试" icon="network">
         :::python
-        **Location**: `langchain_tests.integration_tests`
+        **位置**：`langchain_tests.integration_tests`
         :::
         :::js
-        **Location**: `src.integration_tests`
+        **位置**：`src.integration_tests`
         :::
 
-        Designed to test the component with access to external services (in particular, the external service that the component is designed to interact with)
+        用于在可访问外部服务（特别是组件所对接的目标服务）的环境中测试组件
 
-        [View API reference](https://reference.langchain.com/python/langchain_tests/integration_tests)
+        [查看 API 参考](https://reference.langchain.com/python/langchain_tests/integration_tests)
     </Accordion>
 </AccordionGroup>
 
 :::python
-Both types of tests are implemented as [`pytest`](https://docs.pytest.org/en/stable/) class-based test suites.
+两种测试类型均以 [`pytest`](https://docs.pytest.org/en/stable/) 基于类的测试套件形式实现。
 :::
 
-## Implementing standard tests
+## 实现标准测试
 
-Depending on your integration type, you will need to implement either or both unit and integration tests.
+根据你的集成类型，你需要实现单元测试和/或集成测试。
 
-By subclassing the standard test suite for your integration type, you get the full collection of standard tests for that type. For a test run to be successful, the a given test should pass only if the model supports the capability being tested. Otherwise, the test should be skipped.
+通过继承相应集成类型的标准测试套件，你将获得该类型的全部标准测试集合。测试运行成功的前提是：只有模型支持被测功能时该测试才应通过，否则该测试应被跳过。
 
-Because different integrations offer unique sets of features, most standard tests provided by LangChain are **opt-in by default** to prevent false positives. Consequently, you will need to override properties to indicate which features your integration supports - see the below example for an illustration.
+由于不同的集成提供不同的功能集，LangChain 提供的大多数标准测试默认为**可选加入（opt-in）**，以防止误报。因此，你需要重写属性来指明你的集成支持哪些功能——参见以下示例。
 
 :::python
 ```python tests/integration_tests/test_standard.py
@@ -152,65 +152,65 @@ class ChatParrotLinkStandardIntegrationTests extends ChatModelIntegrationTests<
 :::
 
 <Note>
-    You should organize tests in these subdirectories relative to the root of your package:
-    - `tests/unit_tests` for unit tests
-    - `tests/integration_tests` for integration tests
+    你应将测试文件组织在相对于包根目录的以下子目录中：
+    - `tests/unit_tests` 用于单元测试
+    - `tests/integration_tests` 用于集成测试
 </Note>
 
 :::python
-To see the complete list of configurable capabilities and their defaults, visit the [API reference](https://reference.langchain.com/python/langchain_tests) for standard tests.
+要查看可配置功能的完整列表及其默认值，请访问标准测试的 [API 参考](https://reference.langchain.com/python/langchain_tests)。
 :::
 
 :::js
-To see the complete list of configurable capabilities and their defaults, visit the [API reference](https://reference.langchain.com/javascript) for standard tests.
+要查看可配置功能的完整列表及其默认值，请访问标准测试的 [API 参考](https://reference.langchain.com/javascript)。
 :::
 
 :::python
 
-Here are some example implementations of standard tests from popular integrations:
+以下是一些来自热门集成的标准测试实现示例：
 
 <Tabs>
-    <Tab title="Unit tests">
+    <Tab title="单元测试">
         <Columns cols={3}>
-            <Card title="ChatOpenAI" href="https://github.com/langchain-ai/langchain/blob/master/libs/partners/openai/tests/unit_tests/chat_models/test_base_standard.py" arrow>Unit tests</Card>
-            <Card title="ChatAnthropic" href="https://github.com/langchain-ai/langchain/blob/master/libs/partners/anthropic/tests/unit_tests/test_standard.py" arrow>Unit tests</Card>
-            <Card title="ChatGenAI" href="https://github.com/langchain-ai/langchain-google/blob/main/libs/genai/tests/unit_tests/test_standard.py" arrow>Unit tests</Card>
+            <Card title="ChatOpenAI" href="https://github.com/langchain-ai/langchain/blob/master/libs/partners/openai/tests/unit_tests/chat_models/test_base_standard.py" arrow>单元测试</Card>
+            <Card title="ChatAnthropic" href="https://github.com/langchain-ai/langchain/blob/master/libs/partners/anthropic/tests/unit_tests/test_standard.py" arrow>单元测试</Card>
+            <Card title="ChatGenAI" href="https://github.com/langchain-ai/langchain-google/blob/main/libs/genai/tests/unit_tests/test_standard.py" arrow>单元测试</Card>
         </Columns>
     </Tab>
-    <Tab title="Integration tests">
+    <Tab title="集成测试">
         <Columns cols={3}>
-            <Card title="ChatOpenAI" href="https://github.com/langchain-ai/langchain/blob/master/libs/partners/openai/tests/integration_tests/chat_models/test_base_standard.py" arrow>Integration tests</Card>
-            <Card title="ChatAnthropic" href="https://github.com/langchain-ai/langchain/blob/master/libs/partners/anthropic/tests/integration_tests/test_standard.py" arrow>Integration tests</Card>
-            <Card title="ChatGenAI" href="https://github.com/langchain-ai/langchain-google/blob/main/libs/genai/tests/integration_tests/test_standard.py" arrow>Integration tests</Card>
+            <Card title="ChatOpenAI" href="https://github.com/langchain-ai/langchain/blob/master/libs/partners/openai/tests/integration_tests/chat_models/test_base_standard.py" arrow>集成测试</Card>
+            <Card title="ChatAnthropic" href="https://github.com/langchain-ai/langchain/blob/master/libs/partners/anthropic/tests/integration_tests/test_standard.py" arrow>集成测试</Card>
+            <Card title="ChatGenAI" href="https://github.com/langchain-ai/langchain-google/blob/main/libs/genai/tests/integration_tests/test_standard.py" arrow>集成测试</Card>
         </Columns>
     </Tab>
-    <Tab title="Sandbox integration tests">
-        Ensure your integration passes the standard test suite.
-        See the [Daytona integration](https://github.com/langchain-ai/deepagents/blob/main/libs/partners/daytona/tests/integration_tests/test_integration.py) as an example.
+    <Tab title="沙箱集成测试">
+        确保你的集成通过标准测试套件。
+        参阅 [Daytona 集成](https://github.com/langchain-ai/deepagents/blob/main/libs/partners/daytona/tests/integration_tests/test_integration.py) 作为示例。
 
-        <Card title="Daytona" href="https://github.com/langchain-ai/deepagents/blob/main/libs/partners/daytona/tests/integration_tests/test_integration.py" arrow>Sandbox Integration tests</Card>
+        <Card title="Daytona" href="https://github.com/langchain-ai/deepagents/blob/main/libs/partners/daytona/tests/integration_tests/test_integration.py" arrow>沙箱集成测试</Card>
     </Tab>
 </Tabs>
 
 :::
 
-## Sandbox integrations
+## 沙箱集成
 
 :::python
 
-Deep agents sandbox integrations use `SandboxIntegrationTests` from `langchain_tests.integration_tests`.
-Subclass it and provide a `sandbox` fixture that yields a `SandboxBackendProtocol` instance.
-Use the [Daytona integration tests](https://github.com/langchain-ai/deepagents/blob/main/libs/partners/daytona/tests/integration_tests/test_integration.py) as a reference implementation.
-See [Contributing a sandbox integration](/oss/contributing/integrations-langchain) for publishing guidelines.
+Deep Agents 沙箱集成使用 `langchain_tests.integration_tests` 中的 `SandboxIntegrationTests`。
+继承该类并提供一个 `sandbox` fixture，返回一个 `SandboxBackendProtocol` 实例。
+使用 [Daytona 集成测试](https://github.com/langchain-ai/deepagents/blob/main/libs/partners/daytona/tests/integration_tests/test_integration.py) 作为参考实现。
+参阅 [贡献沙箱集成](/oss/contributing/integrations-langchain) 了解发布指南。
 
 :::
 
 :::js
 
-Deep agents sandbox integrations use `sandboxStandardTests` from `@langchain/sandbox-standard-tests`.
-Call it with a config object that includes `createSandbox`, `resolvePath`, and `closeSandbox`.
-Use the [Daytona integration tests](https://github.com/langchain-ai/deepagentsjs/blob/main/libs/providers/daytona/src/sandbox.int.test.ts) as a reference implementation.
-See [Contributing a sandbox integration](/oss/contributing/integrations-langchain) for publishing guidelines.
+Deep Agents 沙箱集成使用 `@langchain/sandbox-standard-tests` 中的 `sandboxStandardTests`。
+传入包含 `createSandbox`、`resolvePath` 和 `closeSandbox` 的配置对象来调用它。
+使用 [Daytona 集成测试](https://github.com/langchain-ai/deepagentsjs/blob/main/libs/providers/daytona/src/sandbox.int.test.ts) 作为参考实现。
+参阅 [贡献沙箱集成](/oss/contributing/integrations-langchain) 了解发布指南。
 
 :::
 
@@ -218,41 +218,41 @@ See [Contributing a sandbox integration](/oss/contributing/integrations-langchai
 
 :::python
 
-## Running tests
+## 运行测试
 
-If bootstrapping an integration from a template, a `Makefile` is provided that includes targets for running unit and integration tests:
+如果你是从模板引导创建的集成，项目会提供一个 `Makefile`，其中包含运行单元测试和集成测试的目标：
 
 ```bash
 make test
 make integration_test
 ```
 
-Otherwise, if you follow the recommended directory structure, you can run tests with:
+否则，如果你按照推荐的目录结构组织代码，可以使用以下方式运行测试：
 
 ```bash
-# Run all tests
+# 运行所有测试
 uv run --group test pytest tests/unit_tests/
 uv run --group test --group test_integration pytest -n auto tests/integration_tests/
 
-# For certain unit tests, you may need to set certain flags and environment variables:
+# 某些单元测试可能需要设置特定的标志和环境变量：
 TIKTOKEN_CACHE_DIR=tiktoken_cache uv run --group test pytest --disable-socket --allow-unix-socket tests/unit_tests/
 
-# Run a specific test file
+# 运行特定测试文件
 uv run --group test pytest tests/integration_tests/test_chat_models.py
 
-# Run a specific test function in a file
+# 运行文件中的特定测试函数
 uv run --group test pytest tests/integration_tests/test_chat_models.py::test_chat_completions
 
-# Run a specific test function within a class
+# 运行类中的特定测试函数
 uv run --group test pytest tests/integration_tests/test_chat_models.py::TestChatParrotLinkIntegration::test_chat_completions
 ```
 :::
 
-## Troubleshooting
+## 故障排查
 
 :::python
-For a full list of the standard test suites that are available, as well as information on which tests are included and how to troubleshoot common issues, see the [Standard Tests API Reference](https://reference.langchain.com/python/langchain_tests).
+有关可用标准测试套件的完整列表，以及包含哪些测试和常见问题排查方法，请参阅 [标准测试 API 参考](https://reference.langchain.com/python/langchain_tests)。
 :::
 :::js
-For a full list of the standard test suites that are available, as well as information on which tests are included and how to troubleshoot common issues, see the [Standard Tests API Reference](https://v03.api.js.langchain.com/modules/_langchain_standard_tests.html).
+有关可用标准测试套件的完整列表，以及包含哪些测试和常见问题排查方法，请参阅 [标准测试 API 参考](https://v03.api.js.langchain.com/modules/_langchain_standard_tests.html)。
 :::

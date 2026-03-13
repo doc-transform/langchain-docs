@@ -1,45 +1,44 @@
 ---
-title: "Mixedbread AI reranking integration"
-description: "Integrate with the Mixedbread AI reranking document compressor using LangChain JavaScript."
+title: "Mixedbread AI 重排序集成"
+description: "使用 LangChain JavaScript 集成 Mixedbread AI 重排序文档压缩器。"
 ---
 
-## Overview
+## 概览
 
-This guide will help you integrate and use the [Mixedbread AI](https://mixedbread.ai/) reranking API. The reranking API allows you to reorder a list of documents based on a given query, improving the relevance of search results or any ranked list.
+本指南将帮助你集成和使用 [Mixedbread AI](https://mixedbread.ai/) 重排序 API。重排序 API 允许你根据给定查询对文档列表进行重新排序，从而提升搜索结果或任何排序列表的相关性。
 
-## Installation
+## 安装
 
-To get started, install the `@langchain/mixedbread-ai` package:
+要开始使用，请安装 `@langchain/mixedbread-ai` 包：
 
 <Tip>
-See [this section for general instructions on installing LangChain packages](/oss/langchain/install).
+安装 LangChain 包的通用说明请参见[此章节](/oss/langchain/install)。
 </Tip>
 
 ```bash
 npm install @langchain/mixedbread-ai
 ```
 
-## Authentication
+## 身份验证
 
-Obtain your API key by signing up at [Mixedbread AI](https://mixedbread.ai/). You can then set the `MXBAI_API_KEY` environment variable to your Mixedbread AI API key or pass it directly as the `apiKey` option when constructing the class.
+通过在 [Mixedbread AI](https://mixedbread.ai/) 注册获取你的 API 密钥。然后你可以设置 `MXBAI_API_KEY` 环境变量，或在构造类时直接作为 `apiKey` 选项传入。
 
-## Using reranking
+## 使用重排序
 
-The `MixedbreadAIReranker` class provides access to the reranking API. Here’s how to use it:
+`MixedbreadAIReranker` 类提供了对重排序 API 的访问。以下是使用方法：
 
-1. **Import the Class**: First, import the `MixedbreadAIReranker` class from the package.
-
+1. **导入类**：首先，从包中导入 `MixedbreadAIReranker` 类。
 ```typescript
 import { MixedbreadAIReranker } from "@langchain/mixedbread-ai";
 ```
 
-2. **Instantiate the Class**: Create an instance of `MixedbreadAIReranker` with your API key.
+2. **实例化类**：使用你的 API 密钥创建 `MixedbreadAIReranker` 实例。
 
 ```typescript
 const reranker = new MixedbreadAIReranker({ apiKey: "your-api-key" });
 ```
 
-3. **Rerank Documents**: Use the `rerankDocuments` method to reorder documents based on a query.
+3. **重排序文档**：使用 `rerankDocuments` 方法根据查询对文档重新排序。
 
 ```typescript
 const documents = [
@@ -52,6 +51,6 @@ const result = await reranker.compressDocuments(documents, query);
 console.log(result);
 ```
 
-## Additional resources
+## 其他资源
 
-For more information, refer to the [Reranking API documentation](https://www.mixedbread.ai/docs/reranking/overview).
+更多信息请参见 [重排序 API 文档](https://www.mixedbread.ai/docs/reranking/overview)。

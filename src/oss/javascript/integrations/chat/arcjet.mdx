@@ -1,25 +1,25 @@
 ---
-title: "Arcjet redact integration"
-description: "Integrate with the Arcjet redact chat model using LangChain JavaScript."
+title: "Arcjet Redact 集成"
+description: "使用 LangChain JavaScript 集成 Arcjet Redact 对话模型。"
 ---
 
-The [Arcjet](https://arcjet.com) redact integration allows you to redact sensitive user information from your prompts before sending it to a Chat Model.
+[Arcjet](https://arcjet.com) Redact 集成允许你在将提示词发送给对话模型之前，对用户的敏感信息进行脱敏处理。
 
-Arcjet Redact runs entirely on your own machine and never sends data anywhere else, ensuring best in class privacy and performance.
+Arcjet Redact 完全在你自己的机器上运行，从不向其他地方发送数据，确保了一流的隐私和性能。
 
-The Arcjet Redact object is not a chat model itself, instead it wraps an LLM. It redacts the text that is inputted to it and then unredacts the output of the wrapped chat model before returning it.
+Arcjet Redact 对象本身不是对话模型，而是封装了一个 LLM。它对输入的文本进行脱敏，然后对被封装的对话模型的输出进行反脱敏后再返回。
 
-## Overview
+## 概览
 
-### Integration details
+### 集成详情
 
 | Class | Package | Serializable | PY Support | Downloads | Version |
 | :--- | :--- | :---: |  :---: | :---: | :---: |
 | Arcjet | @langchain/community | ✅ | ❌ | ![NPM - Downloads](https://img.shields.io/npm/dm/@langchain/community?style=flat-square&label=%20&) | ![NPM - Version](https://img.shields.io/npm/v/@langchain/community?style=flat-square&label=%20&) |
 
-### Installation
+### 安装
 
-Install the Arcjet Redaction Library:
+安装 Arcjet 脱敏库：
 
 <CodeGroup>
 ```bash npm
@@ -33,7 +33,7 @@ pnpm add @arcjet/redact
 ```
 </CodeGroup>
 
-And install LangChain Community:
+然后安装 LangChain Community：
 
 <CodeGroup>
 ```bash npm
@@ -47,9 +47,9 @@ pnpm add @langchain/community @langchain/core
 ```
 </CodeGroup>
 
-And now you're ready to start protecting your chat model calls with Arcjet Redaction!
+现在你已准备好使用 Arcjet Redaction 保护你的对话模型调用了！
 
-## Usage
+## 用法
 
 ```typescript
 import {

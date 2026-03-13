@@ -1,39 +1,39 @@
 ---
-title: Skills
-description: Learn how to extend your deep agent's capabilities with skills
+title: 技能
+description: 了解如何通过技能扩展 Deep Agent 的能力
 ---
 
 import SkillsUsageTabsPy from '/snippets/skills-usage-tabs-py.mdx';
 import SkillsUsageTabsJs from '/snippets/skills-usage-tabs-js.mdx';
 
-Skills are reusable agent capabilities that provide specialized workflows and domain knowledge.
+技能是可重用的 Agent 能力，提供专业化的工作流和领域知识。
 
-You can use [Agent Skills](https://agentskills.io/) to provide your deep agent with new capabilities and expertise.
+你可以使用 [Agent Skills](https://agentskills.io/) 为 Deep Agent 提供新的能力和专业知识。
 
-Deep agent skills follow the [Agent Skills specification](https://agentskills.io/specification).
+Deep Agent 技能遵循 [Agent Skills 规范](https://agentskills.io/specification)。
 
-## What are skills
+## 什么是技能
 
-Skills are a directory of folders, where each folder has one or more files that contain context the agent can use:
+技能是一个文件夹目录，每个文件夹包含一个或多个 Agent 可以使用的上下文文件：
 
-- A `SKILL.md` file containing instructions and metadata about the skill
-- Additional scripts (optional)
-- Additional reference info, such as docs (optional)
-- Additional assets, such as templates and other resources (optional)
+- 一个 `SKILL.md` 文件，包含技能的指令和元数据
+- 额外的脚本（可选）
+- 额外的参考信息，如文档（可选）
+- 额外的资源，如模板和其他资源（可选）
 
 <Note>
-    Any additional assets (scripts, docs, templates, or other resources) must be referenced in the `SKILL.md` file with information on what the file contains and how to use it so the agent can decide when to use them.
+    任何额外资源（脚本、文档、模板或其他资源）必须在 `SKILL.md` 文件中引用，并说明文件包含什么内容以及如何使用，以便 Agent 能够决定何时使用它们。
 </Note>
 
-## How skills work
+## 技能如何工作
 
-When you create a deep agent, you can pass in a list of directories containing skills. As the agent starts, it reads through the frontmatter of each `SKILL.md` file.
+创建 Deep Agent 时，你可以传入一个包含技能的目录列表。Agent 启动时会读取每个 `SKILL.md` 文件的 frontmatter。
 
-When the agent receives a prompt, the agent checks if it can use any skills while fulfilling the prompt. If it finds a matching prompt, it then reviews the rest of the skill files. This pattern of only reviewing the skill information when needed is called *progressive disclosure*.
+当 Agent 收到提示时，会检查是否有任何技能可以在完成提示时使用。如果找到匹配的技能，它会进一步审查技能文件的其余内容。这种仅在需要时才审查技能信息的模式称为 *渐进式披露*。
 
-## Example
+## 示例
 
-You might have a skills folder that contains a skill to use a docs site in a certain way, as well as another skill to search the arXiv preprint repository of research papers:
+你可能有一个技能文件夹，包含一个以特定方式使用文档站点的技能，以及另一个搜索 arXiv 预印本库的技能：
 
 :::python
 ```plaintext
@@ -42,7 +42,7 @@ You might have a skills folder that contains a skill to use a docs site in a cer
     │   └── SKILL.md
     └── arxiv_search
         ├── SKILL.md
-        └── arxiv_search.py # code for searching arXiv
+        └── arxiv_search.py # 搜索 arXiv 的代码
 ```
 :::
 
@@ -53,13 +53,13 @@ You might have a skills folder that contains a skill to use a docs site in a cer
     │   └── SKILL.md
     └── arxiv_search
         ├── SKILL.md
-        └── arxiv_search.ts # code for searching arXiv
+        └── arxiv_search.ts # 搜索 arXiv 的代码
 ```
 :::
 
-The `SKILL.md` file always follows the same pattern, starting with metadata in the frontmatter and followed by the instructions for the skill.
+`SKILL.md` 文件始终遵循相同的模式，以 frontmatter 中的元数据开头，后接技能的指令。
 
-The following example shows a skill that gives instructions on how to provide relevant langgraph docs when prompted:
+以下示例展示了一个技能，提供如何在收到提示时获取相关 LangGraph 文档的指令：
 
 ```md
 ---
@@ -101,25 +101,25 @@ After reading the documentation, complete the user's request.
 ```
 
 :::python
-For more example skills, see [Deep Agent example skills](https://github.com/langchain-ai/deepagents/tree/main/libs/cli/examples/skills).
+更多技能示例请参阅 [Deep Agent 示例技能](https://github.com/langchain-ai/deepagents/tree/main/libs/cli/examples/skills)。
 :::
 
 :::js
-For more example skills, see [Deep Agent example skills](https://github.com/langchain-ai/deepagentsjs/tree/main/examples/skills).
+更多技能示例请参阅 [Deep Agent 示例技能](https://github.com/langchain-ai/deepagentsjs/tree/main/examples/skills)。
 :::
 
 <Warning>
-    **Important**
+    **重要**
 
-    Refer to the full [Agent Skills Specification](https://agentskills.io/specification) for information on constraints and best practices when authoring skill files. Notably:
+    关于编写技能文件的约束和最佳实践，请参阅完整的 [Agent Skills 规范](https://agentskills.io/specification)。特别注意：
 
-    * The `description` field is truncated to 1024 characters if it exceeds that length.
-    * In Deep Agents, `SKILL.md` files must be under 10 MB. Files exceeding this limit are skipped during skill loading.
+    * 如果 `description` 字段超过 1024 个字符，将被截断。
+    * 在 Deep Agents 中，`SKILL.md` 文件必须小于 10 MB。超过此限制的文件在技能加载时会被跳过。
 </Warning>
 
-### Full example
+### 完整示例
 
-The following example shows a `SKILL.md` file using all available frontmatter fields:
+以下示例展示了使用所有可用 frontmatter 字段的 `SKILL.md` 文件：
 
 ```md expandable
 ---
@@ -166,23 +166,23 @@ Use the fetch_url tool to read the selected documentation URLs.
 After reading the documentation, complete the user's request.
 ```
 
-## Usage
+## 用法
 
-Pass the skills directory when creating your deep agent:
+创建 Deep Agent 时传入技能目录：
 
 :::python
 <SkillsUsageTabsPy />
 
 <ParamField body="skills" type="list[str]" optional>
-    List of skill source paths.
+    技能源路径列表。
 
-    Paths must be specified using forward slashes and are relative to the backend's root.
+    路径必须使用正斜杠，相对于后端的根目录。
 
-    - If omitted, no skills are loaded.
-    - When using `StateBackend` (default), provide skill files with `invoke(files={...})`. Use `create_file_data()` from `deepagents.backends.utils` to format file contents; raw strings are not supported.
-    - With `FilesystemBackend`, skills are loaded from disk relative to the backend's `root_dir`.
+    - 如果省略，则不加载任何技能。
+    - 使用 `StateBackend`（默认）时，通过 `invoke(files={...})` 提供技能文件。使用 `deepagents.backends.utils` 中的 `create_file_data()` 格式化文件内容；不支持原始字符串。
+    - 使用 `FilesystemBackend` 时，技能从磁盘加载，相对于后端的 `root_dir`。
 
-    Later sources override earlier ones for skills with the same name (last one wins).
+    后列的源会覆盖先列的同名技能（最后一个生效）。
 </ParamField>
 
 :::
@@ -191,27 +191,27 @@ Pass the skills directory when creating your deep agent:
 <SkillsUsageTabsJs />
 
 <ParamField body="skills" type="list[str]" optional>
-    List of skill source paths.
+    技能源路径列表。
 
-    Paths must be specified using forward slashes and are relative to the backend's root.
+    路径必须使用正斜杠，相对于后端的根目录。
 
-    - If omitted, no skills are loaded.
-    - When using `StateBackend` (default), provide skill files with `invoke(files={...})`.
-    - With `FilesystemBackend`, skills are loaded from disk relative to the backend's `root_dir`.
+    - 如果省略，则不加载任何技能。
+    - 使用 `StateBackend`（默认）时，通过 `invoke(files={...})` 提供技能文件。
+    - 使用 `FilesystemBackend` 时，技能从磁盘加载，相对于后端的 `root_dir`。
 
-    Later sources override earlier ones for skills with the same name (last one wins).
+    后列的源会覆盖先列的同名技能（最后一个生效）。
 </ParamField>
 :::
 
 <Note>
-    The SDK only loads the sources you pass in `skills`. It does not automatically scan CLI directories such as `~/.deepagents/...` or `~/.agents/...`.
+    SDK 仅加载你在 `skills` 中传入的源。它不会自动扫描 CLI 目录，如 `~/.deepagents/...` 或 `~/.agents/...`。
 
-    For CLI storage conventions, see [App data](/oss/deepagents/data-locations).
+    关于 CLI 存储约定，请参阅[应用数据](/oss/deepagents/data-locations)。
 
     <Accordion
-        title="Emulating CLI source order in SDK"
+        title="在 SDK 中模拟 CLI 源顺序"
     >
-        If you want CLI-style layering in SDK code, pass all desired sources explicitly in lowest-to-highest precedence order:
+        如果你想在 SDK 代码中实现类似 CLI 的分层，请按从低到高的优先级顺序显式传入所有所需源：
 
         ```text
         [
@@ -222,19 +222,19 @@ Pass the skills directory when creating your deep agent:
         ]
         ```
 
-        Then pass that ordered list as `skills` when creating your agent.
+        然后将该有序列表作为 `skills` 传入创建 Agent 时使用。
     </Accordion>
 </Note>
 
 
-## Source precedence
+## 源优先级
 
-When multiple skill sources contain a skill with the same name, the skill from the source listed later in the `skills` array takes precedence (last one wins). This lets you layer skills from different origins.
+当多个技能源包含同名技能时，`skills` 数组中较后列出的源优先级更高（最后一个生效）。这让你可以将不同来源的技能分层组织。
 
 :::python
 ```python
-# If both sources contain a skill named "web-search",
-# the one from "/skills/project/" wins (loaded last).
+# 如果两个源都包含名为 "web-search" 的技能，
+# 来自 "/skills/project/" 的技能将生效（最后加载）。
 agent = create_deep_agent(
     skills=["/skills/user/", "/skills/project/"],
     ...
@@ -244,8 +244,8 @@ agent = create_deep_agent(
 
 :::js
 ```typescript
-// If both sources contain a skill named "web-search",
-// the one from "/skills/project/" wins (loaded last).
+// 如果两个源都包含名为 "web-search" 的技能，
+// 来自 "/skills/project/" 的技能将生效（最后加载）。
 const agent = await createDeepAgent({
   skills: ["/skills/user/", "/skills/project/"],
   ...
@@ -253,14 +253,14 @@ const agent = await createDeepAgent({
 ```
 :::
 
-## Skills for subagents
+## 子 Agent 的技能
 
-When you use [subagents](/oss/deepagents/subagents), you can configure which skills each type has access to:
+当你使用[子 Agent](/oss/deepagents/subagents) 时，可以配置每种类型可以访问哪些技能：
 
-- **General-purpose subagent**: Automatically inherits skills from the main agent when you pass `skills` to `create_deep_agent`. No additional configuration is needed.
-- **Custom subagents**: Do not inherit the main agent's skills. Add a `skills` parameter to each subagent definition with that subagent's skill source paths.
+- **通用子 Agent**：当你向 `create_deep_agent` 传入 `skills` 时，自动继承主 Agent 的技能。无需额外配置。
+- **自定义子 Agent**：不会继承主 Agent 的技能。需要为每个子 Agent 定义添加 `skills` 参数指定该子 Agent 的技能源路径。
 
-Skill state is fully isolated: the main agent's skills are not visible to subagents, and subagent skills are not visible to the main agent.
+技能状态是完全隔离的：主 Agent 的技能对子 Agent 不可见，子 Agent 的技能对主 Agent 也不可见。
 
 :::python
 ```python
@@ -300,36 +300,36 @@ const agent = await createDeepAgent({
 ```
 :::
 
-For more information on subagent configuration and skills inheritance, see [Subagents](/oss/deepagents/subagents).
+关于子 Agent 配置和技能继承的更多信息，请参阅[子 Agent](/oss/deepagents/subagents)。
 
-## What the agent sees
+## Agent 看到了什么
 
-When skills are configured, a "Skills System" section is injected into the agent's system prompt. The agent uses this information to follow a three-step process:
+配置技能后，一个"技能系统"部分会被注入到 Agent 的系统提示词中。Agent 使用这些信息遵循三步流程：
 
-1. **Match**—When a user prompt arrives, the agent checks whether any skill's description matches the task.
-2. **Read**—If a skill applies, the agent reads the full `SKILL.md` file using the path shown in its skills list.
-3. **Execute**—The agent follows the skill's instructions and accesses any supporting files (scripts, templates, reference docs) as needed.
+1. **匹配** — 当用户提示到达时，Agent 检查是否有任何技能的描述与任务匹配。
+2. **读取** — 如果某个技能适用，Agent 使用技能列表中显示的路径读取完整的 `SKILL.md` 文件。
+3. **执行** — Agent 按照技能的指令执行，并根据需要访问任何支持文件（脚本、模板、参考文档）。
 
 <Tip>
-    Write clear, specific descriptions in your `SKILL.md` frontmatter. The agent decides whether to use a skill based on the description alone—detailed descriptions lead to better skill matching.
+    在 `SKILL.md` 的 frontmatter 中编写清晰、具体的描述。Agent 仅根据描述决定是否使用技能——详细的描述能带来更好的技能匹配效果。
 </Tip>
 
-## Skills vs. memory
+## 技能与记忆的区别
 
-Skills and [memory](/oss/deepagents/customization#memory) (`AGENTS.md` files) serve different purposes:
+技能和[记忆](/oss/deepagents/customization#memory)（`AGENTS.md` 文件）服务于不同的目的：
 
-| | Skills | Memory |
+| | 技能 | 记忆 |
 |---|--------|--------|
-| **Purpose** | On-demand capabilities discovered through progressive disclosure | Persistent context always loaded at startup |
-| **Loading** | Read only when the agent determines relevance | Always injected into system prompt |
-| **Format** | `SKILL.md` in named directories | `AGENTS.md` files |
-| **Layering** | User → project (last wins) | User → project (combined) |
-| **Use when** | Instructions are task-specific and potentially large | Context is always relevant (project conventions, preferences) |
+| **目的** | 通过渐进式披露发现的按需能力 | 启动时始终加载的持久上下文 |
+| **加载方式** | 仅当 Agent 判断相关时才读取 | 始终注入系统提示词 |
+| **格式** | 命名目录中的 `SKILL.md` | `AGENTS.md` 文件 |
+| **分层** | 用户 → 项目（最后一个生效） | 用户 → 项目（合并） |
+| **适用场景** | 指令是任务特定的且可能较大 | 上下文始终相关（项目约定、偏好） |
 
-## When to use skills and tools
+## 何时使用技能和工具
 
-These are a few general guidelines for using tools and skills:
+以下是使用工具和技能的一些通用指导：
 
-- Use skills when there is a lot of context to reduce the number of tokens in the system prompt.
-- Use skills to bundle capabilities together into larger actions and provide additional context beyond single tool descriptions.
-- Use tools if the agent does not have access to the file system.
+- 当有大量上下文时使用技能，以减少系统提示词中的 Token 数量。
+- 使用技能将能力捆绑成更大的操作，并提供超出单个工具描述的额外上下文。
+- 如果 Agent 无法访问文件系统，则使用工具。

@@ -2,29 +2,29 @@
 title: Soniox
 ---
 
-Get started using the [Soniox](https://soniox.com/) audio transcription loader in LangChain.
+开始使用 LangChain 中的 [Soniox](https://soniox.com/) 音频转录加载器。
 
-## Setup
+## 设置
 
-Install the package:
+安装该包：
 
 ```bash npm2yarn
 npm install @soniox/langchain
 ```
 
-### Credentials
+### 凭据
 
-Get your Soniox API key from the [Soniox Console](https://console.soniox.com) and set it as an environment variable:
+从 [Soniox 控制台](https://console.soniox.com) 获取你的 Soniox API 密钥并将其设置为环境变量：
 
 ```bash
 export SONIOX_API_KEY=your_api_key
 ```
 
-## Usage
+## 用法
 
-### Basic transcription
+### 基本转录
 
-Example how to transcribe audio file using the `SonioxAudioTranscriptLoader` and generate the summary with an LLM.
+使用 `SonioxAudioTranscriptLoader` 转录音频文件并使用 LLM 生成摘要的示例。
 
 ```typescript
 import { SonioxAudioTranscriptLoader } from "@soniox/langchain";
@@ -63,7 +63,7 @@ const summary = await chain.invoke({ transcript: transcriptText });
 console.log(summary);
 ```
 
-You can also transcribe audio from binary data:
+你也可以从二进制数据转录音频：
 
 ```typescript
 // Fetch the file
@@ -78,9 +78,9 @@ const docs = await loader.load();
 console.log(docs[0].pageContent); // Transcribed text
 ```
 
-### Translation
+### 翻译
 
-Translate from any detected language to a target language:
+从任何检测到的语言翻译到目标语言：
 
 ```typescript
 const loader = new SonioxAudioTranscriptLoader(
@@ -113,13 +113,13 @@ console.log(originalText);
 console.log(translatedText);
 ```
 
-You can also transcribe and translate between two languages simultaneously using `two_way` translation type. Learn more about [Soniox translation](https://soniox.com/docs/stt/async/async-translation).
+你也可以使用 `two_way` 翻译类型同时在两种语言之间转录和翻译。在[此处](https://soniox.com/docs/stt/async/async-translation)了解更多关于翻译的信息。
 
-### Language hints
+### 语言提示
 
-Soniox automatically detects and transcribes speech in [**60+ languages**](https://soniox.com/docs/stt/concepts/supported-languages). When you know which languages are likely to appear in your audio, provide `language_hints` to improve accuracy by biasing recognition toward those languages.
+Soniox 自动检测并转录 [**60+ 种语言**](https://soniox.com/docs/stt/concepts/supported-languages) 的语音。当你知道音频中可能出现哪些语言时，提供 `language_hints` 可以通过向这些语言倾斜识别来提高准确性。
 
-Language hints **do not restrict** recognition—they only **bias** the model toward the specified languages, while still allowing other languages to be detected if present.
+语言提示**不会限制**识别——它们只是**向**指定语言**倾斜**模型，同时仍然允许检测其他存在的语言。
 
 ```typescript
 const loader = new SonioxAudioTranscriptLoader(
@@ -134,11 +134,11 @@ const loader = new SonioxAudioTranscriptLoader(
 const docs = await loader.load();
 ```
 
-For more details, see the [Soniox language hints documentation](https://soniox.com/docs/stt/concepts/language-hints).
+更多详情请参见 [Soniox 语言提示文档](https://soniox.com/docs/stt/concepts/language-hints)。
 
-### Speaker diarization
+### 说话人分离
 
-Enable speaker identification to distinguish between different speakers:
+启用说话人识别以区分不同的说话人：
 
 ```typescript
 const loader = new SonioxAudioTranscriptLoader(
@@ -182,9 +182,9 @@ const analysis = await chain.invoke({ conversation: output });
 console.log(analysis);
 ```
 
-### Language identification
+### 语言识别
 
-Enable automatic language detection and identification:
+启用自动语言检测和识别：
 
 ```typescript
 const loader = new SonioxAudioTranscriptLoader(
@@ -197,9 +197,9 @@ const loader = new SonioxAudioTranscriptLoader(
 );
 ```
 
-### Context for improved accuracy
+### 上下文以提高准确性
 
-Provide domain-specific [context](https://soniox.com/docs/stt/concepts/context) to improve transcription accuracy:
+提供特定领域的[上下文](https://soniox.com/docs/stt/concepts/context)以提高转录准确性：
 
 ```typescript
 const loader = new SonioxAudioTranscriptLoader(
@@ -222,13 +222,13 @@ const loader = new SonioxAudioTranscriptLoader(
 );
 ```
 
-For more details, see the [Soniox context documentation](https://soniox.com/docs/stt/concepts/context).
+更多详情请参见 [Soniox 上下文文档](https://soniox.com/docs/stt/concepts/context)。
 
-## API reference
+## API 参考
 
-### Constructor parameters
+### 构造函数参数
 
-#### SonioxLoaderParams (required)
+#### SonioxLoaderParams（必需）
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -239,7 +239,7 @@ For more details, see the [Soniox context documentation](https://soniox.com/docs
 | `pollingIntervalMs` | `number` | No | Polling interval in ms (min: 1000, default: 1000) |
 | `pollingTimeoutMs` | `number` | No | Polling timeout in ms (default: 180000) |
 
-#### SonioxLoaderOptions (optional)
+#### SonioxLoaderOptions（可选）
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
@@ -251,9 +251,9 @@ For more details, see the [Soniox context documentation](https://soniox.com/docs
 | `enable_language_identification` | `boolean` | Enable language detection |
 | `context` | `object` | Context for improved accuracy |
 
-Browse the [documentation](https://soniox.com/docs/stt/api-reference/transcriptions/create_transcription) for a full list of supported options.
+浏览[文档](https://soniox.com/docs/stt/api-reference/transcriptions/create_transcription)了解支持的完整选项列表。
 
-### Supported audio formats
+### 支持的音频格式
 
 - `aac` - Advanced Audio Coding
 - `aiff` - Audio Interchange File Format
@@ -265,9 +265,9 @@ Browse the [documentation](https://soniox.com/docs/stt/api-reference/transcripti
 - `wav` - Waveform Audio File Format
 - `webm` - WebM Audio
 
-### Return value
+### 返回值
 
-The `load()` method returns an array containing a single `Document` object:
+`load()` 方法返回包含单个 `Document` 对象的数组：
 
 ```typescript
 type Document {
@@ -276,7 +276,7 @@ type Document {
 }
 ```
 
-The metadata includes transcribed text, speaker information (if diarization enabled), language information (if identification enabled), translation data (if translation enabled), and timing information.
+metadata 包含转录文本、说话人信息（如果启用了分离）、语言信息（如果启用了识别）、翻译数据（如果启用了翻译）和时间信息。
 
 ```typescript
 type SonioxTranscriptResponse = {
@@ -286,7 +286,7 @@ type SonioxTranscriptResponse = {
 }
 ```
 
-Token type:
+Token 类型：
 
 ```typescript
 type SonioxTranscriptToken = {
@@ -300,8 +300,8 @@ type SonioxTranscriptToken = {
 };
 ```
 
-You can learn more about the `SonioxTranscriptResponse` type in the [Soniox REST API Reference](https://soniox.com/docs/stt/api-reference/transcriptions/get_transcription_transcript).
+你可以在 [Soniox REST API 参考](https://soniox.com/docs/stt/api-reference/transcriptions/get_transcription_transcript) 中了解更多关于 `SonioxTranscriptResponse` 类型的信息。
 
-## Related
+## 相关
 
-- [Soniox API documentation](https://soniox.com/docs)
+- [Soniox API 文档](https://soniox.com/docs)

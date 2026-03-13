@@ -1,38 +1,38 @@
 ---
-title: "AWS integrations"
-description: "Integrate with AWS using LangChain JavaScript."
-sidebarTitle: "Overview"
+title: "AWS 集成"
+description: "使用 LangChain JavaScript 集成 AWS。"
+sidebarTitle: "概览"
 ---
 
-All functionality related to the [Amazon AWS](https://aws.amazon.com/) platform.
+与 [Amazon AWS](https://aws.amazon.com/) 平台相关的所有功能。
 
-## Chat models
+## 对话模型
 
 ### Bedrock
 
-See a [usage example](/oss/integrations/chat/bedrock).
+参见[使用示例](/oss/integrations/chat/bedrock)。
 
 ```typescript
 import { BedrockChat } from "@langchain/community/chat_models/bedrock";
 ```
 
-## LLMs
+## LLM 模型
 
 ### Bedrock
 
-See a [usage example](/oss/integrations/llms/bedrock).
+参见[使用示例](/oss/integrations/llms/bedrock)。
 
 ```typescript
 import { Bedrock } from "@langchain/community/llms/bedrock";
 ```
 
-### SageMaker endpoint
+### SageMaker 端点
 
-> [Amazon SageMaker](https://aws.amazon.com/sagemaker/) is a system that can build, train, and deploy machine learning (ML) models with fully managed infrastructure, tools, and workflows.
+> [Amazon SageMaker](https://aws.amazon.com/sagemaker/) 是一个可以通过完全托管的基础设施、工具和工作流来构建、训练和部署机器学习（ML）模型的系统。
 
-We use `SageMaker` to host our model and expose it as the `SageMaker Endpoint`.
+我们使用 `SageMaker` 来托管模型并将其作为 `SageMaker Endpoint` 对外提供服务。
 
-See a [usage example](/oss/integrations/llms/aws_sagemaker).
+参见[使用示例](/oss/integrations/llms/aws_sagemaker)。
 
 ```typescript
 import {
@@ -41,24 +41,24 @@ import {
 } from "@langchain/community/llms/sagemaker_endpoint";
 ```
 
-## Text embedding models
+## 文本嵌入模型
 
 ### Bedrock
 
-See a [usage example](/oss/integrations/embeddings/bedrock).
+参见[使用示例](/oss/integrations/text_embedding/bedrock)。
 
 ```typescript
 import { BedrockEmbeddings } from "@langchain/aws";
 ```
 
-## Document loaders
+## 文档加载器
 
-### AWS S3 directory and file
+### AWS S3 目录和文件
 
-> [Amazon Simple Storage Service (Amazon S3)](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-folders.html) is an object storage service.
+> [Amazon Simple Storage Service (Amazon S3)](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-folders.html) 是一种对象存储服务。
 > [AWS S3 Directory](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-folders.html) >[AWS S3 Buckets](https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingBucket.html)
 
-See a [usage example for S3FileLoader](/oss/integrations/document_loaders/web_loaders/s3).
+参见 [S3FileLoader 的使用示例](/oss/integrations/document_loaders/web_loaders/s3)。
 
 ```bash npm
 npm install @aws-sdk/client-s3

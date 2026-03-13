@@ -1,16 +1,16 @@
 ---
-title: "Huggingfaceinference integration"
-description: "Integrate with the Huggingfaceinference LLM using LangChain JavaScript."
+title: "HuggingFaceInference 集成"
+description: "使用 LangChain JavaScript 集成 HuggingFaceInference LLM 模型。"
 ---
 
-Here's an example of calling a HugggingFaceInference model as an LLM:
+以下是将 HuggingFaceInference 模型作为 LLM 调用的示例：
 
 ```bash npm
 npm install @langchain/community @langchain/core @huggingface/inference@4
 ```
 
 <Tip>
-We're unifying model params across all packages. We now suggest using `model` instead of `modelName`, and `apiKey` for API keys.
+我们正在统一所有包的模型参数。现在建议使用 `model` 而不是 `modelName`，使用 `apiKey` 作为 API 密钥参数。
 </Tip>
 
 ```typescript
@@ -24,7 +24,7 @@ const res = await model.invoke("1 + 1 =");
 console.log({ res });
 ```
 
-## Related
+## 相关链接
 
 
-- [Models guide](/oss/langchain/models)
+- [模型指南](/oss/langchain/models)

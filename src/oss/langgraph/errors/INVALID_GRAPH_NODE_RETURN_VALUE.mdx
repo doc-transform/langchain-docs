@@ -3,8 +3,8 @@ title: INVALID_GRAPH_NODE_RETURN_VALUE
 ---
 
 :::python
-A LangGraph [`StateGraph`](https://langchain-ai.github.io/langgraph/reference/graphs/#langgraph.graph.state.StateGraph)
-received a non-dict return type from a node. Here's an example:
+LangGraph [`StateGraph`](https://langchain-ai.github.io/langgraph/reference/graphs/#langgraph.graph.state.StateGraph)
+从节点接收到了非字典类型的返回值。以下是一个示例：
 
 ```python
 class State(TypedDict):
@@ -21,7 +21,7 @@ builder.add_node(bad_node)
 graph = builder.compile()
 ```
 
-Invoking the above graph will result in an error like this:
+调用上述图将导致如下错误：
 
 ```python
 graph.invoke({ "some_key": "someval" });
@@ -32,12 +32,12 @@ InvalidUpdateError: Expected dict, got ['whoops']
 For troubleshooting, visit: https://docs.langchain.com/oss/python/langgraph/errors/INVALID_GRAPH_NODE_RETURN_VALUE
 ```
 
-Nodes in your graph must return a dict containing one or more keys defined in your state.
+图中的节点必须返回包含一个或多个在状态中定义的键的字典。
 :::
 
 :::js
-A LangGraph [`StateGraph`](https://langchain-ai.github.io/langgraph/reference/graphs/#langgraph.graph.state.StateGraph)
-received a non-object return type from a node. Here's an example:
+LangGraph [`StateGraph`](https://langchain-ai.github.io/langgraph/reference/graphs/#langgraph.graph.state.StateGraph)
+从节点接收到了非对象类型的返回值。以下是一个示例：
 
 ```typescript
 import { z } from "zod/v4";
@@ -58,7 +58,7 @@ const builder = new StateGraph(State).addNode("badNode", badNode);
 const graph = builder.compile();
 ```
 
-Invoking the above graph will result in an error like this:
+调用上述图将导致如下错误：
 
 ```typescript
 await graph.invoke({ someKey: "someval" });
@@ -69,17 +69,17 @@ InvalidUpdateError: Expected object, got ['whoops']
 For troubleshooting, visit: https://langchain-ai.github.io/langgraphjs/troubleshooting/errors/INVALID_GRAPH_NODE_RETURN_VALUE
 ```
 
-Nodes in your graph must return an object containing one or more keys defined in your state.
+图中的节点必须返回包含一个或多个在状态中定义的键的对象。
 :::
 
-## Troubleshooting
+## 故障排除
 
-The following may help resolve this error:
+以下方法可能有助于解决此错误：
 
 :::python
-* If you have complex logic in your node, make sure all code paths return an appropriate dict for your defined state.
+* 如果你的节点有复杂的逻辑，确保所有代码路径都返回与定义的状态匹配的适当字典。
 :::
 
 :::js
-* If you have complex logic in your node, make sure all code paths return an appropriate object for your defined state.
+* 如果你的节点有复杂的逻辑，确保所有代码路径都返回与定义的状态匹配的适当对象。
 :::

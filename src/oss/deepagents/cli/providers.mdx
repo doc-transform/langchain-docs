@@ -1,50 +1,49 @@
 ---
-title: Custom model providers
-sidebarTitle: Model providers
-description: Configure any LangChain-compatible model provider for the Deep Agents CLI
+title: 自定义模型提供商
+sidebarTitle: 模型提供商
+description: 为 Deep Agents CLI 配置任何与 LangChain 兼容的模型提供商
 ---
 
-The Deep Agents CLI supports any [chat model provider compatible with LangChain](/oss/langchain/models), unlocking use for virtually any LLM that supports tool calling. Any service that exposes an OpenAI-compatible or Anthropic-compatible API also works out of the box—see [Compatible APIs](/oss/deepagents/cli/configuration#compatible-apis).
+Deep Agents CLI 支持任何[与 LangChain 兼容的聊天模型提供商](/oss/langchain/models)，几乎可以解锁任何支持工具调用的 LLM。任何暴露 OpenAI 兼容或 Anthropic 兼容 API 的服务也可开箱即用——请参见[兼容 API](#compatible-apis)。
 
-## Quick start
+## 快速开始
 
-The CLI integrates automatically with the [following model providers](#provider-reference): no extra configuration needed beyond installing the relevant provider package.
+CLI 可与[以下模型提供商](#provider-reference)自动集成——除了安装相关提供商包外无需额外配置。
 
-1. **Install provider packages**
+1. **安装提供商包**
 
-    Each model provider requires installing its corresponding LangChain integration package. These are available as optional extras when installing the CLI:
+    每个模型提供商需要安装其对应的 LangChain 集成包。安装 CLI 时可以作为可选额外包使用：
 
     ```bash
-    # Quick install with chosen providers (OpenAI included automatically)
-    DEEPAGENTS_EXTRAS="anthropic,groq" curl -LsSf https://raw.githubusercontent.com/langchain-ai/deepagents/refs/heads/main/libs/cli/scripts/install.sh | bash
+    # Install with one provider
+    uv tool install 'deepagents-cli[anthropic]'
 
-    # Or install directly with uv
-    uv tool install 'deepagents-cli[anthropic,groq]'
+    # Install with multiple providers at once
+    uv tool install 'deepagents-cli[anthropic,openai,groq]'
 
     # Add additional packages at a later date
     uv tool upgrade deepagents-cli --with langchain-ollama
 
     # All providers
-    uv tool install 'deepagents-cli[anthropic,baseten,bedrock,cohere,deepseek,fireworks,google-genai,groq,huggingface,ibm,litellm,mistralai,nvidia,ollama,openai,openrouter,perplexity,vertexai,xai]'
+    uv tool install 'deepagents-cli[anthropic,bedrock,cohere,deepseek,fireworks,google-genai,groq,huggingface,ibm,mistralai,nvidia,ollama,openai,openrouter,perplexity,vertexai,xai]'
     ```
 
-2. **Set credentials**
+2. **设置 API 密钥**
 
-    Most providers require an API key. Set the appropriate environment variable listed in the table below. Some providers use other credentials (for example, Vertex AI uses `GOOGLE_CLOUD_PROJECT` plus ADC). Refer to each integration package's docs for details.
+    大多数提供商需要 API 密钥。设置下表中列出的相应环境变量。每个集成包的详细信息请参见其文档。
 
-### Provider reference
+### 提供商参考
 
-Using a provider not listed here? See [Arbitrary providers](/oss/deepagents/cli/configuration#arbitrary-providers): any LangChain-compatible provider can be used in the CLI with some additional setup.
+使用未在此列出的提供商？请参见[任意提供商](#arbitrary-providers)——任何与 LangChain 兼容的提供商都可以通过一些额外设置在 CLI 中使用。
 
 :::python
-| Provider | Package | Credential env var | Model profiles |
+| Provider | Package | API key env var | Model profiles |
 | --- | --- | --- | --- |
 | OpenAI | [`langchain-openai`](/oss/integrations/chat/openai) | `OPENAI_API_KEY` | ✅ |
 | Azure OpenAI | [`langchain-openai`](/oss/integrations/chat/azure_chat_openai) | `AZURE_OPENAI_API_KEY` | ✅ |
 | Anthropic | [`langchain-anthropic`](/oss/integrations/chat/anthropic) | `ANTHROPIC_API_KEY` | ✅ |
 | Google Gemini API | [`langchain-google-genai`](/oss/integrations/chat/google_generative_ai) | `GOOGLE_API_KEY` | ✅ |
 | Google Vertex AI | [`langchain-google-vertexai`](/oss/integrations/chat/google_generative_ai#credentials) | `GOOGLE_CLOUD_PROJECT` | ✅ |
-| Baseten | [`langchain-baseten`](https://github.com/basetenlabs/langchain-baseten) | `BASETEN_API_KEY` | ✅ |
 | AWS Bedrock | [`langchain-aws`](/oss/integrations/chat/bedrock) | `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` | ✅ |
 | AWS Bedrock Converse | [`langchain-aws`](/oss/integrations/chat/bedrock) | `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` | ✅ |
 | Hugging Face | [`langchain-huggingface`](/oss/integrations/chat/huggingface) | `HUGGINGFACEHUB_API_TOKEN` | ✅ |
@@ -56,16 +55,15 @@ Using a provider not listed here? See [Arbitrary providers](/oss/deepagents/cli/
 | Mistral AI | [`langchain-mistralai`](/oss/integrations/chat/mistralai) | `MISTRAL_API_KEY` | ✅ |
 | DeepSeek | [`langchain-deepseek`](/oss/integrations/chat/deepseek) | `DEEPSEEK_API_KEY` | ✅ |
 | IBM (watsonx.ai) | [`langchain-ibm`](/oss/integrations/chat/ibm_watsonx) | `WATSONX_APIKEY` | ❌ |
-| Nvidia | [`langchain-nvidia-ai-endpoints`](/oss/integrations/chat/nvidia_ai_endpoints) | `NVIDIA_API_KEY` | ✅ |
+| Nvidia | [`langchain-nvidia-ai-endpoints`](/oss/integrations/chat/nvidia_ai_endpoints) | `NVIDIA_API_KEY` | ❌ |
 | xAI | [`langchain-xai`](/oss/integrations/chat/xai) | `XAI_API_KEY` | ✅ |
 | Perplexity | [`langchain-perplexity`](/oss/integrations/chat/perplexity) | `PPLX_API_KEY` | ✅ |
 | OpenRouter | [`langchain-openrouter`](/oss/integrations/chat/openrouter) | `OPENROUTER_API_KEY` | ✅ |
-| LiteLLM | [`langchain-litellm`](/oss/integrations/chat/litellm) | Per-provider (see [docs](https://docs.litellm.ai/)) | ❌ |
 
 :::
 
 :::js
-| Provider | Package | Credential env var | Model profiles |
+| Provider | Package | API key env var | Model profiles |
 | --- | --- | --- | --- |
 | OpenAI | [`langchain-openai`](/oss/integrations/chat/openai) | `OPENAI_API_KEY` | ✅ |
 | Anthropic | [`langchain-anthropic`](/oss/integrations/chat/anthropic) | `ANTHROPIC_API_KEY` | ✅ |
@@ -83,111 +81,242 @@ Using a provider not listed here? See [Arbitrary providers](/oss/deepagents/cli/
 :::
 
 <Tip>
-    A **[model profile](/oss/langchain/models#model-profiles)** is a bundle of metadata (model name, default parameters, capabilities, etc.) that ships with a provider package, largely powered by the [models.dev](https://models.dev/) project. Providers that include model profiles have their models listed automatically in the interactive `/model` switcher, subject to the [filtering criteria](#which-models-appear-in-the-switcher) (notably, `tool_calling` must be enabled). Providers without model profiles require you to specify the model name directly or add models via `config.toml`.
+    **[模型配置文件](/oss/langchain/models#model-profiles)**是随提供商包一起分发的元数据包（模型名称、默认参数、能力等），主要由 [models.dev](https://models.dev/) 项目驱动。包含模型配置文件的提供商会在交互式 `/model` 切换器中自动列出其模型。没有模型配置文件的提供商需要你直接指定模型名称。
 </Tip>
 
-### Switching models
+### 切换模型
 
-To switch models in the CLI, either:
+要在 CLI 中切换模型，可以：
 
-1. **Use the interactive model switcher** with the `/model` command. This displays available models sourced from each installed LangChain provider package's [model profiles](/oss/langchain/models#model-profiles).
+1. **使用交互式模型切换器**，通过 `/model` 命令。它会显示一个硬编码的已知模型配置文件列表，来源于每个 LangChain 提供商包。
 
     <Note>
-        These profiles are not an exhaustive list of available models. If the model you want isn't shown, use option 2 instead (useful for newly released models that haven't been added to the profiles yet). See [Which models appear in the switcher](#which-models-appear-in-the-switcher) for the full set of criteria.
+        注意这些配置文件并非可用模型的完整列表。如果想要的模型未显示，请使用选项 2（适用于新发布但尚未添加到配置文件中的模型）。
     </Note>
-2. **Specify a model name directly** as an argument, e.g. `/model openai:gpt-4o`. You can use any model supported by the chosen provider, regardless of whether it appears in the list from option 1. The model name will be passed to the API request.
-3. **Specify the model at launch** via `--model`, e.g.
+2. **直接指定模型名称**作为参数，例如 `/model openai:gpt-4o`。无论模型是否在选项 1 的列表中显示，你都可以使用所选提供商支持的任何模型。模型名称会被传递到 API 请求中。
+3. **在启动时指定模型**，通过 `--model`，例如：
 
     ```txt
     deepagents --model openai:gpt-4o
     ```
 
-### Which models appear in the switcher
+### 设置默认模型
 
-The interactive `/model` selector builds its list dynamically—it is not a hardcoded list baked into the CLI. A model appears in the switcher when **all** of the following are true:
+你可以设置一个持久默认模型，用于所有未来的 CLI 启动：
 
-1. **The provider package is installed.** Each provider (e.g. `langchain-anthropic`, `langchain-openai`) must be installed alongside `deepagents-cli`—either as an [install extra](/oss/deepagents/cli/providers#quick-start) (e.g. `uv tool install 'deepagents-cli[anthropic]'`) or added later with `uv tool upgrade deepagents-cli --with <package>`. If a package is missing, its entire provider section is absent from the switcher.
-2. **The model has a profile with `tool_calling` enabled.** The CLI is a tool-calling agent, so it filters out models that don't support tool calling, as indicated in their profile data. This is the most common reason a model is missing from the list. For providers that don't bundle profiles (see the [Provider reference](#provider-reference) table), you can define one in `config.toml`:
-
-    ```toml
-    [models.providers.ollama.profile."qwen3:4b"]
-    tool_calling = true
-    max_input_tokens = 32768
-    max_output_tokens = 8192
-    ```
-
-    This is not strictly required for the model to appear in the switcher — adding it to the [`models` list](/oss/deepagents/cli/configuration#adding-models-to-the-interactive-switcher) also works and is simpler. A profile is useful when you want the CLI to know the model's context window and capabilities for features like auto-summarization. See [Profile overrides](/oss/deepagents/cli/configuration#profile-overrides) for all overridable fields.
-3. **The model accepts and produces text.** Models whose profile explicitly sets `text_inputs` or `text_outputs` to `false` (e.g. embedding or image-generation models) are excluded.
-
-Models defined in `config.toml` under [`[models.providers.<name>].models`](/oss/deepagents/cli/configuration#adding-models-to-the-interactive-switcher) bypass the profile filter—they always appear in the switcher regardless of profile metadata. This is the recommended way to add models that are missing from the list.
-
-<Tip>
-    Credential status does **not** affect whether a model is listed. The switcher shows all qualifying models and displays a credential indicator next to each provider header: a checkmark for confirmed credentials, a warning for missing credentials, or a question mark when credential status is unknown. You can still select a model with missing credentials—the provider will report an authentication error at request time.
-</Tip>
-
-#### Troubleshooting missing models
-
-| Symptom | Likely cause | Fix |
-| --- | --- | --- |
-| Entire provider missing from switcher | Provider package not installed | Install the package (e.g. `uv tool upgrade deepagents-cli --with langchain-groq`) |
-| Provider shown but specific model missing | Model profile has `tool_calling: false` or no profile exists | Add the model to `[models.providers.<name>].models` in `config.toml`, or use `/model <provider>:<model>` directly |
-| Provider shows ⚠ "missing credentials" | API key env var not set | Set the credential env var from the [Provider reference](#provider-reference) table |
-| Provider shows ? "credentials unknown" | Provider uses non-standard auth that the CLI can't verify | Credentials may still work—try switching to the model. If auth fails, check the provider's docs |
-
-### Setting a default model
-
-You can set a persistent default model that will be used for all future CLI launches:
-
-* **Via model selector:** Open `/model`, navigate to the desired model, and press `Ctrl+S` to pin it as the default. Pressing `Ctrl+S` again on the current default clears it.
-* **Via command:** `/model --default provider:model` (e.g., `/model --default anthropic:claude-opus-4-6`)
-* **Via config file:** Set `[models].default` in `~/.deepagents/config.toml` (see [Configuration](/oss/deepagents/cli/configuration)).
-* **From the shell:**
+* **通过模型选择器：**打开 `/model`，导航到所需模型，然后按 `Ctrl+S` 将其固定为默认。再次在当前默认模型上按 `Ctrl+S` 可清除默认值。
+* **通过命令：**`/model --default provider:model`（例如，`/model --default anthropic:claude-opus-4-6`）
+* **通过配置文件：**在 `~/.deepagents/config.toml` 中设置 `[models].default`（请参见[配置文件](#config-file)）。
+* **通过 shell：**
 
     ```bash
     deepagents --default-model anthropic:claude-opus-4-6
     ```
 
-To view the current default:
+查看当前默认值：
 
 ```bash
 deepagents --default-model
 ```
 
-To clear the default:
+清除默认值：
 
-* **From the shell:**
+* **通过 shell：**
 
     ```bash
     deepagents --clear-default-model
     ```
 
-* **Via command:** `/model --default --clear`
-* **Via model selector:** Press `Ctrl+S` on the currently pinned default model.
+* **通过命令：**`/model --default --clear`
+* **通过模型选择器：**在当前固定的默认模型上按 `Ctrl+S`。
 
-Without a default, the CLI will default to the most recently used model.
+未设置默认值时，CLI 将默认使用最近使用的模型。
 
-### Model resolution order
+### 模型解析顺序
 
-When the CLI launches, it resolves which model to use in the following order:
+CLI 启动时，按以下顺序解析要使用的模型：
 
-1. **`--model` flag** always wins when provided.
-2. **`[models].default`** in `~/.deepagents/config.toml`—The user's intentional long-term preference.
-3. **`[models].recent`** in `~/.deepagents/config.toml`—The last model switched to via `/model`. Written automatically; never overwrites `[models].default`.
-4. **Environment auto-detection**: Falls back to the first available startup credential, checked in order: `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GOOGLE_API_KEY`, `GOOGLE_CLOUD_PROJECT` (Vertex AI).
+1. **`--model` 标志**——提供时始终优先。
+2. **`[models].default`**（`~/.deepagents/config.toml` 中）——用户有意设置的长期偏好。
+3. **`[models].recent`**（`~/.deepagents/config.toml` 中）——通过 `/model` 切换的最后一个模型。自动写入；永远不会覆盖 `[models].default`。
+4. **环境自动检测**——回退到第一个拥有有效 API 密钥的提供商，按以下顺序检查：`OPENAI_API_KEY`、`ANTHROPIC_API_KEY`、`GOOGLE_API_KEY`、`GOOGLE_CLOUD_PROJECT`（Vertex AI）。
 
-This startup fallback intentionally checks only those four credentials. Other supported providers (for example, Groq) are still available via `--model`, `/model`, and saved defaults (`[models].default` / `[models].recent`).
+此启动回退机制有意仅检查这四个凭据。其他支持的提供商（例如 Groq）仍可通过 `--model`、`/model` 以及保存的默认值（`[models].default` / `[models].recent`）使用。
 
-### Model routers and proxies
+---
 
-Model routers like [OpenRouter](https://openrouter.ai/) and [LiteLLM](https://docs.litellm.ai/) provide access to models from multiple providers through a single endpoint.
+## 配置文件
 
-Use the dedicated integration packages for these services:
+Deep Agents CLI 支持通过 `~/.deepagents/config.toml` 扩展和修改单个模型和提供商配置。
+
+每个提供商是 `[models.providers]` 命名空间下的一个 TOML 表：
+
+```toml
+[models.providers.<name>]
+models = ["gpt-4o"]
+api_key_env = "OPENAI_API_KEY"
+base_url = "https://api.openai.com/v1"
+class_path = "my_package.models:MyChatModel"
+
+[models.providers.<name>.params]
+temperature = 0
+max_tokens = 4096
+
+[models.providers.<name>.params."gpt-4o"]
+temperature = 0.7
+```
+
+**参数说明：**
+
+<ResponseField name="models" type="string[]">
+    一个模型名称列表，显示在此提供商的交互式 `/model` 切换器中。对于已经自带模型配置文件的提供商，你在此添加的名称会与内置的一起显示——适用于新发布但尚未添加到包中的模型。对于[任意提供商](#arbitrary-providers)，此列表是切换器中模型的唯一来源。
+
+    此键是可选的。无论模型是否在切换器中显示，你始终可以直接将任何模型名称传给 `/model` 或 `--model`；提供商会在请求时验证名称。
+</ResponseField>
+
+<ResponseField name="api_key_env" type="string">
+    可选地覆盖用于检查凭据的环境变量名称。
+</ResponseField>
+
+<ResponseField name="base_url" type="string">
+    可选地覆盖提供商使用的基础 URL（如果支持）。请参见你的提供商包的[参考文档](https://reference.langchain.com/python/integrations/)获取更多信息。
+</ResponseField>
+
+<ResponseField name="params" type="object">
+    传递给模型构造函数的额外关键字参数。平坦键（如 `temperature = 0`）适用于此提供商的每个模型。模型键的子表（如 `[params."gpt-4o"]`）仅覆盖该模型的单个值；合并是浅合并的（模型级别在冲突时优先）。
+</ResponseField>
+
+<ResponseField name="profile" type="object">
+    （高级）覆盖模型运行时[配置文件](/oss/langchain/models#model-profiles)中的字段（如 `max_input_tokens`）。平坦键适用于此提供商的每个模型。模型键的子表（如 `[profile."claude-sonnet-4-5"]`）仅覆盖该模型的单个值；合并是浅合并的（模型级别在冲突时优先）。这些覆盖在模型创建后应用，因此对上下文限制显示、自动摘要以及其他读取配置文件的功能都会生效。
+</ResponseField>
+
+<ResponseField name="class_path" type="string">
+    用于[任意模型](#arbitrary-providers)提供商。可选的完全限定 Python 类，格式为 `module.path:ClassName`。设置后，CLI 会直接导入并实例化此类作为提供商 `<name>`。该类必须是 `BaseChatModel` 的子类。
+</ResponseField>
+
+你可以在 `~/.deepagents/config.toml` 中设置默认模型——可以直接编辑文件、使用 `/model --default`，或在交互式模型选择器中选择默认值。
+
+```toml
+[models]
+default = "ollama:qwen3:4b"        # your intentional long-term preference
+recent = "anthropic:claude-sonnet-4-5"  # last /model switch (written automatically)
+```
+
+`[models].default` 始终优先于 `[models].recent`。`/model` 命令仅写入 `[models].recent`，因此你配置的默认值不会被会话中的切换覆盖。要移除默认值，使用 `/model --default --clear` 或从配置文件中删除 `default` 键。
+
+## 示例
+
+### 模型构造参数
+
+任何提供商都可以使用 `params` 表向模型构造函数传递额外参数：
+
+```toml
+[models.providers.ollama.params]
+temperature = 0
+num_ctx = 8192
+```
+
+#### 按模型覆盖
+
+如果特定模型需要不同的参数，在 `params` 下添加模型键的子表来覆盖单个值，而无需复制整个提供商配置：
+
+```toml
+[models.providers.ollama]
+models = ["qwen3:4b", "llama3"]
+
+[models.providers.ollama.params]
+temperature = 0
+num_ctx = 8192
+
+[models.providers.ollama.params."qwen3:4b"]
+temperature = 0.5
+num_ctx = 4000
+```
+
+使用此配置：
+
+* `ollama:qwen3:4b` 获得 `{temperature: 0.5, num_ctx: 4000}`——模型覆盖优先。
+* `ollama:llama3` 获得 `{temperature: 0, num_ctx: 8192}`——无覆盖，仅使用提供商级别参数。
+
+合并是浅合并的：模型子表中存在的任何键会替换提供商级别参数中的同名键，而仅存在于提供商级别的键会被保留。
+
+### Profile 覆盖
+
+**（高级）**
+
+覆盖模型运行时配置文件中的字段，以改变 CLI 对模型能力的解读方式。最常见的用例是降低 `max_input_tokens` 以更早触发自动摘要——适用于测试或限制上下文使用量：
+
+```toml
+# 应用于此提供商的所有模型
+[models.providers.anthropic.profile]
+max_input_tokens = 4096
+```
+
+按模型子表的工作方式与 `params` 相同——模型级别的值在冲突时优先：
+
+```toml
+[models.providers.anthropic.profile]
+max_input_tokens = 4096
+
+# 此模型获得更高的限制
+[models.providers.anthropic.profile."claude-sonnet-4-5"]
+max_input_tokens = 8192
+```
+
+Profile 覆盖在模型创建后合并到模型的配置文件中。任何读取配置文件的功能——状态栏中的上下文限制显示、自动摘要阈值、能力检查——都将看到覆盖后的值。
+
+#### 通过 `--model-params` 进行 CLI 覆盖
+
+如需一次性调整而不编辑配置文件，通过 `--model-params` 传递 JSON 对象：
+
+```bash
+deepagents --model ollama:llama3 --model-params '{"temperature": 0.9, "num_ctx": 16384}'
+
+# In non-interactive mode
+deepagents -n "Summarize this repo" --model ollama:llama3 --model-params '{"temperature": 0}'
+```
+
+这些参数具有最高优先级，会覆盖配置文件中的参数值。
+
+#### 通过 `--profile-override` 进行 CLI Profile 覆盖
+
+**（高级）**
+
+如需在运行时覆盖模型 Profile 字段而不编辑配置文件，通过 `--profile-override` 传递 JSON 对象：
+
+```bash
+deepagents --profile-override '{"max_input_tokens": 4096}'
+
+# 与 --model 组合使用
+deepagents --model anthropic:claude-sonnet-4-5 --profile-override '{"max_input_tokens": 4096}'
+
+# 非交互模式下
+deepagents -n "Summarize this repo" --profile-override '{"max_input_tokens": 4096}'
+```
+
+这些值会合并到配置文件的 Profile 覆盖之上（CLI 优先）。优先级链为：模型默认值 < config.toml profile < CLI `--profile-override`。
+
+### 指定自定义 `base_url`
+
+某些提供商包接受 `base_url` 来覆盖默认端点。例如，`langchain-ollama` 通过底层 `ollama` 客户端默认使用 `http://localhost:11434`。要将其指向其他地址，在配置中设置 `base_url`：
+
+```toml
+[models.providers.ollama]
+base_url = "http://your-host-here:port"
+```
+
+具体兼容性信息和其他注意事项请参见你的提供商的参考文档。
+
+### 模型路由器和代理
+
+模型路由器如 [OpenRouter](https://openrouter.ai/) 和 [LiteLLM](https://docs.litellm.ai/) 提供通过单一端点访问多个提供商模型的能力。
+
+使用这些服务的专用集成包：
 
 :::python
 | Router | Package | Config |
 | --- | --- | --- |
 | OpenRouter | [`langchain-openrouter`](/oss/integrations/chat/openrouter) | `openrouter:<model>` (built-in, see [Provider reference](#provider-reference)) |
-| LiteLLM | [`langchain-litellm`](/oss/integrations/chat/litellm) | `litellm:<model>` (built-in, see [Provider reference](#provider-reference)) |
 :::
 
 :::js
@@ -196,20 +325,81 @@ Use the dedicated integration packages for these services:
 | OpenRouter | [`langchain-openrouter`](/oss/integrations/chat/openrouter) |
 :::
 
-**OpenRouter** is a built-in provider—install the package and use it directly:
+**OpenRouter** 是内置提供商——安装包即可直接使用：
 
 ```bash
 uv tool install 'deepagents-cli[openrouter]'
 ```
 
-**LiteLLM** is also a built-in provider:
+### 兼容 API
 
-```bash
-uv tool install 'deepagents-cli[litellm]'
+对于暴露与 OpenAI 或 Anthropic 协议兼容的 API 的提供商，你可以使用现有的 `langchain-openai` 或 `langchain-anthropic` 包，将 `base_url` 指向提供商的端点：
+
+```toml
+[models.providers.openai]
+base_url = "https://api.example.com/v1"
+api_key_env = "EXAMPLE_API_KEY"
+models = ["my-model"]
 ```
 
----
+```toml
+[models.providers.anthropic]
+base_url = "https://api.example.com"
+api_key_env = "EXAMPLE_API_KEY"
+models = ["my-model"]
+```
 
-## Advanced configuration
+<Note>
+    提供商在官方规范之上添加的任何功能都不会被捕获。如果提供商提供了专用的 LangChain 集成包，请优先使用该包。
+</Note>
 
-For detailed configuration of provider params, profile overrides, custom base URLs, compatible APIs, arbitrary providers, and lifecycle hooks, see [Configuration](/oss/deepagents/cli/configuration).
+### 向交互式切换器添加模型
+
+某些提供商（如 `langchain-ollama`）不自带模型配置文件数据（完整列表请参见[提供商参考](#provider-reference)）。这种情况下，交互式 `/model` 切换器不会列出该提供商的模型。你可以在配置文件中为该提供商定义 `models` 列表来填补此缺口：
+
+```toml
+[models.providers.ollama]
+models = ["llama3", "mistral", "codellama"]
+```
+
+`/model` 切换器现在将包含一个 Ollama 部分，列出这些模型。
+
+这完全是可选的。你始终可以通过直接指定完整名称切换到任何模型：
+
+```txt
+/model ollama:llama3
+```
+
+### 任意提供商
+
+你可以使用任何 [LangChain `BaseChatModel`](https://reference.langchain.com/python/langchain_core/language_models/#langchain_core.language_models.BaseChatModel) 子类，通过 `class_path` 指定。CLI 会直接导入并实例化它：
+
+```toml
+[models.providers.my_custom]
+class_path = "my_package.models:MyChatModel"
+api_key_env = "MY_API_KEY"
+base_url = "https://my-endpoint.example.com"
+
+[models.providers.my_custom.params]
+temperature = 0
+max_tokens = 4096
+```
+
+该包必须安装在与 `deepagents-cli` 相同的 Python 环境中：
+
+```bash
+# If deepagents-cli was installed with uv tool:
+uv tool upgrade deepagents-cli --with my_package
+```
+
+当你切换到 `my_custom:my-model-v1`（通过 `/model` 或 `--model`）时，模型名称（`my-model-v1`）会作为 `model` 关键字参数传递：
+
+```python
+MyChatModel(model="my-model-v1", base_url="...", api_key="...", temperature=0, max_tokens=4096)
+```
+
+<Warning>
+`class_path` 会从你的配置文件执行任意 Python 代码。其信任模型与 `pyproject.toml` 构建脚本相同——你控制的是你自己的机器。
+</Warning>
+
+你的提供商包可以选择在 `<package>.data._profiles` 中的 `_PROFILES` 字典中提供模型配置文件，以代替在 `models` 键下定义它们。更多信息请参见 LangChain [模型配置文件](https://github.com/langchain-ai/langchain/tree/master/libs/model-profiles)。

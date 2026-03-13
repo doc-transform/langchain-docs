@@ -1,40 +1,31 @@
 ---
-title: Tool Calling
-description: Display agent tool calls with rich, type-safe UI cards
+title: 工具调用
+description: 将 Agent 工具调用展示为丰富的、类型安全的 UI 卡片
 ---
 
-Agents can invoke external tools like weather APIs, calculators, web search,
-database queries, and more. The results are in raw JSON. This pattern shows you
-how to render
-structured, type-safe UI cards for every tool call your agent makes, complete
-with loading states and error handling.
+Agent 可以调用外部工具，如天气 API、计算器、网页搜索、数据库查询等。结果以原始 JSON 形式返回。本模式展示如何为 Agent 的每次工具调用渲染结构化的、类型安全的 UI 卡片，包含加载状态和错误处理。
 
 import { PatternEmbed } from "/snippets/pattern-embed.jsx"
 
 <PatternEmbed pattern="tool-calling" />
 
-## How tool calling works
+## 工具调用的工作原理
 
-When a LangGraph agent decides it needs external data, it emits one or more
-**tool calls** as part of an AI message. Each tool call includes:
+当 LangGraph Agent 决定需要外部数据时，它会在 AI 消息中发出一个或多个**工具调用**。每个工具调用包含：
 
-- **name**: the tool being invoked (e.g. `"get_weather"`, `"calculator"`)
-- **args**: the structured arguments passed to the tool
-- **id**: a unique identifier linking the call to its result
+- **name**：被调用的工具（例如 `"get_weather"`、`"calculator"`）
+- **args**：传递给工具的结构化参数
+- **id**：将调用与其结果关联的唯一标识符
 
-The agent runtime executes the tool, and the result comes back as a
-`ToolMessage`. The `useStream` hook unifies all of this into a single
-`toolCalls` array you can render directly.
+Agent 运行时执行工具，结果以 `ToolMessage` 形式返回。`useStream` 钩子将所有这些统一为一个 `toolCalls` 数组，你可以直接渲染。
 
-## Setting up useStream
+## 设置 useStream
 
-The first step is wiring up `useStream` to your agent backend. The hook returns
-reactive state including a `toolCalls` array that updates in real time as the
-agent streams.
+第一步是将 `useStream` 连接到 Agent 后端。钩子返回响应式状态，包括一个随 Agent 流式输出实时更新的 `toolCalls` 数组。
 
 :::python
 
-Define a TypeScript interface matching your agent's state schema and pass it as a type parameter to `useStream` for type-safe access to state values. In the examples below, replace `typeof myAgent` with your interface name:
+定义一个与 Agent 状态 schema 匹配的 TypeScript 接口，并将其作为类型参数传递给 `useStream`，以获得类型安全的状态值访问。在下面的示例中，将 `typeof myAgent` 替换为你的接口名称：
 
 ```ts
 import type { BaseMessage } from "@langchain/core/messages";
@@ -48,7 +39,7 @@ interface AgentState {
 
 :::js
 
-Import your agent and pass `typeof myAgent` as a type parameter to `useStream` for type-safe access to state values:
+导入你的 Agent 并将 `typeof myAgent` 作为类型参数传递给 `useStream`，以获得类型安全的状态值访问：
 
 ```ts
 import type { myAgent } from "./agent";
@@ -144,9 +135,9 @@ export class ChatComponent {
 ```
 </CodeGroup>
 
-## The ToolCallWithResult type
+## ToolCallWithResult 类型
 
-Each entry in the `toolCalls` array is a `ToolCallWithResult` object:
+`toolCalls` 数组中的每个条目都是一个 `ToolCallWithResult` 对象：
 
 ```ts
 interface ToolCallWithResult {
@@ -160,19 +151,17 @@ interface ToolCallWithResult {
 }
 ```
 
-| Property | Description |
+| 属性 | 描述 |
 | --- | --- |
-| `call.id` | Unique ID matching the AI message's `tool_calls` entry |
-| `call.name` | The name of the tool (e.g. `"get_weather"`) |
-| `call.args` | Structured arguments the agent passed to the tool |
-| `result` | The `ToolMessage` response, available once the tool finishes |
-| `state` | Lifecycle state: `"pending"` while running, `"completed"` on success, `"error"` on failure |
+| `call.id` | 与 AI 消息的 `tool_calls` 条目匹配的唯一 ID |
+| `call.name` | 工具名称（例如 `"get_weather"`） |
+| `call.args` | Agent 传递给工具的结构化参数 |
+| `result` | `ToolMessage` 响应，在工具完成后可用 |
+| `state` | 生命周期状态：运行中为 `"pending"`，成功为 `"completed"`，失败为 `"error"` |
 
-## Filtering tool calls per message
+## 过滤每条消息的工具调用
 
-An AI message may trigger multiple tool calls, and your chat may contain many AI
-messages. To render the right tool cards under each message, filter by matching
-`call.id` against the message's `tool_calls` array:
+一条 AI 消息可能触发多个工具调用，而你的聊天中可能有多条 AI 消息。要在每条消息下渲染正确的工具卡片，通过将 `call.id` 与消息的 `tool_calls` 数组匹配来过滤：
 
 ```tsx
 function Message({
@@ -197,10 +186,9 @@ function Message({
 }
 ```
 
-## Building specialized tool cards
+## 构建专门的工具卡片
 
-Rather than dumping raw JSON, build dedicated UI components for each tool. Use
-`call.name` to select the right card:
+不要直接显示原始 JSON，而是为每个工具构建专门的 UI 组件。使用 `call.name` 选择正确的卡片：
 
 ```tsx
 function ToolCard({ toolCall }: { toolCall: ToolCallWithResult }) {
@@ -227,7 +215,7 @@ function ToolCard({ toolCall }: { toolCall: ToolCallWithResult }) {
 }
 ```
 
-### Weather card example
+### 天气卡片示例
 
 ```tsx
 function WeatherCard({
@@ -252,9 +240,9 @@ function WeatherCard({
 }
 ```
 
-### Loading and error states
+### 加载和错误状态
 
-Always handle the pending and error states to give users clear feedback:
+始终处理 pending 和 error 状态，给用户清晰的反馈：
 
 ```tsx
 function LoadingCard({ name }: { name: string }) {
@@ -278,10 +266,9 @@ function ErrorCard({ name, error }: { name: string; error?: ToolMessage }) {
 }
 ```
 
-## Type-safe tool arguments
+## 类型安全的工具参数
 
-If your tools are defined with structured schemas, you can use the
-`ToolCallFromTool` utility type to get fully typed `args`:
+如果你的工具使用结构化 schema 定义，你可以使用 `ToolCallFromTool` 实用类型来获得完全类型化的 `args`：
 
 ```ts
 import { tool } from "@langchain/core/tools";
@@ -300,33 +287,26 @@ type WeatherToolCall = ToolCallFromTool<typeof getWeather>;
 ```
 
 <Tip>
-Using `ToolCallFromTool` gives you compile-time safety. If the tool schema
-changes, your UI components will flag type errors immediately.
+使用 `ToolCallFromTool` 可以获得编译时安全。如果工具 schema 变更，你的 UI 组件会立即标记类型错误。
 </Tip>
 
-## Rendering tool calls inline with streaming text
+## 在流式文本中内联渲染工具调用
 
-Tool calls often arrive interleaved with streamed text. The `useStream` hook
-keeps `toolCalls` in sync with the stream, so pending cards appear as soon as
-the agent emits the call, before the tool has finished executing.
+工具调用通常与流式文本交错到达。`useStream` 钩子保持 `toolCalls` 与流同步，因此在 Agent 发出调用后、工具完成执行前，pending 卡片就会立即出现。
 
-This means users see:
+这意味着用户会看到：
 
-1. The AI's text as it streams in
-2. A loading card the moment a tool call is emitted
-3. The card updates to show the result once the tool completes
+1. AI 的文本在流式传入
+2. 工具调用发出的瞬间出现加载卡片
+3. 工具完成后卡片更新显示结果
 
 <Note>
-Tool calls update in place. The same `call.id` transitions from `"pending"` to
-`"completed"` (or `"error"`), so your UI re-renders the same component
-with new state.
+工具调用是原地更新的。相同的 `call.id` 从 `"pending"` 过渡到 `"completed"`（或 `"error"`），因此你的 UI 用新状态重新渲染相同的组件。
 </Note>
 
-## Handling multiple concurrent tool calls
+## 处理多个并发工具调用
 
-Agents can invoke several tools in parallel. The `toolCalls` array will contain
-multiple entries with `state: "pending"` simultaneously. Each resolves
-independently, so your UI should handle partial completion gracefully:
+Agent 可以并行调用多个工具。`toolCalls` 数组会同时包含多个 `state: "pending"` 的条目。每个独立完成，因此你的 UI 应优雅处理部分完成的情况：
 
 ```tsx
 function ToolCallList({ toolCalls }: { toolCalls: ToolCallWithResult[] }) {
@@ -346,17 +326,12 @@ function ToolCallList({ toolCalls }: { toolCalls: ToolCallWithResult[] }) {
 }
 ```
 
-## Best practices
+## 最佳实践
 
-Follow these guidelines when building tool call UIs:
+构建工具调用 UI 时请遵循以下准则：
 
-- **Always handle all three states**: `pending`, `completed`, and `error`.
-  Users should never see a blank card.
-- **Parse results safely**. Tool results arrive as strings. Wrap
-  `JSON.parse()` in a try/catch and show a fallback on parse failure.
-- **Provide a generic fallback**. Not every tool needs a bespoke card. Render
-  a collapsible JSON view for unknown tool names.
-- **Show the tool name and args during loading**. Users want to know *what*
-  the agent is doing, even before the result arrives.
-- **Keep cards compact**. Tool cards sit inline with chat messages. Avoid
-  overwhelming the conversation with oversized widgets.
+- **始终处理所有三种状态**：`pending`、`completed` 和 `error`。用户不应看到空白卡片。
+- **安全解析结果**。工具结果以字符串形式到达。将 `JSON.parse()` 包裹在 try/catch 中，解析失败时显示回退内容。
+- **提供通用回退**。不是每个工具都需要专门的卡片。为未知工具名称渲染可折叠的 JSON 视图。
+- **在加载期间显示工具名称和参数**。用户想知道 Agent *在做什么*，即使结果还没到达。
+- **保持卡片紧凑**。工具卡片与聊天消息内联展示。避免用过大的组件淹没对话。

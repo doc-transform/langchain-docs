@@ -1,22 +1,22 @@
 ---
-title: "Agent with AWS lambda integration"
-description: "Integrate with the Agent with AWS lambda tool using LangChain JavaScript."
+title: "使用 AWS Lambda 的代理集成"
+description: "使用 LangChain JavaScript 集成 AWS Lambda 代理工具。"
 ---
 
-Full docs here: https://docs.aws.amazon.com/lambda/index.html
+完整文档请参见：https://docs.aws.amazon.com/lambda/index.html
 
-**AWS Lambda** is a serverless computing service provided by Amazon Web Services (AWS), designed to allow developers to build and run applications and services without the need for provisioning or managing servers. This serverless architecture enables you to focus on writing and deploying code, while AWS automatically takes care of scaling, patching, and managing the infrastructure required to run your applications.
+**AWS Lambda** 是 Amazon Web Services (AWS) 提供的无服务器计算服务，旨在允许开发者无需预置或管理服务器即可构建和运行应用程序和服务。这种无服务器架构使你能够专注于编写和部署代码，而 AWS 会自动处理运行应用所需的扩展、修补和基础设施管理。
 
-By including a AWSLambda in the list of tools provided to an Agent, you can grant your Agent the ability to invoke code running in your AWS Cloud for whatever purposes you need.
+通过在提供给代理的工具列表中包含 AWSLambda，你可以赋予代理调用 AWS 云中运行代码的能力，满足任何目的。
 
-When an Agent uses the AWSLambda tool, it will provide an argument of type `string` which will in turn be passed into the Lambda function via the `event` parameter.
+当代理使用 AWSLambda 工具时，它会提供一个 `string` 类型的参数，该参数将通过 `event` 参数传递给 Lambda 函数。
 
-This quick start will demonstrate how an Agent could use a Lambda function to send an email via [Amazon Simple Email Service](https://aws.amazon.com/ses/). The lambda code which sends the email is not provided, but if you'd like to learn how this could be done, see [how to send email with Lambda and SES](https://repost.aws/knowledge-center/lambda-send-email-ses). Keep in mind this is an intentionally simple example; Lambda can used to execute code for a near infinite number of other purposes (including executing more Langchains)!
+本快速入门将演示代理如何使用 Lambda 函数通过 [Amazon Simple Email Service](https://aws.amazon.com/ses/) 发送电子邮件。未提供发送邮件的 Lambda 代码，但如果你想了解如何实现，请参见[此处](https://repost.aws/knowledge-center/lambda-send-email-ses)。请注意，这是一个故意简化的示例；Lambda 可用于执行几乎无限多种其他用途的代码（包括执行更多 Langchain）！
 
-### Note about credentials:
+### 关于凭据的说明：
 
-- If you have not run [`aws configure`](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html) via the AWS CLI, the `region`, `accessKeyId`, and `secretAccessKey` must be provided to the AWSLambda constructor.
-- The IAM role corresponding to those credentials must have permission to invoke the lambda function.
+- 如果你还没有通过 AWS CLI 运行 [`aws configure`](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)，则必须向 AWSLambda 构造函数提供 `region`、`accessKeyId` 和 `secretAccessKey`。
+- 与这些凭据对应的 IAM 角色必须有权限调用 Lambda 函数。
 
 <Tip>
 See [this section for general instructions on installing LangChain packages](/oss/langchain/install).
@@ -52,7 +52,7 @@ const result = await executor.invoke({ input });
 console.log(result);
 ```
 
-## Related
+## 相关
 
-- Tool [conceptual guide](/oss/langchain/tools)
-- Tool [how-to guides](/oss/langchain/tools)
+- 工具[概念指南](/oss/langchain/tools)
+- 工具[操作指南](/oss/langchain/tools)

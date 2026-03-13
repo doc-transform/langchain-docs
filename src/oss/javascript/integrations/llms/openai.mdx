@@ -1,48 +1,48 @@
 ---
-title: "OpenAI integration"
-description: "Integrate with the OpenAI LLM using LangChain JavaScript."
+title: "OpenAI 集成"
+description: "使用 LangChain JavaScript 集成 OpenAI LLM 模型。"
 ---
 
 <Warning>
-**You are currently on a page documenting the use of OpenAI text completion models. The latest and most popular OpenAI models are [chat completion models](/oss/langchain/models).**
+**你当前正在查看 OpenAI 文本补全模型的使用文档。最新且最流行的 OpenAI 模型是[对话补全模型](/oss/langchain/models)。**
 
-Unless you are specifically using `gpt-3.5-turbo-instruct`, you are probably looking for [this page instead](/oss/integrations/chat/openai/).
+除非你正在专门使用 `gpt-3.5-turbo-instruct`，否则你可能需要的是[这个页面](/oss/integrations/chat/openai/)。
 </Warning>
 
-[OpenAI](https://en.wikipedia.org/wiki/OpenAI) is an artificial intelligence (AI) research laboratory.
+[OpenAI](https://en.wikipedia.org/wiki/OpenAI) 是一家人工智能（AI）研究实验室。
 
-This will help you get started with OpenAI completion models (LLMs) using LangChain. For detailed documentation on OpenAI features and configuration options, please refer to the [API reference](https://api.js.langchain.com/classes/langchain_openai.OpenAI.html).
+本文将帮助你开始使用 OpenAI 文本补全模型（LLM）。OpenAI 所有功能和配置选项的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain_openai.OpenAI.html)。
 
-## Overview
+## 概览
 
-### Integration details
+### 集成详情
 
 | Class | Package | Local | Serializable | [PY support](https://python.langchain.com/docs/integrations/llms/openai) | Downloads | Version |
 | :--- | :--- | :---: | :---: |  :---: | :---: | :---: |
 | [OpenAI](https://api.js.langchain.com/classes/langchain_openai.OpenAI.html) | [@langchain/openai](https://www.npmjs.com/package/@langchain/openai) | ❌ | ✅ | ✅ | ![NPM - Downloads](https://img.shields.io/npm/dm/@langchain/openai?style=flat-square&label=%20&) | ![NPM - Version](https://img.shields.io/npm/v/@langchain/openai?style=flat-square&label=%20&) |
 
-## Setup
+## 设置
 
-To access OpenAI models you'll need to create an OpenAI account, get an API key, and install the `@langchain/openai` integration package.
+要访问 OpenAI 模型，你需要创建 OpenAI 账户、获取 API 密钥，并安装 `@langchain/openai` 集成包。
 
-### Credentials
+### 凭据
 
-Head to [platform.openai.com](https://platform.openai.com/) to sign up to OpenAI and generate an API key. Once you've done this set the `OPENAI_API_KEY` environment variable:
+前往 [platform.openai.com](https://platform.openai.com/) 注册 OpenAI 并生成 API 密钥。完成后设置 `OPENAI_API_KEY` 环境变量：
 
 ```bash
 export OPENAI_API_KEY="your-api-key"
 ```
 
-If you want to get automated tracing of your model calls you can also set your [LangSmith](/langsmith/home) API key by uncommenting below:
+如果你想获取模型调用的自动追踪，你还可以通过取消下方注释来设置你的 [LangSmith](/langsmith/home) API 密钥：
 
 ```bash
 # export LANGSMITH_TRACING="true"
 # export LANGSMITH_API_KEY="your-api-key"
 ```
 
-### Installation
+### 安装
 
-The LangChain OpenAI integration lives in the `@langchain/openai` package:
+LangChain OpenAI 集成位于 `@langchain/openai` 包中：
 
 <CodeGroup>
 ```bash npm
@@ -56,9 +56,9 @@ pnpm add @langchain/openai @langchain/core
 ```
 </CodeGroup>
 
-## Instantiation
+## 实例化
 
-Now we can instantiate our model object and generate chat completions:
+现在我们可以实例化模型对象并生成对话补全：
 
 ```typescript
 import { OpenAI } from "@langchain/openai"
@@ -74,7 +74,7 @@ const llm = new OpenAI({
 })
 ```
 
-## Invocation
+## 调用
 
 ```typescript
 const inputText = "OpenAI is an AI company that "
@@ -95,9 +95,9 @@ OpenAI has received funding from various sources, including tech giants like Mic
 In addition to its research and development
 ```
 
-## Custom URLs
+## 自定义 URL
 
-You can customize the base URL the SDK sends requests to by passing a `configuration` parameter like this:
+你可以通过传入 `configuration` 参数来自定义 SDK 发送请求的基础 URL：
 
 ```typescript
 const llmCustomURL = new OpenAI({
@@ -108,12 +108,12 @@ const llmCustomURL = new OpenAI({
 });
 ```
 
-You can also pass other `ClientOptions` parameters accepted by the official SDK.
+你还可以传入官方 SDK 支持的其他 `ClientOptions` 参数。
 
-If you are hosting on Azure OpenAI, see the [dedicated page instead](/oss/integrations/llms/azure).
+如果你在 Azure OpenAI 上托管，请参见[专门页面](/oss/integrations/llms/azure)。
 
 ---
 
-## API reference
+## API 参考
 
-For detailed documentation of all OpenAI features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_openai.OpenAI.html).
+所有 OpenAI 功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain_openai.OpenAI.html)。

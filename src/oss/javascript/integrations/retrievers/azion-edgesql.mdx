@@ -1,42 +1,42 @@
 ---
-title: "AzionRetriever integration"
-description: "Integrate with the AzionRetriever retriever using LangChain JavaScript."
+title: "AzionRetriever 集成"
+description: "使用 LangChain JavaScript 集成 AzionRetriever 检索器。"
 ---
 
-## Overview
+## 概览
 
-This will help you getting started with the [AzionRetriever](/oss/langchain/retrieval). For detailed documentation of all AzionRetriever features and configurations head to the [API reference](https://api.js.langchain.com/classes/_langchain_community.retrievers_azion_edgesql.AzionRetriever.html).
+本文将帮助你开始使用 [AzionRetriever](/oss/langchain/retrieval)。所有 AzionRetriever 功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/_langchain_community.retrievers_azion_edgesql.AzionRetriever.html)。
 
-### Integration details
+### 集成详情
 
 | Retriever | Self-host | Cloud offering | Package | [Py support] |
 | :--- | :---: | :---: | :---: | :---: |
 [AzionRetriever](https://api.js.langchain.com/classes/_langchain_community.retrievers_azion_edgesql.AzionRetriever.html) | ❌ | ❌ | @langchain/community | ❌ |
 
-## Setup
+## 设置
 
-To use the AzionRetriever, you need to set the AZION_TOKEN environment variable.
+要使用 AzionRetriever，你需要设置 AZION_TOKEN 环境变量。
 
 ```typescript
 process.env.AZION_TOKEN = "your-api-key"
 ```
 
-If you are using OpenAI embeddings for this guide, you'll need to set your OpenAI key as well:
+如果你在本指南中使用 OpenAI 嵌入，你还需要设置你的 OpenAI 密钥：
 
 ```typescript
 process.env.OPENAI_API_KEY = "YOUR_API_KEY";
 ```
 
-If you want to get automated tracing from individual queries, you can also set your [LangSmith](/langsmith/home) API key by uncommenting below:
+如果你想获取单个查询的自动追踪，你还可以通过取消下方注释来设置你的 [LangSmith](/langsmith/home) API 密钥：
 
 ```typescript
 // process.env.LANGSMITH_API_KEY = "<YOUR API KEY HERE>";
 // process.env.LANGSMITH_TRACING = "true";
 ```
 
-### Installation
+### 安装
 
-This retriever lives in the `@langchain/community/retrievers/azion_edgesql` package:
+该检索器位于 `@langchain/community/retrievers/azion_edgesql` 包中：
 
 <CodeGroup>
 ```bash npm
@@ -50,9 +50,9 @@ pnpm add azion @langchain/openai @langchain/community
 ```
 </CodeGroup>
 
-## Instantiation
+## 实例化
 
-Now we can instantiate our retriever:
+现在我们可以实例化检索器：
 
 ```typescript
 import { AzionRetriever } from "@langchain/community/retrievers/azion_edgesql";
@@ -82,7 +82,7 @@ const retriever = new AzionRetriever(embeddingModel,
 }) // number of results to return from the vector index
 ```
 
-## Usage
+## 用法
 
 ```typescript
 const query = "Australia"
@@ -112,6 +112,6 @@ await retriever.invoke(query);
 
 ---
 
-## API reference
+## API 参考
 
-For detailed documentation of all AzionRetriever features and configurations head to the [API reference](https://api.js.langchain.com/classes/_langchain_community.retrievers_azion_edgesql.AzionRetriever.html).
+所有 AzionRetriever 功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/_langchain_community.retrievers_azion_edgesql.AzionRetriever.html)。

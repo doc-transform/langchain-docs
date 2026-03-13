@@ -1,35 +1,35 @@
 ---
-title: "Html-to-text integration"
-description: "Integrate with the Html-to-text document transformer using LangChain JavaScript."
+title: "Html-to-text 集成"
+description: "使用 LangChain JavaScript 集成 Html-to-text 文档转换器。"
 ---
 
-When ingesting HTML documents for later retrieval, we are often interested only in the actual content of the webpage rather than semantics.
-Stripping HTML tags from documents with the HtmlToTextTransformer can result in more content-rich chunks, making retrieval more effective.
+在接入 HTML 文档以便后续检索时，我们通常只关心网页的实际内容而非语义标记。
+使用 HtmlToTextTransformer 剥离 HTML 标签可以得到内容更丰富的文本块，从而使检索更加有效。
 
-## Setup
+## 安装
 
-You'll need to install the [`html-to-text`](https://www.npmjs.com/package/html-to-text) npm package:
+你需要安装 [`html-to-text`](https://www.npmjs.com/package/html-to-text) npm 包：
 
 ```bash npm
 npm install html-to-text
 ```
-Though not required for the transformer by itself, the below usage examples require [`cheerio`](https://www.npmjs.com/package/cheerio) for scraping:
+虽然转换器本身不需要，但下面的用法示例需要使用 [`cheerio`](https://www.npmjs.com/package/cheerio) 进行网页抓取：
 
 ```bash npm
 npm install cheerio
 ```
 <Tip>
-See [this section for general instructions on installing LangChain packages](/oss/langchain/install).
+安装 LangChain 包的通用说明请参见[此章节](/oss/langchain/install)。
 </Tip>
 
 ```bash npm
 npm install @langchain/community @langchain/core
 ```
 
-## Usage
+## 用法
 
-The below example scrapes a Hacker News thread, splits it based on HTML tags to group chunks based on the semantic information from the tags,
-then extracts content from the individual chunks:
+下面的示例抓取了一个 Hacker News 帖子，根据 HTML 标签进行分割以根据标签的语义信息对文本块进行分组，
+然后从各个文本块中提取内容：
 
 ```typescript
 import { HTMLWebBaseLoader } from "@langchain/community/document_loaders/web/html";
@@ -124,6 +124,6 @@ console.log(newDocuments);
 */
 ```
 
-## Customization
+## 自定义
 
-You can pass the transformer any [arguments accepted by the `html-to-text` package](https://www.npmjs.com/package/html-to-text) to customize how it works.
+你可以向转换器传递 [`html-to-text` 包接受的任何参数](https://www.npmjs.com/package/html-to-text)来自定义其工作方式。

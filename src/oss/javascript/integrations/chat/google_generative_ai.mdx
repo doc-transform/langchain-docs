@@ -1,69 +1,67 @@
 ---
-title: "ChatGoogleGenerativeAI integration"
-sidebarTitle: "ChatGoogleGenerativeAI (Legacy)"
-description: "Integrate with the ChatGoogleGenerativeAI chat model using LangChain JavaScript."
+title: "ChatGoogleGenerativeAI 集成"
+sidebarTitle: "ChatGoogleGenerativeAI（旧版）"
+description: "使用 LangChain JavaScript 集成 ChatGoogleGenerativeAI 对话模型。"
 ---
 
-[Google AI](https://ai.google.dev/) offers a number of different chat models, including the powerful Gemini series. For information on the latest models, their features, context windows, etc. head to the [Google AI docs](https://ai.google.dev/gemini-api/docs/models/gemini).
+[Google AI](https://ai.google.dev/) 提供多种不同的对话模型，包括强大的 Gemini 系列。有关最新模型、其功能、上下文窗口等信息，请参见 [Google AI 文档](https://ai.google.dev/gemini-api/docs/models/gemini)。
 
-This will help you getting started with `ChatGoogleGenerativeAI` [chat models](/oss/langchain/models). For detailed documentation of all `ChatGoogleGenerativeAI` features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_google_genai.ChatGoogleGenerativeAI.html).
+本文将帮助你开始使用 `ChatGoogleGenerativeAI` [对话模型](/oss/langchain/models)。所有 `ChatGoogleGenerativeAI` 功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain_google_genai.ChatGoogleGenerativeAI.html)。
 
 <Note>
-    **This library will be deprecated**
+    **此库将被废弃**
 
-    This library is based on a deprecated library from Google and will
-    be replaced by the [ChatGoogle](/oss/integrations/chat/google) library.
-    New implementations should use the [ChatGoogle](/oss/integrations/chat/google) library instead and
-    existing implementations should consider migrating.
+    此库基于 Google 已废弃的库，
+    将被 [ChatGoogle](/oss/integrations/chat/google) 库替代。
+    新实现应使用 [ChatGoogle](/oss/integrations/chat/google) 库，
+    现有实现应考虑进行迁移。
 </Note>
 
-## Overview
+## 概览
 
-### Integration details
+### 集成详情
 
 | Class | Package | Serializable | [PY support](https://python.langchain.com/docs/integrations/chat/google_generative_ai) | Downloads | Version |
 | :--- | :--- | :---: |  :---: | :---: | :---: |
 | [ChatGoogleGenerativeAI](https://api.js.langchain.com/classes/langchain_google_genai.ChatGoogleGenerativeAI.html) | [@langchain/google-genai](https://api.js.langchain.com/modules/langchain_google_genai.html) | ✅ | ✅ | ![NPM - Downloads](https://img.shields.io/npm/dm/@langchain/google-genai?style=flat-square&label=%20&) | ![NPM - Version](https://img.shields.io/npm/v/@langchain/google-genai?style=flat-square&label=%20&) |
 
-### Model features
+### 模型特性
 
-See the links in the table headers below for guides on how to use specific features.
+有关如何使用特定功能的指南，请参见下表标题中的链接。
 
 | [Tool calling](/oss/langchain/tools) | [Structured output](/oss/langchain/structured-output) | [Image input](/oss/langchain/messages#multimodal) | Audio input | Video input | [Token-level streaming](/oss/langchain/streaming/) | [Token usage](/oss/langchain/models#token-usage) | [Logprobs](/oss/langchain/models#log-probabilities) |
 | :---: | :---: | :---: |  :---: | :---: | :---: | :---: | :---: |
 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |
 
-## Setup
+## 安装
 
-You can access Google's `gemini` and `gemini-vision` models, as well as other
-generative models in LangChain through `ChatGoogleGenerativeAI` class in the
-`@langchain/google-genai` integration package.
+你可以通过 `@langchain/google-genai` 集成包中的 `ChatGoogleGenerativeAI` 类来访问 Google 的 `gemini` 和 `gemini-vision` 模型，以及其他生成式模型。
 
 
 <Tip>
-You can also access Google's `gemini` family of models via the LangChain VertexAI and VertexAI-web integrations. See the [Vertex AI integration docs](/oss/integrations/chat/google_vertex_ai).
+你也可以通过 LangChain VertexAI 和 VertexAI-web 集成访问 Google 的 `gemini` 系列模型。点击[此处](/oss/integrations/chat/google_vertex_ai)查看文档。
 </Tip>
 
-### Credentials
+### 凭据
 
-Get an API key here: [https://ai.google.dev/tutorials/setup](https://ai.google.dev/tutorials/setup)
+在此处获取 API 密钥：[https://ai.google.dev/tutorials/setup](https://ai.google.dev/tutorials/setup)
 
-Then set the `GOOGLE_API_KEY` environment variable:
+然后设置 `GOOGLE_API_KEY` 环境变量：
 
 ```bash
 export GOOGLE_API_KEY="your-api-key"
 ```
 
-If you want to get automated tracing of your model calls you can also set your [LangSmith](/langsmith/home) API key by uncommenting below:
+如果你想获取模型调用的自动追踪，你还可以通过取消下方注释来设置你的 [LangSmith](/langsmith/home) API 密钥：
 
 ```bash
 # export LANGSMITH_TRACING="true"
 # export LANGSMITH_API_KEY="your-api-key"
 ```
 
-### Installation
+### 安装
 
-The LangChain `ChatGoogleGenerativeAI` integration lives in the `@langchain/google-genai` package:
+LangChain `ChatGoogleGenerativeAI` 集成位于 `@langchain/google-genai` 包中：
 
 <CodeGroup>
 ```bash npm
@@ -77,9 +75,9 @@ pnpm add @langchain/google-genai @langchain/core
 ```
 </CodeGroup>
 
-## Instantiation
+## 实例化
 
-Now we can instantiate our model object and generate chat completions:
+现在我们可以实例化模型对象并生成对话补全：
 
 ```typescript
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai"
@@ -92,7 +90,7 @@ const llm = new ChatGoogleGenerativeAI({
 })
 ```
 
-## Invocation
+## 调用
 
 ```typescript
 const aiMsg = await llm.invoke([

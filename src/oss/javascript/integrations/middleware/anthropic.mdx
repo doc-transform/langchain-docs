@@ -1,27 +1,27 @@
 ---
-title: "Anthropic integration"
-description: "Integrate with the Anthropic middleware using LangChain JavaScript."
+title: "Anthropic 集成"
+description: "使用 LangChain JavaScript 集成 Anthropic 中间件。"
 ---
 
-Middleware specifically designed for Anthropic's Claude models. Learn more about [middleware](/oss/langchain/middleware/overview).
+专为 Anthropic Claude 模型设计的中间件。了解更多关于[中间件](/oss/langchain/middleware/overview)的信息。
 
-| Middleware | Description |
+| 中间件 | 描述 |
 |------------|-------------|
-| [Prompt caching](#prompt-caching) | Reduce costs by caching repetitive prompt prefixes |
+| [提示词缓存](#prompt-caching) | 通过缓存重复的提示词前缀来降低成本 |
 
-## Prompt caching
+## 提示词缓存
 
-Reduce costs and latency by caching static or repetitive prompt content (like system prompts, tool definitions, and conversation history) on Anthropic's servers. This middleware implements a **conversational caching strategy** that places cache breakpoints after the most recent message, allowing the entire conversation history (including the latest user message) to be cached and reused in subsequent API calls.
+通过在 Anthropic 服务器上缓存静态或重复的提示词内容（如系统提示词、工具定义和对话历史）来降低成本和延迟。该中间件实现了一种**对话式缓存策略**，在最近的消息之后放置缓存断点，使得整个对话历史（包括最新的用户消息）可以被缓存并在后续 API 调用中复用。
 
-Prompt caching is useful for the following:
+提示词缓存适用于以下场景：
 
-- Applications with long, static system prompts that don't change between requests
-- Agents with many tool definitions that remain constant across invocations
-- Conversations where early message history is reused across multiple turns
-- High-volume deployments where reducing API costs and latency is critical
+- 具有较长的静态系统提示词且在请求间不变的应用
+- 具有大量工具定义且在多次调用间保持不变的 Agent
+- 早期消息历史在多轮对话中被复用的场景
+- 需要降低 API 成本和延迟的高流量部署
 
 <Info>
-    Learn more about [Anthropic prompt caching](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#cache-limitations) strategies and limitations.
+    了解更多关于 [Anthropic 提示词缓存](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#cache-limitations)策略和限制的信息。
 </Info>
 
 ```typescript
@@ -34,22 +34,22 @@ const agent = createAgent({
 });
 ```
 
-<Accordion title="Configuration options">
+<Accordion title="配置选项">
 
 <ParamField body="ttl" type="string" default="5m">
-    Time to live for cached content. Valid values: `'5m'` or `'1h'`
+    缓存内容的生存时间。有效值：`'5m'` 或 `'1h'`
 </ParamField>
 
 </Accordion>
 
-<Accordion title="Full example">
+<Accordion title="完整示例">
 
-The middleware caches content up to and including the latest message in each request. On subsequent requests within the TTL window (5 minutes or 1 hour), previously seen content is retrieved from cache rather than reprocessed, significantly reducing costs and latency.
+该中间件会缓存每次请求中包含最新消息在内的所有内容。在 TTL 窗口（5 分钟或 1 小时）内的后续请求中，先前已见的内容会从缓存中检索而非重新处理，从而显著降低成本和延迟。
 
-**How it works:**
-1. First request: System prompt, tools, and the user message *"Hi, my name is Bob"* are sent to the API and cached
-2. Second request: The cached content (system prompt, tools, and first message) is retrieved from cache. Only the new message *"What's my name?"* needs to be processed, plus the model's response from the first request
-3. This pattern continues for each turn, with each request reusing the cached conversation history
+**工作原理：**
+1. 第一次请求：系统提示词、工具和用户消息 *"Hi, my name is Bob"* 被发送到 API 并缓存
+2. 第二次请求：缓存的内容（系统提示词、工具和第一条消息）从缓存中检索。只有新消息 *"What's my name?"* 需要处理，加上第一次请求的模型响应
+3. 这种模式在每一轮对话中继续，每次请求都复用缓存的对话历史
 
 ```typescript
 import { createAgent, HumanMessage, anthropicPromptCachingMiddleware } from "langchain";
@@ -66,13 +66,13 @@ const agent = createAgent({
   middleware: [anthropicPromptCachingMiddleware({ ttl: "5m" })],
 });
 
-// First invocation: Creates cache with system prompt, tools, and "Hi, my name is Bob"
+// 第一次调用：创建包含系统提示词、工具和 "Hi, my name is Bob" 的缓存
 await agent.invoke({
   messages: [new HumanMessage("Hi, my name is Bob")]
 });
 
-// Second invocation: Reuses cached system prompt, tools, and previous messages
-// Only processes the new message "What's my name?" and the previous AI response
+// 第二次调用：复用缓存的系统提示词、工具和先前的消息
+// 只处理新消息 "What's my name?" 和先前的 AI 响应
 const result = await agent.invoke({
   messages: [new HumanMessage("What's my name?")]
 });

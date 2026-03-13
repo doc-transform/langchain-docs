@@ -1,131 +1,131 @@
 ---
-title: Philosophy
-description: LangChain exists to be the easiest place to start building with LLMs, while also being flexible and production-ready.
+title: 设计理念
+description: LangChain 致力于成为使用 LLM 构建应用的最简单起点，同时兼具灵活性和生产可用性。
 mode: wide
 ---
 
-LangChain is driven by a few core beliefs:
+LangChain 的发展基于以下几个核心信念：
 
-- Large Language Models (LLMs) are great, powerful new technology.
-- LLMs are even better when you combine them with external sources of data.
-- LLMs will transform what the applications of the future look like. Specifically, the applications of the future will look more and more agentic.
-- It is still very early on in that transformation.
-- While it's easy to build a prototype of those agentic applications, it's still really hard to build agents that are reliable enough to put into production.
+- 大语言模型（LLM）是一项强大的新技术。
+- LLM 与外部数据源结合时能发挥更大的价值。
+- LLM 将重塑未来应用的形态——未来的应用将越来越具备 Agent 特性。
+- 这场变革仍处于非常早期的阶段。
+- 虽然构建 Agent 应用的原型很容易，但要构建可靠到能投入生产的 Agent，依然极具挑战。
 
-With LangChain, we have two core focuses:
+围绕这些认知，LangChain 聚焦于两个核心方向：
 
 <Steps>
-    <Step title="We want to enable developers to build with the best models.">
-        Different providers expose different APIs, with different model parameters and different message formats.
-        Standardizing these model inputs and outputs is a core focus, making it easy for developer to easily change to the most recent state-of-the-art model, avoiding lock-in.
+    <Step title="让开发者能够使用最好的模型进行构建">
+        不同的模型提供商有各自不同的 API，包括不同的模型参数和消息格式。
+        标准化模型的输入和输出是核心工作之一，使开发者可以轻松切换到最新的前沿模型，避免厂商锁定。
     </Step>
-    <Step title="We want to make it easy to use models to orchestrate more complex flows that interact with other data and computation.">
-        Models should be used for more than just *text generation* - they should also be used to orchestrate more complex flows that interact with other data. LangChain makes it easy to define [tools](/oss/langchain/tools) that LLMs can use dynamically, as well as help with parsing of and access to unstructured data.
+    <Step title="让模型能够轻松编排与数据和计算交互的复杂流程">
+        模型不应仅被用于*文本生成*——它们还应被用于编排与其他数据交互的更复杂流程。LangChain 让定义 LLM 可以动态调用的[工具（Tools）](/oss/langchain/tools)变得简单，同时也帮助处理和访问非结构化数据。
     </Step>
 </Steps>
 
-## History
+## 发展历程
 
-Given the constant rate of change in the field, LangChain has also evolved over time. Below is a brief timeline of how LangChain has changed over the years, evolving alongside what it means to build with LLMs:
+鉴于该领域日新月异的变化，LangChain 也在持续演进。以下是 LangChain 多年来的发展简史，展示了它如何伴随 LLM 应用构建范式的演变而不断进化：
 
 <Update label="2022-10-24" description="v0.0.1">
-    A month before ChatGPT, **LangChain was launched as a Python package**. It consisted of two main components:
+    在 ChatGPT 发布前一个月，**LangChain 作为 Python 包正式发布**。它包含两个核心组件：
 
-    - LLM abstractions
-    - "Chains", or predetermined steps of computation to run, for common use cases. For example - RAG: run a retrieval step, then run a generation step.
+    - LLM 抽象层
+    - "链（Chains）"——即针对常见用例的预定义计算步骤。例如 RAG：先执行检索步骤，再执行生成步骤。
 
-    The name LangChain comes from "Language" (like Language models) and "Chains".
+    LangChain 的名称来源于"Language"（语言模型）和"Chains"（链）。
 </Update>
 
 <Update label="2022-12">
-    The first general purpose agents were added to LangChain.
+    LangChain 添加了首批通用 Agent。
 
-    These general purpose agents were based on the [ReAct paper](https://arxiv.org/abs/2210.03629) (ReAct standing for Reasoning and Acting). They used LLMs to generate JSON that represented tool calls, and then parsed that JSON to determine what tools to call.
+    这些通用 Agent 基于 [ReAct 论文](https://arxiv.org/abs/2210.03629)（ReAct 即 Reasoning and Acting 的缩写）。它们使用 LLM 生成代表工具调用的 JSON，然后解析该 JSON 以确定调用哪些工具。
 </Update>
 
 <Update label="2023-01">
-    OpenAI releases a 'Chat Completion' API.
+    OpenAI 发布了"Chat Completion" API。
 
-    Previously, models took in strings and returned a string. In the ChatCompletions API, they evolved to take in a list of messages and return a message. Other model providers followed suit, and LangChain updated to work with lists of messages.
+    此前，模型接收字符串输入并返回字符串。在 Chat Completions API 中，模型演进为接收消息列表并返回消息。其他模型提供商纷纷跟进，LangChain 也随之更新以支持消息列表。
 </Update>
 
 <Update label="2023-01">
-    LangChain releases a JavaScript version.
+    LangChain 发布 JavaScript 版本。
 
-    LLMs and agents will change how applications are built and JavaScript is the language of application developers.
+    LLM 和 Agent 将改变应用的构建方式，而 JavaScript 是应用开发者的主力语言。
 </Update>
 
 <Update label="2023-02">
-    **LangChain Inc. was formed as a company** around the open source LangChain project.
+    **LangChain Inc. 围绕开源 LangChain 项目正式成立公司**。
 
-    The main goal was to "make intelligent agents ubiquitous". The team recognized that while LangChain was a key part (LangChain made it simple to get started with LLMs), there was also a need for other components.
+    公司的核心目标是"让智能体无处不在"。团队意识到，虽然 LangChain 是关键一环（它让使用 LLM 变得简单），但还需要其他配套组件。
 </Update>
 
 <Update label="2023-03">
-    OpenAI releases 'function calling' in their API.
+    OpenAI 在其 API 中发布了"函数调用（Function Calling）"功能。
 
-    This allowed the API to explicitly generate payloads that represented tool calls. Other model providers followed suit, and LangChain was updated to use this as the preferred method for tool calling (rather than parsing JSON).
+    这使得 API 能够显式生成代表工具调用的结构化数据。其他模型提供商相继跟进，LangChain 也更新为将此作为工具调用的首选方式（而非解析 JSON）。
 </Update>
 
 <Update label="2023-06">
-    **LangSmith is released** as closed source platform by LangChain Inc., providing observability and evals.
+    **LangSmith 作为 LangChain Inc. 的闭源平台发布**，提供可观测性和评估能力。
 
-    The main issue with building agents is getting them to be reliable, and LangSmith, which provides observability and evals, was built to solve that need. LangChain was updated to integrate seamlessly with LangSmith.
+    构建 Agent 的核心难题在于使其足够可靠，而 LangSmith 通过提供可观测性和评估功能来解决这一需求。LangChain 随之更新以与 LangSmith 无缝集成。
 </Update>
 
 <Update label="2024-01" description="v0.1.0">
-    **LangChain releases 0.1.0**, its first non-0.0.x.
+    **LangChain 发布 0.1.0 版本**，这是首个非 0.0.x 版本。
 
-    The industry matured from prototypes to production, and as such, LangChain increased its focus on stability.
+    行业从原型阶段迈向生产阶段，LangChain 也因此更加注重稳定性。
 </Update>
 
 <Update label="2024-02">
-    **LangGraph is released** as an open-source library.
+    **LangGraph 作为开源库发布**。
 
-    The original LangChain had two focuses: LLM abstractions, and high-level interfaces for getting started with common applications; however, it was missing a low-level orchestration layer that allowed developers to control the exact flow of their agent. Enter: LangGraph.
+    最初的 LangChain 有两个重点：LLM 抽象和用于常见应用的高层接口。但缺少一个底层编排层，让开发者能精确控制 Agent 的执行流程。于是 LangGraph 应运而生。
 
-    When building LangGraph, we learned from lessons when building LangChain and added functionality we discovered was needed: streaming, durable execution, short-term memory, human-in-the-loop, and more.
+    在构建 LangGraph 时，我们汲取了构建 LangChain 的经验教训，并添加了实践中发现必需的功能：流式输出、持久执行、短期记忆、人机协同等。
 </Update>
 
 <Update label="2024-06">
-    **LangChain has over 700 integrations.**
+    **LangChain 拥有超过 700 个集成**。
 
     :::python
-    Integrations were split out of the core LangChain package, and either moved into their own standalone packages (for the core integrations) or `langchain-community`.
+    集成从 LangChain 核心包中拆分出来，核心集成迁移到独立包中，其余移入 `langchain-community`。
     :::
     :::js
-    Integrations were split out of the core LangChain package, and either moved into their own standalone packages (for the core integrations) or `@langchain/community`.
+    集成从 LangChain 核心包中拆分出来，核心集成迁移到独立包中，其余移入 `@langchain/community`。
     :::
 </Update>
 
 <Update label="2024-10">
-    LangGraph becomes the preferred way to build any AI application that is more than a single LLM call.
+    LangGraph 成为构建任何超越单次 LLM 调用的 AI 应用的首选方式。
 
-    As developers tried to improve the reliability of their applications, they needed more control than the high-level interfaces provided. LangGraph provided that low-level flexibility. Most chains and agents were marked as deprecated in LangChain with guides on how to migrate them to LangGraph. There is still one high-level abstraction created in LangGraph: an agent abstraction. It is built on top of low-level LangGraph and has the same interface as the ReAct agents from LangChain.
+    随着开发者努力提升应用的可靠性，他们需要比高层接口更精细的控制。LangGraph 提供了这种底层灵活性。LangChain 中的大多数 Chain 和 Agent 被标记为已弃用，并提供了迁移到 LangGraph 的指南。不过，LangGraph 中保留了一个高层抽象：Agent 抽象。它构建在底层 LangGraph 之上，与 LangChain 的 ReAct Agent 具有相同的接口。
 </Update>
 
 <Update label="2025-04">
-    Model APIs become more multimodal.
+    模型 API 变得更加多模态。
 
     :::python
-    Models started to accept files, images, videos, and more. We updated the `langchain-core` message format accordingly to allow developers to specify these multimodal inputs in a standard way.
+    模型开始接受文件、图片、视频等更多输入类型。我们相应地更新了 `langchain-core` 的消息格式，使开发者能够以标准化方式指定这些多模态输入。
     :::
     :::js
-    Models started to accept files, images, videos, and more. We updated the `@langchain/core` message format accordingly to allow developers to specify these multimodal inputs in a standard way.
+    模型开始接受文件、图片、视频等更多输入类型。我们相应地更新了 `@langchain/core` 的消息格式，使开发者能够以标准化方式指定这些多模态输入。
     :::
 </Update>
 
 <Update label="2025-10-20" description="v1.0.0">
-    **LangChain releases 1.0** with two major changes:
+    **LangChain 发布 1.0 版本**，带来两个重大变化：
 
-    1. Complete revamp of all chains and agents in `langchain`. All chains and agents are now replaced with only one high level abstraction: an agent abstraction built on top of LangGraph. This was the high-level abstraction that was originally created in LangGraph, but just moved to LangChain.
+    1. 对 `langchain` 中的所有 Chain 和 Agent 进行了全面重构。所有 Chain 和 Agent 现已替换为唯一一个高层抽象：构建在 LangGraph 之上的 Agent 抽象。这就是最初在 LangGraph 中创建、后迁移至 LangChain 的那个高层抽象。
 
         :::python
-        For users still using old LangChain chains/agents who do NOT want to upgrade (note: we recommend you do), you can continue using old LangChain by installing the `langchain-classic` package.
+        对于仍在使用旧版 LangChain Chain/Agent 且不想升级的用户（但我们建议升级），可以安装 `langchain-classic` 包继续使用旧版。
         :::
         :::js
-        For users still using old LangChain chains/agents who do NOT want to upgrade (note: we recommend you do), you can continue using old LangChain by installing the `@langchain/classic` package.
+        对于仍在使用旧版 LangChain Chain/Agent 且不想升级的用户（但我们建议升级），可以安装 `@langchain/classic` 包继续使用旧版。
         :::
 
-    2. A standard message content format: Model APIs evolved from returning messages with a simple content string to more complex output types - reasoning blocks, citations, server-side tool calls, etc. LangChain evolved its message formats to standardize these across providers.
+    2. 标准化消息内容格式：模型 API 从返回简单内容字符串的消息，演进到更复杂的输出类型——推理块、引用、服务端工具调用等。LangChain 演进了消息格式，将这些跨提供商进行了标准化。
 </Update>

@@ -1,21 +1,21 @@
 ---
-title: "Document loader integrations"
+title: "文档加载器集成"
 sidebar_position: 0
-sidebarTitle: "Document loaders"
-description: "Integrate with document loaders using LangChain JavaScript."
+sidebarTitle: "文档加载器"
+description: "使用 LangChain JavaScript 集成文档加载器。"
 ---
 
-Document loaders provide a **standard interface** for reading data from different sources (such as Slack, Notion, or Google Drive) into LangChain's @[Document] format.
-This ensures that data can be handled consistently regardless of the source.
+文档加载器提供了一个**标准接口**，用于将不同来源（如 Slack、Notion 或 Google Drive）的数据读取为 LangChain 的 @[Document] 格式。
+这确保了无论数据来源如何，都能以一致的方式处理。
 
-All document loaders implement the @[BaseLoader] interface.
+所有文档加载器都实现了 @[BaseLoader] 接口。
 
-## Interface
+## 接口
 
-Each document loader may define its own parameters, but they share a common API:
+每个文档加载器可以定义自己的参数，但它们共享一个通用 API：
 
-- `load()`: Loads all documents at once.
-- `loadAndSplit()`: Loads all documents at once and splits them into smaller documents.
+- `load()`：一次加载所有文档。
+- `loadAndSplit()`：一次加载所有文档并将其拆分为更小的文档。
 
 ```typescript
 import { CSVLoader } from "@langchain/community/document_loaders/fs/csv";
@@ -26,117 +26,117 @@ const loader = new CSVLoader(
 const data = await loader.load();
 ```
 
-## By category
+## 按类别
 
-LangChain.js categorizes document loaders in two different ways:
+LangChain.js 将文档加载器分为两种类型：
 
-- [File loaders](/oss/integrations/document_loaders/file_loaders/), which load data into LangChain formats from your local filesystem.
-- [Web loaders](/oss/integrations/document_loaders/web_loaders/), which load data from remote sources.
+- [文件加载器](/oss/integrations/document_loaders/file_loaders/)，从本地文件系统将数据加载为 LangChain 格式。
+- [网络加载器](/oss/integrations/document_loaders/web_loaders/)，从远程源加载数据。
 
-### File loaders
+### 文件加载器
 
 <Info>
-    If you'd like to contribute an integration, see [Contributing integrations](/oss/contributing#add-a-new-integration).
+    如果你想贡献一个集成，请参阅[贡献集成](/oss/contributing#add-a-new-integration)。
 </Info>
 
-#### PDFs
+#### PDF
 
-| Document Loader | Description | Package/API |
+| 文档加载器 | 描述 | 包/API |
 |----------------|-------------|-------------|
-| [PDFLoader](/oss/integrations/document_loaders/file_loaders/pdf) | Load and parse PDF files using pdf-parse | Package |
+| [PDFLoader](/oss/integrations/document_loaders/file_loaders/pdf) | 使用 pdf-parse 加载和解析 PDF 文件 | 包 |
 
-#### Common file types
+#### 常见文件类型
 
-| Document Loader | Description | Package/API |
+| 文档加载器 | 描述 | 包/API |
 |----------------|-------------|-------------|
-| [CSV](/oss/integrations/document_loaders/file_loaders/csv) | Load data from CSV files with configurable column extraction | Package |
-| [JSON](/oss/integrations/document_loaders/file_loaders/json) | Load JSON files using JSON pointer to target specific keys | Package |
-| [JSONLines](/oss/integrations/document_loaders/file_loaders/jsonlines) | Load data from JSONLines/JSONL files | Package |
-| [Text](/oss/integrations/document_loaders/file_loaders/text) | Load plain text files | Package |
-| [DOCX](/oss/integrations/document_loaders/file_loaders/docx) | Load Microsoft Word documents (.docx and .doc formats) | Package |
-| [EPUB](/oss/integrations/document_loaders/file_loaders/epub) | Load EPUB files with optional chapter splitting | Package |
-| [PPTX](/oss/integrations/document_loaders/file_loaders/pptx) | Load PowerPoint presentations | Package |
-| [Subtitles](/oss/integrations/document_loaders/file_loaders/subtitles) | Load subtitle files (.srt format) | Package |
+| [CSV](/oss/integrations/document_loaders/file_loaders/csv) | 从 CSV 文件加载数据，支持可配置的列提取 | 包 |
+| [JSON](/oss/integrations/document_loaders/file_loaders/json) | 使用 JSON 指针加载 JSON 文件以定位特定键 | 包 |
+| [JSONLines](/oss/integrations/document_loaders/file_loaders/jsonlines) | 从 JSONLines/JSONL 文件加载数据 | 包 |
+| [Text](/oss/integrations/document_loaders/file_loaders/text) | 加载纯文本文件 | 包 |
+| [DOCX](/oss/integrations/document_loaders/file_loaders/docx) | 加载 Microsoft Word 文档（.docx 和 .doc 格式） | 包 |
+| [EPUB](/oss/integrations/document_loaders/file_loaders/epub) | 加载 EPUB 文件，支持可选的章节拆分 | 包 |
+| [PPTX](/oss/integrations/document_loaders/file_loaders/pptx) | 加载 PowerPoint 演示文稿 | 包 |
+| [Subtitles](/oss/integrations/document_loaders/file_loaders/subtitles) | 加载字幕文件（.srt 格式） | 包 |
 
-#### Specialized file loaders
+#### 专业文件加载器
 
-| Document Loader | Description | Package/API |
+| 文档加载器 | 描述 | 包/API |
 |----------------|-------------|-------------|
-| [`DirectoryLoader`](/oss/integrations/document_loaders/file_loaders/directory) | Load all files from a directory with custom loader mappings | Package |
-| [`UnstructuredLoader`](/oss/integrations/document_loaders/file_loaders/unstructured) | Load multiple file types using Unstructured API | API |
-| [`MultiFileLoader`](/oss/integrations/document_loaders/file_loaders/multi_file) | Load data from multiple individual file paths | Package |
-| [`ChatGPT`](/oss/integrations/document_loaders/file_loaders/chatgpt) | Load ChatGPT conversation exports | Package |
-| [Notion Markdown](/oss/integrations/document_loaders/file_loaders/notion_markdown) | Load Notion pages exported as Markdown | Package |
-| [OpenAI Whisper Audio](/oss/integrations/document_loaders/file_loaders/openai_whisper_audio) | Transcribe audio files using OpenAI Whisper API | API |
+| [`DirectoryLoader`](/oss/integrations/document_loaders/file_loaders/directory) | 使用自定义加载器映射从目录加载所有文件 | 包 |
+| [`UnstructuredLoader`](/oss/integrations/document_loaders/file_loaders/unstructured) | 使用 Unstructured API 加载多种文件类型 | API |
+| [`MultiFileLoader`](/oss/integrations/document_loaders/file_loaders/multi_file) | 从多个单独的文件路径加载数据 | 包 |
+| [`ChatGPT`](/oss/integrations/document_loaders/file_loaders/chatgpt) | 加载 ChatGPT 对话导出 | 包 |
+| [Notion Markdown](/oss/integrations/document_loaders/file_loaders/notion_markdown) | 加载导出为 Markdown 的 Notion 页面 | 包 |
+| [OpenAI Whisper Audio](/oss/integrations/document_loaders/file_loaders/openai_whisper_audio) | 使用 OpenAI Whisper API 转录音频文件 | API |
 
-### Web loaders
+### 网络加载器
 
-#### Webpages
+#### 网页
 
-| Document Loader | Description | Web Support | Package/API |
+| 文档加载器 | 描述 | Web 支持 | 包/API |
 |----------------|-------------|:-----------:|-------------|
-| [`Cheerio`](/oss/integrations/document_loaders/web_loaders/web_cheerio) | Load webpages using Cheerio (lightweight, no JavaScript execution) | ✅ | Package |
-| [`Playwright`](/oss/integrations/document_loaders/web_loaders/web_playwright) | Load dynamic webpages using Playwright (supports JavaScript rendering) | ❌ | Package |
-| [`Puppeteer`](/oss/integrations/document_loaders/web_loaders/web_puppeteer) | Load dynamic webpages using Puppeteer (headless Chrome) | ❌ | Package |
-| [`FireCrawl`](/oss/integrations/document_loaders/web_loaders/firecrawl) | Crawl and convert websites into LLM-ready markdown | ✅ | API |
-| [`Spider`](/oss/integrations/document_loaders/web_loaders/spider) | Fast crawler that converts websites into HTML, markdown, or text | ✅ | API |
-| [`RecursiveUrlLoader`](/oss/integrations/document_loaders/web_loaders/recursive_url_loader) | Recursively load webpages following links | ❌ | Package |
-| [`Sitemap`](/oss/integrations/document_loaders/web_loaders/sitemap) | Load all pages from a sitemap.xml | ✅ | Package |
-| [`Browserbase`](/oss/integrations/document_loaders/web_loaders/browserbase) | Load webpages using managed headless browsers with stealth mode | ✅ | API |
-| [`WebPDFLoader`](/oss/integrations/document_loaders/web_loaders/pdf) | Load PDF files in web environments | ✅ | Package |
+| [`Cheerio`](/oss/integrations/document_loaders/web_loaders/web_cheerio) | 使用 Cheerio 加载网页（轻量级，不执行 JavaScript） | ✅ | 包 |
+| [`Playwright`](/oss/integrations/document_loaders/web_loaders/web_playwright) | 使用 Playwright 加载动态网页（支持 JavaScript 渲染） | ❌ | 包 |
+| [`Puppeteer`](/oss/integrations/document_loaders/web_loaders/web_puppeteer) | 使用 Puppeteer（无头 Chrome）加载动态网页 | ❌ | 包 |
+| [`FireCrawl`](/oss/integrations/document_loaders/web_loaders/firecrawl) | 爬取网站并转换为 LLM 可用的 Markdown | ✅ | API |
+| [`Spider`](/oss/integrations/document_loaders/web_loaders/spider) | 快速爬虫，将网站转换为 HTML、Markdown 或文本 | ✅ | API |
+| [`RecursiveUrlLoader`](/oss/integrations/document_loaders/web_loaders/recursive_url_loader) | 递归加载网页，跟随链接 | ❌ | 包 |
+| [`Sitemap`](/oss/integrations/document_loaders/web_loaders/sitemap) | 从 sitemap.xml 加载所有页面 | ✅ | 包 |
+| [`Browserbase`](/oss/integrations/document_loaders/web_loaders/browserbase) | 使用托管的无头浏览器和隐身模式加载网页 | ✅ | API |
+| [`WebPDFLoader`](/oss/integrations/document_loaders/web_loaders/pdf) | 在 Web 环境中加载 PDF 文件 | ✅ | 包 |
 
-#### Cloud providers
+#### 云服务提供商
 
-| Document Loader | Description | Web Support | Package/API |
+| 文档加载器 | 描述 | Web 支持 | 包/API |
 |----------------|-------------|:-----------:|-------------|
-| [S3](/oss/integrations/document_loaders/web_loaders/s3) | Load files from AWS S3 buckets | ❌ | Package |
-| [Azure Blob Storage Container](/oss/integrations/document_loaders/web_loaders/azure_blob_storage_container) | Load all files from Azure Blob Storage container | ❌ | Package |
-| [Azure Blob Storage File](/oss/integrations/document_loaders/web_loaders/azure_blob_storage_file) | Load individual files from Azure Blob Storage | ❌ | Package |
-| [Google Cloud Storage](/oss/integrations/document_loaders/web_loaders/google_cloud_storage) | Load files from Google Cloud Storage buckets | ❌ | Package |
-| [Google Cloud SQL for PostgreSQL](/oss/integrations/document_loaders/web_loaders/google_cloudsql_pg) | Load documents from Cloud SQL PostgreSQL databases | ✅ | Package |
+| [S3](/oss/integrations/document_loaders/web_loaders/s3) | 从 AWS S3 存储桶加载文件 | ❌ | 包 |
+| [Azure Blob Storage Container](/oss/integrations/document_loaders/web_loaders/azure_blob_storage_container) | 从 Azure Blob Storage 容器加载所有文件 | ❌ | 包 |
+| [Azure Blob Storage File](/oss/integrations/document_loaders/web_loaders/azure_blob_storage_file) | 从 Azure Blob Storage 加载单个文件 | ❌ | 包 |
+| [Google Cloud Storage](/oss/integrations/document_loaders/web_loaders/google_cloud_storage) | 从 Google Cloud Storage 存储桶加载文件 | ❌ | 包 |
+| [Google Cloud SQL for PostgreSQL](/oss/integrations/document_loaders/web_loaders/google_cloudsql_pg) | 从 Cloud SQL PostgreSQL 数据库加载文档 | ✅ | 包 |
 
-#### Productivity tools
+#### 生产力工具
 
-| Document Loader | Description | Web Support | Package/API |
+| 文档加载器 | 描述 | Web 支持 | 包/API |
 |----------------|-------------|:-----------:|-------------|
-| [Notion API](/oss/integrations/document_loaders/web_loaders/notionapi) | Load Notion pages and databases via API | ✅ | API |
-| [Figma](/oss/integrations/document_loaders/web_loaders/figma) | Load Figma file data | ✅ | API |
-| [Confluence](/oss/integrations/document_loaders/web_loaders/confluence) | Load pages from Confluence spaces | ❌ | API |
-| [GitHub](/oss/integrations/document_loaders/web_loaders/github) | Load files from GitHub repositories | ✅ | API |
-| [GitBook](/oss/integrations/document_loaders/web_loaders/gitbook) | Load GitBook documentation pages | ✅ | Package |
-| [Jira](/oss/integrations/document_loaders/web_loaders/jira) | Load issues from Jira projects | ❌ | API |
-| [Airtable](/oss/integrations/document_loaders/web_loaders/airtable) | Load records from Airtable bases | ✅ | API |
-| [Taskade](/oss/integrations/document_loaders/web_loaders/taskade) | Load Taskade project data | ✅ | API |
+| [Notion API](/oss/integrations/document_loaders/web_loaders/notionapi) | 通过 API 加载 Notion 页面和数据库 | ✅ | API |
+| [Figma](/oss/integrations/document_loaders/web_loaders/figma) | 加载 Figma 文件数据 | ✅ | API |
+| [Confluence](/oss/integrations/document_loaders/web_loaders/confluence) | 从 Confluence 空间加载页面 | ❌ | API |
+| [GitHub](/oss/integrations/document_loaders/web_loaders/github) | 从 GitHub 仓库加载文件 | ✅ | API |
+| [GitBook](/oss/integrations/document_loaders/web_loaders/gitbook) | 加载 GitBook 文档页面 | ✅ | 包 |
+| [Jira](/oss/integrations/document_loaders/web_loaders/jira) | 从 Jira 项目加载问题 | ❌ | API |
+| [Airtable](/oss/integrations/document_loaders/web_loaders/airtable) | 从 Airtable 数据库加载记录 | ✅ | API |
+| [Taskade](/oss/integrations/document_loaders/web_loaders/taskade) | 加载 Taskade 项目数据 | ✅ | API |
 
-#### Search & data APIs
+#### 搜索和数据 API
 
-| Document Loader | Description | Web Support | Package/API |
+| 文档加载器 | 描述 | Web 支持 | 包/API |
 |----------------|-------------|:-----------:|-------------|
-| [SearchAPI](/oss/integrations/document_loaders/web_loaders/searchapi) | Load web search results from SearchAPI (Google, YouTube, etc.) | ✅ | API |
-| [SerpApi](/oss/integrations/document_loaders/web_loaders/serpapi) | Load web search results from SerpApi | ✅ | API |
-| [Apify Dataset](/oss/integrations/document_loaders/web_loaders/apify_dataset) | Load scraped data from Apify platform | ✅ | API |
+| [SearchAPI](/oss/integrations/document_loaders/web_loaders/searchapi) | 从 SearchAPI 加载网络搜索结果（Google、YouTube 等） | ✅ | API |
+| [SerpApi](/oss/integrations/document_loaders/web_loaders/serpapi) | 从 SerpApi 加载网络搜索结果 | ✅ | API |
+| [Apify Dataset](/oss/integrations/document_loaders/web_loaders/apify_dataset) | 从 Apify 平台加载抓取的数据 | ✅ | API |
 
-#### Audio & video
+#### 音频和视频
 
-| Document Loader | Description | Web Support | Package/API |
+| 文档加载器 | 描述 | Web 支持 | 包/API |
 |----------------|-------------|:-----------:|-------------|
-| [YouTube](/oss/integrations/document_loaders/web_loaders/youtube) | Load YouTube video transcripts | ✅ | Package |
-| [AssemblyAI](/oss/integrations/document_loaders/web_loaders/assemblyai_audio_transcription) | Transcribe audio and video files using AssemblyAI API | ✅ | API |
-| [Soniox](/oss/integrations/document_loaders/web_loaders/soniox) | Transcribe multilingual audio files with optional translation using Soniox API | ✅ | API |
-| [Sonix](/oss/integrations/document_loaders/web_loaders/sonix_audio_transcription) | Transcribe audio files using Sonix API | ❌ | API |
+| [YouTube](/oss/integrations/document_loaders/web_loaders/youtube) | 加载 YouTube 视频字幕 | ✅ | 包 |
+| [AssemblyAI](/oss/integrations/document_loaders/web_loaders/assemblyai_audio_transcription) | 使用 AssemblyAI API 转录音频和视频文件 | ✅ | API |
+| [Soniox](/oss/integrations/document_loaders/web_loaders/soniox) | 使用 Soniox API 转录多语言音频文件，支持可选翻译 | ✅ | API |
+| [Sonix](/oss/integrations/document_loaders/web_loaders/sonix_audio_transcription) | 使用 Sonix API 转录音频文件 | ❌ | API |
 
-#### Other
+#### 其他
 
-| Document Loader | Description | Web Support | Package/API |
+| 文档加载器 | 描述 | Web 支持 | 包/API |
 |----------------|-------------|:-----------:|-------------|
-| [Couchbase](/oss/integrations/document_loaders/web_loaders/couchbase) | Load documents from Couchbase database using SQL++ queries | ✅ | Package |
-| [LangSmith](/oss/integrations/document_loaders/web_loaders/langsmith) | Load datasets and traces from LangSmith | ✅ | API |
-| [Hacker News](/oss/integrations/document_loaders/web_loaders/hn) | Load Hacker News threads and comments | ✅ | Package |
-| [IMSDB](/oss/integrations/document_loaders/web_loaders/imsdb) | Load movie scripts from Internet Movie Script Database | ✅ | Package |
-| [College Confidential](/oss/integrations/document_loaders/web_loaders/college_confidential) | Load college information from College Confidential | ✅ | Package |
-| [Blockchain Data](/oss/integrations/document_loaders/web_loaders/sort_xyz_blockchain) | Load blockchain data (NFTs, transactions) via Sort.xyz API | ✅ | API |
+| [Couchbase](/oss/integrations/document_loaders/web_loaders/couchbase) | 使用 SQL++ 查询从 Couchbase 数据库加载文档 | ✅ | 包 |
+| [LangSmith](/oss/integrations/document_loaders/web_loaders/langsmith) | 从 LangSmith 加载数据集和追踪记录 | ✅ | API |
+| [Hacker News](/oss/integrations/document_loaders/web_loaders/hn) | 加载 Hacker News 帖子和评论 | ✅ | 包 |
+| [IMSDB](/oss/integrations/document_loaders/web_loaders/imsdb) | 从互联网电影剧本数据库加载电影剧本 | ✅ | 包 |
+| [College Confidential](/oss/integrations/document_loaders/web_loaders/college_confidential) | 从 College Confidential 加载大学信息 | ✅ | 包 |
+| [Blockchain Data](/oss/integrations/document_loaders/web_loaders/sort_xyz_blockchain) | 通过 Sort.xyz API 加载区块链数据（NFT、交易） | ✅ | API |
 
-## All document loaders
+## 所有文档加载器
 
 <Columns cols={3}>
 <Card title="Airtable" icon="link" href="/oss/integrations/document_loaders/web_loaders/airtable" arrow="true" cta="View guide" />

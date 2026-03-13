@@ -1,25 +1,25 @@
 ---
-title: "UpstashVectorStore integration"
-description: "Integrate with the UpstashVectorStore using LangChain JavaScript."
+title: "UpstashVectorStore 集成"
+description: "使用 LangChain JavaScript 集成 UpstashVectorStore。"
 ---
 
-[Upstash Vector](https://upstash.com/) is a REST based serverless vector database, designed for working with vector embeddings.
+[Upstash Vector](https://upstash.com/) 是一个基于 REST 的无服务器向量数据库，专为处理向量嵌入而设计。
 
-This guide provides a quick overview for getting started with Upstash [vector stores](/oss/integrations/vectorstores). For detailed documentation of all `UpstashVectorStore` features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_community_vectorstores_upstash.UpstashVectorStore.html).
+本指南提供了开始使用 Upstash [向量存储](/oss/integrations/vectorstores)的快速概览。有关 `UpstashVectorStore` 所有功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain_community_vectorstores_upstash.UpstashVectorStore.html)。
 
-## Overview
+## 概览
 
-### Integration details
+### 集成详情
 
 | Class | Package | [PY support](https://python.langchain.com/docs/integrations/vectorstores/upstash/) |  Version |
 | :--- | :--- | :---: | :---: |
 | [`UpstashVectorStore`](https://api.js.langchain.com/classes/langchain_community_vectorstores_upstash.UpstashVectorStore.html) | [`@langchain/community`](https://npmjs.com/@langchain/community) | ✅ |  ![NPM - Version](https://img.shields.io/npm/v/@langchain/community?style=flat-square&label=%20&) |
 
-## Setup
+## 设置
 
-To use Upstash vector stores, you'll need to create an Upstash account, create an index, and install the `@langchain/community` integration package. You'll also need to install the [`@upstash/vector`](https://www.npmjs.com/package/@upstash/vector) package as a peer dependency.
+要使用 Upstash 向量存储，你需要创建一个 Upstash 账户、创建一个索引，并安装 `@langchain/community` 集成包。你还需要安装 [`@upstash/vector`](https://www.npmjs.com/package/@upstash/vector) 包作为 peer 依赖。
 
-This guide will also use [OpenAI embeddings](/oss/integrations/embeddings/openai), which require you to install the `@langchain/openai` integration package. You can also use [other supported embeddings models](/oss/integrations/embeddings) if you wish.
+本指南还将使用 [OpenAI 嵌入](/oss/integrations/text_embedding/openai)，需要安装 `@langchain/openai` 集成包。你也可以使用[其他支持的嵌入模型](/oss/integrations/text_embedding)。
 
 <CodeGroup>
 ```bash npm
@@ -33,40 +33,40 @@ pnpm add @langchain/community @langchain/core @upstash/vector @langchain/openai
 ```
 </CodeGroup>
 
-You can create an index from the [Upstash Console](https://console.upstash.com/login). For further reference, see [the official docs](https://upstash.com/docs/vector/overall/getstarted).
+你可以从 [Upstash 控制台](https://console.upstash.com/login)创建索引。更多参考，请参见[官方文档](https://upstash.com/docs/vector/overall/getstarted)。
 
-Upstash vector also has built in embedding support. Which means you can use it directly without the need for an additional embedding model. Check the [embedding models documentation](https://upstash.com/docs/vector/features/embeddingmodels) for more details.
+Upstash Vector 还有内置的嵌入支持。这意味着你可以直接使用它，无需额外的嵌入模型。查看[嵌入模型文档](https://upstash.com/docs/vector/features/embeddingmodels)获取更多详情。
 
 <Note>
-To use the built-in Upstash embeddings, you'll need to select an embedding model when creating the index.
+要使用内置的 Upstash 嵌入，你需要在创建索引时选择一个嵌入模型。
 </Note>
 
 
-### Credentials
+### 凭据
 
-Once you've set up an index, set the following environment variables:
+设置好索引后，设置以下环境变量：
 
 ```typescript
 process.env.UPSTASH_VECTOR_REST_URL = "your-rest-url";
 process.env.UPSTASH_VECTOR_REST_TOKEN = "your-rest-token";
 ```
 
-If you are using OpenAI embeddings for this guide, you'll need to set your OpenAI key as well:
+如果你在本指南中使用 OpenAI 嵌入，你还需要设置 OpenAI 密钥：
 
 ```typescript
 process.env.OPENAI_API_KEY = "YOUR_API_KEY";
 ```
 
-If you want to get automated tracing of your model calls you can also set your [LangSmith](/langsmith/home) API key by uncommenting below:
+如果你想获得模型调用的自动追踪，你还可以通过取消下方注释来设置你的 [LangSmith](/langsmith/home) API 密钥：
 
 ```typescript
 // process.env.LANGSMITH_TRACING="true"
 // process.env.LANGSMITH_API_KEY="your-api-key"
 ```
 
-## Instantiation
+## 实例化
 
-Make sure your index has the same dimension count as your embeddings. The default for OpenAI `text-embedding-3-small` is 1536.
+确保你的索引与嵌入具有相同的维度数。OpenAI `text-embedding-3-small` 的默认维度是 1536。
 
 ```typescript
 import { UpstashVectorStore } from "@langchain/community/vectorstores/upstash";
@@ -90,9 +90,9 @@ const vectorStore = new UpstashVectorStore(embeddings, {
 });
 ```
 
-## Usage with built-in embeddings
+## 使用内置嵌入
 
-To use the built-in Upstash embeddings, you can pass a `FakeEmbeddings` instance to the `UpstashVectorStore` constructor. This will make the `UpstashVectorStore` use the built-in embeddings, which you selected when creating the index.
+要使用内置的 Upstash 嵌入，你可以将 `FakeEmbeddings` 实例传递给 `UpstashVectorStore` 构造函数。这将使 `UpstashVectorStore` 使用你在创建索引时选择的内置嵌入。
 
 ```typescript
 import { UpstashVectorStore } from "@langchain/community/vectorstores/upstash";
@@ -110,9 +110,9 @@ const vectorStore = new UpstashVectorStore(new FakeEmbeddings(), {
 });
 ```
 
-## Manage vector store
+## 管理向量存储
 
-### Add items to vector store
+### 向向量存储添加项目
 
 ```typescript
 import type { Document } from "@langchain/core/documents";
@@ -146,21 +146,21 @@ await vectorStore.addDocuments(documents, { ids: ["1", "2", "3", "4"] });
 [ '1', '2', '3', '4' ]
 ```
 
-**Note:** After adding documents, there may be a slight delay before they become queryable.
+**注意：** 添加文档后，它们可被查询之前可能会有轻微的延迟。
 
-### Delete items from vector store
+### 从向量存储删除项目
 
 ```typescript
 await vectorStore.delete({ ids: ["4"] });
 ```
 
-## Query vector store
+## 查询向量存储
 
-Once your vector store has been created and the relevant documents have been added you will most likely wish to query it during the running of your chain or agent.
+创建向量存储并添加相关文档后，你很可能希望在链或代理运行过程中查询它。
 
-### Query directly
+### 直接查询
 
-Performing a simple similarity search can be done as follows:
+执行简单的相似性搜索可以如下进行：
 
 ```typescript
 const filter = "source = 'https://example.com'";
@@ -177,9 +177,9 @@ for (const doc of similaritySearchResults) {
 * Mitochondria are made out of lipids [{"source":"https://example.com"}]
 ```
 
-See [this page](https://upstash.com/docs/vector/features/filtering) for more on Upstash Vector filter syntax.
+有关 Upstash Vector 过滤语法的更多信息请参见[此页面](https://upstash.com/docs/vector/features/filtering)。
 
-If you want to execute a similarity search and receive the corresponding scores you can run:
+如果你想执行相似性搜索并获取相应的分数，你可以运行：
 
 ```typescript
 const similaritySearchWithScoreResults = await vectorStore.similaritySearchWithScore("biology", 2, filter)
@@ -194,9 +194,9 @@ for (const [doc, score] of similaritySearchWithScoreResults) {
 * [SIM=0.557] Mitochondria are made out of lipids [{"source":"https://example.com"}]
 ```
 
-### Query by turning into retriever
+### 转换为检索器进行查询
 
-You can also transform the vector store into a [retriever](/oss/langchain/retrieval) for easier usage in your chains.
+你还可以将向量存储转换为[检索器](/oss/langchain/retrieval)，以便在链中更方便地使用。
 
 ```typescript
 const retriever = vectorStore.asRetriever({
@@ -222,16 +222,16 @@ await retriever.invoke("biology");
 ]
 ```
 
-### Usage for retrieval-augmented generation
+### 用于检索增强生成
 
-For guides on how to use this vector store for retrieval-augmented generation (RAG), see the following sections:
+有关如何将此向量存储用于检索增强生成（RAG）的指南，请参见以下章节：
 
-- [Build a RAG app with LangChain](/oss/langchain/rag).
+- [使用 LangChain 构建 RAG 应用](/oss/langchain/rag)。
 - [Agentic RAG](/oss/langgraph/agentic-rag)
-- [Retrieval docs](/oss/langchain/retrieval)
+- [检索文档](/oss/langchain/retrieval)
 
 ---
 
-## API reference
+## API 参考
 
-For detailed documentation of all `UpstashVectorStore` features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_community_vectorstores_upstash.UpstashVectorStore.html).
+有关 `UpstashVectorStore` 所有功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain_community_vectorstores_upstash.UpstashVectorStore.html)。

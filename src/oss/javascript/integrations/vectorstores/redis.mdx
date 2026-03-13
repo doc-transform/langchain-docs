@@ -1,29 +1,29 @@
 ---
-title: "RedisVectorStore integration"
-description: "Integrate with the RedisVectorStore using LangChain JavaScript."
+title: "RedisVectorStore 集成"
+description: "使用 LangChain JavaScript 集成 RedisVectorStore。"
 ---
 
 <Tip>
-**Compatibility**: Only available on Node.js.
+**兼容性**：仅在 Node.js 上可用。
 </Tip>
 
-[Redis](https://redis.io/) is a fast open source, in-memory data store. As part of the [Redis Stack](https://redis.io/docs/latest/operate/oss_and_stack/install/install-stack/), [RediSearch](https://redis.io/docs/latest/develop/interact/search-and-query/) is the module that enables vector similarity semantic search, as well as many other types of searching.
+[Redis](https://redis.io/) 是一个快速的开源内存数据存储。作为 [Redis Stack](https://redis.io/docs/latest/operate/oss_and_stack/install/install-stack/) 的一部分，[RediSearch](https://redis.io/docs/latest/develop/interact/search-and-query/) 是启用向量相似性语义搜索以及许多其他类型搜索的模块。
 
-This guide provides a quick overview for getting started with Redis [vector stores](/oss/integrations/vectorstores). For detailed documentation of all `RedisVectorStore` features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_redis.RedisVectorStore.html).
+本指南提供了开始使用 Redis [向量存储](/oss/integrations/vectorstores)的快速概览。有关 `RedisVectorStore` 所有功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain_redis.RedisVectorStore.html)。
 
-## Overview
+## 概览
 
-### Integration details
+### 集成详情
 
 | Class                                                                                            | Package                                                   | [PY support](https://python.langchain.com/docs/integrations/vectorstores/redis/) |                                           Version                                            |
 | :----------------------------------------------------------------------------------------------- | :-------------------------------------------------------- | :------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------: |
 | [`RedisVectorStore`](https://api.js.langchain.com/classes/langchain_redis.RedisVectorStore.html) | [`@langchain/redis`](https://npmjs.com/@langchain/redis/) |                                        ✅                                        | ![NPM - Version](https://img.shields.io/npm/v/@langchain/redis?style=flat-square&label=%20&) |
 
-## Setup
+## 设置
 
-To use Redis vector stores, you'll need to set up a Redis instance and install the `@langchain/redis` integration package. You can also install the [`node-redis`](https://github.com/redis/node-redis) package to initialize the vector store with a specific client instance.
+要使用 Redis 向量存储，你需要设置一个 Redis 实例并安装 `@langchain/redis` 集成包。你还可以安装 [`node-redis`](https://github.com/redis/node-redis) 包来使用特定的客户端实例初始化向量存储。
 
-This guide will also use [OpenAI embeddings](/oss/integrations/embeddings/openai), which require you to install the `@langchain/openai` integration package. You can also use [other supported embeddings models](/oss/integrations/embeddings) if you wish.
+本指南还将使用 [OpenAI 嵌入](/oss/integrations/text_embedding/openai)，需要安装 `@langchain/openai` 集成包。你也可以使用[其他支持的嵌入模型](/oss/integrations/text_embedding)。
 
 <CodeGroup>
 ```bash npm
@@ -37,30 +37,30 @@ pnpm add @langchain/redis @langchain/core redis @langchain/openai
 ```
 </CodeGroup>
 
-You can set up a Redis instance locally with Docker by following [these instructions](https://redis.io/docs/latest/operate/oss_and_stack/install/install-stack/docker/#redisredis-stack).
+你可以按照[这些说明](https://redis.io/docs/latest/operate/oss_and_stack/install/install-stack/docker/#redisredis-stack)使用 Docker 在本地设置 Redis 实例。
 
-### Credentials
+### 凭据
 
-Once you've set up an instance, set the `REDIS_URL` environment variable:
+设置好实例后，设置 `REDIS_URL` 环境变量：
 
 ```typescript
 process.env.REDIS_URL = "your-redis-url";
 ```
 
-If you are using OpenAI embeddings for this guide, you'll need to set your OpenAI key as well:
+如果你在本指南中使用 OpenAI 嵌入，你还需要设置 OpenAI 密钥：
 
 ```typescript
 process.env.OPENAI_API_KEY = "YOUR_API_KEY";
 ```
 
-If you want to get automated tracing of your model calls you can also set your [LangSmith](/langsmith/home) API key by uncommenting below:
+如果你想获得模型调用的自动追踪，你还可以通过取消下方注释来设置你的 [LangSmith](/langsmith/home) API 密钥：
 
 ```typescript
 // process.env.LANGSMITH_TRACING="true"
 // process.env.LANGSMITH_API_KEY="your-api-key"
 ```
 
-## Instantiation
+## 实例化
 
 ```typescript
 import { RedisVectorStore } from "@langchain/redis";
@@ -83,9 +83,9 @@ const vectorStore = new RedisVectorStore(embeddings, {
 });
 ```
 
-## Manage vector store
+## 管理向量存储
 
-### Add items to vector store
+### 向向量存储添加项目
 
 ```typescript
 import type { Document } from "@langchain/core/documents";
@@ -115,15 +115,15 @@ const documents = [document1, document2, document3, document4];
 await vectorStore.addDocuments(documents);
 ```
 
-Top-level document ids are currently not supported, but you can delete documents by providing their IDs directly to the vector store.
+目前不支持顶层文档 ID，但你可以通过直接向向量存储提供 ID 来删除文档。
 
-## Query vector store
+## 查询向量存储
 
-Once your vector store has been created and the relevant documents have been added you will most likely wish to query it during the running of your chain or agent.
+创建向量存储并添加相关文档后，你很可能希望在链或代理运行过程中查询它。
 
-### Query directly
+### 直接查询
 
-Performing a simple similarity search can be done as follows:
+执行简单的相似性搜索可以如下进行：
 
 ```typescript
 const similaritySearchResults = await vectorStore.similaritySearch(
@@ -136,9 +136,9 @@ for (const doc of similaritySearchResults) {
 }
 ```
 
-Filtering will currently look for any metadata key containing the provided string.
+过滤当前会查找包含提供字符串的任何元数据键。
 
-If you want to execute a similarity search and receive the corresponding scores you can run:
+如果你想执行相似性搜索并获取相应的分数，你可以运行：
 
 ```typescript
 const similaritySearchWithScoreResults =
@@ -158,9 +158,9 @@ for (const [doc, score] of similaritySearchWithScoreResults) {
 * [SIM=0.852] Mitochondria are made out of lipids [{"type":"example"}]
 ```
 
-### Query by turning into retriever
+### 转换为检索器进行查询
 
-You can also transform the vector store into a [retriever](/oss/langchain/retrieval) for easier usage in your chains.
+你还可以将向量存储转换为[检索器](/oss/langchain/retrieval)，以便在链中更方便地使用。
 
 ```typescript
 const retriever = vectorStore.asRetriever({
@@ -184,52 +184,52 @@ await retriever.invoke("biology");
 ]
 ```
 
-### Usage for retrieval-augmented generation
+### 用于检索增强生成
 
-For guides on how to use this vector store for retrieval-augmented generation (RAG), see the following sections:
+有关如何将此向量存储用于检索增强生成（RAG）的指南，请参见以下章节：
 
-- [Build a RAG app with LangChain](/oss/langchain/rag).
+- [使用 LangChain 构建 RAG 应用](/oss/langchain/rag)。
 - [Agentic RAG](/oss/langgraph/agentic-rag)
-- [Retrieval docs](/oss/langchain/retrieval)
+- [检索文档](/oss/langchain/retrieval)
 
-## Deleting documents
+## 删除文档
 
-You can delete documents from the vector store in two ways:
+你可以通过两种方式从向量存储中删除文档：
 
-### Delete all documents
+### 删除所有文档
 
-You can delete an entire index and all its documents with the following command:
+你可以使用以下命令删除整个索引及其所有文档：
 
 ```typescript
 await vectorStore.delete({ deleteAll: true });
 ```
 
-### Delete specific documents by ID
+### 按 ID 删除特定文档
 
-You can also delete specific documents by providing their IDs. Note that the configured key prefix will be automatically added to the IDs you provide:
+你也可以通过提供 ID 来删除特定文档。注意，配置的键前缀将自动添加到你提供的 ID 中：
 
 ```typescript
 // The key prefix will be automatically added to each ID
 await vectorStore.delete({ ids: ["doc1", "doc2", "doc3"] });
 ```
 
-## Closing connections
+## 关闭连接
 
-Make sure you close the client connection when you are finished to avoid excessive resource consumption:
+确保在完成后关闭客户端连接，以避免资源过度消耗：
 
 ```typescript
 await client.disconnect();
 ```
 
-## Advanced features
+## 高级功能
 
-### Custom schema and metadata filtering
+### 自定义模式和元数据过滤
 
-The Redis vector store supports custom schema definitions for metadata fields, enabling more efficient filtering and searching. This feature allows you to define specific field types and validation rules for your metadata.
+Redis 向量存储支持元数据字段的自定义模式定义，实现更高效的过滤和搜索。此功能允许你为元数据定义特定的字段类型和验证规则。
 
-#### Defining a custom schema
+#### 定义自定义模式
 
-You can define a custom schema when creating your vector store to specify field types, validation rules, and indexing options:
+你可以在创建向量存储时定义自定义模式，以指定字段类型、验证规则和索引选项：
 
 ```typescript
 import { RedisVectorStore } from "@langchain/redis";
@@ -281,28 +281,28 @@ const vectorStoreWithSchema = new RedisVectorStore(embeddings, {
 });
 ```
 
-#### Schema field types
+#### 模式字段类型
 
-The custom schema supports three main field types:
+自定义模式支持三种主要字段类型：
 
-- **TEXT**: Full-text searchable fields with optional stemming, weighting, and sorting
-- **TAG**: Categorical fields for exact matching, with support for multiple values and custom separators
-- **NUMERIC**: Numeric fields supporting range queries and sorting
+- **TEXT**：全文可搜索字段，支持可选的词干提取、权重和排序
+- **TAG**：分类字段，用于精确匹配，支持多值和自定义分隔符
+- **NUMERIC**：数值字段，支持范围查询和排序
 
-#### Field configuration options
+#### 字段配置选项
 
-Each field can be configured with various options:
+每个字段都可以配置多种选项：
 
-- `required`: Whether the field must be present in metadata (default: false)
-- `SORTABLE`: Enable sorting on this field (default: undefined)
-- `SEPARATOR`: For TAG fields, specify the separator for multiple values (default: ",")
-- `CASESENSITIVE`: For TAG fields, enable case-sensitive matching (Redis expects `true`, not boolean)
-- `NOSTEM`: For TEXT fields, disable stemming (Redis expects `true`, not boolean)
-- `WEIGHT`: For TEXT fields, specify search weight (default: 1.0)
+- `required`：元数据中是否必须存在该字段（默认：false）
+- `SORTABLE`：启用此字段的排序（默认：undefined）
+- `SEPARATOR`：对于 TAG 字段，指定多值的分隔符（默认：","）
+- `CASESENSITIVE`：对于 TAG 字段，启用区分大小写匹配
+- `NOSTEM`：对于 TEXT 字段，禁用词干提取
+- `WEIGHT`：对于 TEXT 字段，指定搜索权重（默认：1.0）
 
-#### Adding documents with schema validation
+#### 使用模式验证添加文档
 
-When using a custom schema, documents are automatically validated against the defined schema:
+使用自定义模式时，文档会自动根据定义的模式进行验证：
 
 ```typescript
 import type { Document } from "@langchain/core/documents";
@@ -344,9 +344,9 @@ const documentsWithMetadata: Document[] = [
 await vectorStoreWithSchema.addDocuments(documentsWithMetadata);
 ```
 
-#### Advanced similarity search with metadata filtering
+#### 使用元数据过滤的高级相似性搜索
 
-The custom schema enables powerful metadata filtering capabilities using the `similaritySearchVectorWithScoreAndMetadata` method:
+自定义模式启用了强大的元数据过滤功能，使用 `similaritySearchVectorWithScoreAndMetadata` 方法：
 
 ```typescript
 // Search with TAG filtering
@@ -407,9 +407,9 @@ for (const [doc, score] of textFilterResults) {
 }
 ```
 
-#### Numeric range query options
+#### 数值范围查询选项
 
-For numeric fields, you can specify various range queries:
+对于数值字段，你可以指定各种范围查询：
 
 ```typescript
 // Exact value match
@@ -425,9 +425,9 @@ For numeric fields, you can specify various range queries:
 { score: { max: 95 } }
 ```
 
-#### Error handling and validation
+#### 错误处理和验证
 
-The custom schema provides automatic validation with helpful error messages:
+自定义模式提供自动验证和有帮助的错误消息：
 
 ```typescript
 try {
@@ -463,21 +463,21 @@ try {
 }
 ```
 
-#### Performance benefits
+#### 性能优势
 
-Using custom schema provides several performance advantages:
+使用自定义模式提供了多个性能优势：
 
-1. **Indexed Metadata Fields**: Individual metadata fields are indexed separately, enabling fast filtering
-2. **Type-Optimized Queries**: Numeric and tag fields use optimized query structures
-3. **Reduced Data Transfer**: Only relevant fields are returned in search results
-4. **Better Query Planning**: Redis can optimize queries based on field types and indexes
+1. **索引元数据字段**：单独索引各个元数据字段，启用快速过滤
+2. **类型优化查询**：数值和标签字段使用优化的查询结构
+3. **减少数据传输**：搜索结果中只返回相关字段
+4. **更好的查询规划**：Redis 可以根据字段类型和索引优化查询
 
-#### Backward compatibility
+#### 向后兼容性
 
-The custom schema feature is fully backward compatible. Existing Redis vector stores without custom schemas will continue to work exactly as before. You can gradually migrate to custom schemas for new indexes or when rebuilding existing ones.
+自定义模式功能完全向后兼容。没有自定义模式的现有 Redis 向量存储将继续像以前一样工作。你可以逐步将新索引或重建现有索引迁移到自定义模式。
 
 ---
 
-## API reference
+## API 参考
 
-For detailed documentation of all `RedisVectorSearch` features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_redis.RedisVectorStore.html).
+有关 `RedisVectorSearch` 所有功能和配置的详细文档请参见 [API 参考](https://api.js.langchain.com/classes/langchain_redis.RedisVectorStore.html)。

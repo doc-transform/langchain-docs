@@ -1,27 +1,27 @@
 ---
-title: "Confluence integration"
-description: "Integrate with the Confluence document loader using LangChain JavaScript."
+title: "Confluence 集成"
+description: "使用 LangChain JavaScript 集成 Confluence 文档加载器。"
 ---
 
 <Tip>
-**Compatibility**
+**兼容性**
 
-Only available on Node.js.
+仅在 Node.js 中可用。
 </Tip>
 
-This covers how to load document objects from pages in a Confluence space.
+本文介绍如何从 Confluence 空间中的页面加载文档对象。
 
-## Credentials
+## 凭据
 
-- You'll need to set up an access token and provide it along with your confluence username in order to authenticate the request
-- You'll also need the `space key` for the space containing the pages to load as documents. This can be found in the URL when navigating to your space e.g. `https://example.atlassian.net/wiki/spaces/{SPACE_KEY}`
-- And you'll need to install `html-to-text` to parse the pages into plain text
+- 你需要设置一个访问令牌，并将其与你的 Confluence 用户名一起提供以进行身份验证
+- 你还需要要加载为文档的页面所在空间的 `space key`。导航到你的空间时可以在 URL 中找到，例如 `https://example.atlassian.net/wiki/spaces/{SPACE_KEY}`
+- 你还需要安装 `html-to-text` 来将页面解析为纯文本
 
 ```bash npm
 npm install @langchain/community @langchain/core html-to-text
 ```
 
-## Usage
+## 用法
 
 ```typescript
 import { ConfluencePagesLoader } from "@langchain/community/document_loaders/web/confluence";
