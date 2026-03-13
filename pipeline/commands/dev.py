@@ -103,7 +103,7 @@ async def dev_command(
         if sys.platform == "win32":
             # Windows requires shell for .CMD files
             mint_process = await asyncio.create_subprocess_shell(
-                "mint dev --port 3000",
+                "mint dev --port 3099",
                 cwd=build_dir,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
@@ -114,7 +114,7 @@ async def dev_command(
                 "mint",
                 "dev",
                 "--port",
-                "3000",
+                "3099",
                 cwd=build_dir,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
