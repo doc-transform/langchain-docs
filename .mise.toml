@@ -1,0 +1,6 @@
+[env]
+PYTHONPATH = "{{config_root}}"
+
+[tasks.dev]
+description = "Start development mode"
+run = "uv run pipeline dev"
